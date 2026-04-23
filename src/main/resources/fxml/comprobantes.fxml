@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="16" styleClass="bg-gray-100, p-6" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.ui.controller.ComprobantesController">
+
+    <!-- Header with Actions -->
+    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="dashboard-header">
+        <VBox>
+            <Label styleClass="dashboard-title" text="📄 Comprobantes de Operaciones" />
+            <Label styleClass="dashboard-subtitle" text="Gestión de comprobantes contables" />
+        </VBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="btnNewComprobante" onAction="#newComprobante" styleClass="submit-btn" text="➕  Nuevo Comprobante" />
+        <Button fx:id="btnRefresh" onAction="#refreshData" styleClass="refresh-btn" text="🔄  Actualizar" />
+    </HBox>
+
+    <!-- Filters Section -->
+    <VBox styleClass="filter-section">
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label styleClass="filter-label" text="📅 Fecha:" />
+            <DatePicker fx:id="filterStartDate" promptText="Fecha inicio" styleClass="filter-date-picker" />
+            <Label styleClass="filter-label" text="—" />
+            <DatePicker fx:id="filterEndDate" promptText="Fecha fin" styleClass="filter-date-picker" />
+            
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <Label styleClass="filter-label" text="📋 Estado:" />
+            <ComboBox fx:id="filterStatusCombo" promptText="Todos" styleClass="form-combo" prefWidth="150" />
+            
+            <Label styleClass="filter-label" text="🔍 Buscar:" />
+            <TextField fx:id="searchField" promptText="Número o descripción..." styleClass="form-input" prefWidth="250" />
+            
+            <Button onAction="#applyFilters" styleClass="filter-btn" text="🔍 Filtrar" />
+            <Button onAction="#clearFilters" styleClass="clear-btn" text="🗑️ Limpiar" />
+        </HBox>
+    </VBox>
+
+    <!-- Summary Cards -->
+    <GridPane hgap="16" vgap="16">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="25" />
+            <ColumnConstraints percentWidth="25" />
+            <ColumnConstraints percentWidth="25" />
+            <ColumnConstraints percentWidth="25" />
+        </columnConstraints>
+
+        <!-- Total Comprobantes -->
+        <VBox styleClass="summary-card, card-assets" GridPane.columnIndex="0">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox styleClass="card-icon-bg">
+                    <Label styleClass="text-3xl" text="📄" />
+                </VBox>
+                <VBox>
+                    <Label styleClass="card-label" text="Total Comprobantes" />
+                    <Label fx:id="totalCountLabel" styleClass="card-value, value-positive" text="0" />
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Publicado -->
+        <VBox styleClass="summary-card, card-equity" GridPane.columnIndex="1">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox styleClass="card-icon-bg-blue">
+                    <Label styleClass="text-3xl" text="✅" />
+                </VBox>
+                <VBox>
+                    <Label styleClass="card-label" text="Publicados" />
+                    <Label fx:id="postedCountLabel" styleClass="card-value, value-info" text="0" />
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Borrador -->
+        <VBox styleClass="summary-card, card-balance" GridPane.columnIndex="2">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox styleClass="card-icon-bg-amber">
+                    <Label styleClass="text-3xl" text="📝" />
+                </VBox>
+                <VBox>
+                    <Label styleClass="card-label" text="Borradores" />
+                    <Label fx:id="draftCountLabel" styleClass="card-value, value-warning" text="0" />
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Anulado -->
+        <VBox styleClass="summary-card, card-liabilities" GridPane.columnIndex="3">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox styleClass="card-icon-bg-red">
+                    <Label styleClass="text-3xl" text="❌" />
+                </VBox>
+                <VBox>
+                    <Label styleClass="card-label" text="Anulados" />
+                    <Label fx:id="cancelledCountLabel" styleClass="card-value, value-negative" text="0" />
+                </VBox>
+            </HBox>
+        </VBox>
+        <rowConstraints>
+            <RowConstraints />
+        </rowConstraints>
+    </GridPane>
+
+    <!-- Comprobantes Table -->
+    <VBox styleClass="bg-white, rounded-xl, shadow-md, p-5" VBox.vgrow="ALWAYS">
+        <TableView fx:id="comprobantesTable" styleClass="transactions-table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colNumber" prefWidth="80" text="Número" />
+                <TableColumn fx:id="colDate" prefWidth="100" text="Fecha" />
+                <TableColumn fx:id="colType" prefWidth="100" text="Tipo" />
+                <TableColumn fx:id="colDescription" prefWidth="300" text="Descripción" />
+                <TableColumn fx:id="colAmount" prefWidth="120" text="Monto Total" />
+                <TableColumn fx:id="colAccounts" prefWidth="150" text="Cuentas" />
+                <TableColumn fx:id="colStatus" prefWidth="100" text="Estado" />
+                <TableColumn fx:id="colActions" prefWidth="100" text="Acciones" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
+
+    <!-- Detail Panel (shown when row selected) -->
+    <VBox fx:id="detailPanel" visible="false" managed="false" styleClass="bg-white, rounded-xl, shadow-md, p-5">
+        <HBox alignment="CENTER_LEFT" spacing="16">
+            <Label styleClass="stats-title" text="📋 Detalle del Comprobante" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnEdit" onAction="#editComprobante" styleClass="submit-btn" text="✏️ Editar" />
+            <Button fx:id="btnPublish" onAction="#publishComprobante" styleClass="filter-btn" text="✅ Publicar" />
+            <Button fx:id="btnCancel" onAction="#cancelComprobante" styleClass="clear-btn" text="❌ Anular" />
+            <Button fx:id="btnCloseDetail" onAction="#closeDetail" styleClass="clear-btn" text="✖ Cerrar" />
+        </HBox>
+        <Separator styleClass="sidebar-separator" />
+        <GridPane hgap="16" vgap="12">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="15" />
+                <ColumnConstraints percentWidth="35" />
+                <ColumnConstraints percentWidth="15" />
+                <ColumnConstraints percentWidth="35" />
+            </columnConstraints>
+
+            <Label styleClass="form-label" text="Número:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label fx:id="detailNumber" styleClass="stat-value" text="-" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label styleClass="form-label" text="Fecha:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <Label fx:id="detailDate" styleClass="stat-value" text="-" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+            <Label styleClass="form-label" text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label fx:id="detailType" styleClass="stat-value" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label styleClass="form-label" text="Estado:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label fx:id="detailStatus" styleClass="stat-value" text="-" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+            <Label styleClass="form-label" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label fx:id="detailDescription" styleClass="stat-value" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3" />
+
+            <Label styleClass="form-label" text="Monto:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Label fx:id="detailAmount" styleClass="stat-value, value-positive" text="-" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+        </GridPane>
+    </VBox>
+
+    <!-- Loading Overlay -->
+    <StackPane fx:id="loadingOverlay" managed="false" styleClass="loading-overlay" visible="false">
+        <VBox alignment="CENTER" spacing="16" styleClass="loading-content">
+            <ProgressIndicator fx:id="loadingIndicator" progress="-1" />
+            <Label styleClass="loading-label" text="Cargando comprobantes..." />
+        </VBox>
+    </StackPane>
+
+</VBox>

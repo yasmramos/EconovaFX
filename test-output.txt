@@ -1,0 +1,1673 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.fusesource.jansi.internal.JansiLoader in an unnamed module (file:/C:/Tools/maven/lib/jansi-2.4.1.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/C:/Tools/maven/lib/guava-33.2.1-jre.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.econovafx:econovafx >-----------------------
+[INFO] Building EconoNova FX - Accounting System 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] 6 problems were encountered while building the effective model for org.openjfx:javafx-controls:jar:21 during dependency collection step for project (use -X to see details)
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ econovafx ---
+[INFO] Deleting D:\PROGRAMACION\VSCodeProjects\econovafx\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ econovafx ---
+[INFO] Copying 10 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.12.1:compile (default-compile) @ econovafx ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 25 source files with javac [debug target 21 module-path] to target\classes
+[WARNING] location of system modules is not set in conjunction with -source 21
+  not setting the location of system modules may lead to class files that cannot run on JDK 21
+    --release 21 is recommended instead of -source 21 -target 21 because it sets the location of system modules automatically
+[INFO] Loaded Plugin: io.avaje.inject.events.spi.ObserverManagerPlugin
+[INFO] No external modules detected
+[INFO] /D:/PROGRAMACION/VSCodeProjects/econovafx/src/main/java/com/econovafx/ui/controller/DashboardController.java: D:\PROGRAMACION\VSCodeProjects\econovafx\src\main\java\com\econovafx\ui\controller\DashboardController.java uses unchecked or unsafe operations.
+[INFO] /D:/PROGRAMACION/VSCodeProjects/econovafx/src/main/java/com/econovafx/ui/controller/DashboardController.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- enhance:17.2.0:enhance (enhance) @ econovafx ---
+ebean-agent version:17.2.0 enhancement:149 resources:[META-INF/ebean-version.mf]
+[INFO] classSource=D:\PROGRAMACION\VSCodeProjects\econovafx\target\classes  transformArgs=debug=1
+[INFO] packages entity:[]  transactional:[]  querybean:[]  profileLocation:true  version:149
+[INFO] Enhanced D:\PROGRAMACION\VSCodeProjects\econovafx\target\classes\com\econovafx\domain\Account.class
+[INFO] Enhanced D:\PROGRAMACION\VSCodeProjects\econovafx\target\classes\com\econovafx\domain\BaseEntity.class
+[INFO] Enhanced D:\PROGRAMACION\VSCodeProjects\econovafx\target\classes\com\econovafx\domain\Transaction.class
+[INFO] Enhanced D:\PROGRAMACION\VSCodeProjects\econovafx\target\classes\com\econovafx\domain\TransactionEntry.class
+[INFO] Enhanced D:\PROGRAMACION\VSCodeProjects\econovafx\target\classes\com\econovafx\domain\User.class
+[INFO] loaded resources: [META-INF/ebean-version.mf]
+[INFO]      Entities (5)  pkgs[com/econovafx/domain] beans[Account, BaseEntity, Transaction, TransactionEntry, User]
+[INFO]    QueryBeans (0)  pkgs[] beans[]
+[INFO] Transactional (0)  pkgs[] beans[]
+[INFO] Query Callers (0)  pkgs[] beans[]
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ econovafx ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.12.1:testCompile (default-testCompile) @ econovafx ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 16 source files with javac [debug target 21 module-path] to target\test-classes
+[WARNING] location of system modules is not set in conjunction with -source 21
+  not setting the location of system modules may lead to class files that cannot run on JDK 21
+    --release 21 is recommended instead of -source 21 -target 21 because it sets the location of system modules automatically
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ econovafx ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.econovafx.domain.AccountTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.471 s -- in com.econovafx.domain.AccountTest
+[INFO] Running com.econovafx.domain.AccountTypeTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in com.econovafx.domain.AccountTypeTest
+[INFO] Running com.econovafx.domain.TransactionEntryTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.190 s -- in com.econovafx.domain.TransactionEntryTest
+[INFO] Running com.econovafx.domain.TransactionTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.856 s -- in com.econovafx.domain.TransactionTest
+[INFO] Running com.econovafx.domain.UserTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 s -- in com.econovafx.domain.UserTest
+[INFO] Running com.econovafx.integration.AccountRepositoryIntegrationTest
+01:29:08.439 [main] INFO  io.ebean.datasource - DataSource [test-db] autoCommit[false] [READ_COMMITTED] min[1] max[5] in[1.181ms]
+01:29:08.487 [main] INFO  io.ebean - ebean version: 17.2.0
+01:29:16.910 [main] INFO  io.ebean.DDL - Executing test-db-drop-all.sql - 0 statements, autoCommit:true
+01:29:16.911 [main] INFO  io.ebean.DDL - Executing test-db-create-all.sql - 0 statements, autoCommit:false
+01:29:16.912 [main] INFO  io.ebean.core - Started database[test-db] platform[H2] in 8.370ms
+01:29:17.720 [main] INFO  io.ebean.datasource - DataSource [test-db] shutdown min[1] max[5] free[1] busy[0] waiting[0] highWaterMark[1] waitCount[0] hitCount[71] totalAcquireMicros[507] maxAcquireMicros[31] totalWaitMicros[0]  psc[hit:0 miss:68 rem:0]
+[ERROR] Tests run: 17, Failures: 0, Errors: 17, Skipped: 0, Time elapsed: 12.04 s <<< FAILURE! -- in com.econovafx.integration.AccountRepositoryIntegrationTest
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testFindAll -- Time elapsed: 0.459 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testFindAll(AccountRepositoryIntegrationTest.java:50)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testCount -- Time elapsed: 0.012 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.count(AccountRepository.java:97)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testCount(AccountRepositoryIntegrationTest.java:168)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testAccountWithParentRelationship -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testAccountWithParentRelationship(AccountRepositoryIntegrationTest.java:237)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testFindByCode -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testFindByCode(AccountRepositoryIntegrationTest.java:38)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testFindByType -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testFindByType(AccountRepositoryIntegrationTest.java:61)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testFindActiveAccounts -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testFindActiveAccounts(AccountRepositoryIntegrationTest.java:193)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testUpdateAccount -- Time elapsed: 0.068 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testUpdateAccount(AccountRepositoryIntegrationTest.java:122)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testExistsById -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testExistsById(AccountRepositoryIntegrationTest.java:160)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testFindByParentAccount -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testFindByParentAccount(AccountRepositoryIntegrationTest.java:73)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testUpdateBalanceWithNegativeAmount -- Time elapsed: 0.008 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testUpdateBalanceWithNegativeAmount(AccountRepositoryIntegrationTest.java:225)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testUpdateBalance -- Time elapsed: 0.022 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testUpdateBalance(AccountRepositoryIntegrationTest.java:212)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testDeleteAccount -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testDeleteAccount(AccountRepositoryIntegrationTest.java:139)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testSearchByName -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testSearchByName(AccountRepositoryIntegrationTest.java:107)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testExistsByCode -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testExistsByCode(AccountRepositoryIntegrationTest.java:151)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testCountByType -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testCountByType(AccountRepositoryIntegrationTest.java:178)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testFindRootAccounts -- Time elapsed: 0.008 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testFindRootAccounts(AccountRepositoryIntegrationTest.java:91)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountRepositoryIntegrationTest.testSaveAndFindById -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountRepositoryIntegrationTest.testSaveAndFindById(AccountRepositoryIntegrationTest.java:24)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[INFO] Running com.econovafx.integration.AccountServiceIntegrationTest
+01:29:17.729 [main] INFO  io.ebean.datasource - DataSource [test-db] autoCommit[false] [READ_COMMITTED] min[1] max[5] in[1ms]
+01:29:17.754 [main] INFO  io.ebean.DDL - Executing test-db-drop-all.sql - 0 statements, autoCommit:true
+01:29:17.754 [main] INFO  io.ebean.DDL - Executing test-db-create-all.sql - 0 statements, autoCommit:false
+01:29:17.755 [main] INFO  io.ebean.core - Started database[test-db] platform[H2] in 26ms
+01:29:17.884 [main] INFO  io.ebean.datasource - DataSource [test-db] shutdown min[1] max[5] free[1] busy[0] waiting[0] highWaterMark[1] waitCount[0] hitCount[71] totalAcquireMicros[978] maxAcquireMicros[255] totalWaitMicros[0]  psc[hit:0 miss:68 rem:0]
+[ERROR] Tests run: 17, Failures: 1, Errors: 15, Skipped: 0, Time elapsed: 0.158 s <<< FAILURE! -- in com.econovafx.integration.AccountServiceIntegrationTest
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testCreateAccountFailsWhenCodeExists -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testCreateAccountFailsWhenCodeExists(AccountServiceIntegrationTest.java:40)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountsCountByType -- Time elapsed: 0.006 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountsCountByType(AccountServiceIntegrationTest.java:212)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testSearchAccounts -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testSearchAccounts(AccountServiceIntegrationTest.java:188)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountById -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountById(AccountServiceIntegrationTest.java:130)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testCreateMultipleAccountsAndQueryAll -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testCreateMultipleAccountsAndQueryAll(AccountServiceIntegrationTest.java:239)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testUpdateAccountFailsWhenNotFound -- Time elapsed: 0.006 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <java.lang.IllegalArgumentException> but was: <jakarta.persistence.PersistenceException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3115)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testUpdateAccountFailsWhenNotFound(AccountServiceIntegrationTest.java:89)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:852)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:843)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsById(AccountRepository.java:93)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.updateAccount(AccountService.java:70)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.lambda$testUpdateAccountFailsWhenNotFound$0(AccountServiceIntegrationTest.java:91)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testGetRootAccounts -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testGetRootAccounts(AccountServiceIntegrationTest.java:173)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testUpdateAccountSuccess -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testUpdateAccountSuccess(AccountServiceIntegrationTest.java:70)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testCreateAccountSuccess -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testCreateAccountSuccess(AccountServiceIntegrationTest.java:24)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testGetAllAccounts -- Time elapsed: 0.007 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testGetAllAccounts(AccountServiceIntegrationTest.java:151)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testDeleteAccountFailsWhenHasChildren -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testDeleteAccountFailsWhenHasChildren(AccountServiceIntegrationTest.java:112)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountByCode -- Time elapsed: 0.007 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountByCode(AccountServiceIntegrationTest.java:141)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testDeleteAccountSuccess -- Time elapsed: 0.007 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testDeleteAccountSuccess(AccountServiceIntegrationTest.java:100)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testCreateAccountWithParent -- Time elapsed: 0.009 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testCreateAccountWithParent(AccountServiceIntegrationTest.java:224)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountsByType -- Time elapsed: 0.015 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountsByType(AccountServiceIntegrationTest.java:161)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountsCount -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.count(AccountRepository.java:97)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.getAccountsCount(AccountService.java:104)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.AccountServiceIntegrationTest.testGetAccountsCount(AccountServiceIntegrationTest.java:202)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[INFO] Running com.econovafx.integration.TransactionRepositoryIntegrationTest
+01:29:17.894 [main] INFO  io.ebean.datasource - DataSource [test-db] autoCommit[false] [READ_COMMITTED] min[1] max[5] in[5ms]
+01:29:17.921 [main] INFO  io.ebean.DDL - Executing test-db-drop-all.sql - 0 statements, autoCommit:true
+01:29:17.921 [main] INFO  io.ebean.DDL - Executing test-db-create-all.sql - 0 statements, autoCommit:false
+01:29:17.922 [main] INFO  io.ebean.core - Started database[test-db] platform[H2] in 28ms
+01:29:18.051 [main] INFO  io.ebean.datasource - DataSource [test-db] shutdown min[1] max[5] free[1] busy[0] waiting[0] highWaterMark[1] waitCount[0] hitCount[71] totalAcquireMicros[494] maxAcquireMicros[105] totalWaitMicros[0]  psc[hit:0 miss:68 rem:0]
+[ERROR] Tests run: 17, Failures: 0, Errors: 17, Skipped: 0, Time elapsed: 0.165 s <<< FAILURE! -- in com.econovafx.integration.TransactionRepositoryIntegrationTest
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testDeleteEntry -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testDeleteEntry(TransactionRepositoryIntegrationTest.java:243)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindByNumber -- Time elapsed: 0.011 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindByNumber(TransactionRepositoryIntegrationTest.java:45)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindUnpostedTransactions -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.createTransaction(TransactionRepositoryIntegrationTest.java:310)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindUnpostedTransactions(TransactionRepositoryIntegrationTest.java:119)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testUpdateTransaction -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.createTransaction(TransactionRepositoryIntegrationTest.java:310)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testUpdateTransaction(TransactionRepositoryIntegrationTest.java:152)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testUpdateEntry -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testUpdateEntry(TransactionRepositoryIntegrationTest.java:282)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindAll -- Time elapsed: 0.007 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.createTransaction(TransactionRepositoryIntegrationTest.java:310)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindAll(TransactionRepositoryIntegrationTest.java:57)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testCount -- Time elapsed: 0.009 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Transaction is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.count(TransactionRepository.java:104)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testCount(TransactionRepositoryIntegrationTest.java:187)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindByType -- Time elapsed: 0.008 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.createTransaction(TransactionRepositoryIntegrationTest.java:310)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindByType(TransactionRepositoryIntegrationTest.java:85)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindPostedTransactions -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.createTransaction(TransactionRepositoryIntegrationTest.java:310)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindPostedTransactions(TransactionRepositoryIntegrationTest.java:102)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testSaveAndFindEntries -- Time elapsed: 0.029 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testSaveAndFindEntries(TransactionRepositoryIntegrationTest.java:197)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testDeleteTransaction -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.createTransaction(TransactionRepositoryIntegrationTest.java:310)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testDeleteTransaction(TransactionRepositoryIntegrationTest.java:168)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindByDateRange -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.createTransaction(TransactionRepositoryIntegrationTest.java:310)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindByDateRange(TransactionRepositoryIntegrationTest.java:69)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testSearchByDescription -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.createTransaction(TransactionRepositoryIntegrationTest.java:310)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testSearchByDescription(TransactionRepositoryIntegrationTest.java:134)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testTransactionWithMultipleEntries -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testTransactionWithMultipleEntries(TransactionRepositoryIntegrationTest.java:259)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testExistsByNumber -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.createTransaction(TransactionRepositoryIntegrationTest.java:310)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testExistsByNumber(TransactionRepositoryIntegrationTest.java:179)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindEntriesByAccount -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.save(AccountRepository.java:67)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testFindEntriesByAccount(TransactionRepositoryIntegrationTest.java:218)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionRepositoryIntegrationTest.testSaveAndFindById -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.TransactionRepository.save(TransactionRepository.java:78)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionRepositoryIntegrationTest.testSaveAndFindById(TransactionRepositoryIntegrationTest.java:29)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[INFO] Running com.econovafx.integration.TransactionServiceIntegrationTest
+01:29:18.077 [main] INFO  io.ebean.datasource - DataSource [test-db] autoCommit[false] [READ_COMMITTED] min[1] max[5] in[2ms]
+01:29:18.114 [main] INFO  io.ebean.DDL - Executing test-db-drop-all.sql - 0 statements, autoCommit:true
+01:29:18.115 [main] INFO  io.ebean.DDL - Executing test-db-create-all.sql - 0 statements, autoCommit:false
+01:29:18.117 [main] INFO  io.ebean.core - Started database[test-db] platform[H2] in 39ms
+01:29:18.255 [main] INFO  io.ebean.datasource - DataSource [test-db] shutdown min[1] max[5] free[1] busy[0] waiting[0] highWaterMark[1] waitCount[0] hitCount[51] totalAcquireMicros[404] maxAcquireMicros[78] totalWaitMicros[0]  psc[hit:0 miss:48 rem:0]
+[ERROR] Tests run: 12, Failures: 0, Errors: 12, Skipped: 0, Time elapsed: 0.184 s <<< FAILURE! -- in com.econovafx.integration.TransactionServiceIntegrationTest
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testCreateAndPostTransaction -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testCreateAndPostTransaction(TransactionServiceIntegrationTest.java:49)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testDeleteUnpostedTransaction -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testDeleteUnpostedTransaction(TransactionServiceIntegrationTest.java:162)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testSearchTransactions -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testSearchTransactions(TransactionServiceIntegrationTest.java:236)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testReverseTransaction -- Time elapsed: 0.014 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testReverseTransaction(TransactionServiceIntegrationTest.java:128)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testCreateTransactionFailsWhenNotBalanced -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testCreateTransactionFailsWhenNotBalanced(TransactionServiceIntegrationTest.java:106)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testGetPostedAndUnpostedTransactions -- Time elapsed: 0.017 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testGetPostedAndUnpostedTransactions(TransactionServiceIntegrationTest.java:269)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testPostTransactionUpdatesLiabilityAccounts -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testPostTransactionUpdatesLiabilityAccounts(TransactionServiceIntegrationTest.java:338)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testCreateTransactionSuccess -- Time elapsed: 0.007 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testCreateTransactionSuccess(TransactionServiceIntegrationTest.java:21)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testPostTransactionUpdatesExpenseAccounts -- Time elapsed: 0.006 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testPostTransactionUpdatesExpenseAccounts(TransactionServiceIntegrationTest.java:306)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testCannotDeletePostedTransaction -- Time elapsed: 0.008 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testCannotDeletePostedTransaction(TransactionServiceIntegrationTest.java:185)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testCreateMultipleTransactions -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testCreateMultipleTransactions(TransactionServiceIntegrationTest.java:84)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.TransactionServiceIntegrationTest.testGetTransactionsByDateRange -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.AccountRepository.existsByCode(AccountRepository.java:88)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.AccountService.createAccount(AccountService.java:58)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.TransactionServiceIntegrationTest.testGetTransactionsByDateRange(TransactionServiceIntegrationTest.java:210)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[INFO] Running com.econovafx.integration.UserRepositoryIntegrationTest
+01:29:18.260 [main] INFO  io.ebean.datasource - DataSource [test-db] autoCommit[false] [READ_COMMITTED] min[1] max[5] in[0ms]
+01:29:18.282 [main] INFO  io.ebean.DDL - Executing test-db-drop-all.sql - 0 statements, autoCommit:true
+01:29:18.283 [main] INFO  io.ebean.DDL - Executing test-db-create-all.sql - 0 statements, autoCommit:false
+01:29:18.284 [main] INFO  io.ebean.core - Started database[test-db] platform[H2] in 24ms
+01:29:18.435 [main] INFO  io.ebean.datasource - DataSource [test-db] shutdown min[1] max[5] free[1] busy[0] waiting[0] highWaterMark[1] waitCount[0] hitCount[59] totalAcquireMicros[136] maxAcquireMicros[44] totalWaitMicros[0]  psc[hit:0 miss:56 rem:0]
+[ERROR] Tests run: 14, Failures: 0, Errors: 14, Skipped: 0, Time elapsed: 0.177 s <<< FAILURE! -- in com.econovafx.integration.UserRepositoryIntegrationTest
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testPasswordPersistence -- Time elapsed: 0.008 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testPasswordPersistence(UserRepositoryIntegrationTest.java:203)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testFindAll -- Time elapsed: 0.007 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testFindAll(UserRepositoryIntegrationTest.java:66)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testCount -- Time elapsed: 0.064 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.count(UserRepository.java:85)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testCount(UserRepositoryIntegrationTest.java:151)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testUpdateUser -- Time elapsed: 0.004 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testUpdateUser(UserRepositoryIntegrationTest.java:96)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testUserWithDifferentRoles -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testUserWithDifferentRoles(UserRepositoryIntegrationTest.java:180)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testExistsById -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testExistsById(UserRepositoryIntegrationTest.java:143)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testFindByUsername -- Time elapsed: 0.007 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testFindByUsername(UserRepositoryIntegrationTest.java:40)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testFindActiveUsers -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testFindActiveUsers(UserRepositoryIntegrationTest.java:78)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testExistsByUsername -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testExistsByUsername(UserRepositoryIntegrationTest.java:125)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testFindByEmail -- Time elapsed: 0.006 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testFindByEmail(UserRepositoryIntegrationTest.java:54)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testDeleteUser -- Time elapsed: 0.006 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testDeleteUser(UserRepositoryIntegrationTest.java:113)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testExistsByEmail -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testExistsByEmail(UserRepositoryIntegrationTest.java:134)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testSaveAndFindById -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testSaveAndFindById(UserRepositoryIntegrationTest.java:26)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserRepositoryIntegrationTest.testSetAndUpdateLastLogin -- Time elapsed: 0.016 s <<< ERROR!
+jakarta.persistence.PersistenceException: There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.errorBeanNotRegistered(BeanDescriptorManager.java:500)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.deploy.BeanDescriptorManager.beanManager(BeanDescriptorManager.java:493)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.beanManager(DefaultPersister.java:1097)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequestInternal(DefaultPersister.java:1025)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.createRequest(DefaultPersister.java:1018)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.insert(DefaultPersister.java:224)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.persist.DefaultPersister.save(DefaultPersister.java:215)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1487)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.save(DefaultServer.java:1479)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.save(UserRepository.java:50)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserRepositoryIntegrationTest.testSetAndUpdateLastLogin(UserRepositoryIntegrationTest.java:162)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[INFO] Running com.econovafx.integration.UserServiceIntegrationTest
+01:29:18.440 [main] INFO  io.ebean.datasource - DataSource [test-db] autoCommit[false] [READ_COMMITTED] min[1] max[5] in[1ms]
+01:29:18.488 [main] INFO  io.ebean.DDL - Executing test-db-drop-all.sql - 0 statements, autoCommit:true
+01:29:18.489 [main] INFO  io.ebean.DDL - Executing test-db-create-all.sql - 0 statements, autoCommit:false
+01:29:18.489 [main] INFO  io.ebean.core - Started database[test-db] platform[H2] in 49ms
+01:29:18.590 [main] INFO  io.ebean.datasource - DataSource [test-db] shutdown min[1] max[5] free[1] busy[0] waiting[0] highWaterMark[1] waitCount[0] hitCount[75] totalAcquireMicros[136] maxAcquireMicros[14] totalWaitMicros[0]  psc[hit:0 miss:72 rem:0]
+[ERROR] Tests run: 18, Failures: 0, Errors: 18, Skipped: 0, Time elapsed: 0.151 s <<< FAILURE! -- in com.econovafx.integration.UserServiceIntegrationTest
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testAuthenticateSuccess -- Time elapsed: 0.001 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testAuthenticateSuccess(UserServiceIntegrationTest.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testGetUserByEmail -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testGetUserByEmail(UserServiceIntegrationTest.java:211)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testCreateUserWithAdminRole -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testCreateUserWithAdminRole(UserServiceIntegrationTest.java:46)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testCreateUserFailsWhenUsernameExists -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testCreateUserFailsWhenUsernameExists(UserServiceIntegrationTest.java:62)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testCreateUserFailsWhenEmailExists -- Time elapsed: 0.007 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testCreateUserFailsWhenEmailExists(UserServiceIntegrationTest.java:83)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testUpdateLastLogin -- Time elapsed: 0.013 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testUpdateLastLogin(UserServiceIntegrationTest.java:323)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testGetAllUsers -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testGetAllUsers(UserServiceIntegrationTest.java:225)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testUpdateUser -- Time elapsed: 0.006 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testUpdateUser(UserServiceIntegrationTest.java:149)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testAuthenticateFailsWhenUserInactive -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testAuthenticateFailsWhenUserInactive(UserServiceIntegrationTest.java:134)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testAuthenticateFailsWithWrongPassword -- Time elapsed: 0.007 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testAuthenticateFailsWithWrongPassword(UserServiceIntegrationTest.java:116)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testCreateMultipleUsersWithDifferentRoles -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testCreateMultipleUsersWithDifferentRoles(UserServiceIntegrationTest.java:286)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testGetUsersCount -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.count(UserRepository.java:85)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.getUsersCount(UserService.java:121)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testGetUsersCount(UserServiceIntegrationTest.java:262)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testAuthenticateFailsWhenUserNotFound -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.findByUsername(UserRepository.java:31)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.authenticate(UserService.java:87)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testAuthenticateFailsWhenUserNotFound(UserServiceIntegrationTest.java:124)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testGetUserByUsername -- Time elapsed: 0.010 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testGetUserByUsername(UserServiceIntegrationTest.java:198)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testCreateUserSuccess -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testCreateUserSuccess(UserServiceIntegrationTest.java:24)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testDeleteUser -- Time elapsed: 0.002 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testDeleteUser(UserServiceIntegrationTest.java:170)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testGetUserById -- Time elapsed: 0.003 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testGetUserById(UserServiceIntegrationTest.java:185)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[ERROR] com.econovafx.integration.UserServiceIntegrationTest.testGetActiveUsers -- Time elapsed: 0.005 s <<< ERROR!
+jakarta.persistence.PersistenceException: com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.desc(DefaultServer.java:1851)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.createQuery(DefaultServer.java:799)
+	at io.ebean.core@17.2.0/io.ebeaninternal.server.core.DefaultServer.find(DefaultServer.java:787)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.repository.UserRepository.existsByUsername(UserRepository.java:71)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.service.UserService.createUser(UserService.java:51)
+	at EconoNovaFXAccountingSystem@1.0.0/com.econovafx.integration.UserServiceIntegrationTest.testGetActiveUsers(UserServiceIntegrationTest.java:238)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+[INFO] Running com.econovafx.service.AccountServiceTest
+01:29:18.598 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.600 [main] INFO  c.econovafx.service.AccountService - Account created: 1002
+01:29:18.600 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+01:29:18.657 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.657 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+01:29:18.671 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.680 [main] INFO  c.econovafx.service.AccountService - Account created: 1000
+01:29:18.680 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.680 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+01:29:18.691 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.691 [main] INFO  c.econovafx.service.AccountService - Account updated: 1001
+01:29:18.693 [main] INFO  c.econovafx.service.AccountService - Account created: 1000
+01:29:18.696 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.698 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.698 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+01:29:18.700 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.702 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.703 [main] INFO  c.econovafx.service.AccountService - Account deleted: 1001
+01:29:18.706 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.754 [main] INFO  c.econovafx.service.AccountService - Account created: 1002
+01:29:18.754 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+01:29:18.761 [main] INFO  c.econovafx.service.AccountService - Account created: 1000
+01:29:18.761 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.763 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+01:29:18.768 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+[INFO] Tests run: 21, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.178 s -- in com.econovafx.service.AccountServiceTest
+[INFO] Running com.econovafx.service.TransactionServiceTest
+01:29:18.836 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+01:29:18.842 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+01:29:18.854 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+01:29:18.854 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000002
+01:29:18.861 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+01:29:18.861 [main] INFO  c.e.service.TransactionService - Transaction posted: TXN-2026-000001
+01:29:18.864 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+01:29:18.865 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000002
+01:29:18.870 [main] INFO  c.e.service.TransactionService - Transaction posted: null
+01:29:18.887 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000002
+01:29:18.959 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+01:29:18.964 [main] INFO  c.e.service.TransactionService - Transaction deleted: TXN-2026-000001
+01:29:18.965 [main] INFO  c.e.service.TransactionService - Transaction posted: null
+01:29:18.967 [main] INFO  c.e.service.TransactionService - Transaction posted: null
+01:29:18.968 [main] INFO  c.e.service.TransactionService - Transaction posted: TXN-2026-000001
+01:29:18.987 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+[INFO] Tests run: 28, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.223 s -- in com.econovafx.service.TransactionServiceTest
+[INFO] Running com.econovafx.service.UserServiceTest
+01:29:19.002 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.004 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.006 [main] INFO  com.econovafx.service.UserService - User created: admin
+01:29:19.022 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.023 [main] INFO  com.econovafx.service.UserService - User updated: testuser
+01:29:19.028 [main] INFO  com.econovafx.service.UserService - User created: user1
+01:29:19.029 [main] INFO  com.econovafx.service.UserService - User created: user2
+01:29:19.029 [main] INFO  com.econovafx.service.UserService - User created: user3
+01:29:19.047 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.048 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.050 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.133 [main] INFO  com.econovafx.service.UserService - User created: user1
+01:29:19.133 [main] INFO  com.econovafx.service.UserService - User created: user2
+01:29:19.136 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.137 [main] INFO  com.econovafx.service.UserService - User deleted: testuser
+01:29:19.147 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.149 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.152 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.195 [main] INFO  com.econovafx.service.UserService - User created: testuser
+01:29:19.199 [main] INFO  com.econovafx.service.UserService - User created: user1
+01:29:19.199 [main] INFO  com.econovafx.service.UserService - User created: user2
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.212 s -- in com.econovafx.service.UserServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   AccountServiceIntegrationTest.testUpdateAccountFailsWhenNotFound:89 Unexpected exception type thrown, expected: <java.lang.IllegalArgumentException> but was: <jakarta.persistence.PersistenceException>
+[ERROR] Errors: 
+[ERROR]   AccountRepositoryIntegrationTest.testAccountWithParentRelationship:237 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testCount:168 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountRepositoryIntegrationTest.testCountByType:178 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testDeleteAccount:139 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testExistsByCode:151 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testExistsById:160 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testFindActiveAccounts:193 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testFindAll:50 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testFindByCode:38 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testFindByParentAccount:73 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testFindByType:61 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testFindRootAccounts:91 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testSaveAndFindById:24 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testSearchByName:107 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testUpdateAccount:122 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testUpdateBalance:212 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountRepositoryIntegrationTest.testUpdateBalanceWithNegativeAmount:225 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   AccountServiceIntegrationTest.testCreateAccountFailsWhenCodeExists:40 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testCreateAccountSuccess:24 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testCreateAccountWithParent:224 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testCreateMultipleAccountsAndQueryAll:239 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testDeleteAccountFailsWhenHasChildren:112 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testDeleteAccountSuccess:100 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testGetAccountByCode:141 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testGetAccountById:130 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testGetAccountsByType:161 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testGetAccountsCount:202 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testGetAccountsCountByType:212 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testGetAllAccounts:151 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testGetRootAccounts:173 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testSearchAccounts:188 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   AccountServiceIntegrationTest.testUpdateAccountSuccess:70 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionRepositoryIntegrationTest.testCount:187 » Persistence com.econovafx.domain.Transaction is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionRepositoryIntegrationTest.testDeleteEntry:243 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testDeleteTransaction:168->createTransaction:310 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testExistsByNumber:179->createTransaction:310 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testFindAll:57->createTransaction:310 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testFindByDateRange:69->createTransaction:310 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testFindByNumber:45 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testFindByType:85->createTransaction:310 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testFindEntriesByAccount:218 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testFindPostedTransactions:102->createTransaction:310 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testFindUnpostedTransactions:119->createTransaction:310 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testSaveAndFindById:29 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testSaveAndFindEntries:197 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testSearchByDescription:134->createTransaction:310 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testTransactionWithMultipleEntries:259 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testUpdateEntry:282 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionRepositoryIntegrationTest.testUpdateTransaction:152->createTransaction:310 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   TransactionServiceIntegrationTest.testCannotDeletePostedTransaction:185 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testCreateAndPostTransaction:49 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testCreateMultipleTransactions:84 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testCreateTransactionFailsWhenNotBalanced:106 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testCreateTransactionSuccess:21 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testDeleteUnpostedTransaction:162 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testGetPostedAndUnpostedTransactions:269 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testGetTransactionsByDateRange:210 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testPostTransactionUpdatesExpenseAccounts:306 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testPostTransactionUpdatesLiabilityAccounts:338 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testReverseTransaction:128 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   TransactionServiceIntegrationTest.testSearchTransactions:236 » Persistence com.econovafx.domain.Account is NOT an Entity Bean registered with this server?
+[ERROR]   UserRepositoryIntegrationTest.testCount:151 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserRepositoryIntegrationTest.testDeleteUser:113 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testExistsByEmail:134 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testExistsById:143 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testExistsByUsername:125 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testFindActiveUsers:78 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testFindAll:66 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testFindByEmail:54 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testFindByUsername:40 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testPasswordPersistence:203 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testSaveAndFindById:26 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testSetAndUpdateLastLogin:162 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testUpdateUser:96 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserRepositoryIntegrationTest.testUserWithDifferentRoles:180 » Persistence There are no registered entities. If using query beans, that generates EbeanEntityRegister.java into generated sources and is service loaded. If using module-info.java, then probably missing 'provides io.ebean.config.EntityClassRegister with EbeanEntityRegister' clause.
+[ERROR]   UserServiceIntegrationTest.testAuthenticateFailsWhenUserInactive:134 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testAuthenticateFailsWhenUserNotFound:124 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testAuthenticateFailsWithWrongPassword:116 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testAuthenticateSuccess:104 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testCreateMultipleUsersWithDifferentRoles:286 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testCreateUserFailsWhenEmailExists:83 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testCreateUserFailsWhenUsernameExists:62 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testCreateUserSuccess:24 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testCreateUserWithAdminRole:46 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testDeleteUser:170 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testGetActiveUsers:238 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testGetAllUsers:225 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testGetUserByEmail:211 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testGetUserById:185 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testGetUserByUsername:198 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testGetUsersCount:262 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testUpdateLastLogin:323 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[ERROR]   UserServiceIntegrationTest.testUpdateUser:149 » Persistence com.econovafx.domain.User is NOT an Entity Bean registered with this server?
+[INFO] 
+[ERROR] Tests run: 233, Failures: 1, Errors: 93, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:02 min
+[INFO] Finished at: 2026-04-09T01:29:20+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.2.5:test (default-test) on project econovafx: There are test failures.
+[ERROR] 
+[ERROR] Please refer to D:\PROGRAMACION\VSCodeProjects\econovafx\target\surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

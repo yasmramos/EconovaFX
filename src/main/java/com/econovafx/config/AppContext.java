@@ -1,0 +1,185 @@
+package com.econovafx.config;
+
+import com.econovafx.repository.AccountRepository;
+import com.econovafx.repository.TransactionRepository;
+import com.econovafx.repository.UserRepository;
+import com.econovafx.service.AccountService;
+import com.econovafx.service.TransactionService;
+import com.econovafx.service.UserService;
+import com.econovafx.ui.controller.*;
+import com.econovafx.ui.view.ViewFactory;
+import io.avaje.inject.BeanScope;
+import io.ebean.Database;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Application context - wrapper around Avaje Inject BeanScope Manages all
+ * dependencies automatically via dependency injection
+ */
+public final class AppContext {
+
+    private static final Logger logger = LoggerFactory.getLogger(AppContext.class);
+    private static AppContext instance;
+
+    private final BeanScope beanScope;
+
+    // Database
+    private final Database database;
+
+    // Repositories (auto-injected)
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
+
+    // Services (auto-injected)
+    private final AccountService accountService;
+    private final TransactionService transactionService;
+    private final UserService userService;
+
+    // Controllers (manual wiring for JavaFX FXML)
+    private DashboardController dashboardController;
+    private AccountsController accountsController;
+    private TransactionsController transactionsController;
+    private final AccountFormController accountFormController;
+    private final TransactionEntryController transactionEntryController;
+    private ComprobantesController comprobantesController;
+
+    // View Factory
+    private ViewFactory viewFactory;
+
+    private AppContext() {
+        logger.info("Initializing application context with Avaje Inject...");
+
+        // Build dependency injection container
+        beanScope = BeanScope.builder().build();
+
+        // Get beans from DI container
+        database = beanScope.get(Database.class);
+        accountRepository = beanScope.get(AccountRepository.class);
+        transactionRepository = beanScope.get(TransactionRepository.class);
+        userRepository = beanScope.get(UserRepository.class);
+        accountService = beanScope.get(AccountService.class);
+        transactionService = beanScope.get(TransactionService.class);
+        userService = beanScope.get(UserService.class);
+
+        // Create controllers with DI-injected services
+        // ViewFactory is null initially, will be recreated below
+        accountFormController = new AccountFormController(accountService);
+        transactionEntryController = new TransactionEntryController(accountService, transactionService);
+        comprobantesController = new ComprobantesController(transactionService, accountService, null);
+        dashboardController = new DashboardController(accountService, transactionService, null);
+        accountsController = new AccountsController(accountService, null);
+        transactionsController = new TransactionsController(transactionService, accountService, null);
+
+        // Create view factory with controllers
+        viewFactory = new ViewFactory(
+                dashboardController,
+                accountsController,
+                transactionsController,
+                accountFormController,
+                transactionEntryController,
+                comprobantesController,
+                accountService,
+                transactionService
+        );
+
+        // Re-create controllers that need viewFactory
+        dashboardController = new DashboardController(accountService, transactionService, viewFactory);
+        accountsController = new AccountsController(accountService, viewFactory);
+        transactionsController = new TransactionsController(transactionService, accountService, viewFactory);
+        comprobantesController = new ComprobantesController(transactionService, accountService, viewFactory);
+
+        // Re-create view factory with updated controllers
+        viewFactory = new ViewFactory(
+                dashboardController,
+                accountsController,
+                transactionsController,
+                accountFormController,
+                transactionEntryController,
+                comprobantesController,
+                accountService,
+                transactionService
+        );
+
+        logger.info("Application context initialized successfully with Avaje Inject");
+    }
+
+    public static AppContext getInstance() {
+        if (instance == null) {
+            instance = new AppContext();
+        }
+        return instance;
+    }
+
+    /**
+     * Close the BeanScope and release all resources
+     */
+    public void close() {
+        if (beanScope != null) {
+            beanScope.close();
+            logger.info("BeanScope closed");
+        }
+    }
+
+    // Getters
+    public BeanScope getBeanScope() {
+        return beanScope;
+    }
+
+    public Database getDatabase() {
+        return database;
+    }
+
+    public AccountRepository getAccountRepository() {
+        return accountRepository;
+    }
+
+    public TransactionRepository getTransactionRepository() {
+        return transactionRepository;
+    }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public AccountService getAccountService() {
+        return accountService;
+    }
+
+    public TransactionService getTransactionService() {
+        return transactionService;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public ViewFactory getViewFactory() {
+        return viewFactory;
+    }
+
+    public DashboardController getDashboardController() {
+        return dashboardController;
+    }
+
+    public AccountsController getAccountsController() {
+        return accountsController;
+    }
+
+    public TransactionsController getTransactionsController() {
+        return transactionsController;
+    }
+
+    public AccountFormController getAccountFormController() {
+        return accountFormController;
+    }
+
+    public TransactionEntryController getTransactionEntryController() {
+        return transactionEntryController;
+    }
+
+    public ComprobantesController getComprobantesController() {
+        return comprobantesController;
+    }
+}

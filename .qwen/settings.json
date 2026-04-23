@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn *)",
+      "Bash(taskkill *)",
+      "Bash(xcopy *)",
+      "Bash(copy *)",
+      "Bash(move *)",
+      "Bash(dir *)",
+      "Bash(tasklist)",
+      "Bash(findstr *)",
+      "Bash(java *)"
+    ]
+  },
+  "$version": 3
+}
