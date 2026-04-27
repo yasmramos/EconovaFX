@@ -2,7 +2,7 @@ package com.econovafx.domain;
 
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.time.LocalDateTime;
 

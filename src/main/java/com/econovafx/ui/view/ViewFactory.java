@@ -24,7 +24,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tailwindfx.TailwindFX;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -121,7 +120,6 @@ public class ViewFactory {
             
             Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
-            TailwindFX.installAll(scene, stage);
             
             // Add custom styles
             scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
@@ -154,7 +152,6 @@ public class ViewFactory {
             
             Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
-            TailwindFX.installAll(scene, stage);
             
             // Add custom styles
             scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
@@ -190,7 +187,6 @@ public class ViewFactory {
             
             Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
-            TailwindFX.installAll(scene, stage);
             
             // Add custom styles
             scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());

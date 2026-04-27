@@ -23,8 +23,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tailwindfx.AnimationUtil;
-import tailwindfx.TailwindFX;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -139,10 +137,6 @@ public class DashboardController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("DashboardController initialized");
         
-        // Apply TailwindFX styles to refresh button
-        TailwindFX.apply(refreshButton, "btn-primary", "rounded-lg", "px-4", "py-2");
-        AnimationUtil.onHoverScale(refreshButton, 1.05);
-        
         initializeTableColumns();
         initializeComboBoxes();
         initializeDatePickerDefaults();
@@ -200,9 +194,6 @@ public class DashboardController implements Initializable {
                 }
             }
         });
-        
-        // Apply TailwindFX table styles
-        TailwindFX.apply(recentTransactionsTable, "table", "table-striped", "table-hover");
     }
 
     private void initializeComboBoxes() {
@@ -437,9 +428,6 @@ public class DashboardController implements Initializable {
     @FXML
     private void refreshDashboard() {
         logger.info("Refreshing dashboard data");
-        
-        // Add animation to refresh button
-        AnimationUtil.pulse(refreshButton).play();
         
         loadDashboardData();
         showNotification("Dashboard actualizado", "Los datos han sido refrescados");

@@ -15,11 +15,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <javafx.version>23.0.2</javafx.version>
-        <ebean.version>17.2.0</ebean.version>
-        <h2.version>2.3.232</h2.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <javafx.version>17.0.2</javafx.version>
+        <ebean.version>13.20.0</ebean.version>
+        <h2.version>2.2.224</h2.version>
         <logback.version>1.4.14</logback.version>
     </properties>
 
@@ -37,13 +37,6 @@
             <version>${javafx.version}</version>
         </dependency>
         
-        <!-- TailwindFX -->
-        <dependency>
-            <groupId>io.github.yasmramos</groupId>
-            <artifactId>tailwindfx</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
         <!-- Ikonli - Icon Library -->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
@@ -91,7 +84,20 @@
         <dependency>
             <groupId>io.avaje</groupId>
             <artifactId>avaje-inject</artifactId>
-            <version>11.0</version>
+            <version>9.0</version>
+        </dependency>
+
+        <!-- JAXB for Java 17 (uses GlassFish implementation) -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.9</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
         </dependency>
 
         <!-- Test -->
@@ -131,13 +137,13 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.12.1</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>17</source>
+                    <target>17</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>io.avaje</groupId>
                             <artifactId>avaje-inject-generator</artifactId>
-                            <version>11.0</version>
+                            <version>9.0</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -191,7 +197,6 @@
                 <configuration>
                     <mainClass>com.econovafx.Launcher</mainClass>
                     <options>
-                        <option>-javaagent:${user.home}/.m2/repository/io/ebean/ebean-agent/${ebean.version}/ebean-agent-${ebean.version}.jar=mode=all;debug=1</option>
                         <option>--add-opens=EconoNovaFXAccountingSystem/com.econovafx.domain=io.ebean.core</option>
                         <option>--add-opens=EconoNovaFXAccountingSystem/com.econovafx.domain=io.ebean</option>
                         <option>--add-opens=EconoNovaFXAccountingSystem/com.econovafx.domain=ALL-UNNAMED</option>

@@ -4,15 +4,16 @@ Sistema contable moderno desarrollado con **JavaFX** y **Ebean ORM**.
 
 ## 🚀 Tecnologías Utilizadas
 
-- **JavaFX 23.0.2** - Interfaz gráfica de usuario
-- **Ebean ORM 17.2.0** - Mapeo objeto-relacional
-- **H2 Database 2.3.232** - Base de datos embebida
+- **JavaFX 17.0.2** - Interfaz gráfica de usuario
+- **Ebean ORM 13.20.0** - Mapeo objeto-relacional
+- **H2 Database 2.2.224** - Base de datos embebida
 - **Maven** - Gestión de dependencias
 - **Logback** - Logging
+- **Avaje Inject 9.0** - Inyección de dependencias
 
 ## 📋 Requisitos Previos
 
-- Java 21 o superior
+- Java 17 o superior
 - Maven 3.8+
 
 ## 🛠️ Instalación y Ejecución

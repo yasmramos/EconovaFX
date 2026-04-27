@@ -11,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tailwindfx.TailwindFX;
 
 /**
  * Main application class for EconoNova FX Accounting System
@@ -47,9 +46,6 @@ public class App extends Application {
 
             Scene scene = new Scene(loader.load(), 1200, 800);
 
-            // Initialize TailwindFX - Modern utility-first CSS framework
-            TailwindFX.installAll(scene, primaryStage);
-            
             // Add custom styles for sidebar and dashboard
             scene.getStylesheets().add(getClass().getResource("/styles/sidebar.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());

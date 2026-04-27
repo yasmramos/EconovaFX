@@ -1,20 +1,47 @@
-# Compiled class files
+```
+# Compiled and build artifacts
 *.class
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
+target/
 
-# Log files
+# Dependencies
+.m2/
+.gradle/
+node_modules/
+lib/
+dependency-reduced-pom.xml
+
+# Logs and temp files
 *.log
+*.tmp
+*.swp
 
-# Package Files
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Testing and coverage
+test-results/
+surefire-reports/
 
 # Maven
-target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -23,29 +50,4 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
-
-# IDE
-.idea/
-*.iws
-*.iml
-*.ipr
-.vscode/
-.settings/
-.project
-.classpath
-
-# Database
-db/
-*.db
-*.trace.db
-
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Avaje Inject generated files
-**/target/**
-**/*.fr
-**/META-INF/services/**
+```

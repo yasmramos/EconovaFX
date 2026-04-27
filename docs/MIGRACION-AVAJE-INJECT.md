@@ -8,7 +8,7 @@
 <dependency>
     <groupId>io.avaje</groupId>
     <artifactId>avaje-inject</artifactId>
-    <version>11.0</version>
+    <version>9.0</version>
 </dependency>
 ```
 
@@ -18,7 +18,7 @@
     <path>
         <groupId>io.avaje</groupId>
         <artifactId>avaje-inject-generator</artifactId>
-        <version>11.0</version>
+        <version>9.0</version>
     </path>
 </annotationProcessorPaths>
 ```
@@ -97,7 +97,7 @@ public class AccountService {
 ## Estado Actual
 
 **⚠️ Pendiente:** Descargar dependencias de Maven Central
-- Las dependencias `io.avaje:avaje-inject:11.0` y `avaje-inject-generator:11.0` necesitan ser descargadas
+- Las dependencias `io.avaje:avaje-inject:9.0` y `avaje-inject-generator:9.0` necesitan ser descargadas
 - Hay un problema de conexión con Maven Central (timeout del proxy)
 
 **Próximos Pasos:**
