@@ -37,10 +37,11 @@
     <!-- Summary Cards -->
     <GridPane hgap="20" vgap="20">
         <columnConstraints>
-            <ColumnConstraints percentWidth="25" />
-            <ColumnConstraints percentWidth="25" />
-            <ColumnConstraints percentWidth="25" />
-            <ColumnConstraints percentWidth="25" />
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="20" />
+            <ColumnConstraints percentWidth="20" />
         </columnConstraints>
 
         <!-- Total Assets Card -->
@@ -98,6 +99,20 @@
                 </VBox>
             </HBox>
         </VBox>
+        
+        <!-- Profit Card (New KPI) -->
+        <VBox styleClass="summary-card, card-profit" GridPane.columnIndex="4">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox styleClass="card-icon-bg-green">
+                    <Label styleClass="text-3xl" text="📈" />
+                </VBox>
+                <VBox>
+                    <Label styleClass="card-label" text="Utilidad del Mes" />
+                    <Label fx:id="profitLabel" styleClass="card-value, value-success" text="\$ 0.00" />
+                    <Label fx:id="profitTrendLabel" styleClass="card-trend, trend-neutral" text="▬ Equilibrio" />
+                </VBox>
+            </HBox>
+        </VBox>
       <rowConstraints>
          <RowConstraints />
       </rowConstraints>
@@ -106,8 +121,9 @@
     <!-- Charts Section -->
     <GridPane hgap="20" vgap="20">
         <columnConstraints>
-            <ColumnConstraints percentWidth="50" />
-            <ColumnConstraints percentWidth="50" />
+            <ColumnConstraints percentWidth="33" />
+            <ColumnConstraints percentWidth="33" />
+            <ColumnConstraints percentWidth="34" />
         </columnConstraints>
 
         <!-- Pie Chart: Assets vs Liabilities -->
@@ -129,6 +145,20 @@
                     <NumberAxis label="Monto" side="LEFT" />
                 </yAxis>
             </BarChart>
+        </VBox>
+        
+        <!-- Line Chart: Daily Cash Flow -->
+        <VBox styleClass="chart-card" GridPane.columnIndex="2">
+            <Label styleClass="chart-title" text="Flujo de Caja Diario" />
+            <Label styleClass="chart-subtitle" text="Últimos 30 días" />
+            <LineChart fx:id="cashFlowLineChart" prefHeight="280">
+                <xAxis>
+                    <CategoryAxis label="Día" side="BOTTOM" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Monto" side="LEFT" />
+                </yAxis>
+            </LineChart>
         </VBox>
       <rowConstraints>
          <RowConstraints />
@@ -167,8 +197,9 @@
     <!-- Quick Actions and Statistics -->
     <GridPane hgap="20" vgap="20">
         <columnConstraints>
-            <ColumnConstraints percentWidth="50" />
-            <ColumnConstraints percentWidth="50" />
+            <ColumnConstraints percentWidth="34" />
+            <ColumnConstraints percentWidth="33" />
+            <ColumnConstraints percentWidth="33" />
         </columnConstraints>
 
         <!-- Quick Transaction -->
@@ -203,8 +234,46 @@
             </GridPane>
         </VBox>
 
-        <!-- Statistics -->
+        <!-- KPI Metrics -->
         <VBox styleClass="stats-card" GridPane.columnIndex="1">
+            <Label styleClass="stats-title" text="📈 Indicadores del Mes" />
+            <VBox spacing="12">
+                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
+                    <HBox styleClass="stat-icon-green">
+                        <Label styleClass="text-2xl" text="💵" />
+                    </HBox>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label styleClass="stat-label" text="Ingresos del Mes" />
+                        <Label fx:id="revenueLabel" styleClass="stat-value, value-positive" text="$ 0.00" />
+                        <Label fx:id="revenueTrendLabel" styleClass="stat-trend" text="Este mes" />
+                    </VBox>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
+                    <HBox styleClass="stat-icon-red">
+                        <Label styleClass="text-2xl" text="💸" />
+                    </HBox>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label styleClass="stat-label" text="Gastos del Mes" />
+                        <Label fx:id="expensesLabel" styleClass="stat-value, value-negative" text="$ 0.00" />
+                        <Label fx:id="expensesTrendLabel" styleClass="stat-trend" text="Este mes" />
+                    </VBox>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
+                    <HBox styleClass="stat-icon-blue">
+                        <Label styleClass="text-2xl" text="🧾" />
+                    </HBox>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label styleClass="stat-label" text="Ticket Promedio" />
+                        <Label fx:id="averageTransactionLabel" styleClass="stat-value, value-info" text="$ 0.00" />
+                    </VBox>
+                </HBox>
+            </VBox>
+        </VBox>
+
+        <!-- Statistics -->
+        <VBox styleClass="stats-card" GridPane.columnIndex="2">
             <Label styleClass="stats-title" text="📊 Estadísticas" />
             <VBox spacing="12">
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">

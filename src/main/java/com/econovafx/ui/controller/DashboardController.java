@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
@@ -67,6 +68,26 @@ public class DashboardController implements Initializable {
     private PieChart financialPieChart;
     @FXML
     private BarChart<String, Number> monthlyBarChart;
+    @FXML
+    private LineChart<String, Number> cashFlowLineChart;
+    
+    // KPI Cards - Additional Metrics
+    @FXML
+    private Label revenueLabel;
+    @FXML
+    private Label expensesLabel;
+    @FXML
+    private Label profitLabel;
+    @FXML
+    private Label averageTransactionLabel;
+    
+    // Trend Labels for KPIs
+    @FXML
+    private Label revenueTrendLabel;
+    @FXML
+    private Label expensesTrendLabel;
+    @FXML
+    private Label profitTrendLabel;
 
     // Transaction Table
     @FXML
@@ -228,6 +249,7 @@ public class DashboardController implements Initializable {
         new Thread(() -> {
             try {
                 loadFinancialSummary();
+                loadKPIs();
                 loadCharts();
                 loadTransactions();
                 loadStatistics();
@@ -293,11 +315,76 @@ public class DashboardController implements Initializable {
         balanceTrendLabel.setText("Estable");
         balanceTrendLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px;");
     }
+    
+    private void loadKPIs() {
+        List<Transaction> allTransactions = transactionService.getAllTransactions();
+        
+        // Calculate revenue and expenses from posted transactions
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+        BigDecimal totalExpenses = BigDecimal.ZERO;
+        
+        for (Transaction t : allTransactions) {
+            if (t.getIsPosted() && t.getDate() != null) {
+                // Consider only transactions from current month
+                YearMonth currentMonth = YearMonth.now();
+                YearMonth transactionMonth = YearMonth.from(t.getDate());
+                
+                if (currentMonth.equals(transactionMonth)) {
+                    if (t.getType().equalsIgnoreCase("INGRESO")) {
+                        totalRevenue = totalRevenue.add(t.getTotalDebit());
+                    } else if (t.getType().equalsIgnoreCase("GASTO")) {
+                        totalExpenses = totalExpenses.add(t.getTotalDebit());
+                    }
+                }
+            }
+        }
+        
+        BigDecimal profit = totalRevenue.subtract(totalExpenses);
+        
+        // Calculate average transaction amount
+        BigDecimal avgTransaction = allTransactions.stream()
+                .filter(Transaction::getIsPosted)
+                .map(Transaction::getTotalDebit)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .divide(BigDecimal.valueOf(allTransactions.stream().filter(Transaction::getIsPosted).count()), 
+                        BigDecimal.ROUND_HALF_UP);
+        
+        final BigDecimal finalRevenue = totalRevenue;
+        final BigDecimal finalExpenses = totalExpenses;
+        final BigDecimal finalProfit = profit;
+        final BigDecimal finalAvgTransaction = avgTransaction;
+        
+        Platform.runLater(() -> {
+            revenueLabel.setText(formatCurrency(finalRevenue));
+            expensesLabel.setText(formatCurrency(finalExpenses));
+            profitLabel.setText(formatCurrency(finalProfit));
+            averageTransactionLabel.setText(formatCurrency(finalAvgTransaction));
+            
+            // Set trend indicators (placeholder - would need historical data)
+            if (finalProfit.compareTo(BigDecimal.ZERO) > 0) {
+                profitTrendLabel.setText("▲ Positivo");
+                profitTrendLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold;");
+            } else if (finalProfit.compareTo(BigDecimal.ZERO) < 0) {
+                profitTrendLabel.setText("▼ Negativo");
+                profitTrendLabel.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 12px; -fx-font-weight: bold;");
+            } else {
+                profitTrendLabel.setText("▬ Equilibrio");
+                profitTrendLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold;");
+            }
+            
+            revenueTrendLabel.setText("Este mes");
+            revenueTrendLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 11px;");
+            
+            expensesTrendLabel.setText("Este mes");
+            expensesTrendLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 11px;");
+        });
+    }
 
     private void loadCharts() {
         Platform.runLater(() -> {
             loadPieChart();
             loadBarChart();
+            loadLineChart();
         });
     }
 
@@ -382,6 +469,53 @@ public class DashboardController implements Initializable {
         monthlyBarChart.getData().addAll(incomeSeries, expenseSeries);
         monthlyBarChart.setLegendVisible(true);
         monthlyBarChart.setLegendSide(javafx.geometry.Side.BOTTOM);
+    }
+    
+    private void loadLineChart() {
+        List<Transaction> allTransactions = transactionService.getAllTransactions();
+        
+        // Calculate daily cash flow for the last 30 days
+        Map<String, BigDecimal> dailyCashFlow = new LinkedHashMap<>();
+        
+        for (int i = 29; i >= 0; i--) {
+            LocalDate date = LocalDate.now().minusDays(i);
+            String dateLabel = date.format(DateTimeFormatter.ofPattern("dd/MM", Locale.forLanguageTag("es")));
+            dailyCashFlow.put(dateLabel, BigDecimal.ZERO);
+        }
+        
+        for (Transaction t : allTransactions) {
+            if (t.getIsPosted() && t.getDate() != null) {
+                String dateKey = t.getDate().format(DateTimeFormatter.ofPattern("dd/MM", Locale.forLanguageTag("es")));
+                
+                if (dailyCashFlow.containsKey(dateKey)) {
+                    if (t.getType().equalsIgnoreCase("INGRESO")) {
+                        dailyCashFlow.put(dateKey, dailyCashFlow.get(dateKey).add(t.getTotalDebit()));
+                    } else if (t.getType().equalsIgnoreCase("GASTO")) {
+                        dailyCashFlow.put(dateKey, dailyCashFlow.get(dateKey).subtract(t.getTotalDebit()));
+                    }
+                }
+            }
+        }
+        
+        XYChart.Series<String, Number> cashFlowSeries = new XYChart.Series<>();
+        cashFlowSeries.setName("Flujo de Caja");
+        
+        for (String date : dailyCashFlow.keySet()) {
+            cashFlowSeries.getData().add(new XYChart.Data<>(date, dailyCashFlow.get(date).doubleValue()));
+        }
+        
+        if (cashFlowLineChart != null) {
+            cashFlowLineChart.getData().clear();
+            cashFlowLineChart.getData().addAll(cashFlowSeries);
+            cashFlowLineChart.setLegendVisible(true);
+            cashFlowLineChart.setLegendSide(javafx.geometry.Side.BOTTOM);
+            
+            // Style the line chart
+            NumberAxis yAxis = (NumberAxis) cashFlowLineChart.getYAxis();
+            yAxis.setLabel("Monto");
+            CategoryAxis xAxis = (CategoryAxis) cashFlowLineChart.getXAxis();
+            xAxis.setLabel("Día");
+        }
     }
 
     private void loadTransactions() {
@@ -494,6 +628,7 @@ public class DashboardController implements Initializable {
                 Platform.runLater(() -> {
                     logger.debug("Auto-refreshing dashboard");
                     loadFinancialSummary();
+                    loadKPIs();
                     loadStatistics();
                 });
             }
