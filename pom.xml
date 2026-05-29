@@ -21,6 +21,9 @@
         <ebean.version>13.20.0</ebean.version>
         <h2.version>2.2.224</h2.version>
         <logback.version>1.4.14</logback.version>
+        <jacoco.version>0.8.11</jacoco.version>
+        <testfx.version>4.0.17</testfx.version>
+        <monocle.version>3.1.0</monocle.version>
     </properties>
 
     <dependencies>
@@ -119,6 +122,34 @@
             <version>5.8.0</version>
             <scope>test</scope>
         </dependency>
+        
+        <!-- TestFX for JavaFX Testing -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>${testfx.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>${testfx.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Monocle for Headless JavaFX Testing -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>jdk-12.0.1+2</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -131,6 +162,59 @@
             </resource>
         </resources>
         <plugins>
+            <!-- Surefire Plugin for JUnit 5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                    <forkCount>1</forkCount>
+                    <argLine>@{argLine} -Xmx1024m -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Djava.awt.headless=true --add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
+            <!-- JaCoCo Plugin for Code Coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Exec Maven Plugin for JaCoCo instrumentation -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-instrument</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -205,6 +289,10 @@
                         <option>--add-opens=java.base/java.lang.reflect=ALL-UNNAMED</option>
                         <option>--add-opens=java.base/java.util=ALL-UNNAMED</option>
                         <option>--add-opens=java.base/java.math=ALL-UNNAMED</option>
+                        <!-- Add opens for TestFX/Monocle -->
+                        <option>--add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED</option>
+                        <option>--add-opens=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</option>
+                        <option>--add-opens=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED</option>
                     </options>
                 </configuration>
             </plugin>
