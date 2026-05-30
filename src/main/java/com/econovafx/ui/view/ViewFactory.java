@@ -1,14 +1,18 @@
 package com.econovafx.ui.view;
 
 import com.econovafx.domain.Account;
+import com.econovafx.domain.ThirdParty;
 import com.econovafx.domain.Transaction;
 import com.econovafx.service.AccountService;
+import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.ui.controller.AccountFormController;
 import com.econovafx.ui.controller.AccountsController;
 import com.econovafx.ui.controller.ComprobanteFormController;
 import com.econovafx.ui.controller.ComprobantesController;
 import com.econovafx.ui.controller.DashboardController;
+import com.econovafx.ui.controller.ThirdPartiesController;
+import com.econovafx.ui.controller.ThirdPartyFormController;
 import com.econovafx.ui.controller.TransactionEntryController;
 import com.econovafx.ui.controller.TransactionsController;
 import io.avaje.inject.Component;
@@ -38,27 +42,36 @@ public class ViewFactory {
     private final DashboardController dashboardController;
     private final AccountsController accountsController;
     private final TransactionsController transactionsController;
+    private final ThirdPartiesController thirdPartiesController;
     private final AccountFormController accountFormController;
+    private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
     private final ComprobantesController comprobantesController;
     private final AccountService accountService;
+    private final ThirdPartyService thirdPartyService;
     private final TransactionService transactionService;
 
     public ViewFactory(DashboardController dashboardController,
                       AccountsController accountsController,
                       TransactionsController transactionsController,
+                      ThirdPartiesController thirdPartiesController,
                       AccountFormController accountFormController,
+                      ThirdPartyFormController thirdPartyFormController,
                       TransactionEntryController transactionEntryController,
                       ComprobantesController comprobantesController,
                       AccountService accountService,
+                      ThirdPartyService thirdPartyService,
                       TransactionService transactionService) {
         this.dashboardController = dashboardController;
         this.accountsController = accountsController;
         this.transactionsController = transactionsController;
+        this.thirdPartiesController = thirdPartiesController;
         this.accountFormController = accountFormController;
+        this.thirdPartyFormController = thirdPartyFormController;
         this.transactionEntryController = transactionEntryController;
         this.comprobantesController = comprobantesController;
         this.accountService = accountService;
+        this.thirdPartyService = thirdPartyService;
         this.transactionService = transactionService;
     }
     
@@ -103,6 +116,17 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading comprobantes view", e);
             throw new RuntimeException("Failed to load comprobantes view", e);
+        }
+    }
+    
+    public Node createThirdPartiesView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/third-parties.fxml"));
+            loader.setControllerFactory(cls -> thirdPartiesController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading third parties view", e);
+            throw new RuntimeException("Failed to load third parties view", e);
         }
     }
     
@@ -203,6 +227,40 @@ public class ViewFactory {
 
         } catch (IOException e) {
             logger.error("Error showing comprobante form dialog", e);
+            return Optional.empty();
+        }
+    }
+    
+    public Optional<ThirdParty> showThirdPartyFormDialog(ThirdParty thirdParty) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/third-party-form.fxml"));
+            loader.setControllerFactory(cls -> thirdPartyFormController);
+            Parent root = loader.load();
+
+            thirdPartyFormController.setEditingThirdParty(thirdParty);
+
+            Stage stage = new Stage(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(thirdParty == null ? "New Third Party" : "Edit Third Party");
+            
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            
+            // Add custom styles
+            scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
+            
+            stage.setScene(scene);
+            stage.setResizable(false);
+            
+            // Make dialog draggable via FXML
+            setupDraggable(stage, root);
+            
+            stage.showAndWait();
+
+            return Optional.ofNullable(thirdPartyFormController.getResult());
+
+        } catch (IOException e) {
+            logger.error("Error showing third party form dialog", e);
             return Optional.empty();
         }
     }

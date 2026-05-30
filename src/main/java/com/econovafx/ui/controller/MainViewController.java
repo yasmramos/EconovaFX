@@ -72,6 +72,9 @@ public class MainViewController implements Initializable {
     private Button btnClasificador;
 
     @FXML
+    private Button btnTerceros;
+
+    @FXML
     private Button btnCostos;
 
     @FXML
@@ -293,14 +296,23 @@ public class MainViewController implements Initializable {
     private void showClasificador() {
         logger.debug("Showing clasificador de cuentas");
         setActiveButton(btnClasificador);
-        updateStatus("Clasificador de Cuentas - Próximamente");
+        updateStatus("Clasificador de Cuentas - Coming Soon");
+    }
+
+    @FXML
+    private void showTerceros() {
+        logger.debug("Showing third parties management");
+        setActiveButton(btnTerceros);
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createThirdPartiesView());
+        updateStatus("Third Parties (Customers/Suppliers)");
     }
 
     @FXML
     private void showCostos() {
         logger.debug("Showing costos y procesos");
         setActiveButton(btnCostos);
-        updateStatus("Costos y Procesos - Próximamente");
+        updateStatus("Costos y Procesos - Coming Soon");
     }
 
     @FXML

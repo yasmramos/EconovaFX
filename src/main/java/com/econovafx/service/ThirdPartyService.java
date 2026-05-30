@@ -53,6 +53,10 @@ public class ThirdPartyService {
         return thirdPartyRepository.findActiveThirdParties();
     }
     
+    public List<ThirdParty> searchThirdParties(String searchTerm) {
+        return thirdPartyRepository.searchByName(searchTerm);
+    }
+    
     public List<ThirdParty> searchByName(String searchTerm) {
         return thirdPartyRepository.searchByName(searchTerm);
     }

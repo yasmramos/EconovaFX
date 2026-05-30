@@ -2,10 +2,12 @@ package com.econovafx.config;
 
 import com.econovafx.repository.AccountRepository;
 import com.econovafx.repository.TransactionRepository;
+import com.econovafx.repository.ThirdPartyRepository;
 import com.econovafx.repository.UserRepository;
 import com.econovafx.service.AccountService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.service.UserService;
+import com.econovafx.service.ThirdPartyService;
 import com.econovafx.ui.controller.*;
 import com.econovafx.ui.view.ViewFactory;
 import io.avaje.inject.BeanScope;
@@ -41,7 +43,9 @@ public final class AppContext {
     private DashboardController dashboardController;
     private AccountsController accountsController;
     private TransactionsController transactionsController;
+    private ThirdPartiesController thirdPartiesController;
     private final AccountFormController accountFormController;
+    private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
     private ComprobantesController comprobantesController;
 
@@ -62,25 +66,31 @@ public final class AppContext {
         accountService = beanScope.get(AccountService.class);
         transactionService = beanScope.get(TransactionService.class);
         userService = beanScope.get(UserService.class);
+        ThirdPartyService thirdPartyService = beanScope.get(ThirdPartyService.class);
 
         // Create controllers with DI-injected services
         // ViewFactory is null initially, will be recreated below
         accountFormController = new AccountFormController(accountService);
+        thirdPartyFormController = new ThirdPartyFormController(thirdPartyService);
         transactionEntryController = new TransactionEntryController(accountService, transactionService);
         comprobantesController = new ComprobantesController(transactionService, accountService, null);
         dashboardController = new DashboardController(accountService, transactionService, null);
         accountsController = new AccountsController(accountService, null);
         transactionsController = new TransactionsController(transactionService, accountService, null);
+        thirdPartiesController = new ThirdPartiesController(thirdPartyService, null);
 
         // Create view factory with controllers
         viewFactory = new ViewFactory(
                 dashboardController,
                 accountsController,
                 transactionsController,
+                thirdPartiesController,
                 accountFormController,
+                thirdPartyFormController,
                 transactionEntryController,
                 comprobantesController,
                 accountService,
+                thirdPartyService,
                 transactionService
         );
 
@@ -88,6 +98,7 @@ public final class AppContext {
         dashboardController = new DashboardController(accountService, transactionService, viewFactory);
         accountsController = new AccountsController(accountService, viewFactory);
         transactionsController = new TransactionsController(transactionService, accountService, viewFactory);
+        thirdPartiesController = new ThirdPartiesController(thirdPartyService, viewFactory);
         comprobantesController = new ComprobantesController(transactionService, accountService, viewFactory);
 
         // Re-create view factory with updated controllers
@@ -95,10 +106,13 @@ public final class AppContext {
                 dashboardController,
                 accountsController,
                 transactionsController,
+                thirdPartiesController,
                 accountFormController,
+                thirdPartyFormController,
                 transactionEntryController,
                 comprobantesController,
                 accountService,
+                thirdPartyService,
                 transactionService
         );
 
