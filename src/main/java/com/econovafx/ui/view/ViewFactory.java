@@ -198,7 +198,7 @@ public class ViewFactory {
 
     public Optional<Transaction> showComprobanteFormDialog(Transaction transaction) {
         try {
-            ComprobanteFormController controller = new ComprobanteFormController(accountService, transactionService);
+            ComprobanteFormController controller = new ComprobanteFormController(accountService, transactionService, thirdPartyService);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/comprobante-form.fxml"));
             loader.setControllerFactory(cls -> controller);
             Parent root = loader.load();
@@ -207,7 +207,7 @@ public class ViewFactory {
 
             Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle(transaction == null ? "Nuevo Comprobante" : "Editar Comprobante");
+            stage.setTitle(transaction == null ? "New Voucher" : "Edit Voucher");
             
             Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
