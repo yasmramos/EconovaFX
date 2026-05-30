@@ -4,6 +4,7 @@ import com.econovafx.domain.User;
 import com.econovafx.repository.UserRepository;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,12 +110,31 @@ public class UserService {
         }
     }
     
+    /**
+     * Hash password using BCrypt with salt
+     * @param password plain text password
+     * @return hashed password
+     */
     private String hashPassword(String password) {
-        return "hashed_" + password;
+        // BCrypt.gensalt() generates a salt with default log rounds (10)
+        // Higher log rounds = more secure but slower
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
     
+    /**
+     * Verify password against hashed value
+     * @param plainPassword plain text password
+     * @param hashedPassword stored hashed password
+     * @return true if password matches
+     */
     private boolean verifyPassword(String plainPassword, String hashedPassword) {
-        return hashPassword(plainPassword).equals(hashedPassword);
+        try {
+            return BCrypt.checkpw(plainPassword, hashedPassword);
+        } catch (IllegalArgumentException e) {
+            // Handle case where hashed password is not in BCrypt format
+            logger.warn("Invalid hash format for user authentication");
+            return false;
+        }
     }
     
     public long getUsersCount() {

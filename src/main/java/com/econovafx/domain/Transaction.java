@@ -36,6 +36,10 @@ public class Transaction extends BaseEntity {
     @JoinColumn(name = "created_by")
     private User createdBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "third_party_id")
+    private ThirdParty thirdParty;
+
     @Column(precision = 19, scale = 4)
     private BigDecimal totalDebit = BigDecimal.ZERO;
 
@@ -103,6 +107,14 @@ public class Transaction extends BaseEntity {
 
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public ThirdParty getThirdParty() {
+        return thirdParty;
+    }
+
+    public void setThirdParty(ThirdParty thirdParty) {
+        this.thirdParty = thirdParty;
     }
 
     public BigDecimal getTotalDebit() {
