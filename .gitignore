@@ -1,3 +1,4 @@
+```
 # Compiled and build artifacts
 *.class
 *.o
@@ -7,13 +8,13 @@ build/
 target/
 
 # Dependencies
+.gradle/
+.mypy_cache/
+.pytest_cache/
+__pycache__/
 node_modules/
 venv/
 .venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-.gradle/
 
 # Logs and temp files
 *.log
@@ -29,16 +30,16 @@ __pycache__/
 .vscode/
 .idea/
 
-# System files
+# OS specific
 .DS_Store
 Thumbs.db
 
-# Coverage reports
+# Coverage
 coverage/
 htmlcov/
 .coverage
 
-# Compressed files
+# Archives
 *.zip
 *.gz
 *.tar
@@ -61,3 +62,4 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+```

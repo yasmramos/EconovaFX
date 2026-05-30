@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.ui.controller.ThirdPartiesController"
+      spacing="20"
+      styleClass="p-5">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Third Parties (Customers/Suppliers)" styleClass="text-2xl, font-bold, text-gray-800"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search by name or ID..." styleClass="w-64, rounded-md"/>
+        <Button text="Search" onAction="#searchThirdParties" styleClass="bg-blue-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-blue-600"/>
+        <Button text="New Third Party" onAction="#newThirdParty" styleClass="bg-green-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-green-600"/>
+    </HBox>
+    
+    <!-- Filter and Table -->
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        
+        <!-- Filter Row -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Filter by Type:" styleClass="text-sm, font-semibold, text-gray-700"/>
+            <ComboBox fx:id="typeFilter" prefWidth="200" styleClass="rounded-md"/>
+        </HBox>
+
+        <!-- Third Parties Table -->
+        <TableView fx:id="thirdPartiesTable" VBox.vgrow="ALWAYS" styleClass="rounded-lg, border, border-gray-200">
+            <columns>
+                <TableColumn fx:id="colName" text="Name" prefWidth="200"/>
+                <TableColumn fx:id="colIdentification" text="ID Number" prefWidth="120"/>
+                <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
+                <TableColumn fx:id="colEmail" text="Email" prefWidth="180"/>
+                <TableColumn fx:id="colPhone" text="Phone" prefWidth="120"/>
+                <TableColumn fx:id="colCity" text="City" prefWidth="120"/>
+                <TableColumn fx:id="colBalance" text="Balance" prefWidth="100"/>
+                <TableColumn fx:id="colActive" text="Status" prefWidth="80"/>
+            </columns>
+        </TableView>
+
+        <!-- Action Buttons -->
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Edit" onAction="#editThirdParty" styleClass="bg-blue-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-blue-600"/>
+            <Button text="Delete" onAction="#deleteThirdParty" styleClass="bg-red-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-red-600"/>
+            <Button text="View Transactions" onAction="#viewTransactions" styleClass="bg-gray-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-gray-600"/>
+        </HBox>
+    </VBox>
+    
+</VBox>
