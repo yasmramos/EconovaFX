@@ -1,9 +1,11 @@
 package com.econovafx.ui.controller;
 
 import com.econovafx.domain.Account;
+import com.econovafx.domain.ThirdParty;
 import com.econovafx.domain.Transaction;
 import com.econovafx.domain.TransactionEntry;
 import com.econovafx.service.AccountService;
+import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.TransactionService;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -36,6 +38,7 @@ public class ComprobanteFormController implements Initializable {
 
     private final AccountService accountService;
     private final TransactionService transactionService;
+    private final ThirdPartyService thirdPartyService;
 
     // Header fields
     @FXML
@@ -46,6 +49,8 @@ public class ComprobanteFormController implements Initializable {
     private DatePicker datePicker;
     @FXML
     private TextField descriptionField;
+    @FXML
+    private ComboBox<ThirdParty> thirdPartyComboBox;
 
     // Entries table
     @FXML
@@ -81,9 +86,12 @@ public class ComprobanteFormController implements Initializable {
     private Transaction editingTransaction;
     private boolean saved = false;
 
-    public ComprobanteFormController(AccountService accountService, TransactionService transactionService) {
+    public ComprobanteFormController(AccountService accountService, 
+                                     TransactionService transactionService,
+                                     ThirdPartyService thirdPartyService) {
         this.accountService = accountService;
         this.transactionService = transactionService;
+        this.thirdPartyService = thirdPartyService;
     }
 
     @Override
@@ -91,6 +99,7 @@ public class ComprobanteFormController implements Initializable {
         logger.info("ComprobanteFormController initialized");
         setupTableColumns();
         loadAccounts();
+        loadThirdParties();
         
         // Set default date to today
         datePicker.setValue(LocalDate.now());
@@ -318,19 +327,60 @@ public class ComprobanteFormController implements Initializable {
     private void loadAccounts() {
         allAccounts = accountService.getAllAccounts();
         if (allAccounts.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Advertencia", 
-                    "No hay cuentas configuradas. Por favor cree cuentas primero.");
+            showAlert(Alert.AlertType.WARNING, "Warning", 
+                    "No accounts configured. Please create accounts first.");
         }
+    }
+    
+    private void loadThirdParties() {
+        List<ThirdParty> thirdParties = thirdPartyService.getAllThirdParties();
+        ObservableList<ThirdParty> observableList = FXCollections.observableArrayList(thirdParties);
+        thirdPartyComboBox.setItems(observableList);
+        
+        // Add "None" option at the beginning
+        ThirdParty noneOption = new ThirdParty();
+        noneOption.setName("-- Select Third Party --");
+        observableList.add(0, noneOption);
+        
+        thirdPartyComboBox.setValue(noneOption);
+        
+        // Custom converter to display third party name
+        thirdPartyComboBox.setConverter(new StringConverter<ThirdParty>() {
+            @Override
+            public String toString(ThirdParty tp) {
+                if (tp == null || tp.getId() == null) {
+                    return "-- Select Third Party --";
+                }
+                return tp.getName() + " (" + tp.getIdentificationNumber() + ")";
+            }
+
+            @Override
+            public ThirdParty fromString(String string) {
+                return null;
+            }
+        });
     }
 
     public void setEditingTransaction(Transaction transaction) {
         this.editingTransaction = transaction;
         if (transaction != null) {
             // Edit mode
-            titleLabel.setText("Editar Comprobante");
+            titleLabel.setText("Edit Voucher");
             numberLabel.setText(transaction.getNumber());
             datePicker.setValue(transaction.getDate());
             descriptionField.setText(transaction.getDescription());
+            
+            // Load third party if exists
+            if (transaction.getThirdParty() != null) {
+                thirdPartyComboBox.setValue(transaction.getThirdParty());
+            } else {
+                // Find and set the "None" option
+                ThirdParty noneOption = thirdPartyComboBox.getItems().stream()
+                        .filter(tp -> tp.getId() == null)
+                        .findFirst()
+                        .orElse(null);
+                thirdPartyComboBox.setValue(noneOption);
+            }
             
             // Load entries
             entriesData.clear();
@@ -346,8 +396,8 @@ public class ComprobanteFormController implements Initializable {
             updateTotals();
         } else {
             // New mode
-            titleLabel.setText("Nuevo Comprobante");
-            numberLabel.setText("(Automático)");
+            titleLabel.setText("New Voucher");
+            numberLabel.setText("(Automatic)");
         }
     }
 
@@ -380,31 +430,31 @@ public class ComprobanteFormController implements Initializable {
             String description = descriptionField.getText().trim();
 
             if (date == null) {
-                showAlert(Alert.AlertType.ERROR, "Validación", "La fecha es requerida");
+                showAlert(Alert.AlertType.ERROR, "Validation", "Date is required");
                 return;
             }
             if (description.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Validación", "La descripción es requerida");
+                showAlert(Alert.AlertType.ERROR, "Validation", "Description is required");
                 return;
             }
 
             // Validate entries
             if (entriesData.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Validación", "Debe agregar al menos un asiento contable");
+                showAlert(Alert.AlertType.ERROR, "Validation", "You must add at least one accounting entry");
                 return;
             }
 
             if (entriesData.size() < 2) {
-                showAlert(Alert.AlertType.ERROR, "Validación", 
-                        "Debe tener al menos 2 asientos (partida doble)");
+                showAlert(Alert.AlertType.ERROR, "Validation", 
+                        "You must have at least 2 entries (double-entry bookkeeping)");
                 return;
             }
 
             // Validate all accounts are selected
             for (EntryRow row : entriesData) {
                 if (row.getFinalAccount() == null) {
-                    showAlert(Alert.AlertType.ERROR, "Validación", 
-                            "Todas las líneas deben tener una cuenta seleccionada en las columnas CTA/SBCTA/SCTRO/ANAL/EPIG");
+                    showAlert(Alert.AlertType.ERROR, "Validation", 
+                            "All rows must have an account selected in CTA/SBCTA/SCTRO/ANAL/EPIG columns");
                     return;
                 }
             }
@@ -419,8 +469,8 @@ public class ComprobanteFormController implements Initializable {
                 BigDecimal credit = new BigDecimal(row.getCredit().replace(",", ""));
 
                 if (debit.compareTo(BigDecimal.ZERO) > 0 && credit.compareTo(BigDecimal.ZERO) > 0) {
-                    showAlert(Alert.AlertType.ERROR, "Validación", 
-                            "Cada línea debe tener solo Debe O Haber, no ambos");
+                    showAlert(Alert.AlertType.ERROR, "Validation", 
+                            "Each row must have only Debit OR Credit, not both");
                     return;
                 }
 
@@ -431,16 +481,16 @@ public class ComprobanteFormController implements Initializable {
                         row.getFinalAccount().getId(),
                         debit,
                         credit,
-                        "Asiento contable"
+                        "Accounting entry"
                 ));
             }
 
             if (totalDebit.compareTo(totalCredit) != 0) {
                 validationLabel.setVisible(true);
                 validationLabel.setManaged(true);
-                showAlert(Alert.AlertType.ERROR, "Validación", 
-                        "El comprobante no está balanceado.\nDebe: " + totalDebit + 
-                        "\nHaber: " + totalCredit);
+                showAlert(Alert.AlertType.ERROR, "Validation", 
+                        "Voucher is not balanced.\nDebit: " + totalDebit + 
+                        "\nCredit: " + totalCredit);
                 return;
             }
 
@@ -451,15 +501,29 @@ public class ComprobanteFormController implements Initializable {
             if (editingTransaction == null) {
                 editingTransaction = new Transaction();
                 editingTransaction.setDate(date);
-                editingTransaction.setType("DIARIO");
+                editingTransaction.setType("JOURNAL");
                 editingTransaction.setDescription(description);
                 editingTransaction.setIsPosted(false);
+                
+                // Set third party if selected
+                ThirdParty selectedThirdParty = thirdPartyComboBox.getValue();
+                if (selectedThirdParty != null && selectedThirdParty.getId() != null) {
+                    editingTransaction.setThirdParty(selectedThirdParty);
+                }
 
                 transactionService.createTransaction(editingTransaction, entryDataList);
             } else {
                 // Update existing (simplified - in production would need more complex logic)
                 editingTransaction.setDate(date);
                 editingTransaction.setDescription(description);
+                
+                // Update third party
+                ThirdParty selectedThirdParty = thirdPartyComboBox.getValue();
+                if (selectedThirdParty != null && selectedThirdParty.getId() != null) {
+                    editingTransaction.setThirdParty(selectedThirdParty);
+                } else {
+                    editingTransaction.setThirdParty(null);
+                }
             }
 
             saved = true;
