@@ -1,6 +1,7 @@
 package com.econovafx.ui.controller;
 
 import com.econovafx.domain.ThirdParty;
+import com.econovafx.service.ExportService;
 import com.econovafx.service.ThirdPartyService;
 import com.econovafx.ui.view.ViewFactory;
 import io.avaje.inject.Component;
@@ -11,9 +12,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +33,13 @@ public class ThirdPartiesController implements Initializable {
     
     private final ThirdPartyService thirdPartyService;
     private final ViewFactory viewFactory;
+    private final ExportService exportService;
     
     @FXML
     private TextField searchField;
+    
+    @FXML
+    private Button searchButton;
     
     @FXML
     private ComboBox<ThirdParty.ThirdPartyType> typeFilter;
@@ -62,9 +71,28 @@ public class ThirdPartiesController implements Initializable {
     @FXML
     private TableColumn<ThirdParty, Boolean> colActive;
     
-    public ThirdPartiesController(ThirdPartyService thirdPartyService, ViewFactory viewFactory) {
+    @FXML
+    private TableColumn<ThirdParty, Void> colActions;
+    
+    @FXML
+    private Label totalThirdPartiesLabel;
+    
+    @FXML
+    private Label totalCustomersLabel;
+    
+    @FXML
+    private Label totalSuppliersLabel;
+    
+    @FXML
+    private Label activeThirdPartiesLabel;
+    
+    @FXML
+    private Label resultsCountLabel;
+    
+    public ThirdPartiesController(ThirdPartyService thirdPartyService, ViewFactory viewFactory, ExportService exportService) {
         this.thirdPartyService = thirdPartyService;
         this.viewFactory = viewFactory;
+        this.exportService = exportService;
     }
     
     @Override
@@ -73,6 +101,7 @@ public class ThirdPartiesController implements Initializable {
         initializeTableColumns();
         initializeTypeFilter();
         loadThirdParties();
+        setupActionColumn();
     }
     
     private void initializeTableColumns() {
@@ -139,12 +168,14 @@ public class ThirdPartiesController implements Initializable {
         List<ThirdParty> thirdParties = thirdPartyService.getAllThirdParties();
         ObservableList<ThirdParty> observableList = FXCollections.observableArrayList(thirdParties);
         thirdPartiesTable.setItems(observableList);
+        updateStatistics(thirdParties);
     }
     
     private void filterByType(ThirdParty.ThirdPartyType type) {
         List<ThirdParty> thirdParties = thirdPartyService.getThirdPartiesByType(type);
         ObservableList<ThirdParty> observableList = FXCollections.observableArrayList(thirdParties);
         thirdPartiesTable.setItems(observableList);
+        updateStatistics(thirdParties);
     }
     
     @FXML
@@ -154,6 +185,7 @@ public class ThirdPartiesController implements Initializable {
             List<ThirdParty> thirdParties = thirdPartyService.searchThirdParties(searchTerm.trim());
             ObservableList<ThirdParty> observableList = FXCollections.observableArrayList(thirdParties);
             thirdPartiesTable.setItems(observableList);
+            updateStatistics(thirdParties);
         } else {
             loadThirdParties();
         }
@@ -166,6 +198,7 @@ public class ThirdPartiesController implements Initializable {
         result.ifPresent(thirdParty -> {
             thirdPartyService.createThirdParty(thirdParty);
             loadThirdParties();
+            updateStatistics(thirdPartyService.getAllThirdParties());
             showAlert(Alert.AlertType.INFORMATION, "Success", "Third party created successfully");
         });
     }
@@ -184,6 +217,7 @@ public class ThirdPartiesController implements Initializable {
         result.ifPresent(thirdParty -> {
             thirdPartyService.updateThirdParty(thirdParty);
             loadThirdParties();
+            updateStatistics(thirdPartyService.getAllThirdParties());
             showAlert(Alert.AlertType.INFORMATION, "Success", "Third party updated successfully");
         });
     }
@@ -207,6 +241,7 @@ public class ThirdPartiesController implements Initializable {
             try {
                 thirdPartyService.deleteThirdParty(selected.getId());
                 loadThirdParties();
+                updateStatistics(thirdPartyService.getAllThirdParties());
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Third party deleted successfully");
             } catch (IllegalArgumentException e) {
                 showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
@@ -224,8 +259,103 @@ public class ThirdPartiesController implements Initializable {
         }
         
         logger.debug("View transactions for third party: {}", selected.getName());
+        // TODO: Implement transaction view for third party
         showAlert(Alert.AlertType.INFORMATION, "Coming Soon", 
                 "Third party transactions view is under development");
+    }
+    
+    @FXML
+    private void exportToExcel() {
+        List<ThirdParty> thirdParties = thirdPartiesTable.getItems();
+        if (thirdParties.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "No Data", 
+                    "There are no third parties to export");
+            return;
+        }
+        
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Export Third Parties to Excel");
+            fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Excel Files", "*.xlsx")
+            );
+            fileChooser.setInitialFileName("third_parties_" + System.currentTimeMillis() + ".xlsx");
+            
+            File file = fileChooser.showSaveDialog(thirdPartiesTable.getScene().getWindow());
+            if (file != null) {
+                exportService.exportThirdPartiesToExcel(thirdParties, file);
+                showAlert(Alert.AlertType.INFORMATION, "Success", 
+                        "Third parties exported successfully to:\n" + file.getAbsolutePath());
+                logger.info("Third parties exported to Excel: {}", file.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            logger.error("Error exporting third parties to Excel", e);
+            showAlert(Alert.AlertType.ERROR, "Export Error", 
+                    "Failed to export third parties: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Setup the Actions column with Edit and Delete buttons for each row
+     */
+    private void setupActionColumn() {
+        colActions.setCellFactory(param -> new TableCell<>() {
+            private final Button btnEdit = new Button("Edit");
+            private final Button btnDelete = new Button("Delete");
+            private final HBox pane = new HBox(5, btnEdit, btnDelete);
+            
+            {
+                btnEdit.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;");
+                btnEdit.setOnMouseEntered(e -> btnEdit.setStyle("-fx-background-color: #2563eb; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
+                btnEdit.setOnMouseExited(e -> btnEdit.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
+                
+                btnDelete.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;");
+                btnDelete.setOnMouseEntered(e -> btnDelete.setStyle("-fx-background-color: #dc2626; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
+                btnDelete.setOnMouseExited(e -> btnDelete.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
+                
+                btnEdit.setOnAction(event -> {
+                    ThirdParty thirdParty = getTableView().getItems().get(getIndex());
+                    if (thirdParty != null) {
+                        thirdPartiesTable.getSelectionModel().select(thirdParty);
+                        editThirdParty();
+                    }
+                });
+                
+                btnDelete.setOnAction(event -> {
+                    ThirdParty thirdParty = getTableView().getItems().get(getIndex());
+                    if (thirdParty != null) {
+                        thirdPartiesTable.getSelectionModel().select(thirdParty);
+                        deleteThirdParty();
+                    }
+                });
+            }
+            
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(pane);
+                }
+            }
+        });
+    }
+    
+    /**
+     * Update statistics labels based on current data
+     */
+    private void updateStatistics(List<ThirdParty> thirdParties) {
+        int total = thirdParties.size();
+        long customers = thirdParties.stream().filter(tp -> tp.getType() == ThirdParty.ThirdPartyType.CUSTOMER || tp.getType() == ThirdParty.ThirdPartyType.BOTH).count();
+        long suppliers = thirdParties.stream().filter(tp -> tp.getType() == ThirdParty.ThirdPartyType.SUPPLIER || tp.getType() == ThirdParty.ThirdPartyType.BOTH).count();
+        long active = thirdParties.stream().filter(ThirdParty::getIsActive).count();
+        
+        totalThirdPartiesLabel.setText(String.valueOf(total));
+        totalCustomersLabel.setText(String.valueOf(customers));
+        totalSuppliersLabel.setText(String.valueOf(suppliers));
+        activeThirdPartiesLabel.setText(String.valueOf(active));
+        resultsCountLabel.setText(total + " result" + (total != 1 ? "s" : ""));
     }
     
     private void showAlert(Alert.AlertType alertType, String title, String message) {

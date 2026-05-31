@@ -213,4 +213,66 @@ public class ExportService {
     public byte[] exportTransactionToExcel(Transaction transaction) throws IOException {
         return exportTransactionsToExcel(List.of(transaction));
     }
+    
+    /**
+     * Export third parties to Excel file
+     * @param thirdParties list of third parties to export
+     * @param file the file to write to
+     * @throws IOException if an error occurs during Excel generation
+     */
+    public void exportThirdPartiesToExcel(List<ThirdParty> thirdParties, java.io.File file) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Third Parties");
+
+            // Create header row
+            Row headerRow = sheet.createRow(0);
+            String[] headers = {"Name", "ID Number", "Type", "Email", "Phone", "Address", 
+                               "City", "Country", "Tax ID", "Credit Limit", "Payment Days", 
+                               "Balance", "Active"};
+            
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            // Data rows
+            int rowNum = 1;
+            for (ThirdParty tp : thirdParties) {
+                Row row = sheet.createRow(rowNum++);
+                
+                row.createCell(0).setCellValue(tp.getName());
+                row.createCell(1).setCellValue(tp.getIdentificationNumber());
+                row.createCell(2).setCellValue(tp.getType().toString());
+                row.createCell(3).setCellValue(tp.getEmail() != null ? tp.getEmail() : "");
+                row.createCell(4).setCellValue(tp.getPhone() != null ? tp.getPhone() : "");
+                row.createCell(5).setCellValue(tp.getAddress() != null ? tp.getAddress() : "");
+                row.createCell(6).setCellValue(tp.getCity() != null ? tp.getCity() : "");
+                row.createCell(7).setCellValue(tp.getCountry() != null ? tp.getCountry() : "");
+                row.createCell(8).setCellValue(tp.getTaxId() != null ? tp.getTaxId() : "");
+                row.createCell(9).setCellValue(tp.getCreditLimit() != null ? tp.getCreditLimit().doubleValue() : 0.0);
+                row.createCell(10).setCellValue(tp.getPaymentDays() != null ? tp.getPaymentDays() : 30);
+                row.createCell(11).setCellValue(tp.getCurrentBalance() != null ? tp.getCurrentBalance().doubleValue() : 0.0);
+                row.createCell(12).setCellValue(tp.getIsActive() != null && tp.getIsActive() ? "Active" : "Inactive");
+            }
+
+            // Auto-size columns
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            try (java.io.FileOutputStream fos = new java.io.FileOutputStream(file)) {
+                workbook.write(fos);
+            }
+            
+            logger.info("Exported {} third parties to Excel: {}", thirdParties.size(), file.getAbsolutePath());
+        }
+    }
 }
