@@ -4,6 +4,7 @@ import com.econovafx.domain.Account;
 import com.econovafx.domain.ThirdParty;
 import com.econovafx.domain.Transaction;
 import com.econovafx.service.AccountService;
+import com.econovafx.service.ExportService;
 import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.ui.controller.AccountFormController;
@@ -50,6 +51,7 @@ public class ViewFactory {
     private final AccountService accountService;
     private final ThirdPartyService thirdPartyService;
     private final TransactionService transactionService;
+    private final ExportService exportService;
 
     public ViewFactory(DashboardController dashboardController,
                       AccountsController accountsController,
@@ -61,7 +63,8 @@ public class ViewFactory {
                       ComprobantesController comprobantesController,
                       AccountService accountService,
                       ThirdPartyService thirdPartyService,
-                      TransactionService transactionService) {
+                      TransactionService transactionService,
+                      ExportService exportService) {
         this.dashboardController = dashboardController;
         this.accountsController = accountsController;
         this.transactionsController = transactionsController;
@@ -73,6 +76,7 @@ public class ViewFactory {
         this.accountService = accountService;
         this.thirdPartyService = thirdPartyService;
         this.transactionService = transactionService;
+        this.exportService = exportService;
     }
     
     public Node createDashboardView() {
