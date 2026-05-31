@@ -230,10 +230,13 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
+                            <mainClass>com.econovafx.Launcher</mainClass>
+                            <classpathScope>test</classpathScope>
                             <skip>true</skip>
                         </configuration>
                     </execution>
                 </executions>
+                <extensions>true</extensions>
             </plugin>
             <!-- Compiler Plugin -->
             <plugin>
