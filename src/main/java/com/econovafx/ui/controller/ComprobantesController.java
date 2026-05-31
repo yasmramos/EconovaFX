@@ -2,6 +2,7 @@ package com.econovafx.ui.controller;
 
 import com.econovafx.domain.Transaction;
 import com.econovafx.service.AccountService;
+import com.econovafx.service.ExportService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.ui.view.ViewFactory;
 import io.avaje.inject.Component;
@@ -17,6 +18,9 @@ import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +35,7 @@ public class ComprobantesController implements Initializable {
 
     private final TransactionService transactionService;
     private final AccountService accountService;
+    private final ExportService exportService;
     private ViewFactory viewFactory;
 
     // Filters
@@ -108,13 +113,19 @@ public class ComprobantesController implements Initializable {
     private Button btnNewComprobante;
     @FXML
     private Button btnRefresh;
+    @FXML
+    private Button btnExportPdf;
+    @FXML
+    private Button btnExportExcel;
 
     private final ObservableList<ComprobanteRow> comprobantesData = FXCollections.observableArrayList();
 
     // Constructor for dependency injection
-    public ComprobantesController(TransactionService transactionService, AccountService accountService, ViewFactory viewFactory) {
+    public ComprobantesController(TransactionService transactionService, AccountService accountService, 
+                                   ExportService exportService, ViewFactory viewFactory) {
         this.transactionService = transactionService;
         this.accountService = accountService;
+        this.exportService = exportService;
         this.viewFactory = viewFactory;
     }
 
@@ -431,6 +442,72 @@ public class ComprobantesController implements Initializable {
         detailPanel.setVisible(false);
         detailPanel.setManaged(false);
         comprobantesTable.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void exportToPdf() {
+        ComprobanteRow selected = comprobantesTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING, "Export to PDF", "Please select a voucher from the table");
+            return;
+        }
+
+        try {
+            var transaction = transactionService.getTransactionByNumber(selected.getNumber());
+            if (transaction.isPresent()) {
+                byte[] pdfContent = exportService.exportTransactionToPdf(transaction.get());
+                
+                // Save to file
+                String fileName = "voucher_" + selected.getNumber().replace("/", "_") + ".pdf";
+                File file = new File(System.getProperty("user.home"), "Downloads/" + fileName);
+                
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    fos.write(pdfContent);
+                }
+                
+                logger.info("PDF exported successfully: {}", file.getAbsolutePath());
+                showAlert(Alert.AlertType.INFORMATION, "Success", 
+                    "Voucher exported to PDF:\n" + file.getAbsolutePath());
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Transaction not found");
+            }
+        } catch (IOException e) {
+            logger.error("Error exporting to PDF", e);
+            showAlert(Alert.AlertType.ERROR, "Error", "Error exporting to PDF: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void exportToExcel() {
+        ComprobanteRow selected = comprobantesTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert(Alert.AlertType.WARNING, "Export to Excel", "Please select a voucher from the table");
+            return;
+        }
+
+        try {
+            var transaction = transactionService.getTransactionByNumber(selected.getNumber());
+            if (transaction.isPresent()) {
+                byte[] excelContent = exportService.exportTransactionToExcel(transaction.get());
+                
+                // Save to file
+                String fileName = "voucher_" + selected.getNumber().replace("/", "_") + ".xlsx";
+                File file = new File(System.getProperty("user.home"), "Downloads/" + fileName);
+                
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    fos.write(excelContent);
+                }
+                
+                logger.info("Excel exported successfully: {}", file.getAbsolutePath());
+                showAlert(Alert.AlertType.INFORMATION, "Success", 
+                    "Voucher exported to Excel:\n" + file.getAbsolutePath());
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Transaction not found");
+            }
+        } catch (IOException e) {
+            logger.error("Error exporting to Excel", e);
+            showAlert(Alert.AlertType.ERROR, "Error", "Error exporting to Excel: " + e.getMessage());
+        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
