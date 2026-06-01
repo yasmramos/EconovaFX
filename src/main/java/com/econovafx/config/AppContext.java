@@ -9,6 +9,7 @@ import com.econovafx.service.TransactionService;
 import com.econovafx.service.UserService;
 import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.ExportService;
+import com.econovafx.service.AccountingPeriodService;
 import com.econovafx.ui.controller.*;
 import com.econovafx.ui.view.ViewFactory;
 import io.avaje.inject.BeanScope;
@@ -45,6 +46,7 @@ public final class AppContext {
     private AccountsController accountsController;
     private TransactionsController transactionsController;
     private ThirdPartiesController thirdPartiesController;
+    private AccountingPeriodsController accountingPeriodsController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
@@ -69,6 +71,7 @@ public final class AppContext {
         userService = beanScope.get(UserService.class);
         ThirdPartyService thirdPartyService = beanScope.get(ThirdPartyService.class);
         ExportService exportService = beanScope.get(ExportService.class);
+        AccountingPeriodService accountingPeriodService = beanScope.get(AccountingPeriodService.class);
 
         // Create controllers with DI-injected services
         // ViewFactory is null initially, will be recreated below
@@ -80,6 +83,7 @@ public final class AppContext {
         accountsController = new AccountsController(accountService, null);
         transactionsController = new TransactionsController(transactionService, accountService, null);
         thirdPartiesController = new ThirdPartiesController(thirdPartyService, null, exportService);
+        accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
 
         // Create view factory with controllers
         viewFactory = new ViewFactory(
@@ -87,6 +91,7 @@ public final class AppContext {
                 accountsController,
                 transactionsController,
                 thirdPartiesController,
+                accountingPeriodsController,
                 accountFormController,
                 thirdPartyFormController,
                 transactionEntryController,
@@ -94,7 +99,8 @@ public final class AppContext {
                 accountService,
                 thirdPartyService,
                 transactionService,
-                exportService
+                exportService,
+                accountingPeriodService
         );
 
         // Re-create controllers that need viewFactory
@@ -103,6 +109,7 @@ public final class AppContext {
         transactionsController = new TransactionsController(transactionService, accountService, viewFactory);
         thirdPartiesController = new ThirdPartiesController(thirdPartyService, viewFactory, exportService);
         comprobantesController = new ComprobantesController(transactionService, accountService, exportService, viewFactory);
+        accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
 
         // Re-create view factory with updated controllers
         viewFactory = new ViewFactory(
@@ -110,6 +117,7 @@ public final class AppContext {
                 accountsController,
                 transactionsController,
                 thirdPartiesController,
+                accountingPeriodsController,
                 accountFormController,
                 thirdPartyFormController,
                 transactionEntryController,
@@ -117,7 +125,8 @@ public final class AppContext {
                 accountService,
                 thirdPartyService,
                 transactionService,
-                exportService
+                exportService,
+                accountingPeriodService
         );
 
         logger.info("Application context initialized successfully with Avaje Inject");

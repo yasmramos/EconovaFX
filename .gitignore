@@ -1,43 +1,45 @@
 ```
-# Java/Maven specific ignores
-target/
+# Compiled and build artifacts
 *.class
-*.jar
-*.war
-*.ear
-
-# IDE specific
-.idea/
-*.iml
-*.ipr
-*.iws
-.vscode/
-
-# Build artifacts
-build/
-dist/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
 
 # Dependencies
 lib/
-libs/
+target/
+.gradle/
+.mypy_cache/
+.pytest_cache/
 
-# Logs
+# Logs and temp files
 *.log
-
-# Temporary files
 *.tmp
-*.temp
-*.bak
+*.swp
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# OS generated files
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build system
+build/
+dist/
+coverage/
+htmlcov/
+*.coverage
+
+# System files
 .DS_Store
 Thumbs.db
-
-# Package manager
-node_modules/
 ```

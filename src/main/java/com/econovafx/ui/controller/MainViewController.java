@@ -75,6 +75,9 @@ public class MainViewController implements Initializable {
     private Button btnTerceros;
 
     @FXML
+    private Button btnPeriodos;
+
+    @FXML
     private Button btnCostos;
 
     @FXML
@@ -306,6 +309,15 @@ public class MainViewController implements Initializable {
         contentArea.getChildren().clear();
         contentArea.getChildren().add(viewFactory.createThirdPartiesView());
         updateStatus("Third Parties (Customers/Suppliers)");
+    }
+
+    @FXML
+    private void showPeriodos() {
+        logger.debug("Showing accounting periods management");
+        setActiveButton(btnPeriodos);
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createAccountingPeriodsView());
+        updateStatus("Accounting Periods Management");
     }
 
     @FXML
