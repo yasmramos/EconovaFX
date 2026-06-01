@@ -28,16 +28,29 @@ public class AccountingPeriod {
     @Column(nullable = false)
     private PeriodStatus status = PeriodStatus.OPEN;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PeriodType type = PeriodType.MONTHLY;
+
     @Column(length = 255)
     private String closedBy;
 
     @Column
     private LocalDate closedDate;
 
+    @Column(length = 500)
+    private String closingNotes;
+
     public enum PeriodStatus {
         OPEN,
         CLOSED,
         LOCKED
+    }
+
+    public enum PeriodType {
+        MONTHLY,
+        ANNUAL,
+        CUSTOM
     }
 
     // Constructors
@@ -47,6 +60,13 @@ public class AccountingPeriod {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public AccountingPeriod(String name, LocalDate startDate, LocalDate endDate, PeriodType type) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.type = type;
     }
 
     // Getters and Setters
@@ -77,5 +97,19 @@ public class AccountingPeriod {
 
     public boolean isClosed() {
         return this.status == PeriodStatus.CLOSED || this.status == PeriodStatus.LOCKED;
+    }
+
+    public PeriodType getType() { return type; }
+    public void setType(PeriodType type) { this.type = type; }
+
+    public String getClosingNotes() { return closingNotes; }
+    public void setClosingNotes(String closingNotes) { this.closingNotes = closingNotes; }
+
+    public boolean isMonthly() {
+        return this.type == PeriodType.MONTHLY;
+    }
+
+    public boolean isAnnual() {
+        return this.type == PeriodType.ANNUAL;
     }
 }

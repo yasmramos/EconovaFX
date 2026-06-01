@@ -88,4 +88,44 @@ public class AccountingPeriodRepository {
                 .findCount();
         return count > 0;
     }
+
+    /**
+     * Find all periods for a specific year and type.
+     */
+    public List<AccountingPeriod> findPeriodsByYearAndType(int year, AccountingPeriod.PeriodType type) {
+        LocalDate startOfYear = LocalDate.of(year, 1, 1);
+        LocalDate endOfYear = LocalDate.of(year, 12, 31);
+        
+        return database.find(AccountingPeriod.class)
+                .where()
+                .eq("type", type)
+                .ge("startDate", startOfYear)
+                .le("endDate", endOfYear)
+                .orderBy("startDate asc")
+                .findList();
+    }
+
+    /**
+     * Find all monthly periods for a specific year.
+     */
+    public List<AccountingPeriod> findMonthlyPeriodsByYear(int year) {
+        return findPeriodsByYearAndType(year, AccountingPeriod.PeriodType.MONTHLY);
+    }
+
+    /**
+     * Find the annual period for a specific year.
+     */
+    public Optional<AccountingPeriod> findAnnualPeriodByYear(int year) {
+        LocalDate startOfYear = LocalDate.of(year, 1, 1);
+        LocalDate endOfYear = LocalDate.of(year, 12, 31);
+        
+        List<AccountingPeriod> results = database.find(AccountingPeriod.class)
+                .where()
+                .eq("type", AccountingPeriod.PeriodType.ANNUAL)
+                .ge("startDate", startOfYear)
+                .le("endDate", endOfYear)
+                .findList();
+        
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+    }
 }
