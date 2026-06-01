@@ -311,4 +311,33 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Profile for full build with all dependencies and Java 21 -->
+        <profile>
+            <id>full</id>
+            <properties>
+                <java.version>21</java.version>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.12.1</version>
+                        <configuration>
+                            <release>21</release>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>io.avaje</groupId>
+                                    <artifactId>avaje-inject-generator</artifactId>
+                                    <version>9.0</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
