@@ -2,6 +2,7 @@ package com.econovafx.service;
 
 import com.econovafx.domain.User;
 import com.econovafx.repository.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +37,7 @@ class UserServiceTest {
 
         assertNotNull(result);
         assertEquals("testuser", result.getUsername());
-        assertEquals("hashed_password123", result.getPassword());
+        assertTrue(BCrypt.checkpw("password123", result.getPassword()));
         assertTrue(userRepository.saveCalled);
     }
 
@@ -151,7 +152,7 @@ class UserServiceTest {
 
         assertNotNull(result);
         assertEquals(User.UserRole.ADMIN, result.getRole());
-        assertEquals("hashed_adminpass", result.getPassword());
+        assertTrue(BCrypt.checkpw("adminpass", result.getPassword()));
     }
 
     @Test
@@ -354,7 +355,7 @@ class UserServiceTest {
 
         userService.createUser(user, "mypassword");
 
-        assertEquals("hashed_mypassword", userRepository.lastSavedUser.getPassword());
+        assertTrue(BCrypt.checkpw("mypassword", userRepository.lastSavedUser.getPassword()));
     }
 
     @Test
