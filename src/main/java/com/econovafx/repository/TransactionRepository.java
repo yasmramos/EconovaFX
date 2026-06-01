@@ -140,4 +140,13 @@ public class TransactionRepository {
                 .orderBy().desc("transaction.date")
                 .findList();
     }
+
+    public List<Transaction> findByThirdPartyId(Long thirdPartyId) {
+        return database.find(Transaction.class)
+                .fetch("entries")
+                .fetch("entries.account")
+                .where().eq("thirdParty.id", thirdPartyId)
+                .orderBy().desc("date")
+                .findList();
+    }
 }

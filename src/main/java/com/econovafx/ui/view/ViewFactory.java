@@ -78,6 +78,18 @@ public class ViewFactory {
         this.transactionService = transactionService;
         this.exportService = exportService;
     }
+
+    public TransactionService getTransactionService() {
+        return transactionService;
+    }
+
+    public ThirdPartyService getThirdPartyService() {
+        return thirdPartyService;
+    }
+
+    public ExportService getExportService() {
+        return exportService;
+    }
     
     public Node createDashboardView() {
         try {
