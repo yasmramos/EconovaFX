@@ -3,6 +3,8 @@ package com.econovafx.service;
 import com.econovafx.domain.Transaction;
 import com.econovafx.domain.TransactionEntry;
 import com.econovafx.domain.ThirdParty;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -273,6 +275,98 @@ public class ExportService {
             }
             
             logger.info("Exported {} third parties to Excel: {}", thirdParties.size(), file.getAbsolutePath());
+        }
+    }
+
+    /**
+     * Exports third party transactions to an Excel file.
+     *
+     * @param thirdParty the third party whose transactions are being exported
+     * @param transactions the list of transactions to export
+     * @param stage the parent stage for the file chooser dialog
+     * @throws IOException if an error occurs during Excel generation
+     */
+    public void exportThirdPartyTransactionsToExcel(ThirdParty thirdParty, List<Transaction> transactions, Stage stage) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Transactions Excel Report");
+        fileChooser.setInitialFileName("transactions_" + thirdParty.getIdentificationNumber() + "_" + 
+            java.time.LocalDate.now().toString() + ".xlsx");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
+        
+        java.io.File file = fileChooser.showSaveDialog(stage);
+        if (file == null) {
+            return; // User cancelled
+        }
+        
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Transactions");
+            
+            // Create header row
+            Row headerRow = sheet.createRow(0);
+            String[] headers = {"Date", "Voucher Type", "Voucher Number", "Description", "Debit", "Credit", "Balance"};
+            
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+            
+            // Add third party info as a comment
+            CreationHelper createHelper = workbook.getCreationHelper();
+            ClientAnchor anchor = createHelper.createClientAnchor();
+            anchor.setCol1(0);
+            anchor.setRow1(0);
+            anchor.setCol2(3);
+            anchor.setRow2(3);
+            Drawing<?> drawing = sheet.createDrawingPatriarch();
+            RichTextString richText = createHelper.createRichTextString("Third Party: " + thirdParty.getName() + 
+                "\nID: " + thirdParty.getIdentificationNumber() + 
+                "\nType: " + thirdParty.getType());
+            Comment comment = drawing.createCellComment(anchor);
+            comment.setString(richText);
+            comment.setAuthor("EconoNova FX");
+            
+            // Data rows with running balance
+            int rowNum = 1;
+            BigDecimal runningBalance = BigDecimal.ZERO;
+            java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            
+            for (Transaction transaction : transactions) {
+                Row row = sheet.createRow(rowNum++);
+                
+                row.createCell(0).setCellValue(transaction.getDate().format(dateFormatter));
+                row.createCell(1).setCellValue(transaction.getType());
+                row.createCell(2).setCellValue(transaction.getNumber());
+                row.createCell(3).setCellValue(transaction.getDescription() != null ? transaction.getDescription() : "");
+                
+                BigDecimal debit = transaction.getTotalDebit() != null ? transaction.getTotalDebit() : BigDecimal.ZERO;
+                BigDecimal credit = transaction.getTotalCredit() != null ? transaction.getTotalCredit() : BigDecimal.ZERO;
+                
+                row.createCell(4).setCellValue(debit.doubleValue());
+                row.createCell(5).setCellValue(credit.doubleValue());
+                
+                runningBalance = runningBalance.add(debit).subtract(credit);
+                row.createCell(6).setCellValue(runningBalance.doubleValue());
+            }
+            
+            // Auto-size columns
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+            
+            try (java.io.FileOutputStream fos = new java.io.FileOutputStream(file)) {
+                workbook.write(fos);
+            }
+            
+            logger.info("Exported {} transactions to Excel for third party {}: {}", 
+                transactions.size(), thirdParty.getName(), file.getAbsolutePath());
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.econovafx.ui.controller;
 
+import com.econovafx.controller.ThirdPartyTransactionsController;
 import com.econovafx.domain.ThirdParty;
 import com.econovafx.service.ExportService;
 import com.econovafx.service.ThirdPartyService;
@@ -258,10 +259,36 @@ public class ThirdPartiesController implements Initializable {
             return;
         }
         
-        logger.debug("View transactions for third party: {}", selected.getName());
-        // TODO: Implement transaction view for third party
-        showAlert(Alert.AlertType.INFORMATION, "Coming Soon", 
-                "Third party transactions view is under development");
+        logger.info("Opening transactions view for third party: {}", selected.getName());
+        
+        try {
+            // Load the FXML
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/com/econovafx/view/third-party-transactions.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            // Get controller and set dependencies
+            ThirdPartyTransactionsController controller = loader.getController();
+            controller.setServices(thirdPartyService, viewFactory.getTransactionService(), exportService);
+            controller.initData(selected);
+            
+            // Create and show stage
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Transactions - " + selected.getName());
+            stage.setScene(new javafx.scene.Scene(root, 900, 600));
+            stage.initOwner(thirdPartiesTable.getScene().getWindow());
+            stage.setResizable(true);
+            
+            controller.setStage(stage);
+            stage.showAndWait();
+            
+            logger.info("Closed transactions view for third party: {}", selected.getName());
+        } catch (Exception e) {
+            logger.error("Error opening transactions view", e);
+            showAlert(Alert.AlertType.ERROR, "Error", 
+                    "Failed to open transactions view: " + e.getMessage());
+        }
     }
     
     @FXML

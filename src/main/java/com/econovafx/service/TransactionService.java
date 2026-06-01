@@ -217,6 +217,10 @@ public class TransactionService {
     public long getTransactionsCount() {
         return transactionRepository.count();
     }
+
+    public List<Transaction> getTransactionsByThirdPartyId(Long thirdPartyId) {
+        return transactionRepository.findByThirdPartyId(thirdPartyId);
+    }
     
     public static class TransactionEntryData {
         private final Long accountId;
