@@ -1,0 +1,81 @@
+package com.econovafx.domain;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+/**
+ * Entity representing an accounting period (fiscal year/month).
+ * Used to control closing and opening of financial periods.
+ */
+@Entity
+@Table(name = "accounting_periods")
+public class AccountingPeriod {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 50)
+    private String name; // e.g., "Fiscal Year 2024", "January 2024"
+
+    @Column(nullable = false)
+    private LocalDate startDate;
+
+    @Column(nullable = false)
+    private LocalDate endDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PeriodStatus status = PeriodStatus.OPEN;
+
+    @Column(length = 255)
+    private String closedBy;
+
+    @Column
+    private LocalDate closedDate;
+
+    public enum PeriodStatus {
+        OPEN,
+        CLOSED,
+        LOCKED
+    }
+
+    // Constructors
+    public AccountingPeriod() {}
+
+    public AccountingPeriod(String name, LocalDate startDate, LocalDate endDate) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+
+    public LocalDate getEndDate() { return endDate; }
+    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+
+    public PeriodStatus getStatus() { return status; }
+    public void setStatus(PeriodStatus status) { this.status = status; }
+
+    public String getClosedBy() { return closedBy; }
+    public void setClosedBy(String closedBy) { this.closedBy = closedBy; }
+
+    public LocalDate getClosedDate() { return closedDate; }
+    public void setClosedDate(LocalDate closedDate) { this.closedDate = closedDate; }
+
+    public boolean isOpen() {
+        return this.status == PeriodStatus.OPEN;
+    }
+
+    public boolean isClosed() {
+        return this.status == PeriodStatus.CLOSED || this.status == PeriodStatus.LOCKED;
+    }
+}
