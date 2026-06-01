@@ -37,6 +37,7 @@
                     <Button fx:id="btnComprobantes" text="📄 Comprobantes de Operaciones" onAction="#showComprobantes" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                     <Button fx:id="btnClasificador" text="🗂️ Clasificador de Cuentas" onAction="#showClasificador" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                     <Button fx:id="btnTerceros" text="👥 Third Parties (Clientes/Proveedores)" onAction="#showTerceros" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
+                    <Button fx:id="btnPeriodos" text="📅 Periodos Contables" onAction="#showPeriodos" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                     <Button fx:id="btnCostos" text="💰 Costos y Procesos" onAction="#showCostos" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                 </VBox>
             </VBox>

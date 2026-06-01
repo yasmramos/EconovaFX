@@ -4,10 +4,12 @@ import com.econovafx.domain.Account;
 import com.econovafx.domain.ThirdParty;
 import com.econovafx.domain.Transaction;
 import com.econovafx.service.AccountService;
+import com.econovafx.service.AccountingPeriodService;
 import com.econovafx.service.ExportService;
 import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.ui.controller.AccountFormController;
+import com.econovafx.ui.controller.AccountingPeriodsController;
 import com.econovafx.ui.controller.AccountsController;
 import com.econovafx.ui.controller.ComprobanteFormController;
 import com.econovafx.ui.controller.ComprobantesController;
@@ -44,6 +46,7 @@ public class ViewFactory {
     private final AccountsController accountsController;
     private final TransactionsController transactionsController;
     private final ThirdPartiesController thirdPartiesController;
+    private final AccountingPeriodsController accountingPeriodsController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
@@ -52,11 +55,13 @@ public class ViewFactory {
     private final ThirdPartyService thirdPartyService;
     private final TransactionService transactionService;
     private final ExportService exportService;
+    private final AccountingPeriodService accountingPeriodService;
 
     public ViewFactory(DashboardController dashboardController,
                       AccountsController accountsController,
                       TransactionsController transactionsController,
                       ThirdPartiesController thirdPartiesController,
+                      AccountingPeriodsController accountingPeriodsController,
                       AccountFormController accountFormController,
                       ThirdPartyFormController thirdPartyFormController,
                       TransactionEntryController transactionEntryController,
@@ -64,11 +69,13 @@ public class ViewFactory {
                       AccountService accountService,
                       ThirdPartyService thirdPartyService,
                       TransactionService transactionService,
-                      ExportService exportService) {
+                      ExportService exportService,
+                      AccountingPeriodService accountingPeriodService) {
         this.dashboardController = dashboardController;
         this.accountsController = accountsController;
         this.transactionsController = transactionsController;
         this.thirdPartiesController = thirdPartiesController;
+        this.accountingPeriodsController = accountingPeriodsController;
         this.accountFormController = accountFormController;
         this.thirdPartyFormController = thirdPartyFormController;
         this.transactionEntryController = transactionEntryController;
@@ -77,6 +84,7 @@ public class ViewFactory {
         this.thirdPartyService = thirdPartyService;
         this.transactionService = transactionService;
         this.exportService = exportService;
+        this.accountingPeriodService = accountingPeriodService;
     }
 
     public TransactionService getTransactionService() {
@@ -143,6 +151,17 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading third parties view", e);
             throw new RuntimeException("Failed to load third parties view", e);
+        }
+    }
+    
+    public Node createAccountingPeriodsView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounting-periods.fxml"));
+            loader.setControllerFactory(cls -> accountingPeriodsController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading accounting periods view", e);
+            throw new RuntimeException("Failed to load accounting periods view", e);
         }
     }
     
