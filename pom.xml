@@ -313,11 +313,11 @@
     </build>
 
     <profiles>
-        <!-- Profile for full build with all dependencies and Java 21 -->
+        <!-- Profile for full build with all dependencies -->
         <profile>
             <id>full</id>
             <properties>
-                <java.version>21</java.version>
+                <java.version>17</java.version>
             </properties>
             <build>
                 <plugins>
@@ -326,7 +326,7 @@
                         <artifactId>maven-compiler-plugin</artifactId>
                         <version>3.12.1</version>
                         <configuration>
-                            <release>21</release>
+                            <release>17</release>
                             <annotationProcessorPaths>
                                 <path>
                                     <groupId>io.avaje</groupId>
