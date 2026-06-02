@@ -102,6 +102,10 @@ public class ComprobantesController implements Initializable {
     @FXML
     private Button btnCloseDetail;
 
+    // Root pane
+    @FXML
+    private StackPane rootPane;
+
     // Loading
     @FXML
     private StackPane loadingOverlay;
@@ -127,6 +131,14 @@ public class ComprobantesController implements Initializable {
         this.accountService = accountService;
         this.exportService = exportService;
         this.viewFactory = viewFactory;
+    }
+
+    /**
+     * Get the root pane of this controller's view
+     * @return StackPane root node
+     */
+    public StackPane getRootNode() {
+        return rootPane;
     }
 
     @Override
