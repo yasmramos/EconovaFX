@@ -78,6 +78,9 @@ public class MainViewController implements Initializable {
     private Button btnPeriodos;
 
     @FXML
+    private Button btnCierres;
+
+    @FXML
     private Button btnCostos;
 
     @FXML
@@ -318,6 +321,15 @@ public class MainViewController implements Initializable {
         contentArea.getChildren().clear();
         contentArea.getChildren().add(viewFactory.createAccountingPeriodsView());
         updateStatus("Accounting Periods Management");
+    }
+
+    @FXML
+    private void showCierres() {
+        logger.debug("Showing accounting closures management");
+        setActiveButton(btnCierres);
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createAccountingClosuresView());
+        updateStatus("Accounting Closures Management");
     }
 
     @FXML

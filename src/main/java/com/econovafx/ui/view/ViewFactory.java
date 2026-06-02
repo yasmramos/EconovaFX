@@ -9,6 +9,7 @@ import com.econovafx.service.ExportService;
 import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.ui.controller.AccountFormController;
+import com.econovafx.ui.controller.AccountingClosuresController;
 import com.econovafx.ui.controller.AccountingPeriodsController;
 import com.econovafx.ui.controller.AccountsController;
 import com.econovafx.ui.controller.ComprobanteFormController;
@@ -47,6 +48,7 @@ public class ViewFactory {
     private final TransactionsController transactionsController;
     private final ThirdPartiesController thirdPartiesController;
     private final AccountingPeriodsController accountingPeriodsController;
+    private final AccountingClosuresController accountingClosuresController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
@@ -62,6 +64,7 @@ public class ViewFactory {
                       TransactionsController transactionsController,
                       ThirdPartiesController thirdPartiesController,
                       AccountingPeriodsController accountingPeriodsController,
+                      AccountingClosuresController accountingClosuresController,
                       AccountFormController accountFormController,
                       ThirdPartyFormController thirdPartyFormController,
                       TransactionEntryController transactionEntryController,
@@ -76,6 +79,7 @@ public class ViewFactory {
         this.transactionsController = transactionsController;
         this.thirdPartiesController = thirdPartiesController;
         this.accountingPeriodsController = accountingPeriodsController;
+        this.accountingClosuresController = accountingClosuresController;
         this.accountFormController = accountFormController;
         this.thirdPartyFormController = thirdPartyFormController;
         this.transactionEntryController = transactionEntryController;
@@ -162,6 +166,17 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading accounting periods view", e);
             throw new RuntimeException("Failed to load accounting periods view", e);
+        }
+    }
+    
+    public Node createAccountingClosuresView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounting-closures.fxml"));
+            loader.setControllerFactory(cls -> accountingClosuresController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading accounting closures view", e);
+            throw new RuntimeException("Failed to load accounting closures view", e);
         }
     }
     
