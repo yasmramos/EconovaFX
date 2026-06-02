@@ -3,21 +3,17 @@ package com.econovafx.ui.util;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
-import javafx.geometry.Pos;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -25,320 +21,216 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
- * Modern dialog utility class that mimics web-style modal dialogs
- * with backdrop blur and smooth animations.
+ * Modern Modal Dialog with backdrop blur effect, similar to web applications.
+ * Supports showing any Node (forms, custom UI) in a centered, animated modal window.
+ * 
+ * Usage example:
+ * <pre>
+ * // Load your form from FXML
+ * Node form = FXMLLoader.load(getClass.getResource("my-form.fxml"));
+ * 
+ * // Show as modal dialog
+ * ModernDialog.showModal(ownerStage, form, "My Form Title");
+ * 
+ * // Or show and wait for closure
+ * ModernDialog.showAndWait(ownerStage, form, "My Form Title");
+ * </pre>
  */
 public class ModernDialog {
 
-    private static final double BACKDROP_OPACITY = 0.6;
-    private static final int DIALOG_WIDTH = 450;
-    private static final int DIALOG_MAX_HEIGHT = 400;
-
-    public enum DialogType {
-        INFO, SUCCESS, WARNING, ERROR, CONFIRM
-    }
+    private static final Color BACKDROP_COLOR = new Color(0, 0, 0, 0.5);
+    private static final Duration ANIMATION_DURATION = Duration.millis(250);
 
     /**
-     * Shows a modern modal dialog with backdrop effect.
+     * Shows a node as a modern modal dialog with backdrop blur effect.
+     * Non-blocking method - returns immediately.
      * 
-     * @param owner The owner stage
-     * @param title Dialog title
-     * @param message Message content
-     * @param type Dialog type (determines icon and colors)
-     * @param buttons Optional custom buttons (if none provided, default OK button is used)
-     * @return The button clicked by the user, or null if dismissed
+     * @param ownerStage The owner stage (main window)
+     * @param content The content node to display (e.g., a form loaded from FXML)
+     * @param title The dialog title (optional, can be null - displayed in window title bar if Stage allows)
+     * @return ObjectProperty that completes when the dialog is closed
      */
-    public static Button showDialog(Stage owner, String title, String message, 
-                                   DialogType type, Button... buttons) {
-        
-        // Create backdrop (semi-transparent blurred background)
-        Pane backdrop = createBackdrop(owner);
-        
-        // Create dialog content
-        VBox dialogContent = createDialogContent(title, message, type, buttons);
-        
-        // Create main container
-        StackPane root = new StackPane(backdrop, dialogContent);
-        root.setStyle("-fx-background-color: transparent;");
-        
-        // Create stage for the dialog
-        Stage dialogStage = new Stage(StageStyle.TRANSPARENT);
-        dialogStage.initOwner(owner);
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setScene(new Scene(root, Color.TRANSPARENT));
-        dialogStage.setResizable(false);
-        
-        // Center dialog on owner
-        dialogStage.setX(owner.getX() + (owner.getWidth() - DIALOG_WIDTH) / 2);
-        dialogStage.setY(owner.getY() + (owner.getHeight() - dialogContent.getHeight()) / 2);
-        
-        // Show with animation
-        dialogStage.show();
-        animateDialogEntrance(dialogContent, backdrop);
-        
-        // Wait for dialog to close
-        try {
-            javafx.application.Platform.runLater(() -> {
-                // Dummy operation to keep focus
-            });
-            
-            // Simple blocking mechanism for modal behavior
-            final boolean[] closed = {false};
-            final Button[] result = {null};
-            
-            // Override close request
-            dialogStage.setOnCloseRequest(e -> {
-                closed[0] = true;
-            });
-            
-            // This is a simplified version - in real app we'd use a more robust blocking mechanism
-            // For now, we'll return null and rely on callbacks for complex interactions
-            return null;
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    public static ObjectProperty<Void> showModal(Stage ownerStage, Node content, String title) {
+        // Create the dialog stage
+        Stage dialogStage = new Stage();
+        dialogStage.initOwner(ownerStage);
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        dialogStage.initStyle(StageStyle.TRANSPARENT);
 
-    /**
-     * Shows a confirmation dialog with Yes/No buttons.
-     * 
-     * @param owner The owner stage
-     * @param title Dialog title
-     * @param message Message content
-     * @return true if user clicked Yes, false otherwise
-     */
-    public static boolean showConfirmation(Stage owner, String title, String message) {
-        // Use a simple approach with a result holder
-        final boolean[] result = {false};
-        final boolean[] completed = {false};
+        // Create the root pane with transparency
+        Pane rootPane = new Pane();
+        rootPane.setStyle("-fx-background-color: transparent;");
+
+        // Create backdrop (semi-transparent dark overlay)
+        Region backdrop = new Region();
+        backdrop.setBackground(new Background(new BackgroundFill(
+            BACKDROP_COLOR, CornerRadii.EMPTY, null)));
+        backdrop.setMouseTransparent(false); // Capture clicks to prevent interaction with main window
+
+        // Apply blur effect to the owner stage's scene content
+        BoxBlur blur = new BoxBlur(10, 10, 3);
+        Node ownerContent = ownerStage.getScene().getRoot();
+        ownerContent.setEffect(blur);
+
+        // Create content container with white background and shadow
+        Pane contentContainer = new Pane(content);
+        contentContainer.setStyle(
+            "-fx-background-color: white;" +
+            "-fx-background-radius: 12;" +
+            "-fx-border-radius: 12;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 30, 0.5, 0, 10);"
+        );
         
-        showConfirmationWithCallback(owner, title, message, 
-            () -> { result[0] = true; completed[0] = true; },
-            () -> { result[0] = false; completed[0] = true; });
-        
-        // Wait for completion (modal behavior)
-        try {
-            synchronized (completed) {
-                while (!completed[0]) {
-                    completed.wait(100);
-                }
+        // Set preferred size if not already set
+        if (content instanceof Region) {
+            Region region = (Region) content;
+            if (region.getPrefWidth() == 0 || region.getPrefWidth() < 300) {
+                region.setPrefWidth(550);
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            if (region.getPrefHeight() == 0 || region.getPrefHeight() < 200) {
+                region.setPrefHeight(450);
+            }
         }
-        
-        return result[0];
-    }
 
-    /**
-     * Shows a confirmation dialog with callbacks for Yes/No actions.
-     */
-    public static boolean showConfirmationWithCallback(Stage owner, String title, String message, 
-                                                      Runnable onYes, Runnable onNo) {
-        Pane backdrop = createBackdrop(owner);
-        
-        Label titleLabel = new Label(title);
-        titleLabel.getStyleClass().add("modern-dialog-title");
-        
-        Label messageLabel = new Label(message);
-        messageLabel.getStyleClass().add("modern-dialog-message");
-        messageLabel.setWrapText(true);
-        
-        Button yesButton = new Button("Yes");
-        yesButton.getStyleClass().addAll("modern-button", "button-primary");
-        yesButton.setOnAction(e -> {
-            onYes.run();
-            closeDialog(backdrop, owner);
+        // Add nodes to root
+        rootPane.getChildren().addAll(backdrop, contentContainer);
+
+        // Sync root size with owner using listeners (avoid bind on ReadOnlyProperty)
+        ownerStage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            rootPane.setPrefWidth(newVal.doubleValue());
+            backdrop.setPrefWidth(newVal.doubleValue());
+            contentContainer.setLayoutX((newVal.doubleValue() - contentContainer.getPrefWidth()) / 2);
+        });
+        ownerStage.heightProperty().addListener((obs, oldVal, newVal) -> {
+            rootPane.setPrefHeight(newVal.doubleValue());
+            backdrop.setPrefHeight(newVal.doubleValue());
+            contentContainer.setLayoutY((newVal.doubleValue() - contentContainer.getPrefHeight()) / 2);
         });
         
-        Button noButton = new Button("No");
-        noButton.getStyleClass().addAll("modern-button", "button-secondary");
-        noButton.setOnAction(e -> {
-            onNo.run();
-            closeDialog(backdrop, owner);
+        // Initialize sizes
+        rootPane.setPrefWidth(ownerStage.getWidth());
+        rootPane.setPrefHeight(ownerStage.getHeight());
+        backdrop.setPrefWidth(ownerStage.getWidth());
+        backdrop.setPrefHeight(ownerStage.getHeight());
+        contentContainer.setLayoutX((ownerStage.getWidth() - contentContainer.getPrefWidth()) / 2);
+        contentContainer.setLayoutY((ownerStage.getHeight() - contentContainer.getPrefHeight()) / 2);
+
+        // Create scene
+        Scene scene = new Scene(rootPane, ownerStage.getWidth(), ownerStage.getHeight(), Color.TRANSPARENT);
+        dialogStage.setScene(scene);
+
+        // Handle close requests
+        ObjectProperty<Void> closeProperty = new SimpleObjectProperty<>();
+        dialogStage.setOnCloseRequest(event -> {
+            ownerContent.setEffect(null); // Remove blur
+            closeProperty.setValue(null);
         });
-        
-        HBox buttonBox = new HBox(10, noButton, yesButton);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        
-        VBox content = new VBox(15, titleLabel, messageLabel, buttonBox);
-        content.getStyleClass().add("modern-dialog-pane");
-        content.setPrefWidth(DIALOG_WIDTH);
-        
-        StackPane root = new StackPane(backdrop, content);
-        root.setStyle("-fx-background-color: transparent;");
-        
-        Stage dialogStage = new Stage(StageStyle.TRANSPARENT);
-        dialogStage.initOwner(owner);
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setScene(new Scene(root, Color.TRANSPARENT));
-        dialogStage.setResizable(false);
-        
-        // Center dialog
-        double x = owner.getX() + (owner.getWidth() - DIALOG_WIDTH) / 2;
-        double y = owner.getY() + (owner.getHeight() - content.prefHeight(-1)) / 2;
-        dialogStage.setX(x);
-        dialogStage.setY(y);
-        
+
+        // Show the dialog
         dialogStage.show();
-        animateDialogEntrance(content, backdrop);
-        
-        return true; // Actual result handled via callbacks
+
+        // Play entrance animations
+        playEntranceAnimation(backdrop, contentContainer);
+
+        return closeProperty;
     }
 
     /**
-     * Shows an information dialog.
+     * Shows a node as a modern modal dialog and waits for it to close.
+     * Blocking method - use this when you need to wait for user input.
+     * 
+     * @param ownerStage The owner stage
+     * @param content The content node to display
+     * @param title The dialog title
      */
-    public static void showInfo(Stage owner, String title, String message) {
-        showMessageDialog(owner, title, message, DialogType.INFO);
+    public static void showAndWait(Stage ownerStage, Node content, String title) {
+        ObjectProperty<Void> property = showModal(ownerStage, content, title);
+        // Wait for the property to be set (dialog closed)
+        while (property.getValue() == null) {
+            try {
+                Thread.sleep(50);
+                Platform.runLater(() -> {}); // Pump events to keep UI responsive
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
     }
 
     /**
-     * Shows a success dialog.
+     * Closes the dialog gracefully with exit animation.
+     * Call this method from within the dialog content when you want to close it.
+     * 
+     * @param dialogStage The dialog stage to close
+     * @param ownerContent The original owner's root node (to remove blur effect)
      */
-    public static void showSuccess(Stage owner, String title, String message) {
-        showMessageDialog(owner, title, message, DialogType.SUCCESS);
-    }
+    public static void closeDialog(Stage dialogStage, Node ownerContent) {
+        if (dialogStage == null || !dialogStage.isShowing()) {
+            return;
+        }
 
-    /**
-     * Shows a warning dialog.
-     */
-    public static void showWarning(Stage owner, String title, String message) {
-        showMessageDialog(owner, title, message, DialogType.WARNING);
-    }
+        Node backdrop = null;
+        Node content = null;
 
-    /**
-     * Shows an error dialog.
-     */
-    public static void showError(Stage owner, String title, String message) {
-        showMessageDialog(owner, title, message, DialogType.ERROR);
-    }
+        if (dialogStage.getScene() != null && dialogStage.getScene().getRoot() instanceof Pane) {
+            Pane root = (Pane) dialogStage.getScene().getRoot();
+            if (root.getChildren().size() >= 2) {
+                backdrop = root.getChildren().get(0);
+                content = root.getChildren().get(1);
+            }
+        }
 
-    private static void showMessageDialog(Stage owner, String title, String message, DialogType type) {
-        Pane backdrop = createBackdrop(owner);
-        
-        Label titleLabel = new Label(title);
-        titleLabel.getStyleClass().add("modern-dialog-title");
-        
-        Label messageLabel = new Label(message);
-        messageLabel.getStyleClass().add("modern-dialog-message");
-        messageLabel.setWrapText(true);
-        
-        Button okButton = new Button("OK");
-        okButton.getStyleClass().addAll("modern-button", getButtonStyleForType(type));
-        okButton.setOnAction(e -> closeDialog(backdrop, owner));
-        
-        HBox buttonBox = new HBox(okButton);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        
-        VBox content = new VBox(15, titleLabel, messageLabel, buttonBox);
-        content.getStyleClass().add("modern-dialog-pane");
-        content.setPrefWidth(DIALOG_WIDTH);
-        
-        StackPane root = new StackPane(backdrop, content);
-        root.setStyle("-fx-background-color: transparent;");
-        
-        Stage dialogStage = new Stage(StageStyle.TRANSPARENT);
-        dialogStage.initOwner(owner);
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setScene(new Scene(root, Color.TRANSPARENT));
-        dialogStage.setResizable(false);
-        
-        // Center dialog
-        double x = owner.getX() + (owner.getWidth() - DIALOG_WIDTH) / 2;
-        double y = owner.getY() + (owner.getHeight() - content.prefHeight(-1)) / 2;
-        dialogStage.setX(x);
-        dialogStage.setY(y);
-        
-        dialogStage.show();
-        animateDialogEntrance(content, backdrop);
-    }
+        if (backdrop != null && content != null) {
+            // Fade out backdrop
+            FadeTransition fadeBackdrop = new FadeTransition(ANIMATION_DURATION, backdrop);
+            fadeBackdrop.setFromValue(1.0);
+            fadeBackdrop.setToValue(0.0);
 
-    private static Pane createBackdrop(Stage owner) {
-        Pane backdrop = new Pane();
-        backdrop.setBackground(new Background(
-            new BackgroundFill(Color.rgb(0, 0, 0, (int)(BACKDROP_OPACITY * 255)), 
-                             CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY)
-        ));
-        backdrop.setPickOnBounds(true);
-        
-        // Bind backdrop size to owner
-        backdrop.prefWidthProperty().bind(owner.widthProperty());
-        backdrop.prefHeightProperty().bind(owner.heightProperty());
-        
-        return backdrop;
-    }
+            // Scale and fade out content
+            ScaleTransition scale = new ScaleTransition(ANIMATION_DURATION, content);
+            scale.setFromX(1.0);
+            scale.setFromY(1.0);
+            scale.setToX(0.95);
+            scale.setToY(0.95);
 
-    private static VBox createDialogContent(String title, String message, DialogType type, Button[] buttons) {
-        Label titleLabel = new Label(title);
-        titleLabel.getStyleClass().add("modern-dialog-title");
-        
-        Label messageLabel = new Label(message);
-        messageLabel.getStyleClass().add("modern-dialog-message");
-        messageLabel.setWrapText(true);
-        
-        HBox buttonBox;
-        if (buttons == null || buttons.length == 0) {
-            Button okButton = new Button("OK");
-            okButton.getStyleClass().addAll("modern-button", getButtonStyleForType(type));
-            buttonBox = new HBox(okButton);
+            FadeTransition fadeContent = new FadeTransition(ANIMATION_DURATION, content);
+            fadeContent.setFromValue(1.0);
+            fadeContent.setToValue(0.0);
+
+            ParallelTransition parallel = new ParallelTransition(fadeBackdrop, scale, fadeContent);
+            parallel.setOnFinished(event -> {
+                if (ownerContent != null) {
+                    ownerContent.setEffect(null); // Remove blur from owner
+                }
+                dialogStage.close();
+            });
+            parallel.play();
         } else {
-            buttonBox = new HBox(10, buttons);
+            if (ownerContent != null) {
+                ownerContent.setEffect(null);
+            }
+            dialogStage.close();
         }
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        
-        VBox content = new VBox(15, titleLabel, messageLabel, buttonBox);
-        content.getStyleClass().add("modern-dialog-pane");
-        content.setPrefWidth(DIALOG_WIDTH);
-        content.setMaxHeight(DIALOG_MAX_HEIGHT);
-        
-        return content;
     }
 
-    private static String getButtonStyleForType(DialogType type) {
-        return switch (type) {
-            case SUCCESS -> "button-success";
-            case ERROR, WARNING -> "button-danger";
-            default -> "button-primary";
-        };
-    }
-
-    private static void animateDialogEntrance(VBox dialog, Pane backdrop) {
+    private static void playEntranceAnimation(Node backdrop, Node content) {
         // Fade in backdrop
-        FadeTransition backdropFade = new FadeTransition(Duration.millis(200), backdrop);
-        backdropFade.setFromValue(0);
-        backdropFade.setToValue(1);
-        
-        // Scale and fade in dialog
-        ScaleTransition scale = new ScaleTransition(Duration.millis(300), dialog);
-        scale.setFromX(0.8);
-        scale.setFromY(0.8);
-        scale.setToX(1);
-        scale.setToY(1);
-        
-        FadeTransition dialogFade = new FadeTransition(Duration.millis(300), dialog);
-        dialogFade.setFromValue(0);
-        dialogFade.setToValue(1);
-        
-        ParallelTransition parallel = new ParallelTransition(backdropFade, scale, dialogFade);
-        parallel.play();
-    }
+        FadeTransition fadeBackdrop = new FadeTransition(ANIMATION_DURATION, backdrop);
+        fadeBackdrop.setFromValue(0.0);
+        fadeBackdrop.setToValue(1.0);
 
-    private static void closeDialog(Pane backdrop, Stage owner) {
-        // Get the stage that contains the backdrop
-        Scene scene = backdrop.getScene();
-        
-        if (scene != null) {
-            Stage stage = (Stage) scene.getWindow();
-            
-            // Animate exit
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(150), backdrop);
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-            fadeOut.setOnFinished(e -> stage.close());
-            fadeOut.play();
-        }
+        // Scale and fade in content with smooth bounce effect
+        ScaleTransition scale = new ScaleTransition(ANIMATION_DURATION.multiply(1.2), content);
+        scale.setFromX(0.85);
+        scale.setFromY(0.85);
+        scale.setToX(1.0);
+        scale.setToY(1.0);
+
+        FadeTransition fadeContent = new FadeTransition(ANIMATION_DURATION, content);
+        fadeContent.setFromValue(0.0);
+        fadeContent.setToValue(1.0);
+
+        ParallelTransition parallel = new ParallelTransition(fadeBackdrop, scale, fadeContent);
+        parallel.play();
     }
 }
