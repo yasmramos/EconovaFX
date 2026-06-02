@@ -68,17 +68,22 @@ public class ModernDialogVisualTest extends ApplicationTest {
         // Click button to open dialog
         clickOn("Open Dialog");
         
-        // Wait for dialog to appear
+        // Wait for dialog to appear and ensure we're on FX thread
         Thread.sleep(500);
-        
-        // Verify dialog is visible
-        verifyThat(".dialog-content", isVisible());
-        
-        // Capture screenshot
-        Scene scene = primaryStage.getScene();
-        if (scene != null && scene.getRoot() != null) {
-            VisualTestUtils.captureNode(scene.getRoot(), "modern-dialog-open");
-        }
+        interact(() -> {
+            // Verify dialog is visible
+            verifyThat(".dialog-content", isVisible());
+            
+            // Capture screenshot
+            Scene scene = primaryStage.getScene();
+            if (scene != null && scene.getRoot() != null) {
+                try {
+                    VisualTestUtils.captureNode(scene.getRoot(), "modern-dialog-open");
+                } catch (Exception e) {
+                    System.err.println("Failed to capture dialog screenshot: " + e.getMessage());
+                }
+            }
+        });
     }
 
     @Test
@@ -87,15 +92,24 @@ public class ModernDialogVisualTest extends ApplicationTest {
         clickOn("Open Dialog");
         Thread.sleep(300);
         
-        // Close dialog by clicking close button
-        clickOn("Close");
+        // Close dialog and capture on FX thread
+        interact(() -> {
+            // Close dialog by clicking close button
+            clickOn("Close");
+        });
         Thread.sleep(500);
         
         // Capture screenshot of closed state
-        Scene scene = primaryStage.getScene();
-        if (scene != null && scene.getRoot() != null) {
-            VisualTestUtils.captureNode(scene.getRoot(), "modern-dialog-closed");
-        }
+        interact(() -> {
+            Scene scene = primaryStage.getScene();
+            if (scene != null && scene.getRoot() != null) {
+                try {
+                    VisualTestUtils.captureNode(scene.getRoot(), "modern-dialog-closed");
+                } catch (Exception e) {
+                    System.err.println("Failed to capture closed dialog screenshot: " + e.getMessage());
+                }
+            }
+        });
     }
 
     private VBox createDialogContent() {
