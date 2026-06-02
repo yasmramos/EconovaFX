@@ -47,6 +47,7 @@ public final class AppContext {
     private TransactionsController transactionsController;
     private ThirdPartiesController thirdPartiesController;
     private AccountingPeriodsController accountingPeriodsController;
+    private AccountingClosuresController accountingClosuresController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
@@ -86,12 +87,15 @@ public final class AppContext {
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
 
         // Create view factory with controllers
+        accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
+        
         viewFactory = new ViewFactory(
                 dashboardController,
                 accountsController,
                 transactionsController,
                 thirdPartiesController,
                 accountingPeriodsController,
+                accountingClosuresController,
                 accountFormController,
                 thirdPartyFormController,
                 transactionEntryController,
@@ -110,6 +114,7 @@ public final class AppContext {
         thirdPartiesController = new ThirdPartiesController(thirdPartyService, viewFactory, exportService);
         comprobantesController = new ComprobantesController(transactionService, accountService, exportService, viewFactory);
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
+        accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
 
         // Re-create view factory with updated controllers
         viewFactory = new ViewFactory(
@@ -118,6 +123,7 @@ public final class AppContext {
                 transactionsController,
                 thirdPartiesController,
                 accountingPeriodsController,
+                accountingClosuresController,
                 accountFormController,
                 thirdPartyFormController,
                 transactionEntryController,

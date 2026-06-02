@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.ui.controller.AccountingClosuresController"
+      fx:id="contentArea"
+      spacing="20"
+      styleClass="bg-gray-50, p-6">
+
+    <Label text="🔒 Cierres Contables" styleClass="text-2xl, font-bold, text-slate-800"/>
+    
+    <Separator/>
+
+    <!-- Info Panel -->
+    <VBox styleClass="card, bg-white, p-6" spacing="15">
+        <Label text="Gestión de Cierres Contables" styleClass="text-lg, font-semibold, text-slate-700"/>
+        <Label text="Administre los cierres mensuales y anuales del sistema contable. Esta funcionalidad permite cerrar periodos contables de forma segura, generando los asientos de cierre correspondientes y bloqueando movimientos en periodos ya cerrados." 
+               styleClass="text-slate-600" wrapText="true"/>
+        
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Button text="📊 Ver Periodos Abiertos" styleClass="btn, btn-primary"/>
+            <Button text="🔒 Ejecutar Cierre Mensual" styleClass="btn, btn-warning"/>
+            <Button text="📅 Ejecutar Cierre Anual" styleClass="btn, btn-danger"/>
+        </HBox>
+    </VBox>
+
+    <!-- Closures List Placeholder -->
+    <VBox styleClass="card, bg-white, p-6" spacing="15" VBox.vgrow="ALWAYS">
+        <Label text="Historial de Cierres" styleClass="text-lg, font-semibold, text-slate-700"/>
+        
+        <TableView prefHeight="300">
+            <columns>
+                <TableColumn text="Tipo" prefWidth="150"/>
+                <TableColumn text="Periodo" prefWidth="200"/>
+                <TableColumn text="Fecha Cierre" prefWidth="150"/>
+                <TableColumn text="Usuario" prefWidth="200"/>
+                <TableColumn text="Estado" prefWidth="150"/>
+                <TableColumn text="Acciones" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+</VBox>

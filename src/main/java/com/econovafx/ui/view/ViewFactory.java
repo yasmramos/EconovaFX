@@ -9,6 +9,7 @@ import com.econovafx.service.ExportService;
 import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.ui.controller.AccountFormController;
+import com.econovafx.ui.controller.AccountingClosuresController;
 import com.econovafx.ui.controller.AccountingPeriodsController;
 import com.econovafx.ui.controller.AccountsController;
 import com.econovafx.ui.controller.ComprobanteFormController;
@@ -18,6 +19,7 @@ import com.econovafx.ui.controller.ThirdPartiesController;
 import com.econovafx.ui.controller.ThirdPartyFormController;
 import com.econovafx.ui.controller.TransactionEntryController;
 import com.econovafx.ui.controller.TransactionsController;
+import com.econovafx.ui.util.ModernDialog;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -47,6 +49,7 @@ public class ViewFactory {
     private final TransactionsController transactionsController;
     private final ThirdPartiesController thirdPartiesController;
     private final AccountingPeriodsController accountingPeriodsController;
+    private final AccountingClosuresController accountingClosuresController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
@@ -62,6 +65,7 @@ public class ViewFactory {
                       TransactionsController transactionsController,
                       ThirdPartiesController thirdPartiesController,
                       AccountingPeriodsController accountingPeriodsController,
+                      AccountingClosuresController accountingClosuresController,
                       AccountFormController accountFormController,
                       ThirdPartyFormController thirdPartyFormController,
                       TransactionEntryController transactionEntryController,
@@ -76,6 +80,7 @@ public class ViewFactory {
         this.transactionsController = transactionsController;
         this.thirdPartiesController = thirdPartiesController;
         this.accountingPeriodsController = accountingPeriodsController;
+        this.accountingClosuresController = accountingClosuresController;
         this.accountFormController = accountFormController;
         this.thirdPartyFormController = thirdPartyFormController;
         this.transactionEntryController = transactionEntryController;
@@ -147,12 +152,17 @@ public class ViewFactory {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/third-parties.fxml"));
             loader.setControllerFactory(cls -> thirdPartiesController);
-            return loader.load();
+            Node view = loader.load();
+            // Store reference for dialog owner lookup
+            this.currentThirdPartiesView = view;
+            return view;
         } catch (IOException e) {
             logger.error("Error loading third parties view", e);
             throw new RuntimeException("Failed to load third parties view", e);
         }
     }
+    
+    private Node currentThirdPartiesView;
     
     public Node createAccountingPeriodsView() {
         try {
@@ -162,6 +172,17 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading accounting periods view", e);
             throw new RuntimeException("Failed to load accounting periods view", e);
+        }
+    }
+    
+    public Node createAccountingClosuresView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounting-closures.fxml"));
+            loader.setControllerFactory(cls -> accountingClosuresController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading accounting closures view", e);
+            throw new RuntimeException("Failed to load accounting closures view", e);
         }
     }
     
@@ -240,23 +261,15 @@ public class ViewFactory {
 
             controller.setEditingTransaction(transaction);
 
-            Stage stage = new Stage(StageStyle.UNDECORATED);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle(transaction == null ? "New Voucher" : "Edit Voucher");
+            // Use ModernDialog for web-style modal with backdrop blur
+            Stage ownerStage = comprobantesController != null && comprobantesController.getRootNode() != null ? 
+                (Stage) comprobantesController.getRootNode().getScene().getWindow() : null;
+            if (ownerStage == null) {
+                logger.warn("Could not determine owner stage for comprobante dialog");
+                return Optional.empty();
+            }
             
-            Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);
-            
-            // Add custom styles
-            scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
-            
-            stage.setScene(scene);
-            stage.setResizable(true);
-            
-            // Make dialog draggable
-            setupDraggable(stage, root);
-            
-            stage.showAndWait();
+            ModernDialog.showAndWait(ownerStage, root, transaction == null ? "New Voucher" : "Edit Voucher");
 
             return Optional.ofNullable(controller.getResult());
 
@@ -274,23 +287,14 @@ public class ViewFactory {
 
             thirdPartyFormController.setEditingThirdParty(thirdParty);
 
-            Stage stage = new Stage(StageStyle.UNDECORATED);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle(thirdParty == null ? "New Third Party" : "Edit Third Party");
-            
-            Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);
-            
-            // Add custom styles
-            scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
-            
-            stage.setScene(scene);
-            stage.setResizable(false);
-            
-            // Make dialog draggable via FXML
-            setupDraggable(stage, root);
-            
-            stage.showAndWait();
+            // Use ModernDialog for web-style modal with backdrop blur
+            Stage ownerStage = currentThirdPartiesView != null ? 
+                (Stage) currentThirdPartiesView.getScene().getWindow() : null;
+            if (ownerStage == null) {
+                logger.warn("Could not determine owner stage for dialog");
+                return Optional.empty();
+            }
+            ModernDialog.showAndWait(ownerStage, root, thirdParty == null ? "New Third Party" : "Edit Third Party");
 
             return Optional.ofNullable(thirdPartyFormController.getResult());
 
