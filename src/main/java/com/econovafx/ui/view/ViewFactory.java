@@ -19,6 +19,7 @@ import com.econovafx.ui.controller.ThirdPartiesController;
 import com.econovafx.ui.controller.ThirdPartyFormController;
 import com.econovafx.ui.controller.TransactionEntryController;
 import com.econovafx.ui.controller.TransactionsController;
+import com.econovafx.ui.util.ModernDialog;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -151,12 +152,17 @@ public class ViewFactory {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/third-parties.fxml"));
             loader.setControllerFactory(cls -> thirdPartiesController);
-            return loader.load();
+            Node view = loader.load();
+            // Store reference for dialog owner lookup
+            this.currentThirdPartiesView = view;
+            return view;
         } catch (IOException e) {
             logger.error("Error loading third parties view", e);
             throw new RuntimeException("Failed to load third parties view", e);
         }
     }
+    
+    private Node currentThirdPartiesView;
     
     public Node createAccountingPeriodsView() {
         try {
@@ -289,23 +295,14 @@ public class ViewFactory {
 
             thirdPartyFormController.setEditingThirdParty(thirdParty);
 
-            Stage stage = new Stage(StageStyle.UNDECORATED);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle(thirdParty == null ? "New Third Party" : "Edit Third Party");
-            
-            Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);
-            
-            // Add custom styles
-            scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
-            
-            stage.setScene(scene);
-            stage.setResizable(false);
-            
-            // Make dialog draggable via FXML
-            setupDraggable(stage, root);
-            
-            stage.showAndWait();
+            // Use ModernDialog for web-style modal with backdrop blur
+            Stage ownerStage = currentThirdPartiesView != null ? 
+                (Stage) currentThirdPartiesView.getScene().getWindow() : null;
+            if (ownerStage == null) {
+                logger.warn("Could not determine owner stage for dialog");
+                return Optional.empty();
+            }
+            ModernDialog.showAndWait(ownerStage, root, thirdParty == null ? "New Third Party" : "Edit Third Party");
 
             return Optional.ofNullable(thirdPartyFormController.getResult());
 
