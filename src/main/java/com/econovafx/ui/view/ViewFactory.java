@@ -261,23 +261,15 @@ public class ViewFactory {
 
             controller.setEditingTransaction(transaction);
 
-            Stage stage = new Stage(StageStyle.UNDECORATED);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle(transaction == null ? "New Voucher" : "Edit Voucher");
+            // Use ModernDialog for web-style modal with backdrop blur
+            Stage ownerStage = comprobantesController != null && comprobantesController.getRootNode() != null ? 
+                (Stage) comprobantesController.getRootNode().getScene().getWindow() : null;
+            if (ownerStage == null) {
+                logger.warn("Could not determine owner stage for comprobante dialog");
+                return Optional.empty();
+            }
             
-            Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);
-            
-            // Add custom styles
-            scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
-            
-            stage.setScene(scene);
-            stage.setResizable(true);
-            
-            // Make dialog draggable
-            setupDraggable(stage, root);
-            
-            stage.showAndWait();
+            ModernDialog.showAndWait(ownerStage, root, transaction == null ? "New Voucher" : "Edit Voucher");
 
             return Optional.ofNullable(controller.getResult());
 
