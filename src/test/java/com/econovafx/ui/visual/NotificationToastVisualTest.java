@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
+import static com.econovafx.ui.visual.VisualTestUtils.captureNode;
 
 /**
  * Visual tests for Notification Toast component.
