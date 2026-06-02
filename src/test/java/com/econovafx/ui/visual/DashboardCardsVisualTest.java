@@ -12,6 +12,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.math.BigDecimal;
+import static com.econovafx.ui.visual.VisualTestUtils.captureNode;
 
 /**
  * Visual tests for Dashboard KPI Cards component.
