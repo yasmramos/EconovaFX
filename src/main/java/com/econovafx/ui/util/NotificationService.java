@@ -53,6 +53,15 @@ public class NotificationService {
         showNotification(stage, message, Color.web("#17a2b8"), "ℹ");
     }
 
+    /**
+     * Shows a warning notification.
+     * @param stage The owner stage.
+     * @param message The message to display.
+     */
+    public static void showWarning(Stage stage, String message) {
+        showNotification(stage, message, Color.web("#ffc107"), "⚠");
+    }
+
     private static void showNotification(Stage stage, String message, Color color, String icon) {
         if (stage == null || stage.getScene() == null) return;
 
