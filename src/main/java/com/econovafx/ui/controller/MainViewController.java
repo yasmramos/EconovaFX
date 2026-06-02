@@ -3,6 +3,7 @@ package com.econovafx.ui.controller;
 import com.econovafx.service.AccountService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.service.UserService;
+import com.econovafx.ui.util.NotificationService;
 import com.econovafx.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -131,7 +132,7 @@ public class MainViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("MainViewController initialized");
-        currentUserLabel.setText("Usuario: Administrador");
+        currentUserLabel.setText("User: Administrator");
         
         // Bind sidebar VBox minHeight to ScrollPane height so spacer works
         if (sidebarVBox != null && sidebarScrollPane != null) {
@@ -139,6 +140,9 @@ public class MainViewController implements Initializable {
         }
         
         showDashboard();
+        
+        // Show welcome notification
+        NotificationService.showInfo(getStage(), "Welcome to EconoNova FX v1.0.0");
     }
 
     private void setActiveButton(Button button) {
@@ -377,10 +381,18 @@ public class MainViewController implements Initializable {
     @FXML
     private void handleLogout() {
         logger.info("User logged out");
+        NotificationService.showInfo(getStage(), "Logging out...");
     }
     
     private void updateStatus(String message) {
         statusLabel.setText(message);
+    }
+    
+    private javafx.stage.Stage getStage() {
+        if (contentArea != null && contentArea.getScene() != null) {
+            return (javafx.stage.Stage) contentArea.getScene().getWindow();
+        }
+        return null;
     }
     
     public AccountService getAccountService() {
