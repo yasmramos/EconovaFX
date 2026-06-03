@@ -406,4 +406,11 @@ public class MainViewController implements Initializable {
     public UserService getUserService() {
         return userService;
     }
+
+    /**
+     * Returns the root node of this view for visual testing
+     */
+    public javafx.scene.layout.VBox getRootNode() {
+        return sidebarVBox;
+    }
 }
