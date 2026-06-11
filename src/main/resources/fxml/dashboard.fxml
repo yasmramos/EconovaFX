@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="16" styleClass="bg-gray-100, p-6" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.ui.controller.DashboardController">
+<VBox spacing="16" styleClass="p-6" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.ui.controller.DashboardController">
 
     <!-- Header with Refresh -->
     <HBox alignment="CENTER_LEFT" spacing="16" styleClass="dashboard-header">
@@ -46,71 +46,71 @@
         </columnConstraints>
 
         <!-- Total Assets Card -->
-        <VBox styleClass="summary-card, card-assets" GridPane.columnIndex="0">
+        <VBox styleClass="card-assets" GridPane.columnIndex="0">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg">
                     <Label styleClass="text-3xl" text="💰" />
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Activos" />
-                    <Label fx:id="totalAssetsLabel" styleClass="card-value, value-positive" text="\$ 0.00" />
-                    <Label fx:id="assetsTrendLabel" styleClass="card-trend, trend-positive" text="+0%" />
+                    <Label fx:id="totalAssetsLabel" styleClass="value-positive" text="$ 0.00" />
+                    <Label fx:id="assetsTrendLabel" styleClass="trend-positive" text="+0%" />
                 </VBox>
             </HBox>
         </VBox>
 
         <!-- Total Liabilities Card -->
-        <VBox styleClass="summary-card, card-liabilities" GridPane.columnIndex="1">
+        <VBox styleClass="card-liabilities" GridPane.columnIndex="1">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-red">
                     <Label styleClass="text-3xl" text="📋" />
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Pasivos" />
-                    <Label fx:id="totalLiabilitiesLabel" styleClass="card-value, value-negative" text="\$ 0.00" />
-                    <Label fx:id="liabilitiesTrendLabel" styleClass="card-trend, trend-positive" text="-0%" />
+                    <Label fx:id="totalLiabilitiesLabel" styleClass="value-negative" text="$ 0.00" />
+                    <Label fx:id="liabilitiesTrendLabel" styleClass="trend-positive" text="-0%" />
                 </VBox>
             </HBox>
         </VBox>
 
         <!-- Total Equity Card -->
-        <VBox styleClass="summary-card, card-equity" GridPane.columnIndex="2">
+        <VBox styleClass="card-equity" GridPane.columnIndex="2">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-blue">
                     <Label styleClass="text-3xl" text="🏦" />
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Patrimonio" />
-                    <Label fx:id="totalEquityLabel" styleClass="card-value, value-info" text="\$ 0.00" />
-                    <Label fx:id="equityTrendLabel" styleClass="card-trend, trend-neutral" text="▬ 0%" />
+                    <Label fx:id="totalEquityLabel" styleClass="value-info" text="$ 0.00" />
+                    <Label fx:id="equityTrendLabel" styleClass="trend-neutral" text="▬ 0%" />
                 </VBox>
             </HBox>
         </VBox>
 
         <!-- Balance Card -->
-        <VBox styleClass="summary-card, card-balance" GridPane.columnIndex="3">
+        <VBox styleClass="card-balance" GridPane.columnIndex="3">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-amber">
                     <Label styleClass="text-3xl" text="⚖️" />
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Balance General" />
-                    <Label fx:id="balanceLabel" styleClass="card-value, value-warning" text="\$ 0.00" />
-                    <Label fx:id="balanceTrendLabel" styleClass="card-trend, trend-positive" text="Estable" />
+                    <Label fx:id="balanceLabel" styleClass="value-warning" text="$ 0.00" />
+                    <Label fx:id="balanceTrendLabel" styleClass="trend-positive" text="Estable" />
                 </VBox>
             </HBox>
         </VBox>
         
         <!-- Profit Card (New KPI) -->
-        <VBox styleClass="summary-card, card-profit" GridPane.columnIndex="4">
+        <VBox styleClass="card-profit" GridPane.columnIndex="4">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-green">
                     <Label styleClass="text-3xl" text="📈" />
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Utilidad del Mes" />
-                    <Label fx:id="profitLabel" styleClass="card-value, value-success" text="\$ 0.00" />
-                    <Label fx:id="profitTrendLabel" styleClass="card-trend, trend-neutral" text="▬ Equilibrio" />
+                    <Label fx:id="profitLabel" styleClass="value-success" text="$ 0.00" />
+                    <Label fx:id="profitTrendLabel" styleClass="trend-neutral" text="▬ Equilibrio" />
                 </VBox>
             </HBox>
         </VBox>
@@ -167,7 +167,7 @@
     </GridPane>
 
     <!-- Recent Transactions with Filters -->
-    <VBox styleClass="bg-white, rounded-xl, shadow-md, p-5" VBox.vgrow="ALWAYS">
+    <VBox styleClass="p-5" VBox.vgrow="ALWAYS">
         <HBox alignment="CENTER_LEFT" spacing="12" styleClass="filter-section">
             <Label styleClass="filter-label" text="📅 Período:" />
             <DatePicker fx:id="filterStartDate" promptText="Fecha inicio" styleClass="filter-date-picker" />
@@ -190,7 +190,7 @@
                 <TableColumn fx:id="colStatus" prefWidth="100" text="Estado" />
             </columns>
             <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
         </TableView>
     </VBox>
@@ -245,7 +245,7 @@
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Ingresos del Mes" />
-                        <Label fx:id="revenueLabel" styleClass="stat-value, value-positive" text="$ 0.00" />
+                        <Label fx:id="revenueLabel" styleClass="stat-value value-positive" text="$ 0.00" />
                         <Label fx:id="revenueTrendLabel" styleClass="stat-trend" text="Este mes" />
                     </VBox>
                 </HBox>
@@ -256,7 +256,7 @@
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Gastos del Mes" />
-                        <Label fx:id="expensesLabel" styleClass="stat-value, value-negative" text="$ 0.00" />
+                        <Label fx:id="expensesLabel" styleClass="value-negative" text="$ 0.00" />
                         <Label fx:id="expensesTrendLabel" styleClass="stat-trend" text="Este mes" />
                     </VBox>
                 </HBox>
@@ -267,7 +267,7 @@
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Ticket Promedio" />
-                        <Label fx:id="averageTransactionLabel" styleClass="stat-value, value-info" text="$ 0.00" />
+                        <Label fx:id="averageTransactionLabel" styleClass="value-info" text="$ 0.00" />
                     </VBox>
                 </HBox>
             </VBox>
@@ -293,7 +293,7 @@
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Transacciones Publicadas" />
-                        <Label fx:id="postedTransactionsLabel" styleClass="stat-value, value-positive" text="0" />
+                        <Label fx:id="postedTransactionsLabel" styleClass="value-positive" text="0" />
                     </VBox>
                 </HBox>
 
@@ -303,7 +303,7 @@
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Transacciones Borrador" />
-                        <Label fx:id="unpostedTransactionsLabel" styleClass="stat-value, value-warning" text="0" />
+                        <Label fx:id="unpostedTransactionsLabel" styleClass="value-warning" text="0" />
                     </VBox>
                 </HBox>
 
@@ -313,7 +313,7 @@
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Total Cuentas" />
-                        <Label fx:id="totalAccountsLabel" styleClass="stat-value, value-info" text="0" />
+                        <Label fx:id="totalAccountsLabel" styleClass="value-info" text="0" />
                     </VBox>
                 </HBox>
             </VBox>
