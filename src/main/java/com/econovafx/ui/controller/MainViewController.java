@@ -70,6 +70,9 @@ public class MainViewController implements Initializable {
     private Button btnComprobantes;
 
     @FXML
+    private Button btnCuentas;
+
+    @FXML
     private Button btnClasificador;
 
     @FXML
@@ -300,6 +303,15 @@ public class MainViewController implements Initializable {
         contentArea.getChildren().clear();
         contentArea.getChildren().add(viewFactory.createComprobantesView());
         updateStatus("Comprobantes de Operaciones");
+    }
+
+    @FXML
+    private void showCuentas() {
+        logger.debug("Showing cuentas contables");
+        setActiveButton(btnCuentas);
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createAccountsView());
+        updateStatus("Cuentas Contables");
     }
 
     @FXML
