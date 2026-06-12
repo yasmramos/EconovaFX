@@ -3,7 +3,9 @@ package com.econovafx.ui.controller;
 import com.econovafx.controller.ThirdPartyTransactionsController;
 import com.econovafx.domain.ThirdParty;
 import com.econovafx.service.ExportService;
+import com.econovafx.service.NotificationService;
 import com.econovafx.service.ThirdPartyService;
+import com.econovafx.ui.util.ModernDialog;
 import com.econovafx.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -14,12 +16,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,7 @@ public class ThirdPartiesController implements Initializable {
     private final ThirdPartyService thirdPartyService;
     private final ViewFactory viewFactory;
     private final ExportService exportService;
+    private final NotificationService notificationService;
     
     @FXML
     private TextField searchField;
@@ -90,10 +93,11 @@ public class ThirdPartiesController implements Initializable {
     @FXML
     private Label resultsCountLabel;
     
-    public ThirdPartiesController(ThirdPartyService thirdPartyService, ViewFactory viewFactory, ExportService exportService) {
+    public ThirdPartiesController(ThirdPartyService thirdPartyService, ViewFactory viewFactory, ExportService exportService, NotificationService notificationService) {
         this.thirdPartyService = thirdPartyService;
         this.viewFactory = viewFactory;
         this.exportService = exportService;
+        this.notificationService = notificationService;
     }
     
     @Override
