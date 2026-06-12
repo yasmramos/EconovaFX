@@ -53,7 +53,7 @@
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Activos" />
-                    <Label fx:id="totalAssetsLabel" styleClass="value-positive" text="$ 0.00" />
+                    <Label fx:id="totalAssetsLabel" styleClass="value-positive" text="\$ 0.00" />
                     <Label fx:id="assetsTrendLabel" styleClass="trend-positive" text="+0%" />
                 </VBox>
             </HBox>
@@ -67,7 +67,7 @@
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Pasivos" />
-                    <Label fx:id="totalLiabilitiesLabel" styleClass="value-negative" text="$ 0.00" />
+                    <Label fx:id="totalLiabilitiesLabel" styleClass="value-negative" text="\$ 0.00" />
                     <Label fx:id="liabilitiesTrendLabel" styleClass="trend-positive" text="-0%" />
                 </VBox>
             </HBox>
@@ -81,7 +81,7 @@
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Patrimonio" />
-                    <Label fx:id="totalEquityLabel" styleClass="value-info" text="$ 0.00" />
+                    <Label fx:id="totalEquityLabel" styleClass="value-info" text="\$ 0.00" />
                     <Label fx:id="equityTrendLabel" styleClass="trend-neutral" text="▬ 0%" />
                 </VBox>
             </HBox>
@@ -95,7 +95,7 @@
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Balance General" />
-                    <Label fx:id="balanceLabel" styleClass="value-warning" text="$ 0.00" />
+                    <Label fx:id="balanceLabel" styleClass="value-warning" text="\$ 0.00" />
                     <Label fx:id="balanceTrendLabel" styleClass="trend-positive" text="Estable" />
                 </VBox>
             </HBox>
@@ -109,7 +109,7 @@
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Utilidad del Mes" />
-                    <Label fx:id="profitLabel" styleClass="value-success" text="$ 0.00" />
+                    <Label fx:id="profitLabel" styleClass="value-success" text="\$ 0.00" />
                     <Label fx:id="profitTrendLabel" styleClass="trend-neutral" text="▬ Equilibrio" />
                 </VBox>
             </HBox>
@@ -245,7 +245,7 @@
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Ingresos del Mes" />
-                        <Label fx:id="revenueLabel" styleClass="stat-value value-positive" text="$ 0.00" />
+                        <Label fx:id="revenueLabel" styleClass="stat-value value-positive" text="\$ 0.00" />
                         <Label fx:id="revenueTrendLabel" styleClass="stat-trend" text="Este mes" />
                     </VBox>
                 </HBox>
@@ -256,7 +256,7 @@
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Gastos del Mes" />
-                        <Label fx:id="expensesLabel" styleClass="value-negative" text="$ 0.00" />
+                        <Label fx:id="expensesLabel" styleClass="value-negative" text="\$ 0.00" />
                         <Label fx:id="expensesTrendLabel" styleClass="stat-trend" text="Este mes" />
                     </VBox>
                 </HBox>
@@ -267,7 +267,7 @@
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Ticket Promedio" />
-                        <Label fx:id="averageTransactionLabel" styleClass="value-info" text="$ 0.00" />
+                        <Label fx:id="averageTransactionLabel" styleClass="value-info" text="\$ 0.00" />
                     </VBox>
                 </HBox>
             </VBox>
