@@ -46,7 +46,8 @@ public class App extends Application {
 
             Scene scene = new Scene(loader.load(), 1200, 800);
 
-            // Add custom styles for sidebar and dashboard
+            // Add all stylesheets in correct order
+            scene.getStylesheets().add(getClass().getResource("/css/main-styles.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/styles/sidebar.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
 
