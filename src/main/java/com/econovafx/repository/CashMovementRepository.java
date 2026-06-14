@@ -46,6 +46,12 @@ public class CashMovementRepository {
         return findByStatus(CashMovement.Status.PENDING);
     }
 
+    public List<CashMovement> findByDateRange(java.time.LocalDate startDate, java.time.LocalDate endDate) {
+        return database.values().stream()
+                .filter(m -> !m.getDate().isBefore(startDate) && !m.getDate().isAfter(endDate))
+                .collect(Collectors.toList());
+    }
+
     public boolean deleteById(Long id) {
         return database.remove(id) != null;
     }
