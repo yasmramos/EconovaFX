@@ -70,6 +70,9 @@ public class MainViewController implements Initializable {
     private Button btnComprobantes;
 
     @FXML
+    private Button btnCuentas;
+
+    @FXML
     private Button btnClasificador;
 
     @FXML
@@ -303,6 +306,15 @@ public class MainViewController implements Initializable {
     }
 
     @FXML
+    private void showCuentas() {
+        logger.debug("Showing cuentas contables");
+        setActiveButton(btnCuentas);
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createAccountsView());
+        updateStatus("Cuentas Contables");
+    }
+
+    @FXML
     private void showClasificador() {
         logger.debug("Showing clasificador de cuentas");
         setActiveButton(btnClasificador);
@@ -405,5 +417,12 @@ public class MainViewController implements Initializable {
     
     public UserService getUserService() {
         return userService;
+    }
+
+    /**
+     * Returns the root node of this view for visual testing
+     */
+    public javafx.scene.layout.VBox getRootNode() {
+        return sidebarVBox;
     }
 }

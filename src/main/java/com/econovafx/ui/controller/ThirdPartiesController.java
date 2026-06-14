@@ -3,7 +3,9 @@ package com.econovafx.ui.controller;
 import com.econovafx.controller.ThirdPartyTransactionsController;
 import com.econovafx.domain.ThirdParty;
 import com.econovafx.service.ExportService;
+import com.econovafx.service.NotificationService;
 import com.econovafx.service.ThirdPartyService;
+import com.econovafx.ui.util.ModernDialog;
 import com.econovafx.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -14,12 +16,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +38,7 @@ public class ThirdPartiesController implements Initializable {
     private final ThirdPartyService thirdPartyService;
     private final ViewFactory viewFactory;
     private final ExportService exportService;
+    private final NotificationService notificationService;
     
     @FXML
     private TextField searchField;
@@ -90,10 +94,11 @@ public class ThirdPartiesController implements Initializable {
     @FXML
     private Label resultsCountLabel;
     
-    public ThirdPartiesController(ThirdPartyService thirdPartyService, ViewFactory viewFactory, ExportService exportService) {
+    public ThirdPartiesController(ThirdPartyService thirdPartyService, ViewFactory viewFactory, ExportService exportService, NotificationService notificationService) {
         this.thirdPartyService = thirdPartyService;
         this.viewFactory = viewFactory;
         this.exportService = exportService;
+        this.notificationService = notificationService;
     }
     
     @Override
@@ -195,57 +200,80 @@ public class ThirdPartiesController implements Initializable {
     @FXML
     private void newThirdParty() {
         logger.debug("New third party clicked");
-        Optional<ThirdParty> result = viewFactory.showThirdPartyFormDialog(null);
-        result.ifPresent(thirdParty -> {
-            thirdPartyService.createThirdParty(thirdParty);
+        try {
+            // Load the form FXML
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/com/econovafx/view/third-party-form.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            // Show using ModernDialog static method
+            Stage ownerStage = (Stage) thirdPartiesTable.getScene().getWindow();
+            ModernDialog.showModal(ownerStage, root, "New Third Party");
+            
+            // Reload data after dialog closes (assuming form saves directly)
             loadThirdParties();
             updateStatistics(thirdPartyService.getAllThirdParties());
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Third party created successfully");
-        });
+            notificationService.showSuccess("Third party created successfully");
+        } catch (Exception e) {
+            logger.error("Error opening new third party form", e);
+            notificationService.showError("Failed to open form: " + e.getMessage());
+        }
     }
     
     @FXML
     private void editThirdParty() {
         ThirdParty selected = thirdPartiesTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.WARNING, "Selection Required", 
-                    "Please select a third party to edit");
+            notificationService.showWarning("Please select a third party to edit");
             return;
         }
         
         logger.debug("Edit third party: {}", selected.getIdentificationNumber());
-        Optional<ThirdParty> result = viewFactory.showThirdPartyFormDialog(selected);
-        result.ifPresent(thirdParty -> {
-            thirdPartyService.updateThirdParty(thirdParty);
+        try {
+            // Load the form FXML
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/com/econovafx/view/third-party-form.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            // Show using ModernDialog static method
+            Stage ownerStage = (Stage) thirdPartiesTable.getScene().getWindow();
+            ModernDialog.showModal(ownerStage, root, "Edit Third Party");
+            
+            // Reload data after dialog closes
             loadThirdParties();
             updateStatistics(thirdPartyService.getAllThirdParties());
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Third party updated successfully");
-        });
+            notificationService.showSuccess("Third party updated successfully");
+        } catch (Exception e) {
+            logger.error("Error editing third party", e);
+            notificationService.showError("Failed to edit: " + e.getMessage());
+        }
     }
     
     @FXML
     private void deleteThirdParty() {
         ThirdParty selected = thirdPartiesTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.WARNING, "Selection Required", 
-                    "Please select a third party to delete");
+            notificationService.showWarning("Please select a third party to delete");
             return;
         }
         
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        // Simple confirmation alert
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Deletion");
-        alert.setHeaderText("Are you sure you want to delete this third party?");
-        alert.setContentText("Third Party: " + selected.getName() + " (" + selected.getIdentificationNumber() + ")");
+        alert.setHeaderText("Delete Third Party?");
+        alert.setContentText(selected.getName() + " (" + selected.getIdentificationNumber() + ")");
         
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        java.util.Optional<javafx.scene.control.ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
             try {
                 thirdPartyService.deleteThirdParty(selected.getId());
                 loadThirdParties();
                 updateStatistics(thirdPartyService.getAllThirdParties());
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Third party deleted successfully");
+                notificationService.showSuccess("Third party deleted successfully");
             } catch (IllegalArgumentException e) {
-                showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+                notificationService.showError(e.getMessage());
             }
         }
     }

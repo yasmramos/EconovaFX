@@ -83,7 +83,7 @@ public final class AppContext {
         dashboardController = new DashboardController(accountService, transactionService, null);
         accountsController = new AccountsController(accountService, null);
         transactionsController = new TransactionsController(transactionService, accountService, null);
-        thirdPartiesController = new ThirdPartiesController(thirdPartyService, null, exportService);
+        thirdPartiesController = new ThirdPartiesController(thirdPartyService, null, exportService, null);
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
 
         // Create view factory with controllers
@@ -111,7 +111,7 @@ public final class AppContext {
         dashboardController = new DashboardController(accountService, transactionService, viewFactory);
         accountsController = new AccountsController(accountService, viewFactory);
         transactionsController = new TransactionsController(transactionService, accountService, viewFactory);
-        thirdPartiesController = new ThirdPartiesController(thirdPartyService, viewFactory, exportService);
+        thirdPartiesController = new ThirdPartiesController(thirdPartyService, viewFactory, exportService, null);
         comprobantesController = new ComprobantesController(transactionService, accountService, exportService, viewFactory);
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
