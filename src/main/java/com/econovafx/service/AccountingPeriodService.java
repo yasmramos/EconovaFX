@@ -13,6 +13,7 @@ import java.util.Optional;
 
 /**
  * Service for managing accounting periods and closing operations.
+ * Resolution 340/2004 Compliance: Validates dependent modules before closing.
  */
 @Component
 public class AccountingPeriodService {
@@ -21,6 +22,12 @@ public class AccountingPeriodService {
 
     @Inject
     AccountingPeriodRepository repository;
+
+    @Inject
+    CashMovementService cashMovementService;
+
+    @Inject
+    InventoryService inventoryService;
 
     /**
      * Get all accounting periods.
@@ -99,7 +106,32 @@ public class AccountingPeriodService {
     }
 
     /**
-     * Close a monthly period with validation.
+     * Validate that all dependent modules are closed before closing accounting period.
+     * Resolution 340/2004 Requirement: Cannot close accounting if other modules are open.
+     */
+    public void validateDependentModulesClosed(AccountingPeriod period) {
+        StringBuilder errors = new StringBuilder();
+
+        // Check Cash Module
+        if (!cashMovementService.isModuleClosedForPeriod(period)) {
+            errors.append("Cash/Bank module is not closed for period ").append(period.getName()).append(". ");
+        }
+
+        // Check Inventory Module
+        if (!inventoryService.isModuleClosedForPeriod(period)) {
+            errors.append("Inventory module is not closed for period ").append(period.getName()).append(". ");
+        }
+
+        if (errors.length() > 0) {
+            throw new IllegalStateException("Cannot close accounting period. Dependencies not met: " + errors.toString());
+        }
+
+        log.info("All dependent modules validated as closed for period: {}", period.getName());
+    }
+
+    /**
+     * Close a monthly period with validation of dependent modules.
+     * Resolution 340/2004: Must verify other modules are closed first.
      */
     public AccountingPeriod closeMonthlyPeriod(Long periodId, String closedBy, String notes) {
         Optional<AccountingPeriod> periodOpt = repository.findById(periodId);
@@ -116,12 +148,15 @@ public class AccountingPeriodService {
             throw new IllegalStateException("This operation is only for monthly periods: " + period.getName());
         }
 
+        // Validate dependent modules are closed
+        validateDependentModulesClosed(period);
+
         period.setStatus(AccountingPeriod.PeriodStatus.CLOSED);
         period.setClosedBy(closedBy);
         period.setClosedDate(LocalDate.now());
         period.setClosingNotes(notes);
         
-        log.info("Monthly period closed: {} by {} on {}", period.getName(), closedBy, LocalDate.now());
+        log.info("Monthly period closed: {} by {} on {} - All dependencies validated", period.getName(), closedBy, LocalDate.now());
         return repository.save(period);
     }
 
@@ -152,12 +187,18 @@ public class AccountingPeriodService {
             
             for (AccountingPeriod monthly : monthlyPeriods) {
                 if (monthly.isOpen()) {
-                    monthly.setStatus(AccountingPeriod.PeriodStatus.CLOSED);
-                    monthly.setClosedBy(closedBy);
-                    monthly.setClosedDate(LocalDate.now());
-                    monthly.setClosingNotes("Auto-closed due to annual closure: " + period.getName());
-                    repository.save(monthly);
-                    log.info("Auto-closed monthly period: {}", monthly.getName());
+                    // Validate dependencies for each month
+                    try {
+                        validateDependentModulesClosed(monthly);
+                        monthly.setStatus(AccountingPeriod.PeriodStatus.CLOSED);
+                        monthly.setClosedBy(closedBy);
+                        monthly.setClosedDate(LocalDate.now());
+                        monthly.setClosingNotes("Auto-closed due to annual closure: " + period.getName());
+                        repository.save(monthly);
+                        log.info("Auto-closed monthly period: {}", monthly.getName());
+                    } catch (IllegalStateException e) {
+                        log.warn("Could not auto-close monthly period {}: {}", monthly.getName(), e.getMessage());
+                    }
                 }
             }
         }
@@ -212,6 +253,7 @@ public class AccountingPeriodService {
 
     /**
      * Reopen a closed period (not allowed for locked periods).
+     * Resolution 340/2004: Cannot reopen a closed period.
      */
     public AccountingPeriod reopenPeriod(Long periodId) {
         Optional<AccountingPeriod> periodOpt = repository.findById(periodId);
@@ -224,11 +266,8 @@ public class AccountingPeriodService {
             throw new IllegalStateException("Cannot reopen a locked period: " + period.getName());
         }
 
-        period.setStatus(AccountingPeriod.PeriodStatus.OPEN);
-        period.setClosedBy(null);
-        period.setClosedDate(null);
-        
-        return repository.save(period);
+        // Resolution 340/2004: Do not allow reopening closed periods
+        throw new IllegalStateException("Cannot reopen a closed period per Resolution 340/2004: " + period.getName());
     }
 
     /**
