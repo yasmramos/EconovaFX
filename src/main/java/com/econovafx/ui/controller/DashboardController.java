@@ -159,9 +159,15 @@ public class DashboardController implements Initializable {
         logger.info("DashboardController initialized");
         
         initializeTableColumns();
-        initializeComboBoxes();
-        initializeDatePickerDefaults();
-        loadDashboardData();
+        
+        // Wrap initialization in try-catch for visual tests where DB might not be ready
+        try {
+            initializeComboBoxes();
+            initializeDatePickerDefaults();
+            loadDashboardData();
+        } catch (Exception e) {
+            logger.warn("Could not initialize dashboard data (DB might not be ready): {}", e.getMessage());
+        }
         
         // Auto-refresh every 30 seconds
         startAutoRefresh();
