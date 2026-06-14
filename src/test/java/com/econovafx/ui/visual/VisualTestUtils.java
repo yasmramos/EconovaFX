@@ -65,4 +65,12 @@ public class VisualTestUtils {
         WaitForAsyncUtils.waitForFxEvents();
         return scene;
     }
+
+    /**
+     * Captures a screenshot of the current stage and saves it to docs/images
+     */
+    public static void captureAndSave(Stage stage, String filename) throws IOException {
+        Node sceneRoot = stage.getScene().getRoot();
+        captureNode(sceneRoot, filename);
+    }
 }

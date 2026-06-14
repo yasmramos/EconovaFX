@@ -7,14 +7,15 @@
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.ui.controller.MainViewController"
       spacing="0"
-      styleClass="bg-gray-50">
+      styleClass="bg-gray-50"
+      fx:id="rootVBox">
 
     <!-- Top Area: Sidebar + Content -->
-    <HBox VBox.vgrow="ALWAYS">
+    <HBox VBox.vgrow="ALWAYS" fillHeight="true">
 
         <!-- Sidebar Navigation (Full Height) -->
         <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" HBox.hgrow="NEVER">
-            <VBox fx:id="sidebarVBox" styleClass="sidebar-container, bg-slate-800" prefWidth="260" minWidth="260" maxWidth="260">
+            <VBox fx:id="sidebarVBox" styleClass="sidebar-container, bg-slate-800" prefWidth="260" minWidth="260" maxWidth="260" fillWidth="true">
 
             <!-- Logo/Brand Section -->
             <VBox styleClass="p-6, pb-2">
@@ -35,6 +36,7 @@
                 </StackPane>
                 <VBox fx:id="contabilidadSubmenu" visible="false" managed="false" styleClass="sidebar-submenu">
                     <Button fx:id="btnComprobantes" text="📄 Comprobantes de Operaciones" onAction="#showComprobantes" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
+                    <Button fx:id="btnCuentas" text="📒 Cuentas Contables" onAction="#showCuentas" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                     <Button fx:id="btnClasificador" text="🗂️ Clasificador de Cuentas" onAction="#showClasificador" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                     <Button fx:id="btnTerceros" text="👥 Terceros (Clientes/Proveedores)" onAction="#showTerceros" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                     <Button fx:id="btnPeriodos" text="📅 Periodos Contables" onAction="#showPeriodos" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
@@ -67,11 +69,11 @@
         </ScrollPane>
 
         <!-- Right Side: Header + Content -->
-        <BorderPane HBox.hgrow="ALWAYS">
+        <BorderPane HBox.hgrow="ALWAYS" fx:id="mainContentPane">
 
             <!-- Top: Header -->
             <top>
-                <HBox styleClass="header-main" alignment="CENTER_LEFT">
+                <HBox styleClass="header-main" alignment="CENTER_LEFT" fillHeight="true">
                     <Label text="EconoNova FX" styleClass="header-title"/>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Label fx:id="currentUserLabel" text="Usuario: Admin" styleClass="header-user"/>
