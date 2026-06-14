@@ -1,4 +1,5 @@
 package com.econovafx.service;
+import com.econovafx.domain.AccountingPeriod;
 
 import com.econovafx.model.CashMovement;
 import com.econovafx.model.BankAccount;
@@ -152,5 +153,20 @@ public class CashMovementService {
 
     public Optional<CashMovement> getMovement(Long id) {
         return movementRepository.findById(id);
+    }
+
+    /**
+     * Check if cash/bank module is closed for a specific accounting period.
+     * Resolution 340/2004: Required for accounting period closure validation.
+     */
+    public boolean isModuleClosedForPeriod(AccountingPeriod period) {
+        // Check if there are any unposted movements in the period
+        List<CashMovement> movements = movementRepository.findByDateRange(
+            period.getStartDate(), 
+            period.getEndDate()
+        );
+        
+        // Module is considered "closed" if all movements are posted
+        return movements.stream().allMatch(m -> m.getPostedAt() != null);
     }
 }

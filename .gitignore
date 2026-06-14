@@ -9,12 +9,8 @@ target/
 
 # Dependencies
 .gradle/
-.mypy_cache/
-.pytest_cache/
-__pycache__/
-node_modules/
-venv/
-.venv/
+lib/
+vendor/
 
 # Logs and temp files
 *.log
@@ -29,13 +25,17 @@ venv/
 # Editors
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
 
 # Coverage
 coverage/
 htmlcov/
 .coverage
 
-# System
-.DS_Store
-Thumbs.db
+# Original rules preserved
 ```
