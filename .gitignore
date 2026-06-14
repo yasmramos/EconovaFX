@@ -9,12 +9,8 @@ target/
 
 # Dependencies
 .gradle/
-.mypy_cache/
-.pytest_cache/
-__pycache__/
-node_modules/
-venv/
-.venv/
+lib/
+vendor/
 
 # Logs and temp files
 *.log
@@ -32,7 +28,7 @@ venv/
 *.swp
 *.swo
 
-# OS
+# OS specific
 .DS_Store
 Thumbs.db
 
@@ -41,27 +37,5 @@ coverage/
 htmlcov/
 .coverage
 
-# Archives
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# Original rules preserved
 ```
