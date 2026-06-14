@@ -65,16 +65,12 @@ public class BankReconciliationService {
         
         BigDecimal adjustedBankBalance = rec.getBankBalance();
         for (ReconciliationItem item : rec.getBankItems()) {
-            if (!item.isReconciled()) {
-                adjustedBankBalance = adjustedBankBalance.add(item.getAmount());
-            }
+            adjustedBankBalance = adjustedBankBalance.add(item.getAmount());
         }
         
         BigDecimal adjustedSystemBalance = rec.getSystemBalance();
         for (ReconciliationItem item : rec.getSystemItems()) {
-            if (!item.isReconciled()) {
-                adjustedSystemBalance = adjustedSystemBalance.subtract(item.getAmount());
-            }
+            adjustedSystemBalance = adjustedSystemBalance.subtract(item.getAmount());
         }
         
         return adjustedBankBalance.compareTo(adjustedSystemBalance) == 0;

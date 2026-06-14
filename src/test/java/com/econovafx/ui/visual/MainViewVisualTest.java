@@ -47,7 +47,7 @@ public class MainViewVisualTest extends ApplicationTest {
         DashboardController dashboardController = new DashboardController(accountService, transactionService, null);
         AccountsController accountsController = new AccountsController(accountService, null);
         TransactionsController transactionsController = new TransactionsController(transactionService, accountService, null);
-        ThirdPartiesController thirdPartiesController = new ThirdPartiesController(thirdPartyService, null, exportService);
+        ThirdPartiesController thirdPartiesController = new ThirdPartiesController(thirdPartyService, null, exportService, null);
         AccountingPeriodsController periodsController = new AccountingPeriodsController(periodService);
         AccountingClosuresController closuresController = new AccountingClosuresController(periodService);
         AccountFormController accountFormController = new AccountFormController(accountService);

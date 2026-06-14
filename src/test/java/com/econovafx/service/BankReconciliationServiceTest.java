@@ -88,15 +88,16 @@ public class BankReconciliationServiceTest {
         bankItem.setDate(LocalDate.now());
         service.addBankItem(created.getId(), bankItem);
         
-        // System balance: 9500 + 1000 (outstanding check not yet cleared) = 10500 adjusted
+        // System balance needs to be 11500 so that 11500 - 1000 (outstanding check) = 10500
+        // Outstanding checks are subtracted from system balance to match bank balance
         ReconciliationItem systemItem = new ReconciliationItem();
         systemItem.setDescription("Outstanding check");
         systemItem.setAmount(new BigDecimal("1000.00"));
         systemItem.setDate(LocalDate.now());
         service.addSystemItem(created.getId(), systemItem);
         
-        // Adjust balances to match
-        created.setSystemBalance(new BigDecimal("10500.00"));
+        // Adjust system balance to match: 11500 - 1000 = 10500 (matches bank: 10000 + 500)
+        created.setSystemBalance(new BigDecimal("11500.00"));
         service.createReconciliation(created);
         
         assertTrue(service.validateReconciliation(created.getId()));
