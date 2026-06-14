@@ -27,42 +27,11 @@ public class MainViewVisualTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         primaryStage = stage;
-        AppContext appContext = AppContext.getInstance();
         
-        // Create mock repositories for visual test (using null database - will fail gracefully for UI-only test)
-        Database mockDb = null;
-        AccountRepository accountRepo = new AccountRepository(mockDb);
-        TransactionRepository transactionRepo = new TransactionRepository(mockDb);
-        ThirdPartyRepository thirdPartyRepo = new ThirdPartyRepository(mockDb);
-        AccountingPeriodRepository periodRepo = new AccountingPeriodRepository();
+        // Create minimal ViewFactory with null services for visual-only test
+        ViewFactory viewFactory = new ViewFactory(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         
-        // Create services with mock repositories
-        AccountService accountService = new AccountService(accountRepo);
-        TransactionService transactionService = new TransactionService(transactionRepo, accountRepo);
-        ThirdPartyService thirdPartyService = new ThirdPartyService(thirdPartyRepo);
-        ExportService exportService = new ExportService();
-        AccountingPeriodService periodService = new AccountingPeriodService();
-        
-        // Create minimal controllers for visual test
-        DashboardController dashboardController = new DashboardController(accountService, transactionService, null);
-        AccountsController accountsController = new AccountsController(accountService, null);
-        TransactionsController transactionsController = new TransactionsController(transactionService, accountService, null);
-        ThirdPartiesController thirdPartiesController = new ThirdPartiesController(thirdPartyService, null, exportService, null);
-        AccountingPeriodsController periodsController = new AccountingPeriodsController(periodService);
-        AccountingClosuresController closuresController = new AccountingClosuresController(periodService);
-        AccountFormController accountFormController = new AccountFormController(accountService);
-        ThirdPartyFormController thirdPartyFormController = new ThirdPartyFormController(thirdPartyService);
-        TransactionEntryController entryController = new TransactionEntryController(accountService, transactionService);
-        ComprobantesController comprobantesController = new ComprobantesController(transactionService, accountService, exportService, null);
-        
-        ViewFactory viewFactory = new ViewFactory(
-            dashboardController, accountsController, transactionsController,
-            thirdPartiesController, periodsController, closuresController,
-            accountFormController, thirdPartyFormController, entryController, comprobantesController,
-            accountService, thirdPartyService, transactionService, exportService, periodService
-        );
-        
-        MainViewController controller = new MainViewController(accountService, transactionService, null, viewFactory);
+        MainViewController controller = new MainViewController(null, null, null, viewFactory);
         
         // Load FXML - controller is already specified in FXML file via fx:controller
         URL fxmlUrl = getClass().getResource("/fxml/main-view.fxml");
