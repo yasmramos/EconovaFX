@@ -4,7 +4,6 @@ import com.econovafx.domain.FinancialStatementModel;
 import com.econovafx.domain.FinancialStatementModel.ModelType;
 import io.ebean.DB;
 import io.ebean.Database;
-import io.ebean.Query;
 import jakarta.inject.Singleton;
 
 import java.util.List;
