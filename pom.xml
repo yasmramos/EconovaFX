@@ -293,6 +293,9 @@
                 <configuration>
                     <mainClass>com.econovafx.Launcher</mainClass>
                     <options>
+                        <!-- Ensure Ebean agent is loaded at runtime to enhance beans when necessary -->
+                        <option>-javaagent=${project.basedir}/lib/ebean-agent-${ebean.version}.jar</option>
+
                         <option>--add-opens=EconoNovaFXAccountingSystem/com.econovafx.domain=io.ebean.core</option>
                         <option>--add-opens=EconoNovaFXAccountingSystem/com.econovafx.domain=io.ebean</option>
                         <option>--add-opens=EconoNovaFXAccountingSystem/com.econovafx.domain=ALL-UNNAMED</option>
@@ -307,6 +310,28 @@
                         <option>--add-opens=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED</option>
                     </options>
                 </configuration>
+            </plugin>
+
+            <!-- Copy Ebean agent into lib/ so -javaagent can reference it during runtime -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-ebean-agent</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifact>io.ebean:ebean-agent:${ebean.version}</artifact>
+                            <outputDirectory>${project.basedir}/lib</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
