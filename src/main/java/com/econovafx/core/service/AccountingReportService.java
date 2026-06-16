@@ -206,7 +206,9 @@ public class AccountingReportService {
             entry.put("credit", ((Number) row[6]).doubleValue());
             
             Map<String, Object> voucher = voucherMap.get(transactionId);
-            ((List<Map<String, Object>>) voucher.get("entries")).add(entry);
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> entries = (List<Map<String, Object>>) voucher.get("entries");
+            entries.add(entry);
             voucher.put("totalDebit", ((Double) voucher.get("totalDebit")) + ((Number) row[5]).doubleValue());
             voucher.put("totalCredit", ((Double) voucher.get("totalCredit")) + ((Number) row[6]).doubleValue());
         }
