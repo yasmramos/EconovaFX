@@ -2,8 +2,8 @@ package com.econovafx.repository;
 
 import com.econovafx.domain.ReportDefinition;
 import com.econovafx.domain.ReportDefinition.ReportType;
-import io.ebean.DB;
 import io.ebean.Database;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -17,8 +17,9 @@ public class ReportDefinitionRepository {
 
     private final Database database;
 
-    public ReportDefinitionRepository() {
-        this.database = DB.getDefault();
+    @Inject
+    public ReportDefinitionRepository(Database database) {
+        this.database = database;
     }
 
     public Optional<ReportDefinition> findById(Long id) {
