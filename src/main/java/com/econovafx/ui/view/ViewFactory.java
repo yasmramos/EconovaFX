@@ -125,6 +125,17 @@ public class ViewFactory {
             throw new RuntimeException("Failed to load accounts view", e);
         }
     }
+
+    public Node loadFXML(String url , Class<?> clazz){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
+            loader.setControllerFactory(cls -> clazz);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading view", e);
+            throw new RuntimeException("Failed to load view", e);
+        }
+    }
     
     public Node createTransactionsView() {
         try {
