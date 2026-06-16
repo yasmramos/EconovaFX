@@ -1,7 +1,7 @@
 package com.econovafx.core.service;
 
-import io.ebean.DB;
 import io.ebean.Database;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.time.LocalDate;
@@ -15,8 +15,9 @@ public class AccountingReportService {
 
     private final Database database;
 
-    public AccountingReportService() {
-        this.database = DB.getDefault();
+    @Inject
+    public AccountingReportService(Database database) {
+        this.database = database;
     }
 
     /**
