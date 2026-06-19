@@ -1,5 +1,7 @@
 package com.econovafx.domain;
 
+import jakarta.persistence.*;
+
 /**
  * Account type enumeration for accounting classification
  */
