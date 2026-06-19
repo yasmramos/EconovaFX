@@ -29,7 +29,7 @@ public class MainViewVisualTest extends ApplicationTest {
         primaryStage = stage;
         
         // Create minimal ViewFactory with null services for visual-only test
-        ViewFactory viewFactory = new ViewFactory(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        ViewFactory viewFactory = new ViewFactory(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         
         MainViewController controller = new MainViewController(null, null, null, viewFactory);
         

@@ -3,15 +3,15 @@
 *.class
 *.o
 *.obj
+*.exe
+*.dll
+*.so
+*.a
 *.out
-build/
-target/
 
 # Dependencies
 lib/
-libs/
-jars/
-.m2/
+target/
 .gradle/
 
 # Logs and temp files
@@ -27,9 +27,30 @@ jars/
 # Editors
 .vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
+*.swp
+*.swo
+
+# Build systems
+build/
+dist/
+
+# Python specific (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.egg-info/
+.eggs/
+.coverage
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+
+# Java specific
+*.jar
+*.war
+*.ear
+hs_err_pid*
 
 # OS generated files
 .DS_Store
