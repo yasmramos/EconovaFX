@@ -1,6 +1,7 @@
 package com.econovafx.ui.controller;
 
 import com.econovafx.service.NotificationService;
+import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -64,6 +65,9 @@ public class SystemSettingsController {
 
     @FXML
     private ComboBox<String> languageCombo;
+
+    @Inject
+    private NotificationService notificationService;
 
     private ResourceBundle resources;
 

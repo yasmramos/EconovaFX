@@ -10,6 +10,7 @@ import com.econovafx.service.UserService;
 import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.ExportService;
 import com.econovafx.service.AccountingPeriodService;
+import com.econovafx.service.NotificationService;
 import com.econovafx.ui.controller.*;
 import com.econovafx.ui.view.ViewFactory;
 import io.avaje.inject.BeanScope;
@@ -52,6 +53,7 @@ public final class AppContext {
     private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
     private ComprobantesController comprobantesController;
+    private SystemSettingsController systemSettingsController;
 
     // View Factory
     private ViewFactory viewFactory;
@@ -89,6 +91,9 @@ public final class AppContext {
         // Create view factory with controllers
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
         
+        // Get notification service instance from bean scope
+        NotificationService notificationService = beanScope.get(NotificationService.class);
+        
         viewFactory = new ViewFactory(
                 dashboardController,
                 accountsController,
@@ -100,11 +105,13 @@ public final class AppContext {
                 thirdPartyFormController,
                 transactionEntryController,
                 comprobantesController,
+                systemSettingsController,
                 accountService,
                 thirdPartyService,
                 transactionService,
                 exportService,
-                accountingPeriodService
+                accountingPeriodService,
+                notificationService
         );
 
         // Re-create controllers that need viewFactory
@@ -117,6 +124,7 @@ public final class AppContext {
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
 
         // Re-create view factory with updated controllers
+        NotificationService notificationService2 = beanScope.get(NotificationService.class);
         viewFactory = new ViewFactory(
                 dashboardController,
                 accountsController,
@@ -128,11 +136,13 @@ public final class AppContext {
                 thirdPartyFormController,
                 transactionEntryController,
                 comprobantesController,
+                systemSettingsController,
                 accountService,
                 thirdPartyService,
                 transactionService,
                 exportService,
-                accountingPeriodService
+                accountingPeriodService,
+                notificationService2
         );
 
         logger.info("Application context initialized successfully with Avaje Inject");
