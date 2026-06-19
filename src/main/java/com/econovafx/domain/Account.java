@@ -1,7 +1,7 @@
 package com.econovafx.domain;
 
 import io.ebean.annotation.DbEnumValue;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

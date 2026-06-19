@@ -1,6 +1,6 @@
 package com.econovafx.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Financial Statement Row entity for configuring report structure

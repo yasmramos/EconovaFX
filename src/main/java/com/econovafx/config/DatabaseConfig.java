@@ -1,5 +1,6 @@
 package com.econovafx.config;
 
+import com.econovafx.domain.Company;
 import io.ebean.Database;
 import io.ebean.datasource.DataSourceConfig;
 import io.ebean.datasource.DataSourceFactory;
@@ -10,45 +11,127 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Database configuration and initialization
+ * Configuración de base de datos con soporte multi-tenant.
+ * Gestiona una base de datos maestra para empresas y bases de datos separadas por tenant.
  */
 public class DatabaseConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
-    private static Database database;
+    
+    // Base de datos maestra (gestión de empresas)
+    private static Database masterDatabase;
+    
+    // Cache de bases de datos por empresa (tenant)
+    private static final ConcurrentHashMap<Long, Database> tenantDatabases = new ConcurrentHashMap<>();
 
-    public static void initialize() {
+    /**
+     * Inicializa la base de datos maestra para gestión de empresas.
+     */
+    public static void initializeMaster() {
         try {
             Properties props = loadProperties();
 
             DataSourceConfig dsConfig = new DataSourceConfig();
-            dsConfig.setDriver(props.getProperty("ebean.datasource.default.driver", "org.h2.Driver"));
-            dsConfig.setUrl(props.getProperty("ebean.datasource.default.url",
-                    "jdbc:h2:./db/econovadb;DB_CLOSE_DELAY=-1"));
-            dsConfig.setUsername(props.getProperty("ebean.datasource.default.username", "sa"));
-            dsConfig.setPassword(props.getProperty("ebean.datasource.default.password", ""));
+            dsConfig.setDriver(props.getProperty("ebean.datasource.master.driver", "org.h2.Driver"));
+            dsConfig.setUrl(props.getProperty("ebean.datasource.master.url",
+                    "jdbc:h2:./db/econova_master;DB_CLOSE_DELAY=-1"));
+            dsConfig.setUsername(props.getProperty("ebean.datasource.master.username", "sa"));
+            dsConfig.setPassword(props.getProperty("ebean.datasource.master.password", ""));
             dsConfig.setMinConnections(1);
             dsConfig.setMaxConnections(10);
 
-            DataSource dataSource = DataSourceFactory.create("econova-db", dsConfig);
+            DataSource dataSource = DataSourceFactory.create("econova-master", dsConfig);
 
             var dbConfig = new io.ebean.config.DatabaseConfig();
-            dbConfig.setName("econova-db");
+            dbConfig.setName("econova-master");
             dbConfig.setDataSource(dataSource);
             dbConfig.addPackage("com.econovafx.domain");
             dbConfig.setDdlGenerate(true);
             dbConfig.setDdlRun(true);
+            dbConfig.setMigrationPath("dbmigration/master");
 
-            database = io.ebean.DatabaseFactory.create(dbConfig);
+            masterDatabase = io.ebean.DatabaseFactory.create(dbConfig);
 
-            logger.info("Database initialized successfully");
+            logger.info("Master database initialized successfully");
 
         } catch (IOException e) {
-            logger.error("Failed to initialize database", e);
-            throw new RuntimeException("Database initialization failed", e);
+            logger.error("Failed to initialize master database", e);
+            throw new RuntimeException("Master database initialization failed", e);
         }
+    }
+
+    /**
+     * Inicializa o recupera la base de datos de un tenant específico.
+     * @param company La empresa (tenant) para la cual inicializar la BD
+     * @return La instancia de Database para el tenant
+     */
+    public static Database getOrCreateTenantDatabase(Company company) {
+        return tenantDatabases.computeIfAbsent(company.getId(), id -> {
+            logger.info("Creating database for tenant: {} ({})", company.getName(), company.getCode());
+            
+            try {
+                DataSourceConfig dsConfig = new DataSourceConfig();
+                dsConfig.setDriver("org.h2.Driver");
+                dsConfig.setUrl(company.getDatabaseUrl());
+                
+                if (company.getDatabaseUser() != null && !company.getDatabaseUser().isEmpty()) {
+                    dsConfig.setUsername(company.getDatabaseUser());
+                    dsConfig.setPassword(""); // Se puede mejorar con encriptación
+                } else {
+                    dsConfig.setUsername("sa");
+                    dsConfig.setPassword("");
+                }
+                
+                dsConfig.setMinConnections(1);
+                dsConfig.setMaxConnections(10);
+
+                DataSource dataSource = DataSourceFactory.create("econova-tenant-" + company.getCode(), dsConfig);
+
+                var dbConfig = new io.ebean.config.DatabaseConfig();
+                dbConfig.setName("econova-tenant-" + company.getCode());
+                dbConfig.setDataSource(dataSource);
+                dbConfig.addPackage("com.econovafx.domain");
+                dbConfig.addPackage("com.econovafx.model");
+                dbConfig.setDdlGenerate(true);
+                dbConfig.setDdlRun(true);
+                dbConfig.setMigrationPath("dbmigration/tenant");
+
+                Database tenantDb = io.ebean.DatabaseFactory.create(dbConfig);
+                logger.info("Tenant database created successfully for: {}", company.getCode());
+                return tenantDb;
+
+            } catch (Exception e) {
+                logger.error("Failed to create tenant database for {}", company.getCode(), e);
+                throw new RuntimeException("Tenant database creation failed", e);
+            }
+        });
+    }
+
+    /**
+     * Obtiene la base de datos del tenant actual desde el contexto.
+     * @return La base de datos del tenant activo
+     * @throws IllegalStateException si no hay un tenant configurado
+     */
+    public static Database getCurrentTenantDatabase() {
+        Company currentTenant = TenantContext.getCurrentTenant();
+        if (currentTenant == null) {
+            throw new IllegalStateException("No tenant configured in current context");
+        }
+        return getOrCreateTenantDatabase(currentTenant);
+    }
+
+    /**
+     * Obtiene la base de datos maestra.
+     * @return La base de datos maestra
+     */
+    public static Database getMasterDatabase() {
+        if (masterDatabase == null) {
+            initializeMaster();
+        }
+        return masterDatabase;
     }
 
     private static Properties loadProperties() throws IOException {
@@ -62,17 +145,32 @@ public class DatabaseConfig {
         return props;
     }
 
-    public static Database getServer() {
-        if (database == null) {
-            initialize();
+    /**
+     * Cierra la base de datos de un tenant específico.
+     * @param companyId ID de la empresa
+     */
+    public static void closeTenantDatabase(Long companyId) {
+        Database db = tenantDatabases.remove(companyId);
+        if (db != null) {
+            db.shutdown();
+            logger.info("Tenant database closed for company ID: {}", companyId);
         }
-        return database;
     }
 
+    /**
+     * Cierra todas las conexiones de base de datos.
+     */
     public static void shutdown() {
-        if (database != null) {
-            database.shutdown();
-            logger.info("Database shutdown complete");
+        // Cerrar todas las bases de datos de tenants
+        tenantDatabases.values().forEach(Database::shutdown);
+        tenantDatabases.clear();
+        
+        // Cerrar base de datos maestra
+        if (masterDatabase != null) {
+            masterDatabase.shutdown();
+            logger.info("Master database shutdown complete");
         }
+        
+        logger.info("All databases shutdown complete");
     }
 }

@@ -4,34 +4,19 @@
 *.o
 *.obj
 *.out
-build/
-target/
-
 # Dependencies
-lib/
-libs/
-jars/
+target/
 .m2/
 .gradle/
-
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-
 # Environment
 .env
 .env.local
 *.env.*
-
 # Editors
 .vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
-
-# OS generated files
-.DS_Store
-Thumbs.db
 ```
