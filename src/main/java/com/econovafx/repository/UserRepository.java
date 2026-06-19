@@ -47,6 +47,13 @@ public class UserRepository {
         return database.find(User.class)
                 .where().eq("isActive", true).findList();
     }
+
+    /**
+     * Alias para findAllActive usado en WarehouseConfigController
+     */
+    public List<User> findAllActive() {
+        return findActiveUsers();
+    }
     
     public User save(User user) {
         database.save(user);

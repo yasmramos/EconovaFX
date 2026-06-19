@@ -20,9 +20,6 @@ import com.econovafx.ui.controller.ThirdPartyFormController;
 import com.econovafx.ui.controller.TransactionEntryController;
 import com.econovafx.ui.controller.TransactionsController;
 import com.econovafx.ui.util.ModernDialog;
-import io.avaje.inject.Component;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -123,6 +120,17 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading accounts view", e);
             throw new RuntimeException("Failed to load accounts view", e);
+        }
+    }
+
+    public Node loadFXML(String url , Class<?> clazz){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
+            loader.setControllerFactory(cls -> clazz);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading view", e);
+            throw new RuntimeException("Failed to load view", e);
         }
     }
     

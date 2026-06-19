@@ -1,8 +1,8 @@
 package com.econovafx.repository;
 
 import com.econovafx.domain.FinancialStatementRow;
-import io.ebean.DB;
 import io.ebean.Database;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -16,8 +16,9 @@ public class FinancialStatementRowRepository {
 
     private final Database database;
 
-    public FinancialStatementRowRepository() {
-        this.database = DB.getDefault();
+    @Inject
+    public FinancialStatementRowRepository(Database database) {
+        this.database = database;
     }
 
     public Optional<FinancialStatementRow> findById(Long id) {

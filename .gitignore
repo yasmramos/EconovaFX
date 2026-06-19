@@ -8,9 +8,11 @@ build/
 target/
 
 # Dependencies
-.gradle/
 lib/
-vendor/
+libs/
+jars/
+.m2/
+.gradle/
 
 # Logs and temp files
 *.log
@@ -25,17 +27,11 @@ vendor/
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
+*.iml
+*.ipr
+*.iws
 
-# OS specific
+# OS generated files
 .DS_Store
 Thumbs.db
-
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Original rules preserved
 ```
