@@ -30,6 +30,10 @@ public class DatabaseConfig {
     /**
      * Inicializa la base de datos maestra para gestión de empresas.
      */
+    public static void initialize() {
+        initializeMaster();
+    }
+
     public static void initializeMaster() {
         try {
             Properties props = loadProperties();
@@ -51,7 +55,7 @@ public class DatabaseConfig {
             dbConfig.addPackage("com.econovafx.domain");
             dbConfig.setDdlGenerate(true);
             dbConfig.setDdlRun(true);
-            dbConfig.setMigrationPath("dbmigration/master");
+            dbConfig.setDefaultServer(true);
 
             masterDatabase = io.ebean.DatabaseFactory.create(dbConfig);
 
@@ -97,7 +101,6 @@ public class DatabaseConfig {
                 dbConfig.addPackage("com.econovafx.model");
                 dbConfig.setDdlGenerate(true);
                 dbConfig.setDdlRun(true);
-                dbConfig.setMigrationPath("dbmigration/tenant");
 
                 Database tenantDb = io.ebean.DatabaseFactory.create(dbConfig);
                 logger.info("Tenant database created successfully for: {}", company.getCode());
@@ -132,6 +135,14 @@ public class DatabaseConfig {
             initializeMaster();
         }
         return masterDatabase;
+    }
+
+    /**
+     * Obtiene el servidor de base de datos por defecto.
+     * @return La base de datos por defecto
+     */
+    public static Database getServer() {
+        return getMasterDatabase();
     }
 
     private static Properties loadProperties() throws IOException {

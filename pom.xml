@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
         <javafx.version>17.0.2</javafx.version>
-        <ebean.version>13.20.0</ebean.version>
+        <ebean.version>17.11.0</ebean.version>
         <h2.version>2.2.224</h2.version>
         <logback.version>1.4.14</logback.version>
         <jacoco.version>0.8.11</jacoco.version>
@@ -49,6 +49,13 @@
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-materialdesign2-pack</artifactId>
             <version>12.3.1</version>
+        </dependency>
+
+        <!-- Jakarta Persistence API (JPA) -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
 
         <!-- Ebean ORM -->
