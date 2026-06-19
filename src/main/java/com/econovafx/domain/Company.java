@@ -1,11 +1,11 @@
 package com.econovafx.domain;
 
+import io.ebean.annotation.Entity;
+import io.ebean.annotation.Id;
+import io.ebean.annotation.Table;
+import io.ebean.annotation.Version;
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
-io.ebean.annotation.Entity;
-io.ebean.annotation.Id;
-io.ebean.annotation.Table;
-io.ebean.annotation.Version;
 
 import java.time.LocalDateTime;
 
