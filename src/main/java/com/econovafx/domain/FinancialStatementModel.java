@@ -2,7 +2,7 @@ package com.econovafx.domain;
 
 import io.ebean.annotation.DbEnumType;
 import io.ebean.annotation.DbEnumValue;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 /**

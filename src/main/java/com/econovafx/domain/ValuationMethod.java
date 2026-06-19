@@ -1,5 +1,7 @@
 package com.econovafx.domain;
 
+import jakarta.persistence.*;
+
 /**
  * Enumeración que define los métodos de valoración de inventario soportados.
  * 

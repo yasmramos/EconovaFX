@@ -1,7 +1,7 @@
 package com.econovafx.domain;
 
 import io.ebean.annotation.*;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
 /**

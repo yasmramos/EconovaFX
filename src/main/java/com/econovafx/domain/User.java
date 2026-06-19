@@ -1,6 +1,6 @@
 package com.econovafx.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
