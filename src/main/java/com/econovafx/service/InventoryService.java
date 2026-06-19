@@ -23,22 +23,22 @@ public class InventoryService {
     private static final Logger log = LoggerFactory.getLogger(InventoryService.class);
 
     @Inject
-    protected InventoryItemRepository itemRepository;
+    public InventoryItemRepository itemRepository;
 
     @Inject
-    protected InventoryCategoryRepository categoryRepository;
+    public InventoryCategoryRepository categoryRepository;
 
     @Inject
-    protected InventoryMovementRepository movementRepository;
+    public InventoryMovementRepository movementRepository;
 
     @Inject
-    protected WarehouseRepository warehouseRepository;
+    public WarehouseRepository warehouseRepository;
 
     @Inject
-    protected TransactionService transactionService;
+    public TransactionService transactionService;
 
     @Inject
-    protected AuditService auditService;
+    public AuditService auditService;
 
     /**
      * Calcula el costo de salida según el método de valoración del almacén.

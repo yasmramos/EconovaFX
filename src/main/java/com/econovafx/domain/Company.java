@@ -2,10 +2,10 @@ package com.econovafx.domain;
 
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
-io.ebean.annotation.Entity;
-io.ebean.annotation.Id;
-io.ebean.annotation.Table;
-io.ebean.annotation.Version;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 import java.time.LocalDateTime;
 
