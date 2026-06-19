@@ -178,11 +178,14 @@ public class WarehouseConfigController {
         result.ifPresent(warehouse -> {
             try {
                 warehouseRepository.save(warehouse);
-                auditService.logAudit(
-                    "WAREHOUSE_CREATE",
-                    "Usuario creó almacén: " + warehouse.getCode(),
-                    warehouse.toString(),
-                    null
+                auditService.logWithValues(
+                    "SYSTEM",
+                    AuditLog.OperationType.CREATE,
+                    "Warehouse",
+                    warehouse.getId(),
+                    "Creó almacén: " + warehouse.getCode(),
+                    null,
+                    warehouse.toString()
                 );
                 notificationService.showSuccess(getCurrentStage(), "Almacén '" + warehouse.getName() + "' creado exitosamente");
                 loadWarehouses();
@@ -202,17 +205,20 @@ public class WarehouseConfigController {
         }
 
         log.info("Editando almacén: {}", selected.getCode());
-        Warehouse originalData = cloneWarehouse(selected);
+        String originalData = selected.toString();
         
         Optional<Warehouse> result = showWarehouseDialog(selected);
         result.ifPresent(updatedWarehouse -> {
             try {
                 warehouseRepository.save(updatedWarehouse);
-                auditService.logAudit(
-                    "WAREHOUSE_UPDATE",
-                    "Usuario actualizó almacén: " + updatedWarehouse.getCode(),
-                    updatedWarehouse.toString(),
-                    originalData.toString()
+                auditService.logWithValues(
+                    "SYSTEM",
+                    AuditLog.OperationType.UPDATE,
+                    "Warehouse",
+                    updatedWarehouse.getId(),
+                    "Actualizó almacén: " + updatedWarehouse.getCode(),
+                    originalData,
+                    updatedWarehouse.toString()
                 );
                 notificationService.showSuccess(getCurrentStage(), "Almacén actualizado exitosamente");
                 loadWarehouses();
@@ -234,12 +240,11 @@ public class WarehouseConfigController {
         boolean newStatus = !selected.isActive();
         String action = newStatus ? "activar" : "desactivar";
         
-        ModernDialog dialog = new ModernDialog(
-            Stage.getWindows().stream().findFirst().orElse(null),
-            "Confirmar " + action.substring(0, 1).toUpperCase() + action.substring(1),
-            "¿Está seguro que desea " + action + " el almacén '" + selected.getName() + "'?",
-            ModernDialog.DialogType.CONFIRMATION
-        );
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        dialog.setTitle("Confirmar " + action.substring(0, 1).toUpperCase() + action.substring(1));
+        dialog.setHeaderText(null);
+        dialog.setContentText("¿Está seguro que desea " + action + " el almacén '" + selected.getName() + "'?");
+        dialog.initOwner(getCurrentStage());
         
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -247,11 +252,14 @@ public class WarehouseConfigController {
                 selected.setActive(newStatus);
                 warehouseRepository.save(selected);
                 
-                auditService.logAudit(
-                    "WAREHOUSE_" + (newStatus ? "ACTIVATE" : "DEACTIVATE"),
+                auditService.logWithValues(
+                    "SYSTEM",
+                    newStatus ? AuditLog.OperationType.UPDATE : AuditLog.OperationType.DELETE,
+                    "Warehouse",
+                    selected.getId(),
                     "Usuario " + action + " almacén: " + selected.getCode(),
-                    "Active: " + newStatus,
-                    "Active: " + !newStatus
+                    "Active: " + !newStatus,
+                    "Active: " + newStatus
                 );
                 
                 notificationService.showSuccess(getCurrentStage(), "Almacén " + (newStatus ? "activado" : "desactivado") + " exitosamente");
@@ -271,13 +279,12 @@ public class WarehouseConfigController {
             return;
         }
 
-        ModernDialog dialog = new ModernDialog(
-            Stage.getWindows().stream().findFirst().orElse(null),
-            "Confirmar Eliminación",
-            "¿Está seguro que desea eliminar permanentemente el almacén '" + selected.getName() + "'?\n\n" +
-            "ADVERTENCIA: Esta acción no se puede deshacer y puede afectar los movimientos de inventario asociados.",
-            ModernDialog.DialogType.CONFIRMATION
-        );
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        dialog.setTitle("Confirmar Eliminación");
+        dialog.setHeaderText(null);
+        dialog.setContentText("¿Está seguro que desea eliminar permanentemente el almacén '" + selected.getName() + "'?\n\n" +
+            "ADVERTENCIA: Esta acción no se puede deshacer y puede afectar los movimientos de inventario asociados.");
+        dialog.initOwner(getCurrentStage());
         
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
