@@ -8,12 +8,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -232,5 +234,23 @@ public class ModernDialog {
 
         ParallelTransition parallel = new ParallelTransition(fadeBackdrop, scale, fadeContent);
         parallel.play();
+    }
+    
+    /**
+     * Shows a simple info dialog with a message.
+     * @param ownerStage The owner stage
+     * @param title The dialog title
+     * @param message The message to display
+     */
+    public static void showInfoDialog(Stage ownerStage, String title, String message) {
+        Label messageLabel = new Label(message);
+        messageLabel.setWrapText(true);
+        messageLabel.setMaxWidth(400);
+        messageLabel.setStyle("-fx-font-size: 14px; -fx-padding: 20px;");
+        
+        VBox content = new VBox(messageLabel);
+        content.setStyle("-fx-background-color: white; -fx-padding: 20px;");
+        
+        showAndWait(ownerStage, content, title);
     }
 }

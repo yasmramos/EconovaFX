@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.ui.controller.AuditLogsController" spacing="15">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Header -->
+    <VBox spacing="10">
+        <Label text="Auditoría del Sistema" styleClass="page-title"/>
+        <Label text="Registro detallado de todas las operaciones del sistema" styleClass="subtitle"/>
+    </VBox>
+
+    <!-- Filters -->
+    <GridPane hgap="15" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="20"/>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="20"/>
+            <ColumnConstraints percentWidth="30"/>
+        </columnConstraints>
+
+        <Label text="Usuario:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <ComboBox fx:id="userFilter" promptText="Todos los usuarios" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Tipo de Operación:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+        <ComboBox fx:id="operationTypeFilter" promptText="Todas las operaciones" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+        <Label text="Fecha Inicio:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <DatePicker fx:id="startDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="Fecha Fin:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <DatePicker fx:id="endDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
+            <Button text="Filtrar" onAction="#handleFilter" styleClass="btn-primary"/>
+            <Button text="Limpiar" onAction="#handleClearFilters" styleClass="btn-secondary"/>
+            <Button text="Exportar CSV" onAction="#handleExport" styleClass="btn-success"/>
+        </HBox>
+    </GridPane>
+
+    <!-- Statistics Cards -->
+    <HBox spacing="15" fillHeight="false">
+        <VBox styleClass="stat-card" prefWidth="200">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            <Label text="Total Operaciones" styleClass="stat-title"/>
+            <Label fx:id="totalOperationsLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+        <VBox styleClass="stat-card" prefWidth="200">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            <Label text="Operaciones Exitosas" styleClass="stat-title"/>
+            <Label fx:id="successfulOperationsLabel" text="0" styleClass="stat-value stat-success"/>
+        </VBox>
+        <VBox styleClass="stat-card" prefWidth="200">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            <Label text="Operaciones Fallidas" styleClass="stat-title"/>
+            <Label fx:id="failedOperationsLabel" text="0" styleClass="stat-value stat-danger"/>
+        </VBox>
+        <VBox styleClass="stat-card" prefWidth="200">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+            <Label text="Usuarios Activos" styleClass="stat-title"/>
+            <Label fx:id="activeUsersLabel" text="0" styleClass="stat-value stat-info"/>
+        </VBox>
+    </HBox>
+
+    <!-- Audit Logs Table -->
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <Label text="Registro de Auditoría"/>
+        <TableView fx:id="auditLogsTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="timestampColumn" text="Fecha/Hora" prefWidth="140"/>
+                <TableColumn fx:id="usernameColumn" text="Usuario" prefWidth="120"/>
+                <TableColumn fx:id="operationTypeColumn" text="Operación" prefWidth="130"/>
+                <TableColumn fx:id="entityTypeColumn" text="Entidad" prefWidth="100"/>
+                <TableColumn fx:id="entityIdColumn" text="ID Entidad" prefWidth="80"/>
+                <TableColumn fx:id="descriptionColumn" text="Descripción" prefWidth="250"/>
+                <TableColumn fx:id="successColumn" text="Estado" prefWidth="80"/>
+                <TableColumn fx:id="actionsColumn" text="Acciones" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Status Bar -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label fx:id="statusLabel" text="Listo"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Última actualización:"/>
+        <Label fx:id="lastUpdateLabel" styleClass="timestamp"/>
+    </HBox>
+</VBox>

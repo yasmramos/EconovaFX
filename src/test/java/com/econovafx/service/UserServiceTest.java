@@ -1,6 +1,8 @@
 package com.econovafx.service;
 
+import com.econovafx.domain.AuditLog;
 import com.econovafx.domain.User;
+import com.econovafx.repository.AuditLogRepository;
 import com.econovafx.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,12 +20,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
 
     private StubUserRepository userRepository;
+    private StubAuditLogRepository auditLogRepository;
+    private AuditService auditService;
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         userRepository = new StubUserRepository();
-        userService = new UserService(userRepository);
+        auditLogRepository = new StubAuditLogRepository();
+        auditService = new AuditService(auditLogRepository);
+        userService = new UserService(userRepository, auditService);
     }
 
     @Test
@@ -376,6 +382,94 @@ class UserServiceTest {
         user.setEmail(username + "@example.com");
         user.setFullName(fullName);
         return user;
+    }
+
+    // Stub implementation of AuditLogRepository
+    private static class StubAuditLogRepository extends AuditLogRepository {
+        boolean saveCalled = false;
+        AuditLog lastSavedLog;
+        private List<AuditLog> logs = new ArrayList<>();
+
+        public StubAuditLogRepository() {
+            super(null);
+        }
+
+        @Override
+        public Optional<AuditLog> findById(Long id) {
+            return logs.stream()
+                .filter(l -> l.getId() != null && l.getId().equals(id))
+                .findFirst();
+        }
+
+        @Override
+        public List<AuditLog> findAll() {
+            return new ArrayList<>(logs);
+        }
+
+        @Override
+        public List<AuditLog> findByUsername(String username) {
+            return logs.stream()
+                .filter(l -> username.equals(l.getUsername()))
+                .toList();
+        }
+
+        @Override
+        public List<AuditLog> findByOperationType(AuditLog.OperationType operationType) {
+            return logs.stream()
+                .filter(l -> operationType.equals(l.getOperationType()))
+                .toList();
+        }
+
+        @Override
+        public List<AuditLog> findByEntityType(String entityType) {
+            return logs.stream()
+                .filter(l -> entityType.equals(l.getEntityType()))
+                .toList();
+        }
+
+        @Override
+        public List<AuditLog> findByEntityId(Long entityId) {
+            return logs.stream()
+                .filter(l -> entityId.equals(l.getEntityId()))
+                .toList();
+        }
+
+        @Override
+        public List<AuditLog> findByDateRange(java.time.LocalDateTime startDate, java.time.LocalDateTime endDate) {
+            return logs.stream()
+                .filter(l -> !l.getCreatedAt().isBefore(startDate) && !l.getCreatedAt().isAfter(endDate))
+                .toList();
+        }
+
+        @Override
+        public List<AuditLog> findFailedOperations() {
+            return logs.stream()
+                .filter(l -> Boolean.FALSE.equals(l.getSuccess()))
+                .toList();
+        }
+
+        @Override
+        public AuditLog save(AuditLog log) {
+            if (log.getId() == null) {
+                log.setId((long)(logs.size() + 1));
+            }
+            logs.add(log);
+            saveCalled = true;
+            lastSavedLog = log;
+            return log;
+        }
+
+        @Override
+        public long count() {
+            return logs.size();
+        }
+
+        @Override
+        public long countByUser(String username) {
+            return logs.stream()
+                .filter(l -> username.equals(l.getUsername()))
+                .count();
+        }
     }
 
     // Stub implementation

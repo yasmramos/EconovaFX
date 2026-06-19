@@ -2,6 +2,7 @@ package com.econovafx.service;
 
 import com.econovafx.domain.*;
 import com.econovafx.repository.AccountRepository;
+import com.econovafx.repository.AuditLogRepository;
 import com.econovafx.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,13 +22,15 @@ class TransactionServiceTest {
 
     private StubTransactionRepository transactionRepository;
     private StubAccountRepositoryForTransaction accountRepository;
+    private AuditService auditService;
     private TransactionService transactionService;
 
     @BeforeEach
     void setUp() {
         transactionRepository = new StubTransactionRepository();
         accountRepository = new StubAccountRepositoryForTransaction();
-        transactionService = new TransactionService(transactionRepository, accountRepository);
+        auditService = new AuditService(new StubAuditLogRepositoryForTransaction());
+        transactionService = new TransactionService(transactionRepository, accountRepository, auditService);
     }
 
     @Test
@@ -652,6 +655,67 @@ class TransactionServiceTest {
         @Override
         public void update(Account account) {
             updateCallCount++;
+        }
+    }
+
+    private static class StubAuditLogRepositoryForTransaction extends AuditLogRepository {
+        public StubAuditLogRepositoryForTransaction() {
+            super(null);
+        }
+
+        @Override
+        public Optional<AuditLog> findById(Long id) {
+            return Optional.empty();
+        }
+
+        @Override
+        public List<AuditLog> findAll() {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public List<AuditLog> findByUsername(String username) {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public List<AuditLog> findByOperationType(AuditLog.OperationType operationType) {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public List<AuditLog> findByEntityType(String entityType) {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public List<AuditLog> findByEntityId(Long entityId) {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public List<AuditLog> findByDateRange(java.time.LocalDateTime startDate, java.time.LocalDateTime endDate) {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public List<AuditLog> findFailedOperations() {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public AuditLog save(AuditLog log) {
+            return log;
+        }
+
+        @Override
+        public long count() {
+            return 0;
+        }
+
+        @Override
+        public long countByUser(String username) {
+            return 0;
         }
     }
 }
