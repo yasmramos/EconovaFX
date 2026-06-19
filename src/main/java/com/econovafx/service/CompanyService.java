@@ -22,7 +22,7 @@ public class CompanyService {
     private static final Logger logger = LoggerFactory.getLogger(CompanyService.class);
 
     @Inject
-    private CompanyRepository companyRepository;
+    public CompanyRepository companyRepository;
 
     /**
      * Obtiene todas las empresas activas.
