@@ -2,6 +2,7 @@ package com.econovafx.security;
 
 import io.avaje.inject.aop.Aspect;
 import io.avaje.inject.aop.Invocation;
+import io.avaje.inject.aop.MethodInterceptor;
 
 import java.lang.reflect.Method;
 
@@ -10,9 +11,10 @@ import java.lang.reflect.Method;
  * Blocks method execution if the current user does not have the required role(s).
  */
 @Aspect
-public class RoleInterceptor {
+public interface RoleInterceptor extends MethodInterceptor {
 
-    public Object intercept(Invocation invocation) throws Throwable {
+    @Override
+    default void invoke(Invocation invocation) throws Throwable {
         Method method = invocation.method();
         
         // Check for @RequiresRole on method
@@ -20,7 +22,7 @@ public class RoleInterceptor {
         
         // If not on method, check on class level
         if (requiresRole == null) {
-            requiresRole = invocation.target().getClass().getAnnotation(RequiresRole.class);
+            requiresRole = method.getDeclaringClass().getAnnotation(RequiresRole.class);
         }
         
         if (requiresRole != null) {
@@ -39,6 +41,6 @@ public class RoleInterceptor {
         }
         
         // Proceed with method execution
-        return invocation.proceed();
+        invocation.invoke();
     }
 }
