@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Base entity class with common fields
+ * Base entity class with common fields including multi-tenant support
  */
 @MappedSuperclass
 public abstract class BaseEntity {
@@ -15,6 +15,14 @@ public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+
+    /**
+     * Referencia a la empresa/tenant para aislamiento de datos.
+     * Todas las entidades transaccionales deben tener esta referencia.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @WhenCreated
     @Column(name = "created_at", updatable = false)
@@ -33,6 +41,14 @@ public abstract class BaseEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public LocalDateTime getCreatedAt() {
