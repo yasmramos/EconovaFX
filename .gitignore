@@ -3,56 +3,20 @@
 *.class
 *.o
 *.obj
-*.exe
-*.dll
-*.so
-*.a
 *.out
-
 # Dependencies
-lib/
 target/
+.m2/
 .gradle/
-
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-
 # Environment
 .env
 .env.local
 *.env.*
-
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
-
-# Build systems
-build/
-dist/
-
-# Python specific (if applicable)
-__pycache__/
-*.pyc
-*.pyo
-.Python
-*.egg-info/
-.eggs/
-.coverage
-htmlcov/
-.mypy_cache/
-.pytest_cache/
-
-# Java specific
-*.jar
-*.war
-*.ear
-hs_err_pid*
-
-# OS generated files
-.DS_Store
-Thumbs.db
 ```
