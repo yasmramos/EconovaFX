@@ -1,0 +1,28 @@
+2026-06-16 10:26:55.176986-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "ACCOUNTS" no encontrada
+Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-06-16 10:26:55.180984-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "FINANCIAL_STATEMENT_ROW" no encontrada
+Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-06-16 10:26:55.182983-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "FINANCIAL_STATEMENT_ROW" no encontrada
+Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-06-16 10:26:55.187979-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "TRANSACTIONS" no encontrada
+Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-06-16 10:26:55.189980-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "TRANSACTIONS" no encontrada
+Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-06-16 10:26:55.196975-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "TRANSACTION_ENTRIES" no encontrada
+Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-06-16 10:26:55.204971-04:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "TRANSACTION_ENTRIES" no encontrada
+Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]

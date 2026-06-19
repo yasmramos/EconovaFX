@@ -54,7 +54,8 @@ public class AccountingPeriod {
     }
 
     // Constructors
-    public AccountingPeriod() {}
+    public AccountingPeriod() {
+    }
 
     public AccountingPeriod(String name, LocalDate startDate, LocalDate endDate) {
         this.name = name;
@@ -70,26 +71,61 @@ public class AccountingPeriod {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public String getName() {
+        return name;
+    }
 
-    public LocalDate getEndDate() { return endDate; }
-    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public PeriodStatus getStatus() { return status; }
-    public void setStatus(PeriodStatus status) { this.status = status; }
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
-    public String getClosedBy() { return closedBy; }
-    public void setClosedBy(String closedBy) { this.closedBy = closedBy; }
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
 
-    public LocalDate getClosedDate() { return closedDate; }
-    public void setClosedDate(LocalDate closedDate) { this.closedDate = closedDate; }
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public PeriodStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PeriodStatus status) {
+        this.status = status;
+    }
+
+    public String getClosedBy() {
+        return closedBy;
+    }
+
+    public void setClosedBy(String closedBy) {
+        this.closedBy = closedBy;
+    }
+
+    public LocalDate getClosedDate() {
+        return closedDate;
+    }
+
+    public void setClosedDate(LocalDate closedDate) {
+        this.closedDate = closedDate;
+    }
 
     public boolean isOpen() {
         return this.status == PeriodStatus.OPEN;
@@ -99,11 +135,21 @@ public class AccountingPeriod {
         return this.status == PeriodStatus.CLOSED || this.status == PeriodStatus.LOCKED;
     }
 
-    public PeriodType getType() { return type; }
-    public void setType(PeriodType type) { this.type = type; }
+    public PeriodType getType() {
+        return type;
+    }
 
-    public String getClosingNotes() { return closingNotes; }
-    public void setClosingNotes(String closingNotes) { this.closingNotes = closingNotes; }
+    public void setType(PeriodType type) {
+        this.type = type;
+    }
+
+    public String getClosingNotes() {
+        return closingNotes;
+    }
+
+    public void setClosingNotes(String closingNotes) {
+        this.closingNotes = closingNotes;
+    }
 
     public boolean isMonthly() {
         return this.type == PeriodType.MONTHLY;

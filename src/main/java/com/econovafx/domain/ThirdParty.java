@@ -45,8 +45,6 @@ public class ThirdParty extends BaseEntity {
     @Column(name = "payment_days")
     private Integer paymentDays = 30;
 
-    @Column(name = "is_active")
-    private Boolean isActive = true;
 
     @Column(name = "notes")
     @Lob
@@ -55,11 +53,7 @@ public class ThirdParty extends BaseEntity {
     @OneToMany(mappedBy = "thirdParty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    
 
     public enum ThirdPartyType {
         CUSTOMER,      // Cliente
@@ -67,16 +61,7 @@ public class ThirdParty extends BaseEntity {
         BOTH           // Both (Cliente y Proveedor)
     }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    
 
     // Getters and Setters
     public String getName() {
@@ -175,13 +160,6 @@ public class ThirdParty extends BaseEntity {
         this.paymentDays = paymentDays;
     }
 
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
 
     public String getNotes() {
         return notes;
@@ -199,21 +177,7 @@ public class ThirdParty extends BaseEntity {
         this.transactions = transactions;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    // `createdAt`, `updatedAt` and `isActive` are inherited from BaseEntity
 
     @Override
     public String toString() {

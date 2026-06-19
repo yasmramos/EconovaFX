@@ -1,4 +1,5 @@
 package com.econovafx.service;
+import io.avaje.inject.Component;
 import com.econovafx.domain.AccountingPeriod;
 
 import com.econovafx.model.CashMovement;
@@ -9,7 +10,6 @@ import com.econovafx.repository.BankAccountRepository;
 import com.econovafx.repository.CashBoxRepository;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +17,7 @@ import java.util.Optional;
 /**
  * Service for managing Cash Movements with Accounting integration.
  */
+@Component
 public class CashMovementService {
     
     private final CashMovementRepository movementRepository = new CashMovementRepository();

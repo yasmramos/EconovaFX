@@ -2,9 +2,8 @@ package com.econovafx.repository;
 
 import com.econovafx.domain.FinancialStatementModel;
 import com.econovafx.domain.FinancialStatementModel.ModelType;
-import io.ebean.DB;
 import io.ebean.Database;
-import io.ebean.Query;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -18,8 +17,9 @@ public class FinancialStatementModelRepository {
 
     private final Database database;
 
-    public FinancialStatementModelRepository() {
-        this.database = DB.getDefault();
+    @Inject
+    public FinancialStatementModelRepository(Database database) {
+        this.database = database;
     }
 
     public Optional<FinancialStatementModel> findById(Long id) {

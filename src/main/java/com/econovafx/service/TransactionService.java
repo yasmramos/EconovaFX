@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service for managing transactions
+ * Service for managing transactions with audit logging
  */
 @Component
 public class TransactionService {
@@ -23,12 +23,15 @@ public class TransactionService {
     
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final AuditService auditService;
     
     @Inject
     public TransactionService(TransactionRepository transactionRepository,
-                             AccountRepository accountRepository) {
+                             AccountRepository accountRepository,
+                             AuditService auditService) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
+        this.auditService = auditService;
     }
     
     public Optional<Transaction> getTransactionById(Long id) {
@@ -62,7 +65,7 @@ public class TransactionService {
     /**
      * Create a new transaction with double-entry bookkeeping
      */
-    public Transaction createTransaction(Transaction transaction, List<TransactionEntryData> entries) {
+    public Transaction createTransaction(Transaction transaction, List<TransactionEntryData> entries, String username) {
         validateTransaction(transaction, entries);
         
         if (transaction.getNumber() == null || transaction.getNumber().trim().isEmpty()) {
@@ -91,8 +94,10 @@ public class TransactionService {
         }
         
         if (totalDebit.compareTo(totalCredit) != 0) {
-            throw new IllegalArgumentException(
-                    "Transaction is not balanced. Debit: " + totalDebit + ", Credit: " + totalCredit);
+            String errorMsg = "Transaction is not balanced. Debit: " + totalDebit + ", Credit: " + totalCredit;
+            auditService.logFailure(username, AuditLog.OperationType.CREATE, "Transaction", null, 
+                                   "Create transaction - validation failed", errorMsg);
+            throw new IllegalArgumentException(errorMsg);
         }
         
         transaction.setTotalDebit(totalDebit);
@@ -101,22 +106,39 @@ public class TransactionService {
         
         Transaction saved = transactionRepository.save(transaction);
         logger.info("Transaction created: {}", saved.getNumber());
+        
+        // Audit log
+        auditService.logWithValues(username, AuditLog.OperationType.CREATE, "Transaction", 
+                                  saved.getId(), "Created transaction: " + saved.getNumber(),
+                                  null, buildTransactionJson(saved));
+        
         return saved;
+    }
+    
+    /**
+     * Create transaction without audit (for backward compatibility)
+     */
+    public Transaction createTransaction(Transaction transaction, List<TransactionEntryData> entries) {
+        return createTransaction(transaction, entries, "system");
     }
     
     /**
      * Post a transaction (apply to account balances)
      */
-    public Transaction postTransaction(Long transactionId) {
+    public Transaction postTransaction(Long transactionId, String username) {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Transaction not found: " + transactionId));
         
         if (transaction.getIsPosted()) {
+            auditService.logFailure(username, AuditLog.OperationType.PUBLISH_TRANSACTION, "Transaction", 
+                                   transactionId, "Post transaction - already posted", "Transaction already posted");
             throw new IllegalStateException("Transaction already posted");
         }
         
         if (!transaction.isBalanced()) {
+            auditService.logFailure(username, AuditLog.OperationType.PUBLISH_TRANSACTION, "Transaction", 
+                                   transactionId, "Post transaction - not balanced", "Transaction is not balanced");
             throw new IllegalStateException("Transaction is not balanced");
         }
         
@@ -151,18 +173,32 @@ public class TransactionService {
         transactionRepository.update(transaction);
         
         logger.info("Transaction posted: {}", transaction.getNumber());
+        
+        // Audit log
+        auditService.logSuccess(username, AuditLog.OperationType.PUBLISH_TRANSACTION, "Transaction",
+                               transactionId, "Posted transaction: " + transaction.getNumber());
+        
         return transaction;
+    }
+    
+    /**
+     * Post transaction without audit (for backward compatibility)
+     */
+    public Transaction postTransaction(Long transactionId) {
+        return postTransaction(transactionId, "system");
     }
     
     /**
      * Reverse/Void a posted transaction
      */
-    public Transaction reverseTransaction(Long transactionId, String reason) {
+    public Transaction reverseTransaction(Long transactionId, String reason, String username) {
         Transaction original = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Transaction not found: " + transactionId));
         
         if (!original.getIsPosted()) {
+            auditService.logFailure(username, AuditLog.OperationType.REJECT, "Transaction",
+                                   transactionId, "Reverse transaction - not posted", "Cannot reverse unposted transaction");
             throw new IllegalStateException("Cannot reverse unposted transaction");
         }
         
@@ -180,20 +216,48 @@ public class TransactionService {
                         "Reversal of " + entry.getDescription()))
                 .toList();
         
-        return createTransaction(reversal, reverseEntries);
+        Transaction savedReversal = createTransaction(reversal, reverseEntries, username);
+        
+        // Audit log for reversal
+        auditService.logWithValues(username, AuditLog.OperationType.REJECT, "Transaction",
+                                  transactionId, "Reversed transaction: " + original.getNumber() + " - Reason: " + reason,
+                                  buildTransactionJson(original), buildTransactionJson(savedReversal));
+        
+        return savedReversal;
     }
     
-    public void deleteTransaction(Long id) {
+    /**
+     * Reverse transaction without audit (for backward compatibility)
+     */
+    public Transaction reverseTransaction(Long transactionId, String reason) {
+        return reverseTransaction(transactionId, reason, "system");
+    }
+    
+    public void deleteTransaction(Long id, String username) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Transaction not found: " + id));
         
         if (transaction.getIsPosted()) {
+            auditService.logFailure(username, AuditLog.OperationType.DELETE, "Transaction",
+                                   id, "Delete transaction - is posted", "Cannot delete posted transaction. Please reverse it.");
             throw new IllegalStateException("Cannot delete posted transaction. Please reverse it.");
         }
         
+        Long entityId = transaction.getId();
         transactionRepository.delete(transaction);
         logger.info("Transaction deleted: {}", transaction.getNumber());
+        
+        // Audit log
+        auditService.logSuccess(username, AuditLog.OperationType.DELETE, "Transaction",
+                               entityId, "Deleted transaction: " + transaction.getNumber());
+    }
+    
+    /**
+     * Delete transaction without audit (for backward compatibility)
+     */
+    public void deleteTransaction(Long id) {
+        deleteTransaction(id, "system");
     }
     
     private void validateTransaction(Transaction transaction, List<TransactionEntryData> entries) {
@@ -212,6 +276,27 @@ public class TransactionService {
         long count = transactionRepository.count() + 1;
         return "TXN-" + LocalDate.now().getYear() + "-" + 
                String.format("%06d", count);
+    }
+    
+    /**
+     * Build JSON representation of transaction for audit logging
+     */
+    private String buildTransactionJson(Transaction transaction) {
+        if (transaction == null) {
+            return null;
+        }
+        StringBuilder json = new StringBuilder();
+        json.append("{");
+        json.append("\"id\":").append(transaction.getId()).append(",");
+        json.append("\"number\":\"").append(transaction.getNumber()).append("\",");
+        json.append("\"date\":\"").append(transaction.getDate()).append("\",");
+        json.append("\"type\":\"").append(transaction.getType()).append("\",");
+        json.append("\"description\":\"").append(transaction.getDescription()).append("\",");
+        json.append("\"totalDebit\":").append(transaction.getTotalDebit()).append(",");
+        json.append("\"totalCredit\":").append(transaction.getTotalCredit()).append(",");
+        json.append("\"isPosted\":").append(transaction.getIsPosted());
+        json.append("}");
+        return json.toString();
     }
     
     public long getTransactionsCount() {
