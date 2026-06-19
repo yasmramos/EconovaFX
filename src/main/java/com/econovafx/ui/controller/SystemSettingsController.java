@@ -1,6 +1,9 @@
 package com.econovafx.ui.controller;
 
+import com.econovafx.domain.SystemConfiguration;
+import com.econovafx.service.AuditService;
 import com.econovafx.service.NotificationService;
+import com.econovafx.service.SystemConfigService;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -17,6 +20,15 @@ import java.util.ResourceBundle;
  * Diseño inspirado en preferencesFx con navegación lateral.
  */
 public class SystemSettingsController {
+
+    @Inject
+    private SystemConfigService systemConfigService;
+
+    @Inject
+    private NotificationService notificationService;
+
+    @Inject
+    private AuditService auditService;
 
     @FXML
     private VBox sidebarContainer;
@@ -66,8 +78,6 @@ public class SystemSettingsController {
     @FXML
     private ComboBox<String> languageCombo;
 
-    @Inject
-    private NotificationService notificationService;
 
     private ResourceBundle resources;
 
