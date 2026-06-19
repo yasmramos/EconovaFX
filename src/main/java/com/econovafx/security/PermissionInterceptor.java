@@ -1,6 +1,5 @@
 package com.econovafx.security;
 
-import io.avaje.inject.aop.Aspect;
 import io.avaje.inject.aop.Invocation;
 import io.avaje.inject.aop.MethodInterceptor;
 
@@ -10,11 +9,10 @@ import java.lang.reflect.Method;
  * Interceptor for @RequiresPermission annotation.
  * Blocks method execution if the current user does not have the required permission(s).
  */
-@Aspect
-public interface PermissionInterceptor extends MethodInterceptor {
+public class PermissionInterceptor implements MethodInterceptor {
 
     @Override
-    default void invoke(Invocation invocation) throws Throwable {
+    public void invoke(Invocation invocation) throws Throwable {
         Method method = invocation.method();
         
         // Check for @RequiresPermission on method
