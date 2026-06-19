@@ -1,5 +1,6 @@
 package com.econovafx.ui.controller;
 
+import com.econovafx.domain.AuditLog;
 import com.econovafx.domain.User;
 import com.econovafx.domain.ValuationMethod;
 import com.econovafx.domain.Warehouse;
@@ -283,13 +284,16 @@ public class WarehouseConfigController {
             try {
                 // Verificar si tiene movimientos
                 // Esto debería validarse en el servicio
-                warehouseRepository.delete(selected);
+                warehouseRepository.deleteById(selected.getId());
                 
-                auditService.logAudit(
-                    "WAREHOUSE_DELETE",
+                auditService.logWithValues(
+                    "SYSTEM",
+                    AuditLog.OperationType.DELETE,
+                    "WAREHOUSE",
+                    selected.getId(),
                     "Usuario eliminó almacén: " + selected.getCode(),
-                    null,
-                    selected.toString()
+                    selected.toString(),
+                    null
                 );
                 
                 notificationService.showSuccess(getCurrentStage(), "Almacén eliminado exitosamente");
@@ -395,7 +399,6 @@ public class WarehouseConfigController {
         clone.setUpdatedAt(original.getUpdatedAt());
         return clone;
     }
-}
 
     private Stage getCurrentStage() {
         return (Stage) warehouseTable.getScene().getWindow();

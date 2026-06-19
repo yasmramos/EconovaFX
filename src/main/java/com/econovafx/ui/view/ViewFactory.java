@@ -15,6 +15,7 @@ import com.econovafx.ui.controller.AccountsController;
 import com.econovafx.ui.controller.ComprobanteFormController;
 import com.econovafx.ui.controller.ComprobantesController;
 import com.econovafx.ui.controller.DashboardController;
+import com.econovafx.ui.controller.SystemSettingsController;
 import com.econovafx.ui.controller.ThirdPartiesController;
 import com.econovafx.ui.controller.ThirdPartyFormController;
 import com.econovafx.ui.controller.TransactionEntryController;
@@ -51,6 +52,7 @@ public class ViewFactory {
     private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
     private final ComprobantesController comprobantesController;
+    private final SystemSettingsController systemSettingsController;
     private final AccountService accountService;
     private final ThirdPartyService thirdPartyService;
     private final TransactionService transactionService;
@@ -67,6 +69,7 @@ public class ViewFactory {
                       ThirdPartyFormController thirdPartyFormController,
                       TransactionEntryController transactionEntryController,
                       ComprobantesController comprobantesController,
+                      SystemSettingsController systemSettingsController,
                       AccountService accountService,
                       ThirdPartyService thirdPartyService,
                       TransactionService transactionService,
@@ -82,6 +85,7 @@ public class ViewFactory {
         this.thirdPartyFormController = thirdPartyFormController;
         this.transactionEntryController = transactionEntryController;
         this.comprobantesController = comprobantesController;
+        this.systemSettingsController = systemSettingsController;
         this.accountService = accountService;
         this.thirdPartyService = thirdPartyService;
         this.transactionService = transactionService;
@@ -328,5 +332,28 @@ public class ViewFactory {
             stage.setX(event.getScreenX() - xOffset[0]);
             stage.setY(event.getScreenY() - yOffset[0]);
         });
+    }
+
+    /**
+     * Load System Settings view in a new window
+     */
+    public void loadSystemSettings() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/ui/view/system-settings.fxml"));
+            loader.setControllerFactory(cls -> systemSettingsController);
+            Parent root = loader.load();
+
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setTitle("Configuración del Sistema");
+            stage.setScene(new Scene(root, 900, 650));
+            
+            // Add styles
+            stage.getScene().getStylesheets().add(getClass().getResource("/com/econovafx/ui/css/system-settings.css").toExternalForm());
+            
+            stage.show();
+        } catch (IOException e) {
+            logger.error("Error loading system settings view", e);
+            throw new RuntimeException("Failed to load system settings view", e);
+        }
     }
 }
