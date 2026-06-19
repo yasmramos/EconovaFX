@@ -416,4 +416,26 @@ public class SecurityUtil {
         }
         requireRole(user, roleName);
     }
+    
+    /**
+     * Validates that the current authenticated user has at least one of the specified roles.
+     * @param roleNames Role names
+     * @throws AuthorizationException if the current user does not have any of the roles
+     */
+    public static void requireAnyRole(String... roleNames) {
+        User user = getCurrentUser();
+        if (user == null) {
+            throw new AuthorizationException("Access denied: No authenticated user");
+        }
+        if (!hasAnyRole(user, roleNames)) {
+            String message = String.format(
+                "Access denied: User %s (role=%s) does not have any of required roles %s",
+                user.getUsername(),
+                user.getRole(),
+                String.join(", ", roleNames)
+            );
+            logger.error(message);
+            throw new AuthorizationException(message);
+        }
+    }
 }
