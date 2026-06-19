@@ -224,9 +224,15 @@ public class MainViewController implements Initializable {
 
     @FXML
     private void showAppSettings() {
-        logger.debug("Showing app settings");
+        logger.debug("Showing system settings");
         setActiveButton(btnAppSettings);
-        updateStatus("Ajustes de la App - Próximamente");
+        try {
+            viewFactory.loadSystemSettings();
+            updateStatus("Configuración del Sistema");
+        } catch (Exception e) {
+            logger.error("Error loading system settings", e);
+            NotificationService.showError(getStage(), "Error al cargar la configuración: " + e.getMessage());
+        }
     }
 
     @FXML
