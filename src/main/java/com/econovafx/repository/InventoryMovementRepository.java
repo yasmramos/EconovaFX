@@ -179,4 +179,20 @@ public class InventoryMovementRepository {
                 .findOne();
         return row != null ? row.getBigDecimal("total") : BigDecimal.ZERO;
     }
+
+    /**
+     * Obtiene todos los movimientos de entrada de un producto en un almacén, ordenados por fecha (más antiguos primero).
+     * Necesario para el cálculo FIFO (PEPS).
+     */
+    public List<InventoryMovement> findEntriesByItemAndWarehouse(Long itemId, Long warehouseId) {
+        return database.find(InventoryMovement.class)
+                .fetch("item")
+                .fetch("warehouse")
+                .where()
+                .eq("type", MovementType.ENTRY)
+                .eq("item.id", itemId)
+                .eq("warehouse.id", warehouseId)
+                .orderBy("movementDate asc")
+                .findList();
+    }
 }

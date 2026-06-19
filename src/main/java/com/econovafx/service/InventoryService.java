@@ -40,6 +40,53 @@ public class InventoryService {
     @Inject
     protected AuditService auditService;
 
+    /**
+     * Calcula el costo de salida según el método de valoración del almacén.
+     * Soporta FIFO (PEPS) y Promedio Ponderado.
+     */
+    public BigDecimal calculateOutputCost(InventoryItem item, Warehouse warehouse, BigDecimal quantity) {
+        ValuationMethod method = warehouse.getValuationMethod();
+        
+        switch (method) {
+            case FIFO:
+                return calculateFifoCost(item, warehouse, quantity);
+            case WEIGHTED_AVERAGE:
+                return item.getUnitCost().multiply(quantity);
+            default:
+                throw new IllegalArgumentException("Método de valoración no soportado: " + method);
+        }
+    }
+
+    /**
+     * Calcula el costo de salida usando el método FIFO (PEPS).
+     * Las primeras unidades en entrar son las primeras en salir.
+     */
+    private BigDecimal calculateFifoCost(InventoryItem item, Warehouse warehouse, BigDecimal quantity) {
+        // Obtener movimientos de entrada ordenados por fecha (más antiguos primero)
+        List<InventoryMovement> entries = movementRepository.findEntriesByItemAndWarehouse(item.getId(), warehouse.getId());
+        
+        BigDecimal remainingQuantity = quantity;
+        BigDecimal totalCost = BigDecimal.ZERO;
+        
+        for (InventoryMovement entry : entries) {
+            if (remainingQuantity.compareTo(BigDecimal.ZERO) <= 0) {
+                break;
+            }
+            
+            BigDecimal availableQuantity = entry.getQuantity();
+            BigDecimal quantityToUse = remainingQuantity.min(availableQuantity);
+            
+            totalCost = totalCost.add(entry.getUnitCost().multiply(quantityToUse));
+            remainingQuantity = remainingQuantity.subtract(quantityToUse);
+        }
+        
+        if (remainingQuantity.compareTo(BigDecimal.ZERO) > 0) {
+            throw new IllegalStateException("Stock insuficiente para aplicar FIFO. Cantidad faltante: " + remainingQuantity);
+        }
+        
+        return totalCost;
+    }
+
 
     // ==================== CATEGORÍAS ====================
 
@@ -293,12 +340,16 @@ public class InventoryService {
             throw new IllegalStateException("Stock insuficiente para realizar la salida");
         }
         
+        // Calcular costo de salida según método de valoración
+        BigDecimal outputCost = calculateOutputCost(item, warehouse, quantity);
+        BigDecimal unitCost = outputCost.divide(quantity, 4, java.math.RoundingMode.HALF_UP);
+        
         InventoryMovement movement = new InventoryMovement();
         movement.setType(InventoryMovement.MovementType.OUTPUT);
         movement.setItem(item);
         movement.setWarehouse(warehouse);
         movement.setQuantity(quantity);
-        movement.setUnitCost(currentItem.getUnitCost());
+        movement.setUnitCost(unitCost);
         movement.setDocumentNumber(documentNumber);
         movement.setNotes(notes);
         movement.setCreatedBy(currentUser);
@@ -320,7 +371,8 @@ public class InventoryService {
             movement.toString()
         );
         
-        log.info("Salida de inventario registrada: {} - Cantidad: {}", documentNumber, quantity);
+        log.info("Salida de inventario registrada: {} - Cantidad: {} (Método: {})", 
+                 documentNumber, quantity, warehouse.getValuationMethod());
         
         
         return movement;
