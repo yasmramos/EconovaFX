@@ -30,6 +30,10 @@ public class Warehouse extends BaseEntity {
     private User manager;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ValuationMethod valuationMethod = ValuationMethod.FIFO;
+
+    @Column(nullable = false)
     private boolean active = true;
 
     @WhenCreated
@@ -113,12 +117,21 @@ public class Warehouse extends BaseEntity {
         this.updatedAt = updatedAt;
     }
 
+    public ValuationMethod getValuationMethod() {
+        return valuationMethod;
+    }
+
+    public void setValuationMethod(ValuationMethod valuationMethod) {
+        this.valuationMethod = valuationMethod;
+    }
+
     @Override
     public String toString() {
         return "Warehouse{" +
                 "id=" + id +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
+                ", valuationMethod=" + valuationMethod +
                 '}';
     }
 }

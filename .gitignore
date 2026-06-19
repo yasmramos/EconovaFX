@@ -1,42 +1,37 @@
 ```
 # Compiled and build artifacts
-*.jar
 *.class
 *.o
 *.obj
-*.exe
-*.dll
-*.so
-*.a
 *.out
+build/
+target/
 
 # Dependencies
 lib/
-target/
+libs/
+jars/
+.m2/
 .gradle/
-.mypy_cache/
-.pytest_cache/
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
 
-# Editors
-.vscode/
-.idea/
-
 # Environment
 .env
 .env.local
 *.env.*
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
+# Editors
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
 
-# System files
+# OS generated files
 .DS_Store
 Thumbs.db
 ```

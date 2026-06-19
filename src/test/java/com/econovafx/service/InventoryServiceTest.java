@@ -216,6 +216,7 @@ class InventoryServiceTest {
 
         Warehouse warehouse = new Warehouse();
         warehouse.setId(1L);
+        warehouse.setValuationMethod(ValuationMethod.WEIGHTED_AVERAGE); // Usar Promedio Ponderado para evitar necesidad de entradas previas
 
         User user = new User();
         user.setUsername("testuser");
@@ -364,5 +365,103 @@ class InventoryServiceTest {
         assertNotNull(result);
         verify(itemRepository).update(updatedItem);
         verify(auditService).logWithValues(anyString(), any(AuditLog.OperationType.class), anyString(), anyLong(), anyString(), anyString(), anyString());
+    }
+
+    @Test
+    void testCalculateOutputCost_WeightedAverage() {
+        Warehouse warehouse = new Warehouse();
+        warehouse.setId(1L);
+        warehouse.setCode("WH001");
+        warehouse.setName("Almacén Principal");
+        warehouse.setValuationMethod(ValuationMethod.WEIGHTED_AVERAGE);
+
+        InventoryItem item = new InventoryItem();
+        item.setId(1L);
+        item.setCode("PROD001");
+        item.setName("Producto Prueba");
+        item.setUnitCost(new BigDecimal("10.50"));
+        item.setCurrentStock(new BigDecimal("100"));
+
+        BigDecimal quantity = new BigDecimal("5");
+        BigDecimal expectedCost = new BigDecimal("52.50"); // 10.50 * 5
+
+        BigDecimal result = inventoryService.calculateOutputCost(item, warehouse, quantity);
+
+        assertEquals(0, expectedCost.compareTo(result), "El costo debe ser igual al costo unitario por cantidad en promedio ponderado");
+    }
+
+    @Test
+    void testCalculateOutputCost_Fifo() {
+        Warehouse warehouse = new Warehouse();
+        warehouse.setId(1L);
+        warehouse.setCode("WH001");
+        warehouse.setName("Almacén FIFO");
+        warehouse.setValuationMethod(ValuationMethod.FIFO);
+
+        InventoryItem item = new InventoryItem();
+        item.setId(1L);
+        item.setCode("PROD001");
+        item.setName("Producto FIFO");
+
+        // Crear movimientos de entrada con diferentes costos (simulando compras en diferentes fechas)
+        InventoryMovement entry1 = new InventoryMovement();
+        entry1.setType(InventoryMovement.MovementType.ENTRY);
+        entry1.setItem(item);
+        entry1.setWarehouse(warehouse);
+        entry1.setQuantity(new BigDecimal("10"));
+        entry1.setUnitCost(new BigDecimal("10.00"));
+        entry1.setMovementDate(LocalDateTime.now().minusDays(10));
+
+        InventoryMovement entry2 = new InventoryMovement();
+        entry2.setType(InventoryMovement.MovementType.ENTRY);
+        entry2.setItem(item);
+        entry2.setWarehouse(warehouse);
+        entry2.setQuantity(new BigDecimal("20"));
+        entry2.setUnitCost(new BigDecimal("12.00"));
+        entry2.setMovementDate(LocalDateTime.now().minusDays(5));
+
+        when(movementRepository.findEntriesByItemAndWarehouse(1L, 1L))
+                .thenReturn(List.of(entry1, entry2));
+
+        // Solicitar 15 unidades: 10 a $10 + 5 a $12 = $100 + $60 = $160
+        BigDecimal quantity = new BigDecimal("15");
+        BigDecimal expectedCost = new BigDecimal("160.00");
+
+        BigDecimal result = inventoryService.calculateOutputCost(item, warehouse, quantity);
+
+        assertEquals(0, expectedCost.compareTo(result), "El costo FIFO debe calcularse correctamente");
+    }
+
+    @Test
+    void testCalculateOutputCost_FifoInsufficientStock() {
+        Warehouse warehouse = new Warehouse();
+        warehouse.setId(1L);
+        warehouse.setCode("WH001");
+        warehouse.setName("Almacén FIFO");
+        warehouse.setValuationMethod(ValuationMethod.FIFO);
+
+        InventoryItem item = new InventoryItem();
+        item.setId(1L);
+        item.setCode("PROD001");
+        item.setName("Producto FIFO");
+
+        // Solo hay 10 unidades en total
+        InventoryMovement entry1 = new InventoryMovement();
+        entry1.setType(InventoryMovement.MovementType.ENTRY);
+        entry1.setItem(item);
+        entry1.setWarehouse(warehouse);
+        entry1.setQuantity(new BigDecimal("10"));
+        entry1.setUnitCost(new BigDecimal("10.00"));
+        entry1.setMovementDate(LocalDateTime.now().minusDays(10));
+
+        when(movementRepository.findEntriesByItemAndWarehouse(1L, 1L))
+                .thenReturn(List.of(entry1));
+
+        // Solicitar 15 unidades (más de lo disponible)
+        BigDecimal quantity = new BigDecimal("15");
+
+        assertThrows(IllegalStateException.class, () -> {
+            inventoryService.calculateOutputCost(item, warehouse, quantity);
+        }, "Debe lanzar excepción cuando no hay stock suficiente para FIFO");
     }
 }
