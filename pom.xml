@@ -93,7 +93,7 @@
         <dependency>
             <groupId>io.avaje</groupId>
             <artifactId>avaje-inject</artifactId>
-            <version>11.5</version>
+            <version>12.6</version>
         </dependency>
 
         <!-- Avaje Config (Configuration Management) -->
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>io.avaje</groupId>
             <artifactId>avaje-inject-aop</artifactId>
-            <version>11.5</version>
+            <version>12.6</version>
         </dependency>
 
         <!-- BCrypt for Password Hashing -->
@@ -270,7 +270,7 @@
                         <path>
                             <groupId>io.avaje</groupId>
                             <artifactId>avaje-inject-generator</artifactId>
-                            <version>11.5</version>
+                            <version>12.6</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -359,7 +359,7 @@
       <plugin>
         <groupId>io.avaje</groupId>
         <artifactId>avaje-inject-maven-plugin</artifactId>
-        <version>11.5</version>
+        <version>12.6</version>
         <executions>
           <execution>
             <?m2e execute?>
@@ -392,7 +392,7 @@
                                 <path>
                                     <groupId>io.avaje</groupId>
                                     <artifactId>avaje-inject-generator</artifactId>
-                                    <version>11.5</version>
+                                    <version>12.6</version>
                                 </path>
                             </annotationProcessorPaths>
                         </configuration>
