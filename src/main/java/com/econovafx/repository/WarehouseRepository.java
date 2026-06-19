@@ -79,6 +79,13 @@ public class WarehouseRepository {
     }
 
     /**
+     * Obtiene todos los almacenes (activos e inactivos) - alias para compatibilidad.
+     */
+    public List<Warehouse> findAllActiveAndInactive() {
+        return findAll();
+    }
+
+    /**
      * Busca almacenes por nombre (búsqueda parcial).
      */
     public List<Warehouse> findByNameContaining(String name) {
