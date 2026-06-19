@@ -96,6 +96,13 @@
             <version>9.0</version>
         </dependency>
 
+        <!-- Avaje Config (Configuration Management) -->
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-config</artifactId>
+            <version>5.2</version>
+        </dependency>
+
         <!-- BCrypt for Password Hashing -->
         <dependency>
             <groupId>org.mindrot</groupId>
