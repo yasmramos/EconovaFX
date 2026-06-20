@@ -88,6 +88,9 @@ public class MainViewController implements Initializable {
     private Button btnCostos;
 
     @FXML
+    private Button btnTasasCambio;
+
+    @FXML
     private Button btnFinanzas;
 
     @FXML
@@ -394,6 +397,15 @@ public class MainViewController implements Initializable {
         logger.debug("Showing nóminas");
         setActiveButton(btnNominas);
         updateStatus("Nóminas - Próximamente");
+    }
+
+    @FXML
+    private void showTasasCambio() {
+        logger.debug("Showing exchange rates");
+        setActiveButton(btnTasasCambio);
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createExchangeRatesView());
+        updateStatus("Tasas de Cambio");
     }
 
     @FXML
