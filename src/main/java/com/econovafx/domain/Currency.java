@@ -40,7 +40,7 @@ public class Currency extends BaseEntity {
     /**
      * Fecha de vigencia de la tasa de cambio
      */
-    @jakarta.persistence.Column(name = "rate_date")
+    @jakarta.persistence.Column(name = "rate_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime rateDate;
 
     /**

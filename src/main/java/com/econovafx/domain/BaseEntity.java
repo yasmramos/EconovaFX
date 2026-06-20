@@ -25,11 +25,11 @@ public abstract class BaseEntity {
     private Company company;
 
     @WhenCreated
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
     @WhenModified
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
     @Column(name = "is_active")

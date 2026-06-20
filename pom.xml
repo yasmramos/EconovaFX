@@ -295,6 +295,9 @@
                         <goals>
                             <goal>enhance</goal>
                         </goals>
+                        <configuration>
+                            <transformArgs>debug=1,version=149</transformArgs>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
