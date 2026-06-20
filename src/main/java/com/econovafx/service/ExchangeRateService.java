@@ -232,4 +232,45 @@ public class ExchangeRateService {
     public Optional<ExchangeRate> getExchangeRateById(Long id) {
         return exchangeRateRepository.findById(id);
     }
+
+    /**
+     * Fetches and saves latest rates from BCC (alias for fetchAndSaveRatesFromBCC)
+     */
+    public List<ExchangeRate> fetchAndSaveLatestRates() {
+        return fetchAndSaveRatesFromBCC();
+    }
+
+    /**
+     * Gets latest rates for all currencies (active rates)
+     */
+    public List<ExchangeRate> getLatestRatesForAllCurrencies() {
+        return getAllActiveRates();
+    }
+
+    /**
+     * Gets exchange rates by date range and optional currency filter
+     */
+    public List<ExchangeRate> getExchangeRatesByDateRange(LocalDate from, LocalDate to, String currencyCode) {
+        if (currencyCode != null && !currencyCode.isEmpty()) {
+            Currency currency = currencyRepository.findByCode(currencyCode)
+                .orElseThrow(() -> new IllegalArgumentException("Moneda no encontrada: " + currencyCode));
+            return exchangeRateRepository.findRatesByDateRangeAndCurrency(from.atStartOfDay(), to.atTime(23, 59, 59), currency);
+        } else {
+            return exchangeRateRepository.findRatesByDateRange(from.atStartOfDay(), to.atTime(23, 59, 59));
+        }
+    }
+
+    /**
+     * Gets the last update time from the most recent exchange rate
+     */
+    public Optional<LocalDateTime> getLastUpdateTime() {
+        List<ExchangeRate> allRates = getAllActiveRates();
+        if (allRates.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(allRates.stream()
+            .map(ExchangeRate::getDate)
+            .max(LocalDateTime::compareTo)
+            .orElse(null));
+    }
 }

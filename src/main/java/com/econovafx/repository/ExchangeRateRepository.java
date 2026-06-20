@@ -178,4 +178,36 @@ public class ExchangeRateRepository {
         throw new IllegalStateException("No se encontró tasa de cambio entre " + 
                                         fromCurrency.getCode() + " y " + toCurrency.getCode());
     }
+
+    /**
+     * Finds exchange rates by date range
+     */
+    public List<ExchangeRate> findRatesByDateRange(LocalDateTime from, LocalDateTime to) {
+        return database.find(ExchangeRate.class)
+                .fetch("fromCurrency")
+                .fetch("toCurrency")
+                .where()
+                .ge("effectiveDate", from)
+                .le("effectiveDate", to)
+                .orderBy().desc("effectiveDate")
+                .findList();
+    }
+
+    /**
+     * Finds exchange rates by date range and specific currency
+     */
+    public List<ExchangeRate> findRatesByDateRangeAndCurrency(LocalDateTime from, LocalDateTime to, Currency currency) {
+        return database.find(ExchangeRate.class)
+                .fetch("fromCurrency")
+                .fetch("toCurrency")
+                .where()
+                .ge("effectiveDate", from)
+                .le("effectiveDate", to)
+                .and()
+                    .eq("fromCurrency", currency)
+                    .or()
+                        .eq("toCurrency", currency)
+                .orderBy().desc("effectiveDate")
+                .findList();
+    }
 }
