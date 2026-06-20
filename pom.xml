@@ -110,6 +110,13 @@
             <version>12.6</version>
         </dependency>
 
+        <!-- Jsoup for HTML Parsing (BCC Exchange Rates) -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.17.2</version>
+        </dependency>
+
         <!-- BCrypt for Password Hashing -->
         <dependency>
             <groupId>org.mindrot</groupId>

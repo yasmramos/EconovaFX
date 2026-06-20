@@ -11,6 +11,7 @@ import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.ExportService;
 import com.econovafx.service.AccountingPeriodService;
 import com.econovafx.service.NotificationService;
+import com.econovafx.service.ExchangeRateService;
 import com.econovafx.ui.controller.*;
 import com.econovafx.ui.view.ViewFactory;
 import io.avaje.inject.BeanScope;
@@ -49,6 +50,7 @@ public final class AppContext {
     private ThirdPartiesController thirdPartiesController;
     private AccountingPeriodsController accountingPeriodsController;
     private AccountingClosuresController accountingClosuresController;
+    private ExchangeRatesController exchangeRatesController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
@@ -90,9 +92,11 @@ public final class AppContext {
 
         // Create view factory with controllers
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
+        exchangeRatesController = new ExchangeRatesController();
         
         // Get notification service instance from bean scope
         NotificationService notificationService = beanScope.get(NotificationService.class);
+        ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
         
         viewFactory = new ViewFactory(
                 dashboardController,
@@ -101,6 +105,7 @@ public final class AppContext {
                 thirdPartiesController,
                 accountingPeriodsController,
                 accountingClosuresController,
+                exchangeRatesController,
                 accountFormController,
                 thirdPartyFormController,
                 transactionEntryController,
@@ -122,6 +127,7 @@ public final class AppContext {
         comprobantesController = new ComprobantesController(transactionService, accountService, exportService, viewFactory);
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
+        exchangeRatesController = new ExchangeRatesController();
 
         // Re-create view factory with updated controllers
         NotificationService notificationService2 = beanScope.get(NotificationService.class);
@@ -132,6 +138,7 @@ public final class AppContext {
                 thirdPartiesController,
                 accountingPeriodsController,
                 accountingClosuresController,
+                exchangeRatesController,
                 accountFormController,
                 thirdPartyFormController,
                 transactionEntryController,

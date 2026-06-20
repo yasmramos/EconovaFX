@@ -1,7 +1,6 @@
 package com.econovafx.repository;
 
 import com.econovafx.domain.InventoryCategory;
-import io.ebean.DB;
 import io.ebean.Database;
 import io.avaje.inject.Component;
 
@@ -16,8 +15,8 @@ public class InventoryCategoryRepository {
 
     private final Database database;
 
-    public InventoryCategoryRepository() {
-        this.database = DB.getDefault();
+    public InventoryCategoryRepository(Database database) {
+        this.database = database;
     }
 
     /**

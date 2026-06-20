@@ -42,6 +42,7 @@
                     <Button fx:id="btnPeriodos" text="📅 Periodos Contables" onAction="#showPeriodos" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                     <Button fx:id="btnCierres" text="🔒 Cierres Contables" onAction="#showCierres" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                     <Button fx:id="btnCostos" text="💰 Costos y Procesos" onAction="#showCostos" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
+                    <Button fx:id="btnTasasCambio" text="💱 Tasas de Cambio" onAction="#showTasasCambio" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                 </VBox>
             </VBox>
 

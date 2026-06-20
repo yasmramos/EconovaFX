@@ -1,7 +1,7 @@
 package com.econovafx.repository;
 
 import com.econovafx.domain.Currency;
-import io.ebean.DB;
+import io.avaje.inject.Component;
 import io.ebean.Database;
 import io.ebean.Transaction;
 
@@ -11,12 +11,13 @@ import java.util.Optional;
 /**
  * Repositorio para gestión de monedas según Resolución 340/2004.
  */
+@Component
 public class CurrencyRepository {
 
     private final Database database;
 
-    public CurrencyRepository() {
-        this.database = DB.getDefault();
+    public CurrencyRepository(Database database) {
+        this.database = database;
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.econovafx.repository;
 
 import com.econovafx.domain.Warehouse;
-import io.ebean.DB;
 import io.ebean.Database;
 import io.avaje.inject.Component;
 
@@ -16,8 +15,8 @@ public class WarehouseRepository {
 
     private final Database database;
 
-    public WarehouseRepository() {
-        this.database = DB.getDefault();
+    public WarehouseRepository(Database database) {
+        this.database = database;
     }
 
     /**

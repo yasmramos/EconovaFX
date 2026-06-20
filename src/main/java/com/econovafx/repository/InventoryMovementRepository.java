@@ -4,7 +4,6 @@ import com.econovafx.domain.InventoryMovement;
 import com.econovafx.domain.InventoryMovement.MovementType;
 import com.econovafx.domain.InventoryItem;
 import com.econovafx.domain.Warehouse;
-import io.ebean.DB;
 import io.ebean.Database;
 import io.avaje.inject.Component;
 
@@ -21,8 +20,8 @@ public class InventoryMovementRepository {
 
     private final Database database;
 
-    public InventoryMovementRepository() {
-        this.database = DB.getDefault();
+    public InventoryMovementRepository(Database database) {
+        this.database = database;
     }
 
     /**
