@@ -2,7 +2,6 @@ package com.econovafx.repository;
 
 import com.econovafx.domain.Currency;
 import io.avaje.inject.Component;
-import io.ebean.DB;
 import io.ebean.Database;
 import io.ebean.Transaction;
 
@@ -17,8 +16,8 @@ public class CurrencyRepository {
 
     private final Database database;
 
-    public CurrencyRepository() {
-        this.database = DB.getDefault();
+    public CurrencyRepository(Database database) {
+        this.database = database;
     }
 
     /**

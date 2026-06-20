@@ -3,7 +3,6 @@ package com.econovafx.repository;
 import com.econovafx.domain.InventoryItem;
 import com.econovafx.domain.InventoryCategory;
 import com.econovafx.domain.Warehouse;
-import io.ebean.DB;
 import io.ebean.Database;
 import io.ebean.Query;
 import io.avaje.inject.Component;
@@ -20,8 +19,8 @@ public class InventoryItemRepository {
 
     private final Database database;
 
-    public InventoryItemRepository() {
-        this.database = DB.getDefault();
+    public InventoryItemRepository(Database database) {
+        this.database = database;
     }
 
     /**
