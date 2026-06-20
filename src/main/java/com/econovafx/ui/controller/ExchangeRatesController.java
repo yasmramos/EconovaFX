@@ -136,8 +136,8 @@ public class ExchangeRatesController {
             new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getEffectiveDate().toLocalDate()));
         
         sourceCol.setCellValueFactory(data -> 
-            javafx.beans.binding.Bindings.createObjectBinding(() -> 
-                data.getValue().getSource() != null ? data.getValue().getSource() : "Manual"));
+            new javafx.beans.property.SimpleStringProperty(
+                data.getValue().getObservations() != null ? "BCC API" : "Manual"));
 
         // Historical rates table columns
         histCurrencyCodeCol.setCellValueFactory(data -> 

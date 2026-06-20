@@ -269,7 +269,7 @@ public class ExchangeRateService {
             return Optional.empty();
         }
         return Optional.of(allRates.stream()
-            .map(ExchangeRate::getDate)
+            .map(ExchangeRate::getEffectiveDate)
             .max(LocalDateTime::compareTo)
             .orElse(null));
     }

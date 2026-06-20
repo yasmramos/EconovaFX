@@ -107,16 +107,16 @@ public class ExchangeRateScheduler {
         for (BCCExchangeRateClient.BCCRateDTO rateDTO : rates) {
             try {
                 exchangeRateService.registerExchangeRate(
-                        rateDTO.codigoMoneda(),
+                        rateDTO.getCodigoMoneda(),
                         "CUP",  // Moneda base
-                        rateDTO.tasa(),
-                        rateDTO.fecha().atStartOfDay(),
+                        rateDTO.getTasa(),
+                        rateDTO.getFecha().atStartOfDay(),
                         com.econovafx.domain.ExchangeRate.RateType.OFICIAL,
-                        "Tasa oficial del Banco Central de Cuba - " + rateDTO.fuente()
+                        "Tasa oficial del Banco Central de Cuba - " + rateDTO.getFuente()
                 );
-                log.debug("Tasa persistida: 1 {} = {} CUP", rateDTO.codigoMoneda, rateDTO.tasa);
+                log.debug("Tasa persistida: 1 {} = {} CUP", rateDTO.getCodigoMoneda(), rateDTO.getTasa());
             } catch (Exception e) {
-                log.error("Error persistiendo tasa para {}: {}", rateDTO.codigoMoneda, e.getMessage());
+                log.error("Error persistiendo tasa para {}: {}", rateDTO.getCodigoMoneda(), e.getMessage());
             }
         }
     }
