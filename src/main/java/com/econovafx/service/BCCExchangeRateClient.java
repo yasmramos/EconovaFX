@@ -55,7 +55,14 @@ public class BCCExchangeRateClient {
             BigDecimal tasa,
             LocalDate fecha,
             String fuente
-    ) {}
+    ) {
+        // Getters explícitos para compatibilidad con JavaFX y Expression Language
+        public String getCodigoMoneda() { return codigoMoneda; }
+        public String getNombreMoneda() { return nombreMoneda; }
+        public BigDecimal getTasa() { return tasa; }
+        public LocalDate getFecha() { return fecha; }
+        public String getFuente() { return fuente; }
+    }
 
     /**
      * Obtiene las tasas de cambio activas desde la API del Banco Central de Cuba
