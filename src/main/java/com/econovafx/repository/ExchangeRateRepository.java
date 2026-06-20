@@ -3,7 +3,6 @@ package com.econovafx.repository;
 import com.econovafx.domain.ExchangeRate;
 import com.econovafx.domain.Currency;
 import io.avaje.inject.Component;
-import io.ebean.DB;
 import io.ebean.Database;
 import io.ebean.Transaction;
 
@@ -19,8 +18,8 @@ public class ExchangeRateRepository {
 
     private final Database database;
 
-    public ExchangeRateRepository() {
-        this.database = DB.getDefault();
+    public ExchangeRateRepository(Database database) {
+        this.database = database;
     }
 
     /**
