@@ -2,7 +2,7 @@ package com.econovafx.repository;
 
 import com.econovafx.domain.ExchangeRate;
 import com.econovafx.domain.Currency;
-import io.ebean.DB;
+import io.avaje.inject.Component;
 import io.ebean.Database;
 import io.ebean.Transaction;
 
@@ -13,12 +13,13 @@ import java.util.Optional;
 /**
  * Repositorio para gestión de tipos de cambio según Resolución 340/2004.
  */
+@Component
 public class ExchangeRateRepository {
 
     private final Database database;
 
-    public ExchangeRateRepository() {
-        this.database = DB.getDefault();
+    public ExchangeRateRepository(Database database) {
+        this.database = database;
     }
 
     /**
@@ -176,5 +177,37 @@ public class ExchangeRateRepository {
 
         throw new IllegalStateException("No se encontró tasa de cambio entre " + 
                                         fromCurrency.getCode() + " y " + toCurrency.getCode());
+    }
+
+    /**
+     * Finds exchange rates by date range
+     */
+    public List<ExchangeRate> findRatesByDateRange(LocalDateTime from, LocalDateTime to) {
+        return database.find(ExchangeRate.class)
+                .fetch("fromCurrency")
+                .fetch("toCurrency")
+                .where()
+                .ge("effectiveDate", from)
+                .le("effectiveDate", to)
+                .orderBy().desc("effectiveDate")
+                .findList();
+    }
+
+    /**
+     * Finds exchange rates by date range and specific currency
+     */
+    public List<ExchangeRate> findRatesByDateRangeAndCurrency(LocalDateTime from, LocalDateTime to, Currency currency) {
+        return database.find(ExchangeRate.class)
+                .fetch("fromCurrency")
+                .fetch("toCurrency")
+                .where()
+                .ge("effectiveDate", from)
+                .le("effectiveDate", to)
+                .and()
+                    .eq("fromCurrency", currency)
+                    .or()
+                        .eq("toCurrency", currency)
+                .orderBy().desc("effectiveDate")
+                .findList();
     }
 }

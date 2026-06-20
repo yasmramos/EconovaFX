@@ -2,7 +2,6 @@ package com.econovafx.repository;
 
 import com.econovafx.domain.SystemConfiguration;
 import io.avaje.inject.Component;
-import io.ebean.DB;
 import io.ebean.Database;
 import io.ebean.ExpressionList;
 
@@ -16,8 +15,8 @@ public class SystemConfigRepository {
 
     private final Database database;
 
-    public SystemConfigRepository() {
-        this.database = DB.getDefault();
+    public SystemConfigRepository(Database database) {
+        this.database = database;
     }
 
     /**

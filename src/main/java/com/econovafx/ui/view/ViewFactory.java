@@ -16,6 +16,7 @@ import com.econovafx.ui.controller.AccountsController;
 import com.econovafx.ui.controller.ComprobanteFormController;
 import com.econovafx.ui.controller.ComprobantesController;
 import com.econovafx.ui.controller.DashboardController;
+import com.econovafx.ui.controller.ExchangeRatesController;
 import com.econovafx.ui.controller.SystemSettingsController;
 import com.econovafx.ui.controller.ThirdPartiesController;
 import com.econovafx.ui.controller.ThirdPartyFormController;
@@ -49,6 +50,7 @@ public class ViewFactory {
     private final ThirdPartiesController thirdPartiesController;
     private final AccountingPeriodsController accountingPeriodsController;
     private final AccountingClosuresController accountingClosuresController;
+    private final ExchangeRatesController exchangeRatesController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
     private final TransactionEntryController transactionEntryController;
@@ -66,6 +68,7 @@ public class ViewFactory {
                       ThirdPartiesController thirdPartiesController,
                       AccountingPeriodsController accountingPeriodsController,
                       AccountingClosuresController accountingClosuresController,
+                      ExchangeRatesController exchangeRatesController,
                       AccountFormController accountFormController,
                       ThirdPartyFormController thirdPartyFormController,
                       TransactionEntryController transactionEntryController,
@@ -83,6 +86,7 @@ public class ViewFactory {
         this.thirdPartiesController = thirdPartiesController;
         this.accountingPeriodsController = accountingPeriodsController;
         this.accountingClosuresController = accountingClosuresController;
+        this.exchangeRatesController = exchangeRatesController;
         this.accountFormController = accountFormController;
         this.thirdPartyFormController = thirdPartyFormController;
         this.transactionEntryController = transactionEntryController;
@@ -356,6 +360,20 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading system settings view", e);
             throw new RuntimeException("Failed to load system settings view", e);
+        }
+    }
+
+    /**
+     * Create Exchange Rates view
+     */
+    public Node createExchangeRatesView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/exchange-rates.fxml"));
+            loader.setControllerFactory(cls -> exchangeRatesController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading exchange rates view", e);
+            throw new RuntimeException("Failed to load exchange rates view", e);
         }
     }
 }
