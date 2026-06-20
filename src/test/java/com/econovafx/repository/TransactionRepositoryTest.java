@@ -21,6 +21,7 @@ class TransactionRepositoryTest {
     private TransactionRepository transactionRepository;
     private AccountRepository accountRepository;
     private UserRepository userRepository;
+    private CompanyRepository companyRepository;
     private Database db;
 
     @BeforeAll
@@ -28,6 +29,7 @@ class TransactionRepositoryTest {
         DatabaseConfig.initialize();
         db = DatabaseConfig.getServer();
         
+        companyRepository = new CompanyRepository();
         userRepository = new UserRepository(db);
         accountRepository = new AccountRepository(db);
         transactionRepository = new TransactionRepository(db);
@@ -50,6 +52,7 @@ class TransactionRepositoryTest {
         try { db.sqlUpdate("DELETE FROM accounts").execute(); } catch (Exception e) {}
         try { db.sqlUpdate("DELETE FROM user_accounts").execute(); } catch (Exception e) {}
         try { db.sqlUpdate("DELETE FROM users").execute(); } catch (Exception e) {}
+        try { db.sqlUpdate("DELETE FROM companies").execute(); } catch (Exception e) {}
         try { db.sqlUpdate("DELETE FROM accounting_periods").execute(); } catch (Exception e) {}
         
         // Re-enable foreign key constraints
@@ -75,6 +78,7 @@ class TransactionRepositoryTest {
         try { db.sqlUpdate("DELETE FROM accounts").execute(); } catch (Exception e) {}
         try { db.sqlUpdate("DELETE FROM user_accounts").execute(); } catch (Exception e) {}
         try { db.sqlUpdate("DELETE FROM users").execute(); } catch (Exception e) {}
+        try { db.sqlUpdate("DELETE FROM companies").execute(); } catch (Exception e) {}
         try { db.sqlUpdate("DELETE FROM accounting_periods").execute(); } catch (Exception e) {}
         
         try {
@@ -85,22 +89,39 @@ class TransactionRepositoryTest {
     }
     
     // Helper methods to create test data
+    private Company createTestCompany(String name) {
+        Company company = new Company();
+        company.setName(name);
+        company.setCode("CODE-" + name.replace(" ", "-"));
+        company.setNif("NIF-" + name.replace(" ", "-"));
+        company.setStatus("ACTIVE");
+        return company;
+    }
+    
     private User createTestUser(String username) {
+        Company company = createTestCompany("Test Company for " + username);
+        companyRepository.save(company);
+        
         User user = new User();
         user.setUsername(username);
         user.setPassword("password123");
         user.setEmail(username + "@test.com");
         user.setFullName(username.replace("_", " ").toUpperCase());
         user.setRole(UserRole.ADMIN);
+        user.setCompany(company);
         return user;
     }
     
     private Account createTestAccount(String code, String name, AccountType type) {
+        Company company = createTestCompany("Test Company for Account " + code);
+        companyRepository.save(company);
+        
         Account account = new Account();
         account.setCode(code);
         account.setName(name);
         account.setType(type);
         account.setBalance(BigDecimal.ZERO);
+        account.setCompany(company);
         return account;
     }
     
@@ -111,6 +132,7 @@ class TransactionRepositoryTest {
         transaction.setType("INCOME");
         transaction.setDescription("Test transaction");
         transaction.setReference("REF-" + number);
+        transaction.setCompany(account.getCompany());
         return transaction;
     }
 
@@ -335,6 +357,7 @@ class TransactionRepositoryTest {
         thirdParty.setType(ThirdParty.ThirdPartyType.CUSTOMER);
         thirdParty.setEmail("test@thirdparty.com");
         thirdParty.setIsActive(true);
+        thirdParty.setCompany(account1.getCompany());
         
         // Save third party using a direct database insert since we don't have a repository in this test
         db.insert(thirdParty);

@@ -17,7 +17,7 @@ public class Transaction extends BaseEntity {
     @Column(nullable = false)
     private String number;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate date;
 
     @Column(nullable = false)

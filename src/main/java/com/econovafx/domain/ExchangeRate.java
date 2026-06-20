@@ -40,13 +40,13 @@ public class ExchangeRate extends BaseEntity {
     /**
      * Fecha de vigencia de la tasa
      */
-    @Column(name = "effective_date", nullable = false)
+    @Column(name = "effective_date", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime effectiveDate;
 
     /**
      * Fecha de fin de vigencia (opcional, para tasas temporales)
      */
-    @Column(name = "end_date")
+    @Column(name = "end_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime endDate;
 
     /**
