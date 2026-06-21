@@ -56,6 +56,9 @@ public class DatabaseConfig {
             dbConfig.setDdlGenerate(true);
             dbConfig.setDdlRun(true);
             dbConfig.setDefaultServer(true);
+            
+            // Configure H2 database platform for compatibility
+            dbConfig.setDatabasePlatform(new io.ebean.platform.h2.H2Platform());
 
             masterDatabase = io.ebean.DatabaseFactory.create(dbConfig);
 
