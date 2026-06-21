@@ -378,7 +378,7 @@ SOFTWARE.
 
 ## 📞 Contacto
 
-- **Autor**: Yasmín Ramos
+- **Autor**: Yasmany Ramos García
 - **Email**: yasmramos95@gmail.com
 - **GitHub**: [@yasmramos](https://github.com/yasmramos)
 - **Proyecto**: [EconoNova FX](https://github.com/yasmramos/EconovaFX)
