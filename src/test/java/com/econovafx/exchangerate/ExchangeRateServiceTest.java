@@ -16,6 +16,8 @@ import static org.mockito.Mockito.*;
 import com.econovafx.service.BCCExchangeRateClient;
 import com.econovafx.repository.ExchangeRateRepository;
 import com.econovafx.service.ExchangeRateService;
+import com.econovafx.repository.CurrencyRepository;
+import com.econovafx.service.BCCExchangeRateFetcher;
 
 /**
  * Unit tests for ExchangeRateService.
@@ -29,86 +31,139 @@ class ExchangeRateServiceTest {
     @Mock
     private ExchangeRateRepository mockRepository;
 
+    @Mock
+    private CurrencyRepository mockCurrencyRepository;
+
+    @Mock
+    private BCCExchangeRateFetcher mockBccFetcher;
+
     private ExchangeRateService service;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        // service = new ExchangeRateService(mockClient, mockRepository);
+        service = new ExchangeRateService(mockRepository, mockCurrencyRepository, mockBccFetcher);
     }
 
     @Test
-    void testGetActiveRates_UsesCache_WhenAvailable() {
-        // Given: Cache has valid data
-        // When: getActiveRates() is called multiple times
-        // Then: Should return cached data without calling API
+    void testFetchAndSaveRatesFromBCC_Success() {
+        // Given: BCC fetcher returns valid rates
+        List<BCCExchangeRateFetcher.BCCRate> mockRates = List.of(
+            new BCCExchangeRateFetcher.BCCRate("USD", "Dólar Estadounidense", java.math.BigDecimal.valueOf(120.0), "$", LocalDate.now(), "BCC")
+        );
+        when(mockBccFetcher.fetchCurrentRates()).thenReturn(mockRates);
         
-        verify(mockClient, never()).getActiveRates();
-        assertTrue(true, "Placeholder - implement cache testing");
-    }
+        // Mock currency repository to return existing CUP currency
+        when(mockCurrencyRepository.findByCode("CUP")).thenReturn(Optional.empty());
+        when(mockCurrencyRepository.save(any())).thenAnswer(invocation -> {
+            com.econovafx.domain.Currency c = invocation.getArgument(0);
+            c.setId(1L);
+            return c;
+        });
+        
+        when(mockCurrencyRepository.findByCode("USD")).thenReturn(Optional.empty());
+        
+        // Mock exchange rate repository save
+        when(mockRepository.save(any())).thenAnswer(invocation -> {
+            com.econovafx.domain.ExchangeRate er = invocation.getArgument(0);
+            er.setId(1L);
+            return er;
+        });
 
-    @Test
-    void testGetActiveRates_FetchesFromAPI_WhenCacheEmpty() {
-        // Given: Empty cache
-        // When: getActiveRates() is called
-        // Then: Should call API and populate cache
-        
-        verify(mockClient, times(1)).getActiveRates();
-        assertTrue(true, "Placeholder - implement cache miss testing");
-    }
+        // When: fetchAndSaveRatesFromBCC is called
+        List<com.econovafx.domain.ExchangeRate> result = service.fetchAndSaveRatesFromBCC();
 
-    @Test
-    void testGetActiveRates_PersistsToDatabase() {
-        // Given: Fresh data from API
-        // When: Rates are fetched
-        // Then: Should save to repository
-        
+        // Then: Should save rates to repository
+        assertNotNull(result);
+        assertEquals(1, result.size());
         verify(mockRepository, times(1)).save(any());
-        assertTrue(true, "Placeholder - implement persistence testing");
     }
 
     @Test
-    void testForceRefresh_BypassesCache() {
-        // Given: Valid cache exists
-        // When: forceRefresh() is called
-        // Then: Should ignore cache and fetch from API
-        
-        verify(mockClient, times(1)).getActiveRates();
-        assertTrue(true, "Placeholder - implement force refresh testing");
+    void testFetchAndSaveRatesFromBCC_EmptyResponse() {
+        // Given: BCC fetcher returns empty list
+        when(mockBccFetcher.fetchCurrentRates()).thenReturn(List.of());
+
+        // When: fetchAndSaveRatesFromBCC is called
+        List<com.econovafx.domain.ExchangeRate> result = service.fetchAndSaveRatesFromBCC();
+
+        // Then: Should return empty list
+        assertTrue(result.isEmpty());
+        verify(mockRepository, never()).save(any());
     }
 
     @Test
-    void testGetHistoricalRates_DelegatesToRepository() {
-        // Given: Date range
-        LocalDate start = LocalDate.of(2024, 1, 1);
-        LocalDate end = LocalDate.of(2024, 1, 31);
-        
-        // When: getHistoricalRates(start, end) is called
-        // Then: Should query repository
-        
-        verify(mockRepository, times(1)).findByDateBetween(start, end);
-        assertTrue(true, "Placeholder - implement historical query testing");
+    void testGetAllActiveRates_DelegatesToRepository() {
+        // Given: Repository has active rates
+        List<com.econovafx.domain.ExchangeRate> mockRates = List.of(
+            new com.econovafx.domain.ExchangeRate(null, null, java.math.BigDecimal.ONE, java.time.LocalDateTime.now())
+        );
+        when(mockRepository.findAllActive()).thenReturn(mockRates);
+
+        // When: getAllActiveRates is called
+        List<com.econovafx.domain.ExchangeRate> result = service.getAllActiveRates();
+
+        // Then: Should return rates from repository
+        assertEquals(1, result.size());
+        verify(mockRepository, times(1)).findAllActive();
     }
 
     @Test
-    void testRetry_OnAPIFailure() {
-        // Given: API fails first call, succeeds on retry
-        when(mockClient.getActiveRates())
-            .thenThrow(new RuntimeException("Network error"))
-            .thenReturn(List.of()); // Success on retry
-        
-        // When: getActiveRates() is called
-        // Then: Should retry and eventually succeed
-        
-        assertTrue(true, "Placeholder - implement retry testing");
+    void testDeactivateExchangeRate_DelegatesToRepository() {
+        // Given: Exchange rate ID
+        Long rateId = 1L;
+
+        // When: deactivateExchangeRate is called
+        service.deactivateExchangeRate(rateId);
+
+        // Then: Should call repository deactivate
+        verify(mockRepository, times(1)).deactivate(rateId);
     }
 
     @Test
-    void testCacheExpiration_AfterTTL() {
-        // Given: Cache with TTL of 60 minutes
-        // When: Time passes beyond TTL
-        // Then: Next call should fetch from API again
-        
-        assertTrue(true, "Placeholder - implement TTL expiration testing");
+    void testGetExchangeRateById_DelegatesToRepository() {
+        // Given: Exchange rate ID
+        Long rateId = 1L;
+        com.econovafx.domain.ExchangeRate mockRate = new com.econovafx.domain.ExchangeRate(
+            null, null, java.math.BigDecimal.ONE, java.time.LocalDateTime.now()
+        );
+        mockRate.setId(rateId);
+        when(mockRepository.findById(rateId)).thenReturn(Optional.of(mockRate));
+
+        // When: getExchangeRateById is called
+        Optional<com.econovafx.domain.ExchangeRate> result = service.getExchangeRateById(rateId);
+
+        // Then: Should return rate from repository
+        assertTrue(result.isPresent());
+        assertEquals(rateId, result.get().getId());
+        verify(mockRepository, times(1)).findById(rateId);
+    }
+
+    @Test
+    void testFetchAndSaveLatestRates_AliasWorks() {
+        // Given: BCC fetcher returns valid rates
+        when(mockBccFetcher.fetchCurrentRates()).thenReturn(List.of());
+
+        // When: fetchAndSaveLatestRates is called (alias method)
+        service.fetchAndSaveLatestRates();
+
+        // Then: Should delegate to fetchAndSaveRatesFromBCC
+        verify(mockBccFetcher, times(1)).fetchCurrentRates();
+    }
+
+    @Test
+    void testGetLatestRatesForAllCurrencies_DelegatesToGetAllActive() {
+        // Given: Active rates exist
+        List<com.econovafx.domain.ExchangeRate> mockRates = List.of(
+            new com.econovafx.domain.ExchangeRate(null, null, java.math.BigDecimal.ONE, java.time.LocalDateTime.now())
+        );
+        when(mockRepository.findAllActive()).thenReturn(mockRates);
+
+        // When: getLatestRatesForAllCurrencies is called
+        List<com.econovafx.domain.ExchangeRate> result = service.getLatestRatesForAllCurrencies();
+
+        // Then: Should return all active rates
+        assertEquals(1, result.size());
+        verify(mockRepository, times(1)).findAllActive();
     }
 }

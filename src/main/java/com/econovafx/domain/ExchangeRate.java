@@ -40,13 +40,13 @@ public class ExchangeRate extends BaseEntity {
     /**
      * Fecha de vigencia de la tasa
      */
-    @Column(name = "effective_date", nullable = false)
+    @Column(name = "effective_date", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime effectiveDate;
 
     /**
      * Fecha de fin de vigencia (opcional, para tasas temporales)
      */
-    @Column(name = "end_date")
+    @Column(name = "end_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime endDate;
 
     /**
@@ -77,12 +77,6 @@ public class ExchangeRate extends BaseEntity {
 
     @Version
     private Long version;
-
-    @WhenCreated
-    private LocalDateTime createdAt;
-
-    @WhenModified
-    private LocalDateTime updatedAt;
 
     public enum RateType {
         OFICIAL,      // Tasa oficial del Banco Central
@@ -192,22 +186,6 @@ public class ExchangeRate extends BaseEntity {
 
     public void setVersion(Long version) {
         this.version = version;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     @Override

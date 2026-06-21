@@ -26,7 +26,7 @@ public class AuditLog extends BaseEntity {
     @Column(nullable = false)
     private String entityType;
 
-    @Column(nullable = false)
+    @Column(name = "entity_id", nullable = false, columnDefinition = "BIGINT")
     private Long entityId;
 
     @Column(length = 2000)

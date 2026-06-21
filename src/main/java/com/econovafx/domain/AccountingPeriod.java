@@ -18,10 +18,10 @@ public class AccountingPeriod {
     @Column(nullable = false, length = 50)
     private String name; // e.g., "Fiscal Year 2024", "January 2024"
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
@@ -35,7 +35,7 @@ public class AccountingPeriod {
     @Column(length = 255)
     private String closedBy;
 
-    @Column
+    @Column(columnDefinition = "DATE")
     private LocalDate closedDate;
 
     @Column(length = 500)
