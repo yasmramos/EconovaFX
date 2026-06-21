@@ -58,7 +58,6 @@ public class InventoryItem extends BaseEntity {
     @Column(precision = 5, scale = 2)
     private BigDecimal taxRate = BigDecimal.ZERO;
 
-    @WhenCreated
     // Getters y Setters
     public Long getId() {
         return id;
@@ -178,14 +177,6 @@ public class InventoryItem extends BaseEntity {
 
     public void setTaxRate(BigDecimal taxRate) {
         this.taxRate = taxRate;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     /**
