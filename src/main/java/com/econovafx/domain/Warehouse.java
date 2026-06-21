@@ -37,6 +37,13 @@ public class Warehouse extends BaseEntity {
     private boolean active = true;
 
     @WhenCreated
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP(6)")
+    private LocalDateTime createdAt;
+
+    @WhenModified
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP(6)")
+    private LocalDateTime updatedAt;
+
     // Getters y Setters
     public Long getId() {
         return id;
@@ -86,6 +93,14 @@ public class Warehouse extends BaseEntity {
         this.manager = manager;
     }
 
+    public ValuationMethod getValuationMethod() {
+        return valuationMethod;
+    }
+
+    public void setValuationMethod(ValuationMethod valuationMethod) {
+        this.valuationMethod = valuationMethod;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -101,6 +116,13 @@ public class Warehouse extends BaseEntity {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
