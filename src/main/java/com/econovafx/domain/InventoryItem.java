@@ -59,13 +59,6 @@ public class InventoryItem extends BaseEntity {
     private BigDecimal taxRate = BigDecimal.ZERO;
 
     @WhenCreated
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @WhenModified
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
     // Getters y Setters
     public Long getId() {
         return id;
@@ -193,21 +186,6 @@ public class InventoryItem extends BaseEntity {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    /**
-     * Verifica si el stock actual está por debajo del mínimo.
-     */
-    public boolean isBelowMinimumStock() {
-        return currentStock.compareTo(minimumStock) < 0;
     }
 
     /**

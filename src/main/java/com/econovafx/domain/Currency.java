@@ -64,12 +64,6 @@ public class Currency extends BaseEntity {
     @Version
     private Long version;
 
-    @WhenCreated
-    private LocalDateTime createdAt;
-
-    @WhenModified
-    private LocalDateTime updatedAt;
-
     // Constructores
     public Currency() {
     }
@@ -162,22 +156,6 @@ public class Currency extends BaseEntity {
 
     public void setVersion(Long version) {
         this.version = version;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     @Override

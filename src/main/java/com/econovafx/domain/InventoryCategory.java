@@ -29,14 +29,6 @@ public class InventoryCategory extends BaseEntity {
     @Column(nullable = false)
     private boolean active = true;
 
-    @WhenCreated
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @WhenModified
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
     // Getters y Setters
     public Long getId() {
         return id;
@@ -84,22 +76,6 @@ public class InventoryCategory extends BaseEntity {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     /**
