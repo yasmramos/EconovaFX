@@ -1,7 +1,7 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.Account;
-import com.econovafx.domain.Transaction;
+import com.econovafx.model.Account;
+import com.econovafx.model.Transaction;
 import com.econovafx.service.AccountService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.ui.view.ViewFactory;
@@ -73,7 +73,7 @@ public class DashboardControllerTest extends ApplicationTest {
         Account account = new Account();
         account.setCode(code);
         account.setName(name);
-        account.setType(com.econovafx.domain.AccountType.valueOf(type));
+        account.setType(com.econovafx.model.AccountType.valueOf(type));
         account.setBalance(balance);
         return account;
     }

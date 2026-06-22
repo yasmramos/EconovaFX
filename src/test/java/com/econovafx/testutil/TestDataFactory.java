@@ -1,10 +1,10 @@
 package com.econovafx.testutil;
 
-import com.econovafx.domain.Account;
-import com.econovafx.domain.AccountType;
-import com.econovafx.domain.Transaction;
-import com.econovafx.domain.TransactionEntry;
-import com.econovafx.domain.User;
+import com.econovafx.model.Account;
+import com.econovafx.model.AccountType;
+import com.econovafx.model.Transaction;
+import com.econovafx.model.TransactionEntry;
+import com.econovafx.model.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

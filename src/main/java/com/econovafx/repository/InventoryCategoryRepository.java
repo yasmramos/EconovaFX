@@ -1,6 +1,6 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.InventoryCategory;
+import com.econovafx.model.InventoryCategory;
 import io.ebean.Database;
 import io.avaje.inject.Component;
 

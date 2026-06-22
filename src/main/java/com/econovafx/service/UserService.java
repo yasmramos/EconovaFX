@@ -1,7 +1,7 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.AuditLog;
-import com.econovafx.domain.User;
+import com.econovafx.model.AuditLog;
+import com.econovafx.model.User;
 import com.econovafx.repository.UserRepository;
 import com.econovafx.security.PasswordService;
 import io.avaje.inject.Component;

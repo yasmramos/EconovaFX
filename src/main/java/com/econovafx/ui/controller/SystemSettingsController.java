@@ -1,6 +1,6 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.SystemConfiguration;
+import com.econovafx.model.SystemConfiguration;
 import com.econovafx.service.AuditService;
 import com.econovafx.service.NotificationService;
 import com.econovafx.service.SystemConfigService;

@@ -2,7 +2,7 @@ package com.econovafx.service;
 
 import com.econovafx.config.DatabaseConfig;
 import com.econovafx.config.TenantContext;
-import com.econovafx.domain.Company;
+import com.econovafx.model.Company;
 import com.econovafx.repository.CompanyRepository;
 import io.ebean.annotation.Transactional;
 import jakarta.inject.Inject;

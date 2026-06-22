@@ -1,6 +1,6 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.*;
+import com.econovafx.model.*;
 import com.econovafx.repository.AccountRepository;
 import com.econovafx.repository.FinancialStatementModelRepository;
 import com.econovafx.repository.FinancialStatementRowRepository;

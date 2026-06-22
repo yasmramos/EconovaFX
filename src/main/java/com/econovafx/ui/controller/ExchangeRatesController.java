@@ -1,6 +1,6 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.ExchangeRate;
+import com.econovafx.model.ExchangeRate;
 import com.econovafx.service.ExchangeRateService;
 import com.econovafx.ui.util.ModernDialog;
 import jakarta.inject.Inject;

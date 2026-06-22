@@ -1,9 +1,9 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.Account;
-import com.econovafx.domain.ThirdParty;
-import com.econovafx.domain.Transaction;
-import com.econovafx.domain.TransactionEntry;
+import com.econovafx.model.Account;
+import com.econovafx.model.ThirdParty;
+import com.econovafx.model.Transaction;
+import com.econovafx.model.TransactionEntry;
 import com.econovafx.service.AccountService;
 import com.econovafx.service.ThirdPartyService;
 import com.econovafx.service.TransactionService;

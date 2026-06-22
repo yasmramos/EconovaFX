@@ -1,7 +1,7 @@
 package com.econovafx.config;
 
-import com.econovafx.domain.Company;
-import com.econovafx.domain.User;
+import com.econovafx.model.Company;
+import com.econovafx.model.User;
 import com.econovafx.security.PasswordService;
 import io.ebean.DB;
 import jakarta.inject.Singleton;

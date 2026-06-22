@@ -1,7 +1,7 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.Transaction;
-import com.econovafx.domain.TransactionEntry;
+import com.econovafx.model.Transaction;
+import com.econovafx.model.TransactionEntry;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;
