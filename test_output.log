@@ -1,0 +1,340 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m----------------------< [0;36mcom.econovafx:econovafx[0;1m >-----------------------[m
+[[1;34mINFO[m] [1mBuilding EconoNova FX - Accounting System 1.0.0[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:2.5:clean[m [1m(default-clean)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] Deleting /workspace/target
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.11:prepare-agent[m [1m(prepare-agent)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.11/org.jacoco.agent-0.8.11-runtime.jar=destfile=/workspace/target/jacoco.exec
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mavaje-inject-maven-plugin:12.6:provides[m [1m(default)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 32 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.6.0:copy[m [1m(copy-ebean-agent)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] Configured Artifact: io.ebean:ebean-agent:17.11.0:jar
+[[1;34mINFO[m] Copying ebean-agent-17.11.0.jar to /workspace/lib/ebean-agent-17.11.0.jar
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.12.1:compile[m [1m(default-compile)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged source code[m.
+[[1;34mINFO[m] Compiling 109 source files with javac [debug release 17] to target/classes
+[[1;34mINFO[m] Loaded Plugin: io.avaje.inject.events.spi.ObserverManagerPlugin
+[[1;34mINFO[m] No external modules detected
+[[1;33mWARNING[m] /workspace/src/main/java/com/econovafx/config/DatabaseConfig.java:[52,28] DatabaseConfig() in io.ebean.config.DatabaseConfig has been deprecated and marked for removal
+[[1;33mWARNING[m] /workspace/src/main/java/com/econovafx/config/DatabaseConfig.java:[63,54] create(io.ebean.DatabaseBuilder) in io.ebean.DatabaseFactory has been deprecated and marked for removal
+[[1;33mWARNING[m] /workspace/src/main/java/com/econovafx/config/DatabaseConfig.java:[100,32] DatabaseConfig() in io.ebean.config.DatabaseConfig has been deprecated and marked for removal
+[[1;33mWARNING[m] /workspace/src/main/java/com/econovafx/config/DatabaseConfig.java:[108,61] create(io.ebean.DatabaseBuilder) in io.ebean.DatabaseFactory has been deprecated and marked for removal
+[[1;34mINFO[m] /workspace/src/main/java/com/econovafx/ui/controller/DashboardController.java: Some input files use or override a deprecated API.
+[[1;34mINFO[m] /workspace/src/main/java/com/econovafx/ui/controller/DashboardController.java: Recompile with -Xlint:deprecation for details.
+[[1;34mINFO[m] /workspace/src/main/java/com/econovafx/ui/controller/DashboardController.java: Some input files use unchecked or unsafe operations.
+[[1;34mINFO[m] /workspace/src/main/java/com/econovafx/ui/controller/DashboardController.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mebean-maven-plugin:17.11.0:enhance[m [1m(enhance)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] classSource=/workspace/target/classes  transformArgs=debug=1,version=149
+[[1;34mINFO[m] packages entity:[]  transactional:[]  querybean:[]  profileLocation:true  version:149
+[[1;34mINFO[m] loaded resources: [META-INF/ebean-version.mf]
+[[1;34mINFO[m]      Entities (19) pkgs[com/econovafx/domain] beans[Account, AccountingPeriod, AuditLog, BaseEntity, Company, Currency, ExchangeRate, FinancialStatementModel, FinancialStatementRow, InventoryCategory, InventoryItem, InventoryMovement, ReportDefinition, SystemConfiguration, ThirdParty, Tra ...
+[[1;34mINFO[m]    QueryBeans (0)  pkgs[] beans[]
+[[1;34mINFO[m] Transactional (2)  pkgs[com/econovafx] beans[repository/CompanyRepository, service/CompanyService]
+[[1;34mINFO[m] Query Callers (0)  pkgs[] beans[]
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:testResources[m [1m(default-testResources)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 3 resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.12.1:testCompile[m [1m(default-testCompile)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged dependency[m.
+[[1;34mINFO[m] Compiling 25 source files with javac [debug release 17] to target/test-classes
+[[1;34mINFO[m] /workspace/src/test/java/com/econovafx/repository/UserRepositoryTest.java: /workspace/src/test/java/com/econovafx/repository/UserRepositoryTest.java uses unchecked or unsafe operations.
+[[1;34mINFO[m] /workspace/src/test/java/com/econovafx/repository/UserRepositoryTest.java: Recompile with -Xlint:unchecked for details.
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mexec-maven-plugin:3.1.1:java[m [1m(jacoco-instrument)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] skipping execute as per configuration
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-surefire-plugin:3.2.5:test[m [1m(default-test)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[[1;34mINFO[m] 
+[[1;34mINFO[m] -------------------------------------------------------
+[[1;34mINFO[m]  T E S T S
+[[1;34mINFO[m] -------------------------------------------------------
+WARNING: Unknown module: javafx.graphics specified to --add-opens
+WARNING: Unknown module: javafx.graphics specified to --add-opens
+WARNING: Unknown module: javafx.graphics specified to --add-opens
+[[1;34mINFO[m] Running com.econovafx.accounting.[1mAccountingValidatorTest[m
+16:04:29.920 [main] ERROR c.e.validation.AccountingValidator - Validación fallida - Asiento no cuadrado: El asiento no está cuadrado. Total Débito: 1000.00, Total Crédito: 900.00, Diferencia: 100.00
+16:04:29.996 [main] ERROR c.e.validation.AccountingValidator - Validación fallida - Asiento no cuadrado: El asiento no está cuadrado. Total Débito: 100.00, Total Crédito: 1000.00, Diferencia: -900.00
+16:04:30.039 [main] ERROR c.e.validation.AccountingValidator - Validación fallida - Asiento no cuadrado: El asiento no está cuadrado. Total Débito: 1000.00, Total Crédito: 0, Diferencia: 1000.00
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m10[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.117 s -- in com.econovafx.accounting.[1mAccountingValidatorTest[m
+[[1;34mINFO[m] Running com.econovafx.repository.[1mTransactionRepositoryTest[m
+16:04:34.176 [main] INFO  io.ebean.datasource - DataSource [econova-master] autoCommit[false] [READ_COMMITTED] min[1] max[10] in[3,683ms]
+16:04:34.395 [main] INFO  io.ebean - ebean version: 17.11.0
+16:04:37.836 [main] WARN  io.ebean.core - Huh??? property com.econovafx.domain.Currency.id being defined twice but replaced property was not transient? This is not expected?
+16:04:37.874 [main] WARN  io.ebean.core - Huh??? property com.econovafx.domain.ExchangeRate.id being defined twice but replaced property was not transient? This is not expected?
+16:04:38.054 [main] WARN  io.ebean.core - Huh??? property com.econovafx.domain.User.company being defined twice but replaced property was not transient? This is not expected?
+16:04:38.076 [main] WARN  io.ebean.core - Huh??? property com.econovafx.domain.Warehouse.createdAt being defined twice but replaced property was not transient? This is not expected?
+16:04:38.077 [main] WARN  io.ebean.core - Huh??? property com.econovafx.domain.Warehouse.updatedAt being defined twice but replaced property was not transient? This is not expected?
+16:04:40.575 [main] INFO  io.ebean.DDL - Executing econova-master-drop-all.sql - 93 statements, autoCommit:true
+16:04:40.838 [main] INFO  io.ebean.DDL - Executing econova-master-create-all.sql - 93 statements, autoCommit:false
+16:04:42.276 [main] INFO  io.ebean.core - Started database[econova-master] platform[H2] in 7,739ms
+16:04:42.278 [main] INFO  com.econovafx.config.DatabaseConfig - Master database initialized successfully
+16:04:43.254 [main] DEBUG c.e.repository.UserRepository - User saved: testuser3
+16:04:43.277 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-003
+16:04:43.335 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-003
+16:04:43.374 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-004
+16:04:43.655 [main] DEBUG c.e.repository.UserRepository - User saved: testuser1
+16:04:43.657 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-001
+16:04:43.658 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-001
+16:04:43.738 [main] DEBUG c.e.repository.UserRepository - User saved: testuser4
+16:04:43.755 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-004
+16:04:43.775 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-005
+16:04:43.835 [main] DEBUG c.e.repository.TransactionRepository - Transaction deleted by ID: 4
+16:04:43.917 [main] DEBUG c.e.repository.UserRepository - User saved: testuser2
+16:04:43.934 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-002
+16:04:43.936 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-002
+16:04:44.096 [main] DEBUG c.e.repository.UserRepository - User saved: testuser_count
+16:04:44.098 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-COUNT
+16:04:44.099 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-COUNT-1
+16:04:44.114 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-COUNT-2
+16:04:44.116 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-COUNT-3
+16:04:44.117 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-COUNT-4
+16:04:44.255 [main] DEBUG c.e.repository.UserRepository - User saved: testuser_type
+16:04:44.257 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-TYPE
+16:04:44.258 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-TYPE-1
+16:04:44.259 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-TYPE-2
+16:04:44.259 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-TYPE-3
+16:04:44.396 [main] DEBUG c.e.repository.UserRepository - User saved: testuser_date
+16:04:44.415 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-DATE
+16:04:44.416 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-DATE-1
+16:04:44.417 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-DATE-2
+16:04:44.418 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-DATE-3
+16:04:44.476 [main] DEBUG c.e.repository.UserRepository - User saved: testuser8
+16:04:44.494 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-008
+16:04:44.497 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-016
+16:04:44.515 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-017
+16:04:44.516 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-018
+16:04:44.755 [main] DEBUG c.e.repository.UserRepository - User saved: testuser9
+16:04:44.774 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-009
+16:04:44.775 [main] DEBUG c.e.repository.AccountRepository - Account saved: ACC-010
+16:04:44.794 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-019
+16:04:44.795 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-020
+16:04:44.796 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-021
+16:04:44.816 [main] DEBUG c.e.repository.TransactionRepository - Transaction saved: TRX-022
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m10[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.88 s -- in com.econovafx.repository.[1mTransactionRepositoryTest[m
+[[1;34mINFO[m] Running com.econovafx.repository.[1mUserRepositoryTest[m
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+16:05:00.039 [main] DEBUG c.e.repository.UserRepository - User deleted by ID: 1
+16:05:00.197 [main] DEBUG c.e.repository.UserRepository - User deleted: todelete
+16:05:00.300 [main] DEBUG c.e.repository.UserRepository - User saved: newuser
+16:05:00.340 [main] DEBUG c.e.repository.UserRepository - User updated: existinguser
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m19[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.34 s -- in com.econovafx.repository.[1mUserRepositoryTest[m
+[[1;34mINFO[m] Running com.econovafx.exchangerate.[1mExchangeRateServiceTest[m
+16:05:02.456 [main] INFO  c.e.service.ExchangeRateService - Iniciando obtención de tasas de cambio desde el Banco Central de Cuba...
+16:05:02.456 [main] WARN  c.e.service.ExchangeRateService - No se obtuvieron tasas de cambio del Banco Central de Cuba
+16:05:02.537 [main] INFO  c.e.service.ExchangeRateService - Iniciando obtención de tasas de cambio desde el Banco Central de Cuba...
+16:05:02.596 [main] INFO  c.e.service.ExchangeRateService - Tasa registrada: 1 USD = 120.0 CUP (BCC)
+16:05:02.614 [main] INFO  c.e.service.ExchangeRateService - Se registraron 1 tasas de cambio desde el Banco Central de Cuba
+16:05:02.637 [main] INFO  c.e.service.ExchangeRateService - Tasa de cambio 1 desactivada
+16:05:02.699 [main] INFO  c.e.service.ExchangeRateService - Iniciando obtención de tasas de cambio desde el Banco Central de Cuba...
+16:05:02.700 [main] WARN  c.e.service.ExchangeRateService - No se obtuvieron tasas de cambio del Banco Central de Cuba
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m7[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.178 s -- in com.econovafx.exchangerate.[1mExchangeRateServiceTest[m
+[[1;34mINFO[m] Running com.econovafx.exchangerate.[1mBCCExchangeRateClientTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m5[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.476 s -- in com.econovafx.exchangerate.[1mBCCExchangeRateClientTest[m
+[[1;34mINFO[m] Running com.econovafx.service.[1mInventoryServiceTest[m
+16:05:05.216 [main] INFO  c.econovafx.service.InventoryService - Categoría de inventario creada: CAT001 - Productos Terminados
+16:05:05.334 [main] INFO  c.econovafx.service.InventoryService - Verificación de cierre de inventarios para el período: Enero 2025
+16:05:05.397 [main] INFO  c.econovafx.service.InventoryService - Almacén creado: WH001 - Almacén Principal
+16:05:05.476 [main] INFO  c.econovafx.service.InventoryService - Salida de inventario registrada: DOC001 - Cantidad: 10 (Método: WEIGHTED_AVERAGE)
+16:05:05.656 [main] INFO  c.econovafx.service.InventoryService - Producto actualizado: 1
+16:05:05.719 [main] INFO  c.econovafx.service.InventoryService - Producto creado: PROD001 - Producto de Prueba
+16:05:05.895 [main] INFO  c.econovafx.service.InventoryService - Entrada de inventario registrada: DOC001 - Cantidad: 10
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m19[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.696 s -- in com.econovafx.service.[1mInventoryServiceTest[m
+[[1;34mINFO[m] Running com.econovafx.service.[1mCashMovementServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m7[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.218 s -- in com.econovafx.service.[1mCashMovementServiceTest[m
+[[1;34mINFO[m] Running com.econovafx.service.[1mTransactionServiceTest[m
+16:05:06.500 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+16:05:06.500 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:06.580 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+16:05:06.594 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:06.600 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+16:05:06.615 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:06.616 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000002
+16:05:06.617 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000002 on Transaction (2) by system
+16:05:06.659 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+16:05:06.659 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:06.675 [main] INFO  c.e.service.TransactionService - Transaction posted: TXN-2026-000001
+16:05:06.675 [main] INFO  com.econovafx.service.AuditService - Audit: PUBLISH_TRANSACTION - Posted transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:06.679 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+16:05:06.694 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:06.695 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000002
+16:05:06.696 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000002 on Transaction (2) by system
+16:05:06.699 [main] INFO  c.e.service.TransactionService - Transaction posted: null
+16:05:06.699 [main] INFO  com.econovafx.service.AuditService - Audit: PUBLISH_TRANSACTION - Posted transaction: null on Transaction (1) by system
+16:05:06.758 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: REJECT - Reverse transaction - not posted on Transaction (1) by system - Error: Cannot reverse unposted transaction
+16:05:06.815 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000002
+16:05:06.815 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000002 on Transaction (1) by system
+16:05:06.835 [main] INFO  com.econovafx.service.AuditService - Audit: REJECT - Reversed transaction: TXN-2026-000001 - Reason: Error in original on Transaction (1) by system
+16:05:06.838 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: PUBLISH_TRANSACTION - Post transaction - not balanced on Transaction (1) by system - Error: Transaction is not balanced
+16:05:06.859 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: CREATE - Create transaction - validation failed on Transaction (null) by system - Error: Transaction is not balanced. Debit: 1000.00, Credit: 800.00
+16:05:06.878 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: PUBLISH_TRANSACTION - Post transaction - already posted on Transaction (1) by system - Error: Transaction already posted
+16:05:06.935 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+16:05:06.935 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:06.977 [main] INFO  c.e.service.TransactionService - Transaction deleted: TXN-2026-000001
+16:05:06.978 [main] INFO  com.econovafx.service.AuditService - Audit: DELETE - Deleted transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:06.996 [main] INFO  c.e.service.TransactionService - Transaction posted: null
+16:05:06.996 [main] INFO  com.econovafx.service.AuditService - Audit: PUBLISH_TRANSACTION - Posted transaction: null on Transaction (1) by system
+16:05:07.015 [main] INFO  c.e.service.TransactionService - Transaction posted: null
+16:05:07.017 [main] INFO  com.econovafx.service.AuditService - Audit: PUBLISH_TRANSACTION - Posted transaction: null on Transaction (1) by system
+16:05:07.019 [main] INFO  c.e.service.TransactionService - Transaction posted: TXN-2026-000001
+16:05:07.019 [main] INFO  com.econovafx.service.AuditService - Audit: PUBLISH_TRANSACTION - Posted transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:07.075 [main] INFO  c.e.service.TransactionService - Transaction created: TXN-2026-000001
+16:05:07.075 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction: TXN-2026-000001 on Transaction (1) by system
+16:05:07.095 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: DELETE - Delete transaction - is posted on Transaction (1) by system - Error: Cannot delete posted transaction. Please reverse it.
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m28[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.645 s -- in com.econovafx.service.[1mTransactionServiceTest[m
+[[1;34mINFO[m] Running com.econovafx.service.[1mBankReconciliationServiceTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m7[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.156 s -- in com.econovafx.service.[1mBankReconciliationServiceTest[m
+[[1;34mINFO[m] Running com.econovafx.service.[1mAccountServiceTest[m
+16:05:07.359 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.360 [main] INFO  c.econovafx.service.AccountService - Account created: 1002
+16:05:07.360 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+16:05:07.375 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.376 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+16:05:07.437 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.457 [main] INFO  c.econovafx.service.AccountService - Account created: 1000
+16:05:07.457 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.458 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+16:05:07.459 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.459 [main] INFO  c.econovafx.service.AccountService - Account updated: 1001
+16:05:07.476 [main] INFO  c.econovafx.service.AccountService - Account created: 1000
+16:05:07.514 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.516 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.516 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+16:05:07.700 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.716 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.734 [main] INFO  c.econovafx.service.AccountService - Account deleted: 1001
+16:05:07.755 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.755 [main] INFO  c.econovafx.service.AccountService - Account created: 1002
+16:05:07.755 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+16:05:07.774 [main] INFO  c.econovafx.service.AccountService - Account created: 1000
+16:05:07.775 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.776 [main] INFO  c.econovafx.service.AccountService - Account created: 1001
+16:05:07.777 [main] INFO  c.econovafx.service.AccountService - Account created: 2001
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m21[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.438 s -- in com.econovafx.service.[1mAccountServiceTest[m
+[[1;34mINFO[m] Running com.econovafx.service.[1mAuditServiceTest[m
+16:05:08.115 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created transaction on Transaction (1) by testuser
+16:05:08.276 [main] INFO  com.econovafx.service.AuditService - Audit: UPDATE - Updated account name on Account (3) by admin
+16:05:08.376 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: DELETE - Delete user failed on User (2) by testuser - Error: User not found
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m16[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.601 s -- in com.econovafx.service.[1mAuditServiceTest[m
+[[1;34mINFO[m] Running com.econovafx.service.[1mSystemConfigServiceTest[m
+16:05:08.600 [main] INFO  c.e.service.SystemConfigService - Guardando configuración del sistema
+16:05:08.634 [main] INFO  c.e.service.SystemConfigService - Guardando configuración del sistema
+16:05:08.656 [main] WARN  c.e.service.SystemConfigService - Reiniciando configuración del sistema a valores por defecto
+16:05:08.657 [main] INFO  c.e.service.SystemConfigService - Configuración existente será reemplazada
+16:05:08.675 [main] INFO  c.e.service.SystemConfigService - Inicializando configuración del sistema con valores por defecto
+16:05:08.715 [main] INFO  c.e.service.SystemConfigService - Guardando configuración del sistema
+16:05:08.720 [main] INFO  c.e.service.SystemConfigService - Guardando configuración del sistema
+16:05:08.756 [main] INFO  c.e.service.SystemConfigService - Guardando configuración del sistema
+16:05:08.796 [main] INFO  c.e.service.SystemConfigService - Guardando configuración del sistema
+16:05:08.834 [main] INFO  c.e.service.SystemConfigService - Guardando configuración del sistema
+16:05:08.840 [main] INFO  c.e.service.SystemConfigService - Guardando configuración del sistema
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m16[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.459 s -- in com.econovafx.service.[1mSystemConfigServiceTest[m
+[[1;34mINFO[m] Running com.econovafx.service.[1mUserServiceTest[m
+16:05:09.457 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:09.474 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:09.834 [main] INFO  com.econovafx.service.AuditService - Audit: LOGIN - User logged in successfully on User (1) by testuser
+16:05:10.195 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:10.196 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:10.594 [main] INFO  com.econovafx.service.UserService - User created: admin
+16:05:10.595 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: admin on User (1) by system
+16:05:10.936 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: CREATE - Create user - username exists on User (null) by system - Error: Username already exists: testuser
+16:05:10.938 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: CREATE - Create user - email exists on User (null) by system - Error: Email already exists: test@example.com
+16:05:11.357 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:11.357 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:11.358 [main] INFO  com.econovafx.service.UserService - User updated: testuser
+16:05:11.358 [main] INFO  com.econovafx.service.AuditService - Audit: UPDATE - Updated user: testuser on User (1) by system
+16:05:11.716 [main] INFO  com.econovafx.service.UserService - User created: user1
+16:05:11.716 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: user1 on User (1) by system
+16:05:12.058 [main] INFO  com.econovafx.service.UserService - User created: user2
+16:05:12.058 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: user2 on User (2) by system
+16:05:12.459 [main] INFO  com.econovafx.service.UserService - User created: user3
+16:05:12.460 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: user3 on User (3) by system
+16:05:13.395 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:13.396 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:13.396 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: LOGIN - Login failed - user inactive on User (1) by testuser - Error: User is inactive: testuser
+16:05:14.078 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:14.078 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:14.437 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: LOGIN - Login failed - invalid password on User (1) by testuser - Error: Invalid password for user: testuser
+16:05:14.799 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:14.814 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:15.516 [main] INFO  com.econovafx.service.UserService - User created: user1
+16:05:15.517 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: user1 on User (1) by system
+16:05:15.837 [main] INFO  com.econovafx.service.UserService - User created: user2
+16:05:15.837 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: user2 on User (2) by system
+16:05:16.180 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:16.194 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:16.195 [main] INFO  com.econovafx.service.UserService - User deleted: testuser
+16:05:16.195 [main] INFO  com.econovafx.service.AuditService - Audit: DELETE - Deleted user: testuser on User (1) by system
+16:05:16.235 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: LOGIN - Login failed - user not found on User (null) by nonexistent - Error: User not found: nonexistent
+16:05:16.675 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:16.675 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:17.014 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:17.014 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:17.779 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:17.780 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:18.156 [main] INFO  com.econovafx.service.AuditService - Audit: LOGIN - User logged in successfully on User (1) by testuser
+16:05:18.558 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: LOGIN - Login failed - invalid password on User (1) by testuser - Error: Invalid password for user: testuser
+16:05:18.958 [main] INFO  com.econovafx.service.UserService - User created: testuser
+16:05:18.958 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: testuser on User (1) by system
+16:05:19.359 [main] INFO  com.econovafx.service.UserService - User created: user1
+16:05:19.359 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: user1 on User (1) by system
+16:05:19.776 [main] INFO  com.econovafx.service.UserService - User created: user2
+16:05:19.776 [main] INFO  com.econovafx.service.AuditService - Audit: CREATE - Created user: user2 on User (2) by system
+16:05:19.779 [main] WARN  com.econovafx.service.AuditService - Audit FAILED: UPDATE - Update user - not found on User (999) by system - Error: User not found with ID: 999
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m25[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.78 s -- in com.econovafx.service.[1mUserServiceTest[m
+[[1;34mINFO[m] Running com.econovafx.domain.[1mAccountTypeTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m6[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.econovafx.domain.[1mAccountTypeTest[m
+[[1;34mINFO[m] Running com.econovafx.domain.[1mTransactionEntryTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m12[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 s -- in com.econovafx.domain.[1mTransactionEntryTest[m
+[[1;34mINFO[m] Running com.econovafx.domain.[1mAccountTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m14[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.179 s -- in com.econovafx.domain.[1mAccountTest[m
+[[1;34mINFO[m] Running com.econovafx.domain.[1mTransactionTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m17[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.318 s -- in com.econovafx.domain.[1mTransactionTest[m
+[[1;34mINFO[m] Running com.econovafx.domain.[1mUserTest[m
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m15[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.197 s -- in com.econovafx.domain.[1mUserTest[m
+[[1;34mINFO[m] Running com.econovafx.ui.controller.[1mDashboardControllerTest[m
+Jun 21, 2026 4:05:21 PM com.sun.javafx.application.PlatformImpl startup
+WARNING: Unsupported JavaFX configuration: classes were loaded from 'unnamed module @31ea9581'
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m7[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.360 s -- in com.econovafx.ui.controller.[1mDashboardControllerTest[m
+[[1;34mINFO[m] Running com.econovafx.ui.visual.[1mDashboardCardsVisualTest[m
+Screenshot saved: /workspace/docs/images/dashboard-cards.png
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m1[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.780 s -- in com.econovafx.ui.visual.[1mDashboardCardsVisualTest[m
+[[1;34mINFO[m] Running com.econovafx.ui.visual.[1mNotificationToastVisualTest[m
+Failed to capture screenshot: Not on FX application thread; currentThread = main
+Failed to capture screenshot: Not on FX application thread; currentThread = main
+Failed to capture screenshot: Not on FX application thread; currentThread = main
+Failed to capture screenshot: Not on FX application thread; currentThread = main
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m4[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 21.08 s -- in com.econovafx.ui.visual.[1mNotificationToastVisualTest[m
+[[1;34mINFO[m] Running com.econovafx.ui.visual.[1mModernDialogVisualTest[m
+Screenshot saved: /workspace/docs/images/modern-dialog-open.png
+Screenshot saved: /workspace/docs/images/modern-dialog-closed.png
+[[1;34mINFO[m] [1;32mTests run: [0;1;32m2[m, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.613 s -- in com.econovafx.ui.visual.[1mModernDialogVisualTest[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] Results:
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1;32mTests run: 268, Failures: 0, Errors: 0, Skipped: 0[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mjacoco-maven-plugin:0.8.11:report[m [1m(report)[m @ [36meconovafx[0;1m ---[m
+[[1;34mINFO[m] Loading execution data file /workspace/target/jacoco.exec
+[[1;34mINFO[m] Analyzed bundle 'EconoNova FX - Accounting System' with 162 classes
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  02:26 min
+[[1;34mINFO[m] Finished at: 2026-06-21T16:06:05Z
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[0m[0m

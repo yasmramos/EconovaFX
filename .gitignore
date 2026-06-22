@@ -1,40 +1,26 @@
 ```
 # Compiled and build artifacts
 *.class
+*.pyc
+__pycache__/
 *.o
 *.obj
-*.exe
-*.dll
-*.so
-*.a
 *.out
-
-# Dependencies
-lib/
 target/
-
-# Logs and temp files
+# Dependencies
+node_modules/
+venv/
+.venv/
+# Database
+*.mv.db
+*.trace.db
+# Generated sources
+target/generated-sources/
+# Maven
+target/avaje-module-dependencies.csv
+target/avaje-plugins.csv
+target/avaje-processors.txt
+# Logs
 *.log
-*.tmp
-*.swp
-
-# Editors
-.vscode/
-.idea/
-
-# Environment
-.env
-.env.local
-*.env.*
-
-# Coverage reports
-coverage/
-htmlcov/
-*.coverage
-
-# Package manager caches
-.gradle/
-.mypy_cache/
-.pytest_cache/
-__pycache__/
+test_output.log
 ```
