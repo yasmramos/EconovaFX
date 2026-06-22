@@ -1,13 +1,10 @@
 package com.econovafx.model;
 
-import io.ebean.annotation.WhenCreated;
-import io.ebean.annotation.WhenModified;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 /**
- * Entidad que representa un almacén o depósito de inventario.
- * Permite manejar múltiples ubicaciones físicas.
+ * Entity representing a warehouse or inventory storage location.
+ * Allows managing multiple physical locations.
  */
 @Entity
 @Table(name = "warehouses")
@@ -36,23 +33,7 @@ public class Warehouse extends BaseEntity {
     @Column(nullable = false)
     private boolean active = true;
 
-    @WhenCreated
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP(6)")
-    private LocalDateTime createdAt;
-
-    @WhenModified
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP(6)")
-    private LocalDateTime updatedAt;
-
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // Getters and Setters
     public String getCode() {
         return code;
     }
@@ -107,22 +88,6 @@ public class Warehouse extends BaseEntity {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     @Override

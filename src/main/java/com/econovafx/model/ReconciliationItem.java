@@ -38,7 +38,7 @@ public class ReconciliationItem extends BaseEntity {
     @Column(nullable = false)
     private Boolean reconciled = false;
 
-    @Column(name = "cash_movement_id")
+    @Column(name = "cash_movement_id", columnDefinition = "BIGINT")
     private Long cashMovementId;
 
     @Column(name = "bank_reference")

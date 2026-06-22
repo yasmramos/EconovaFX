@@ -1,91 +1,83 @@
 package com.econovafx.model;
 
-import io.ebean.annotation.WhenCreated;
-import io.ebean.annotation.WhenModified;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 /**
- * Entidad que representa un Tipo de Cambio según Resolución 340/2004.
- * Registra el histórico de tasas de cambio entre monedas.
+ * Entity representing an Exchange Rate according to Resolution 340/2004.
+ * Records historical exchange rates between currencies.
  */
 @Entity
 @Table(name = "exchange_rates")
 public class ExchangeRate extends BaseEntity {
 
-    @Id
-    private Long id;
-
     /**
-     * Moneda origen (la que se convierte)
+     * Source currency (the one being converted)
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_currency_id", nullable = false)
     private Currency fromCurrency;
 
     /**
-     * Moneda destino (a la que se convierte)
+     * Target currency (the one being converted to)
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_currency_id", nullable = false)
     private Currency toCurrency;
 
     /**
-     * Tasa de cambio: cuántas unidades de toCurrency equivalen a 1 unidad de fromCurrency
+     * Exchange rate: how many units of toCurrency equal 1 unit of fromCurrency
      */
     @Column(nullable = false, precision = 18, scale = 6)
     private java.math.BigDecimal rate;
 
     /**
-     * Fecha de vigencia de la tasa
+     * Date when the rate becomes effective
      */
     @Column(name = "effective_date", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime effectiveDate;
 
     /**
-     * Fecha de fin de vigencia (opcional, para tasas temporales)
+     * End date of validity (optional, for temporary rates)
      */
     @Column(name = "end_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime endDate;
 
     /**
-     * Tipo de tasa: OFICIAL, MERCADO, ESPECIAL
+     * Rate type: OFICIAL, MERCADO, ESPECIAL, CONTABLE
      */
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private RateType rateType = RateType.OFICIAL;
 
     /**
-     * Usuario que registró la tasa
+     * User who registered the rate
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_user")
     private User createdByUser;
 
     /**
-     * Observaciones sobre la tasa
+     * Observations about the rate
      */
     @Column(length = 500)
     private String observations;
 
     /**
-     * Estado: ACTIVE, INACTIVE, HISTORICAL
+     * Status: ACTIVE, INACTIVE, HISTORICAL
      */
     @Column(length = 20)
     private String status = "ACTIVE";
 
-    @Version
-    private Long version;
-
     public enum RateType {
-        OFICIAL,      // Tasa oficial del Banco Central
-        MERCADO,      // Tasa de mercado
-        ESPECIAL,     // Tasa especial para operaciones específicas
-        CONTABLE      // Tasa contable para cierre
+        OFICIAL,      // Official rate from Central Bank
+        MERCADO,      // Market rate
+        ESPECIAL,     // Special rate for specific operations
+        CONTABLE      // Accounting rate for closing
     }
 
-    // Constructores
+    // Constructors
     public ExchangeRate() {
     }
 
@@ -99,15 +91,7 @@ public class ExchangeRate extends BaseEntity {
         this.status = "ACTIVE";
     }
 
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // Getters and Setters
     public Currency getFromCurrency() {
         return fromCurrency;
     }
