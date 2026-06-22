@@ -1,10 +1,12 @@
 package com.econovafx.security;
 
 import org.mindrot.jbcrypt.BCrypt;
+import io.avaje.inject.Component;
 
 /**
  * Servicio para el manejo de contraseñas usando BCrypt.
  */
+@Component
 public class PasswordService {
 
     private static final int STRENGTH = 12;
