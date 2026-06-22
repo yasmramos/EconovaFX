@@ -463,3 +463,63 @@ DELETE FROM user_accounts [42102-224]
 2026-06-22 01:26:06.406053Z jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
 DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:11.427352Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:11.548624Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:11.566696Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:11.808886Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:11.826422Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:11.864641Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:11.907290Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:11.964661Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:11.968305Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.008349Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.026679Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.188871Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.205799Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.263241Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.283564Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.306543Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.309588Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.446754Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.467283Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
+2026-06-22 02:04:12.585577Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_ACCOUNTS" not found; SQL statement:
+DELETE FROM user_accounts [42102-224]
