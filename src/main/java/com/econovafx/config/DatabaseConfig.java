@@ -2,6 +2,8 @@ package com.econovafx.config;
 
 import com.econovafx.domain.Company;
 import io.ebean.Database;
+import io.ebean.DatabaseBuilder;
+import io.ebean.DatabaseFactory;
 import io.ebean.datasource.DataSourceConfig;
 import io.ebean.datasource.DataSourceFactory;
 import org.slf4j.Logger;
@@ -49,18 +51,16 @@ public class DatabaseConfig {
 
             DataSource dataSource = DataSourceFactory.create("econova-master", dsConfig);
 
-            var dbConfig = new io.ebean.config.DatabaseConfig();
+            io.ebean.config.DatabaseConfig dbConfig = new io.ebean.config.DatabaseConfig();
             dbConfig.setName("econova-master");
             dbConfig.setDataSource(dataSource);
             dbConfig.addPackage("com.econovafx.domain");
             dbConfig.setDdlGenerate(true);
             dbConfig.setDdlRun(true);
             dbConfig.setDefaultServer(true);
-            
-            // Configure H2 database platform for compatibility
             dbConfig.setDatabasePlatform(new io.ebean.platform.h2.H2Platform());
-
-            masterDatabase = io.ebean.DatabaseFactory.create(dbConfig);
+            
+            masterDatabase = DatabaseFactory.create(dbConfig);
 
             logger.info("Master database initialized successfully");
 
@@ -97,15 +97,15 @@ public class DatabaseConfig {
 
                 DataSource dataSource = DataSourceFactory.create("econova-tenant-" + company.getCode(), dsConfig);
 
-                var dbConfig = new io.ebean.config.DatabaseConfig();
+                io.ebean.config.DatabaseConfig dbConfig = new io.ebean.config.DatabaseConfig();
                 dbConfig.setName("econova-tenant-" + company.getCode());
                 dbConfig.setDataSource(dataSource);
                 dbConfig.addPackage("com.econovafx.domain");
                 dbConfig.addPackage("com.econovafx.model");
                 dbConfig.setDdlGenerate(true);
                 dbConfig.setDdlRun(true);
-
-                Database tenantDb = io.ebean.DatabaseFactory.create(dbConfig);
+                
+                Database tenantDb = DatabaseFactory.create(dbConfig);
                 logger.info("Tenant database created successfully for: {}", company.getCode());
                 return tenantDb;
 
