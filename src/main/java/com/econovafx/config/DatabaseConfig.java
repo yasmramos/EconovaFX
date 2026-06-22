@@ -51,16 +51,18 @@ public class DatabaseConfig {
 
             DataSource dataSource = DataSourceFactory.create("econova-master", dsConfig);
 
-            io.ebean.config.DatabaseConfig dbConfig = new io.ebean.config.DatabaseConfig();
-            dbConfig.setName("econova-master");
-            dbConfig.setDataSource(dataSource);
-            dbConfig.addPackage("com.econovafx.domain");
-            dbConfig.setDdlGenerate(true);
-            dbConfig.setDdlRun(true);
-            dbConfig.setDefaultServer(true);
-            dbConfig.setDatabasePlatform(new io.ebean.platform.h2.H2Platform());
+            DatabaseBuilder builder = Database.builder();
+            builder.name("econova-master")
+                .dataSource(dataSource)
+                .addPackage("com.econovafx.domain")
+                .ddlGenerate(true)
+                .ddlRun(true)
+                .setDefaultServer(true)
+                .databasePlatform(new io.ebean.platform.h2.H2Platform());
             
-            masterDatabase = DatabaseFactory.create(dbConfig);
+            Database masterDb = builder.build();
+            
+            masterDatabase = masterDb;
 
             logger.info("Master database initialized successfully");
 
@@ -97,15 +99,16 @@ public class DatabaseConfig {
 
                 DataSource dataSource = DataSourceFactory.create("econova-tenant-" + company.getCode(), dsConfig);
 
-                io.ebean.config.DatabaseConfig dbConfig = new io.ebean.config.DatabaseConfig();
-                dbConfig.setName("econova-tenant-" + company.getCode());
-                dbConfig.setDataSource(dataSource);
-                dbConfig.addPackage("com.econovafx.domain");
-                dbConfig.addPackage("com.econovafx.model");
-                dbConfig.setDdlGenerate(true);
-                dbConfig.setDdlRun(true);
+                DatabaseBuilder builder = Database.builder();
+                builder.name("econova-tenant-" + company.getCode())
+                    .dataSource(dataSource)
+                    .addPackage("com.econovafx.domain")
+                    .addPackage("com.econovafx.model")
+                    .ddlGenerate(true)
+                    .ddlRun(true);
                 
-                Database tenantDb = DatabaseFactory.create(dbConfig);
+                Database tenantDb = builder.build();
+                    
                 logger.info("Tenant database created successfully for: {}", company.getCode());
                 return tenantDb;
 
