@@ -9,11 +9,7 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "accounting_periods")
-public class AccountingPeriod {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class AccountingPeriod extends BaseEntity {
 
     @Column(nullable = false, length = 50)
     private String name; // e.g., "Fiscal Year 2024", "January 2024"
@@ -71,14 +67,6 @@ public class AccountingPeriod {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }

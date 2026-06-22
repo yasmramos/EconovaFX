@@ -35,8 +35,7 @@ public class BankReconciliationService {
         if (reconciliation.getStatus() != BankReconciliation.Status.IN_PROGRESS) {
             throw new IllegalStateException("Cannot modify a completed or cancelled reconciliation");
         }
-        item.setReconciliationId(reconciliationId);
-        item.setOriginType(ReconciliationItem.OriginType.BANK);
+        // No need to set reconciliationId, the relationship is handled via @ManyToOne
         reconciliation.addBankItem(item);
         return repository.save(reconciliation);
     }
@@ -50,8 +49,7 @@ public class BankReconciliationService {
         if (reconciliation.getStatus() != BankReconciliation.Status.IN_PROGRESS) {
             throw new IllegalStateException("Cannot modify a completed or cancelled reconciliation");
         }
-        item.setReconciliationId(reconciliationId);
-        item.setOriginType(ReconciliationItem.OriginType.SYSTEM);
+        // No need to set reconciliationId, the relationship is handled via @ManyToOne
         reconciliation.addSystemItem(item);
         return repository.save(reconciliation);
     }

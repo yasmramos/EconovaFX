@@ -1,5 +1,9 @@
 package com.econovafx.model;
 
+import com.econovafx.domain.BaseEntity;
+import io.ebean.annotation.DbEnumValue;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,35 +13,53 @@ import java.util.List;
 /**
  * Entity representing a Bank Reconciliation according to Resolution 340/2004.
  */
-public class BankReconciliation {
-    
+@Entity
+@Table(name = "bank_reconciliation")
+public class BankReconciliation extends BaseEntity {
+
     public enum Status {
         IN_PROGRESS, COMPLETED, CANCELLED
     }
 
-    private Long id;
+    @Column(name = "bank_account_id", nullable = false)
     private Long bankAccountId;
+
+    @Column(name = "reconciliation_number", nullable = false, unique = true)
     private String reconciliationNumber;
+
+    @Column(name = "statement_date", nullable = false)
     private LocalDate statementDate;
+
+    @Column(name = "bank_balance", nullable = false, precision = 19, scale = 4)
     private BigDecimal bankBalance;
+
+    @Column(name = "system_balance", nullable = false, precision = 19, scale = 4)
     private BigDecimal systemBalance;
+
+    @Column(name = "reconciled_balance", precision = 19, scale = 4)
     private BigDecimal reconciledBalance;
-    private Status status;
-    private LocalDateTime createdAt;
-    private String createdBy;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status = Status.IN_PROGRESS;
+
+    @Column(name = "completed_at")
     private LocalDateTime completedAt;
+
+    @Column(name = "completed_by")
     private String completedBy;
-    
+
+    @OneToMany(mappedBy = "reconciliation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReconciliationItem> bankItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reconciliation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReconciliationItem> systemItems = new ArrayList<>();
 
     public BankReconciliation() {
+        super();
         this.status = Status.IN_PROGRESS;
-        this.createdAt = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
     public Long getBankAccountId() { return bankAccountId; }
     public void setBankAccountId(Long bankAccountId) { this.bankAccountId = bankAccountId; }
     public String getReconciliationNumber() { return reconciliationNumber; }
@@ -52,10 +74,6 @@ public class BankReconciliation {
     public void setReconciledBalance(BigDecimal reconciledBalance) { this.reconciledBalance = reconciledBalance; }
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
     public LocalDateTime getCompletedAt() { return completedAt; }
     public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
     public String getCompletedBy() { return completedBy; }
@@ -66,10 +84,14 @@ public class BankReconciliation {
     public void setSystemItems(List<ReconciliationItem> systemItems) { this.systemItems = systemItems; }
 
     public void addBankItem(ReconciliationItem item) {
+        item.setReconciliation(this);
+        item.setOriginType(ReconciliationItem.OriginType.BANK);
         this.bankItems.add(item);
     }
 
     public void addSystemItem(ReconciliationItem item) {
+        item.setReconciliation(this);
+        item.setOriginType(ReconciliationItem.OriginType.SYSTEM);
         this.systemItems.add(item);
     }
 }

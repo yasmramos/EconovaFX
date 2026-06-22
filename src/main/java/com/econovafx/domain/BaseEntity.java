@@ -1,5 +1,6 @@
 package com.econovafx.domain;
 
+import io.ebean.annotation.TenantId;
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
 import jakarta.persistence.*;
@@ -7,7 +8,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Base entity class with common fields including multi-tenant support
+ * Base entity class with common fields including native Ebean multi-tenant support.
+ * Usa @TenantId para soporte nativo de multi-tenancy en Ebean 17+.
  */
 @MappedSuperclass
 public abstract class BaseEntity {
@@ -17,12 +19,13 @@ public abstract class BaseEntity {
     protected Long id;
 
     /**
-     * Referencia a la empresa/tenant para aislamiento de datos.
-     * Todas las entidades transaccionales deben tener esta referencia.
+     * Tenant ID para aislamiento de datos usando soporte nativo de Ebean.
+     * Todas las entidades transaccionales deben tener este campo.
+     * Ebean automáticamente filtra por este valor en todas las consultas.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
+    @TenantId
+    @Column(name = "tenant_id", nullable = false, updatable = false)
+    private Long tenantId;
 
     @WhenCreated
     @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP")
@@ -43,12 +46,12 @@ public abstract class BaseEntity {
         this.id = id;
     }
 
-    public Company getCompany() {
-        return company;
+    public Long getTenantId() {
+        return tenantId;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -33,7 +33,7 @@ public class CashBoxRepository {
 
     public List<CashBox> findOpenBoxes() {
         return database.values().stream()
-                .filter(CashBox::isOpen)
+                .filter(CashBox::getOpen)
                 .collect(Collectors.toList());
     }
 
