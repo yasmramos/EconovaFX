@@ -1,6 +1,6 @@
 package com.econovafx.service;
 import io.avaje.inject.Component;
-import com.econovafx.domain.AccountingPeriod;
+import com.econovafx.model.AccountingPeriod;
 
 import com.econovafx.model.CashMovement;
 import com.econovafx.model.BankAccount;

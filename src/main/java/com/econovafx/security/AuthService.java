@@ -1,8 +1,8 @@
 package com.econovafx.security;
 
 import com.econovafx.config.TenantContext;
-import com.econovafx.domain.Company;
-import com.econovafx.domain.User;
+import com.econovafx.model.Company;
+import com.econovafx.model.User;
 import io.ebean.DB;
 import io.ebean.Query;
 import jakarta.inject.Singleton;

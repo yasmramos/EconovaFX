@@ -1,6 +1,6 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.SystemConfiguration;
+import com.econovafx.model.SystemConfiguration;
 import com.econovafx.repository.SystemConfigRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

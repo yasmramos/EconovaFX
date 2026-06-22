@@ -1,6 +1,6 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.User;
+import com.econovafx.model.User;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;

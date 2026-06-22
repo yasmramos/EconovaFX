@@ -1,6 +1,6 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.ThirdParty;
+import com.econovafx.model.ThirdParty;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import io.ebean.ExpressionList;

@@ -1,7 +1,7 @@
 package com.econovafx.controller;
 
-import com.econovafx.domain.ThirdParty;
-import com.econovafx.domain.Transaction;
+import com.econovafx.model.ThirdParty;
+import com.econovafx.model.Transaction;
 import com.econovafx.service.ExportService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.service.ThirdPartyService;

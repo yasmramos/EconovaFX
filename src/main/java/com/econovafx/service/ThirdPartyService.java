@@ -1,6 +1,6 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.ThirdParty;
+import com.econovafx.model.ThirdParty;
 import com.econovafx.repository.ThirdPartyRepository;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;

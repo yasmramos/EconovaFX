@@ -1,6 +1,6 @@
 package com.econovafx.validation;
 
-import com.econovafx.domain.*;
+import com.econovafx.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

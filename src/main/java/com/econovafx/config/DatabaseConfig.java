@@ -1,6 +1,6 @@
 package com.econovafx.config;
 
-import com.econovafx.domain.Company;
+import com.econovafx.model.Company;
 import io.ebean.Database;
 import io.ebean.DatabaseBuilder;
 import io.ebean.config.CurrentTenantProvider;
@@ -62,7 +62,7 @@ public class DatabaseConfig {
             DatabaseBuilder builder = Database.builder();
             builder.name("econova-master")
                 .dataSource(dataSource)
-                .addPackage("com.econovafx.domain")
+                .addPackage("com.econovafx.model")
                 .ddlGenerate(true)
                 .ddlRun(true)
                 .databasePlatform(new H2Platform());
@@ -109,7 +109,7 @@ public class DatabaseConfig {
                 .setCurrentTenantProvider(tenantProvider)
                 .setTenantDataSourceProvider(dataSourceProvider)
                 .setDatabasePlatform(new H2Platform())
-                .addPackage("com.econovafx.domain")
+                .addPackage("com.econovafx.model")
                 .addPackage("com.econovafx.model")
                 .ddlGenerate(true)
                 .ddlRun(true);

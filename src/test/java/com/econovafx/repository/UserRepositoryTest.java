@@ -1,6 +1,6 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.User;
+import com.econovafx.model.User;
 import io.ebean.Database;
 import io.ebean.ExpressionList;
 import io.ebean.Query;
