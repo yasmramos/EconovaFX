@@ -3,12 +3,15 @@ package com.econovafx;
 import com.econovafx.config.AppContext;
 import com.econovafx.config.DatabaseConfig;
 import com.econovafx.ui.controller.MainViewController;
+import com.econovafx.ui.controller.SplashController;
 import com.econovafx.ui.view.ViewFactory;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +21,12 @@ import org.slf4j.LoggerFactory;
 public class App extends Application {
 
     private static final Logger logger = LoggerFactory.getLogger(App.class);
+    private static final String VERSION = "1.0.0";
 
     private AppContext context;
+    private Stage primaryStage;
+    private SplashController splashController;
+    private StackPane splashRoot;
 
     @Override
     public void init() throws Exception {
@@ -29,9 +36,76 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
         logger.info("Starting JavaFX application");
+        this.primaryStage = stage;
 
+        try {
+            // Show splash screen first
+            showSplashScreen();
+
+            // Initialize main application in background
+            new Thread(this::initializeMainApp).start();
+
+        } catch (IOException e) {
+            logger.error("Failed to start application", e);
+            throw new RuntimeException("Failed to start application", e);
+        }
+    }
+
+    private void showSplashScreen() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/splash.fxml"));
+        splashRoot = loader.load();
+        splashController = loader.getController();
+        
+        if (splashController != null) {
+            splashController.setVersion(VERSION);
+        }
+
+        Scene splashScene = new Scene(splashRoot, 600, 400);
+        splashScene.getStylesheets().add(getClass().getResource("/css/splash.css").toExternalForm());
+
+        primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.setScene(splashScene);
+        primaryStage.centerOnScreen();
+        primaryStage.show();
+    }
+
+    private void initializeMainApp() {
+        try {
+            // Simulate heavy initialization tasks
+            updateSplash(0.2, "Loading database configuration...");
+            Thread.sleep(500);
+
+            updateSplash(0.4, "Initializing services...");
+            Thread.sleep(500);
+
+            updateSplash(0.6, "Loading user interface...");
+            Thread.sleep(500);
+
+            updateSplash(0.8, "Finalizing setup...");
+            Thread.sleep(500);
+
+            // Load main application on JavaFX thread
+            javafx.application.Platform.runLater(this::loadMainView);
+
+        } catch (Exception e) {
+            logger.error("Error during initialization", e);
+            javafx.application.Platform.runLater(() -> {
+                // Handle error appropriately
+            });
+        }
+    }
+
+    private void updateSplash(double progress, String message) {
+        if (splashController != null) {
+            javafx.application.Platform.runLater(() -> 
+                splashController.updateProgress(progress, message)
+            );
+        }
+    }
+
+    private void loadMainView() {
         try {
             ViewFactory viewFactory = context.getViewFactory();
             MainViewController mainController = new MainViewController(
@@ -51,18 +125,17 @@ public class App extends Application {
             scene.getStylesheets().add(getClass().getResource("/styles/sidebar.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
 
-            primaryStage.setTitle("EconoNova FX - Sistema Contable");
+            primaryStage.setTitle("EconoNova FX - Accounting System");
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(1024);
             primaryStage.setMinHeight(768);
-
-            primaryStage.show();
+            primaryStage.centerOnScreen();
 
             logger.info("Application started successfully");
 
         } catch (IOException e) {
-            logger.error("Failed to start application", e);
-            throw new RuntimeException("Failed to start application", e);
+            logger.error("Failed to load main view", e);
+            throw new RuntimeException("Failed to load main view", e);
         }
     }
 

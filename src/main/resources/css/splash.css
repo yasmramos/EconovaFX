@@ -1,0 +1,39 @@
+/* 
+ * Splash Screen Styles for EconoNova FX
+ */
+
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #f0f4ff);
+}
+
+#titleLabel {
+    -fx-text-fill: #1a73e8;
+    -fx-effect: dropshadow(gaussian, rgba(26, 115, 232, 0.3), 10, 0, 0, 2);
+}
+
+#statusLabel {
+    -fx-text-fill: #555555;
+}
+
+#progressBar {
+    -fx-accent: #1a73e8;
+    -fx-pref-height: 8px;
+    -fx-background-radius: 4px;
+}
+
+#progressBar .bar {
+    -fx-background-radius: 4px;
+}
+
+#progressBar .track {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 4px;
+}
+
+#versionLabel {
+    -fx-text-fill: #999999;
+}
+
+#logoView {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 15, 0, 0, 5);
+}
