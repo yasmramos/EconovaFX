@@ -1,6 +1,6 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.AccountingPeriod;
+import com.econovafx.model.AccountingPeriod;
 import com.econovafx.repository.AccountingPeriodRepository;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;

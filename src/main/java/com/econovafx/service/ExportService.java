@@ -1,8 +1,8 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.Transaction;
-import com.econovafx.domain.TransactionEntry;
-import com.econovafx.domain.ThirdParty;
+import com.econovafx.model.Transaction;
+import com.econovafx.model.TransactionEntry;
+import com.econovafx.model.ThirdParty;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;

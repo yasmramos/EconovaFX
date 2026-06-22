@@ -1,4 +1,4 @@
-package com.econovafx.domain;
+package com.econovafx.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

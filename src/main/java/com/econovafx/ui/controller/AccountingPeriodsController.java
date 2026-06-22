@@ -1,6 +1,6 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.AccountingPeriod;
+import com.econovafx.model.AccountingPeriod;
 import com.econovafx.service.AccountingPeriodService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;

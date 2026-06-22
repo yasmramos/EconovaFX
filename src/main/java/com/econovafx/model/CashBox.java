@@ -1,6 +1,6 @@
 package com.econovafx.model;
 
-import com.econovafx.domain.BaseEntity;
+import com.econovafx.model.BaseEntity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;

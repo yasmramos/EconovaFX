@@ -1,9 +1,9 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.AuditLog;
-import com.econovafx.domain.User;
-import com.econovafx.domain.ValuationMethod;
-import com.econovafx.domain.Warehouse;
+import com.econovafx.model.AuditLog;
+import com.econovafx.model.User;
+import com.econovafx.model.ValuationMethod;
+import com.econovafx.model.Warehouse;
 import com.econovafx.repository.UserRepository;
 import com.econovafx.repository.WarehouseRepository;
 import com.econovafx.service.AuditService;

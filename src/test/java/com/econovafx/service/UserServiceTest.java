@@ -1,9 +1,10 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.AuditLog;
-import com.econovafx.domain.User;
+import com.econovafx.model.AuditLog;
+import com.econovafx.model.User;
 import com.econovafx.repository.AuditLogRepository;
 import com.econovafx.repository.UserRepository;
+import com.econovafx.security.PasswordService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ class UserServiceTest {
     private StubUserRepository userRepository;
     private StubAuditLogRepository auditLogRepository;
     private AuditService auditService;
+    private PasswordService passwordService;
     private UserService userService;
 
     @BeforeEach
@@ -29,7 +31,8 @@ class UserServiceTest {
         userRepository = new StubUserRepository();
         auditLogRepository = new StubAuditLogRepository();
         auditService = new AuditService(auditLogRepository);
-        userService = new UserService(userRepository, auditService);
+        passwordService = new PasswordService();
+        userService = new UserService(userRepository, auditService, passwordService);
     }
 
     @Test

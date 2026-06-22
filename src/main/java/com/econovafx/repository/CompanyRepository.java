@@ -1,6 +1,6 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.Company;
+import com.econovafx.model.Company;
 import io.ebean.annotation.Transactional;
 import jakarta.inject.Singleton;
 

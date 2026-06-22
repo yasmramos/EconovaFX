@@ -1,7 +1,7 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.ReportDefinition;
-import com.econovafx.domain.ReportDefinition.ReportType;
+import com.econovafx.model.ReportDefinition;
+import com.econovafx.model.ReportDefinition.ReportType;
 import io.ebean.Database;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

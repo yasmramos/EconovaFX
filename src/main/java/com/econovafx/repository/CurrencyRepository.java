@@ -1,6 +1,6 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.Currency;
+import com.econovafx.model.Currency;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import io.ebean.Transaction;

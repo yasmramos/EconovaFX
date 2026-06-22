@@ -1,4 +1,4 @@
-package com.econovafx.domain;
+package com.econovafx.model;
 
 import io.ebean.annotation.DbEnumType;
 import io.ebean.annotation.DbEnumValue;

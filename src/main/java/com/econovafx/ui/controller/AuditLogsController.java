@@ -1,6 +1,6 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.AuditLog;
+import com.econovafx.model.AuditLog;
 import com.econovafx.service.AuditService;
 import com.econovafx.service.NotificationService;
 import com.econovafx.ui.util.ModernDialog;

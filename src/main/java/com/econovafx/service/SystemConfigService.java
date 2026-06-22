@@ -1,6 +1,6 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.SystemConfiguration;
+import com.econovafx.model.SystemConfiguration;
 import com.econovafx.repository.SystemConfigRepository;
 import io.avaje.inject.Component;
 import org.slf4j.Logger;

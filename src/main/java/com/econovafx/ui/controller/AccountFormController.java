@@ -1,7 +1,7 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.Account;
-import com.econovafx.domain.AccountType;
+import com.econovafx.model.Account;
+import com.econovafx.model.AccountType;
 import com.econovafx.service.AccountService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
