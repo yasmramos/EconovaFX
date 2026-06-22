@@ -51,14 +51,16 @@ public class DatabaseConfig {
 
             DataSource dataSource = DataSourceFactory.create("econova-master", dsConfig);
 
-            Database masterDb = Database.builder()
-                .name("econova-master")
+            DatabaseBuilder builder = Database.builder();
+            builder.name("econova-master")
                 .dataSource(dataSource)
                 .addPackage("com.econovafx.domain")
                 .ddlGenerate(true)
                 .ddlRun(true)
-                .databasePlatform(new io.ebean.platform.h2.H2Platform())
-                .build();
+                .setDefaultServer(true)
+                .databasePlatform(new io.ebean.platform.h2.H2Platform());
+            
+            Database masterDb = builder.build();
             
             masterDatabase = masterDb;
 
@@ -97,25 +99,15 @@ public class DatabaseConfig {
 
                 DataSource dataSource = DataSourceFactory.create("econova-tenant-" + company.getCode(), dsConfig);
 
-<<<<<<< HEAD
-                Database tenantDb = Database.builder()
-                    .name("econova-tenant-" + company.getCode())
-=======
                 DatabaseBuilder builder = Database.builder();
                 builder.name("econova-tenant-" + company.getCode())
->>>>>>> 3f37d874e4d4b1d6f338c33165a9d60e71107e2f
                     .dataSource(dataSource)
                     .addPackage("com.econovafx.domain")
                     .addPackage("com.econovafx.model")
                     .ddlGenerate(true)
-<<<<<<< HEAD
-                    .ddlRun(true)
-                    .build();
-=======
                     .ddlRun(true);
                 
                 Database tenantDb = builder.build();
->>>>>>> 3f37d874e4d4b1d6f338c33165a9d60e71107e2f
                     
                 logger.info("Tenant database created successfully for: {}", company.getCode());
                 return tenantDb;
