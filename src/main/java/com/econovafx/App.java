@@ -3,7 +3,7 @@ package com.econovafx;
 import com.econovafx.config.AppContext;
 import com.econovafx.config.DatabaseConfig;
 import com.econovafx.ui.controller.MainViewController;
-import com.econovafx.ui.controller.SplashController;
+import com.econovafx.ui.preloader.EconoNovaPreloader;
 import com.econovafx.ui.view.ViewFactory;
 import java.io.IOException;
 import javafx.application.Application;
@@ -25,8 +25,6 @@ public class App extends Application {
 
     private AppContext context;
     private Stage primaryStage;
-    private SplashController splashController;
-    private StackPane splashRoot;
 
     @Override
     public void init() throws Exception {
@@ -41,52 +39,37 @@ public class App extends Application {
         this.primaryStage = stage;
 
         try {
-            // Show splash screen first
-            showSplashScreen();
-
-            // Initialize main application in background
+            // Initialize main application in background with preloader
+            notifyPreloader(new EconoNovaPreloader.ProgressNotification(0.1, "Initializing application..."));
             new Thread(this::initializeMainApp).start();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Failed to start application", e);
             throw new RuntimeException("Failed to start application", e);
         }
     }
 
-    private void showSplashScreen() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/splash.fxml"));
-        splashRoot = loader.load();
-        splashController = loader.getController();
-        
-        if (splashController != null) {
-            splashController.setVersion(VERSION);
-        }
-
-        Scene splashScene = new Scene(splashRoot, 600, 400);
-        splashScene.getStylesheets().add(getClass().getResource("/css/splash.css").toExternalForm());
-
-        primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setScene(splashScene);
-        primaryStage.centerOnScreen();
-        primaryStage.show();
-    }
-
     private void initializeMainApp() {
         try {
-            // Simulate heavy initialization tasks
-            updateSplash(0.2, "Loading database configuration...");
-            Thread.sleep(500);
+            // Load database configuration
+            notifyPreloader(new EconoNovaPreloader.ProgressNotification(0.2, "Loading database configuration..."));
+            DatabaseConfig.initialize();
+            Thread.sleep(300);
 
-            updateSplash(0.4, "Initializing services...");
-            Thread.sleep(500);
+            // Initialize services (already initialized in AppContext constructor)
+            notifyPreloader(new EconoNovaPreloader.ProgressNotification(0.4, "Initializing services..."));
+            Thread.sleep(300);
 
-            updateSplash(0.6, "Loading user interface...");
-            Thread.sleep(500);
+            // Load user interface
+            notifyPreloader(new EconoNovaPreloader.ProgressNotification(0.6, "Loading user interface..."));
+            Thread.sleep(300);
 
-            updateSplash(0.8, "Finalizing setup...");
-            Thread.sleep(500);
+            // Finalize setup
+            notifyPreloader(new EconoNovaPreloader.ProgressNotification(0.8, "Finalizing setup..."));
+            Thread.sleep(300);
 
             // Load main application on JavaFX thread
+            notifyPreloader(new EconoNovaPreloader.ProgressNotification(1.0, "Ready!"));
             javafx.application.Platform.runLater(this::loadMainView);
 
         } catch (Exception e) {
@@ -94,14 +77,6 @@ public class App extends Application {
             javafx.application.Platform.runLater(() -> {
                 // Handle error appropriately
             });
-        }
-    }
-
-    private void updateSplash(double progress, String message) {
-        if (splashController != null) {
-            javafx.application.Platform.runLater(() -> 
-                splashController.updateProgress(progress, message)
-            );
         }
     }
 
