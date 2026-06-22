@@ -1,6 +1,6 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.Transaction;
+import com.econovafx.model.Transaction;
 import com.econovafx.service.AccountService;
 import com.econovafx.service.ExportService;
 import com.econovafx.service.TransactionService;

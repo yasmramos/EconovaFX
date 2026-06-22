@@ -1,8 +1,8 @@
 package com.econovafx.repository;
 
 import com.econovafx.config.DatabaseConfig;
-import com.econovafx.domain.*;
-import com.econovafx.domain.User.UserRole;
+import com.econovafx.model.*;
+import com.econovafx.model.User.UserRole;
 import io.ebean.Database;
 import org.junit.jupiter.api.*;
 
@@ -124,8 +124,8 @@ class TransactionRepositoryTest {
         return account;
     }
     
-    private com.econovafx.domain.Transaction createTestTransaction(String number, Account account) {
-        com.econovafx.domain.Transaction transaction = new com.econovafx.domain.Transaction();
+    private com.econovafx.model.Transaction createTestTransaction(String number, Account account) {
+        com.econovafx.model.Transaction transaction = new com.econovafx.model.Transaction();
         transaction.setNumber(number);
         transaction.setDate(LocalDate.now());
         transaction.setType("INCOME");
@@ -144,7 +144,7 @@ class TransactionRepositoryTest {
         Account account = createTestAccount("ACC-001", "Test Account", AccountType.ASSET);
         accountRepository.save(account);
         
-        com.econovafx.domain.Transaction transaction = createTestTransaction("TRX-001", account);
+        com.econovafx.model.Transaction transaction = createTestTransaction("TRX-001", account);
         
         // Act
         transactionRepository.save(transaction);
@@ -164,7 +164,7 @@ class TransactionRepositoryTest {
         Account account = createTestAccount("ACC-002", "Test Account", AccountType.ASSET);
         accountRepository.save(account);
         
-        com.econovafx.domain.Transaction transaction = createTestTransaction("TRX-002", account);
+        com.econovafx.model.Transaction transaction = createTestTransaction("TRX-002", account);
         transactionRepository.save(transaction);
         
         // Act
@@ -199,7 +199,7 @@ class TransactionRepositoryTest {
         transactionRepository.save(createTestTransaction("TRX-004", account));
         
         // Act
-        List<com.econovafx.domain.Transaction> transactions = transactionRepository.findAll();
+        List<com.econovafx.model.Transaction> transactions = transactionRepository.findAll();
         
         // Assert
         assertTrue(transactions.size() >= 2);
@@ -215,7 +215,7 @@ class TransactionRepositoryTest {
         Account account = createTestAccount("ACC-004", "Test Account", AccountType.ASSET);
         accountRepository.save(account);
         
-        com.econovafx.domain.Transaction transaction = createTestTransaction("TRX-005", account);
+        com.econovafx.model.Transaction transaction = createTestTransaction("TRX-005", account);
         transactionRepository.save(transaction);
         Long id = transaction.getId();
         
@@ -258,11 +258,11 @@ class TransactionRepositoryTest {
         Account account = createTestAccount("ACC-TYPE", "Test Account Type", AccountType.ASSET);
         accountRepository.save(account);
         
-        com.econovafx.domain.Transaction t1 = createTestTransaction("TRX-TYPE-1", account);
+        com.econovafx.model.Transaction t1 = createTestTransaction("TRX-TYPE-1", account);
         t1.setType("INCOME");
-        com.econovafx.domain.Transaction t2 = createTestTransaction("TRX-TYPE-2", account);
+        com.econovafx.model.Transaction t2 = createTestTransaction("TRX-TYPE-2", account);
         t2.setType("EXPENSE");
-        com.econovafx.domain.Transaction t3 = createTestTransaction("TRX-TYPE-3", account);
+        com.econovafx.model.Transaction t3 = createTestTransaction("TRX-TYPE-3", account);
         t3.setType("INCOME");
         
         transactionRepository.save(t1);
@@ -270,7 +270,7 @@ class TransactionRepositoryTest {
         transactionRepository.save(t3);
         
         // Act
-        List<com.econovafx.domain.Transaction> incomeTransactions = transactionRepository.findByType("INCOME");
+        List<com.econovafx.model.Transaction> incomeTransactions = transactionRepository.findByType("INCOME");
         
         // Assert
         assertEquals(2, incomeTransactions.size());
@@ -290,11 +290,11 @@ class TransactionRepositoryTest {
         LocalDate startDate = LocalDate.now().minusDays(1);
         LocalDate endDate = LocalDate.now().plusDays(1);
         
-        com.econovafx.domain.Transaction t1 = createTestTransaction("TRX-DATE-1", account);
+        com.econovafx.model.Transaction t1 = createTestTransaction("TRX-DATE-1", account);
         t1.setDate(startDate);
-        com.econovafx.domain.Transaction t2 = createTestTransaction("TRX-DATE-2", account);
+        com.econovafx.model.Transaction t2 = createTestTransaction("TRX-DATE-2", account);
         t2.setDate(LocalDate.now());
-        com.econovafx.domain.Transaction t3 = createTestTransaction("TRX-DATE-3", account);
+        com.econovafx.model.Transaction t3 = createTestTransaction("TRX-DATE-3", account);
         t3.setDate(endDate);
         
         transactionRepository.save(t1);
@@ -302,7 +302,7 @@ class TransactionRepositoryTest {
         transactionRepository.save(t3);
         
         // Act
-        List<com.econovafx.domain.Transaction> result = transactionRepository.findByDateRange(startDate, endDate);
+        List<com.econovafx.model.Transaction> result = transactionRepository.findByDateRange(startDate, endDate);
         
         // Assert
         assertEquals(3, result.size());
@@ -318,11 +318,11 @@ class TransactionRepositoryTest {
         Account account = createTestAccount("ACC-008", "Test Account", AccountType.ASSET);
         accountRepository.save(account);
         
-        com.econovafx.domain.Transaction t1 = createTestTransaction("TRX-016", account);
+        com.econovafx.model.Transaction t1 = createTestTransaction("TRX-016", account);
         t1.setDescription("Payment for services");
-        com.econovafx.domain.Transaction t2 = createTestTransaction("TRX-017", account);
+        com.econovafx.model.Transaction t2 = createTestTransaction("TRX-017", account);
         t2.setDescription("Office supplies purchase");
-        com.econovafx.domain.Transaction t3 = createTestTransaction("TRX-018", account);
+        com.econovafx.model.Transaction t3 = createTestTransaction("TRX-018", account);
         t3.setDescription("Service payment received");
         
         transactionRepository.save(t1);
@@ -330,7 +330,7 @@ class TransactionRepositoryTest {
         transactionRepository.save(t3);
         
         // Act
-        List<com.econovafx.domain.Transaction> result = transactionRepository.searchByDescription("payment");
+        List<com.econovafx.model.Transaction> result = transactionRepository.searchByDescription("payment");
         
         // Assert
         assertEquals(2, result.size());
@@ -359,13 +359,13 @@ class TransactionRepositoryTest {
         // Save third party using a direct database insert since we don't have a repository in this test
         db.insert(thirdParty);
         
-        com.econovafx.domain.Transaction t1 = createTestTransaction("TRX-019", account1);
+        com.econovafx.model.Transaction t1 = createTestTransaction("TRX-019", account1);
         t1.setThirdParty(thirdParty);
-        com.econovafx.domain.Transaction t2 = createTestTransaction("TRX-020", account1);
+        com.econovafx.model.Transaction t2 = createTestTransaction("TRX-020", account1);
         t2.setThirdParty(thirdParty);
-        com.econovafx.domain.Transaction t3 = createTestTransaction("TRX-021", account1);
+        com.econovafx.model.Transaction t3 = createTestTransaction("TRX-021", account1);
         t3.setThirdParty(thirdParty);
-        com.econovafx.domain.Transaction t4 = createTestTransaction("TRX-022", account2);
+        com.econovafx.model.Transaction t4 = createTestTransaction("TRX-022", account2);
         // t4 has no third party
         
         transactionRepository.save(t1);
@@ -374,7 +374,7 @@ class TransactionRepositoryTest {
         transactionRepository.save(t4);
         
         // Act
-        List<com.econovafx.domain.Transaction> result = transactionRepository.findByThirdPartyId(thirdParty.getId());
+        List<com.econovafx.model.Transaction> result = transactionRepository.findByThirdPartyId(thirdParty.getId());
         
         // Assert
         assertEquals(3, result.size());

@@ -1,8 +1,8 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.Currency;
-import com.econovafx.domain.ExchangeRate;
-import com.econovafx.domain.User;
+import com.econovafx.model.Currency;
+import com.econovafx.model.ExchangeRate;
+import com.econovafx.model.User;
 import com.econovafx.repository.CurrencyRepository;
 import com.econovafx.repository.ExchangeRateRepository;
 import com.econovafx.security.SecurityUtil;

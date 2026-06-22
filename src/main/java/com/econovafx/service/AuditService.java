@@ -1,6 +1,6 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.AuditLog;
+import com.econovafx.model.AuditLog;
 import com.econovafx.repository.AuditLogRepository;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;

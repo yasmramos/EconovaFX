@@ -1,7 +1,7 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.Account;
-import com.econovafx.domain.Transaction;
+import com.econovafx.model.Account;
+import com.econovafx.model.Transaction;
 import com.econovafx.service.AccountService;
 import com.econovafx.service.TransactionService;
 import com.econovafx.service.TransactionService.TransactionEntryData;
@@ -223,7 +223,7 @@ public class TransactionEntryController implements Initializable {
                 return;
             }
             
-            com.econovafx.domain.Transaction transaction = new com.econovafx.domain.Transaction();
+            com.econovafx.model.Transaction transaction = new com.econovafx.model.Transaction();
             transaction.setDate(date);
             transaction.setType(type);
             transaction.setDescription(description);

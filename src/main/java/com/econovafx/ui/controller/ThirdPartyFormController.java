@@ -1,6 +1,6 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.domain.ThirdParty;
+import com.econovafx.model.ThirdParty;
 import com.econovafx.service.ThirdPartyService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

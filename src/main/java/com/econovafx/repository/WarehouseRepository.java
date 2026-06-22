@@ -1,6 +1,6 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.Warehouse;
+import com.econovafx.model.Warehouse;
 import io.ebean.Database;
 import io.avaje.inject.Component;
 

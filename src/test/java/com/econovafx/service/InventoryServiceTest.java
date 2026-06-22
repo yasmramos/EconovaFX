@@ -1,6 +1,6 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.*;
+import com.econovafx.model.*;
 import com.econovafx.repository.*;
 import com.econovafx.service.AuditService;
 import org.junit.jupiter.api.BeforeEach;

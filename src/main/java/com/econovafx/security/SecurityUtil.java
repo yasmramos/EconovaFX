@@ -1,6 +1,6 @@
 package com.econovafx.security;
 
-import com.econovafx.domain.User;
+import com.econovafx.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

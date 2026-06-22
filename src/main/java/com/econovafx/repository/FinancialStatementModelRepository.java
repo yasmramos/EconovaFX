@@ -1,7 +1,7 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.FinancialStatementModel;
-import com.econovafx.domain.FinancialStatementModel.ModelType;
+import com.econovafx.model.FinancialStatementModel;
+import com.econovafx.model.FinancialStatementModel.ModelType;
 import io.ebean.Database;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

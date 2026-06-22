@@ -1,6 +1,6 @@
 package com.econovafx.config;
 
-import com.econovafx.domain.Company;
+import com.econovafx.model.Company;
 
 /**
  * Contexto de Tenant almacenado en ThreadLocal para gestión multi-empresa.

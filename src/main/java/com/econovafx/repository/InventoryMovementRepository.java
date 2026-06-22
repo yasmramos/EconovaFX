@@ -1,9 +1,9 @@
 package com.econovafx.repository;
 
-import com.econovafx.domain.InventoryMovement;
-import com.econovafx.domain.InventoryMovement.MovementType;
-import com.econovafx.domain.InventoryItem;
-import com.econovafx.domain.Warehouse;
+import com.econovafx.model.InventoryMovement;
+import com.econovafx.model.InventoryMovement.MovementType;
+import com.econovafx.model.InventoryItem;
+import com.econovafx.model.Warehouse;
 import io.ebean.Database;
 import io.avaje.inject.Component;
 

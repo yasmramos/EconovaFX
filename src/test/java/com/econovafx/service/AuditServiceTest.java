@@ -1,7 +1,7 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.AuditLog;
-import com.econovafx.domain.User;
+import com.econovafx.model.AuditLog;
+import com.econovafx.model.User;
 import com.econovafx.repository.AuditLogRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

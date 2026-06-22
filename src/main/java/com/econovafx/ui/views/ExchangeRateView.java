@@ -1,7 +1,7 @@
 package com.econovafx.ui.views;
 
-import com.econovafx.domain.ExchangeRate;
-import com.econovafx.domain.Currency;
+import com.econovafx.model.ExchangeRate;
+import com.econovafx.model.Currency;
 import com.econovafx.service.ExchangeRateService;
 import com.econovafx.service.BCCExchangeRateClient;
 import javafx.geometry.Insets;

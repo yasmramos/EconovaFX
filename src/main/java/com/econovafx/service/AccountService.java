@@ -1,7 +1,7 @@
 package com.econovafx.service;
 
-import com.econovafx.domain.Account;
-import com.econovafx.domain.AccountType;
+import com.econovafx.model.Account;
+import com.econovafx.model.AccountType;
 import com.econovafx.repository.AccountRepository;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
