@@ -1,9 +1,6 @@
 package com.econovafx.model;
 
-import io.ebean.annotation.WhenCreated;
-import io.ebean.annotation.WhenModified;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
@@ -11,52 +8,49 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Entidad que representa una Moneda en el sistema según Resolución 340/2004.
- * Soporta operaciones en múltiples monedas (CUP, USD, EUR, etc.)
+ * Entity representing a Currency in the system according to Resolution 340/2004.
+ * Supports multi-currency operations (CUP, USD, EUR, etc.)
  */
 @Entity
 @Table(name = "currencies")
 public class Currency extends BaseEntity {
 
-    @Id
-    private Long id;
-
     @jakarta.persistence.Column(nullable = false, unique = true, length = 3)
-    private String code; // Código ISO: CUP, USD, EUR, etc.
+    private String code; // ISO Code: CUP, USD, EUR, etc.
 
     @jakarta.persistence.Column(nullable = false, length = 50)
-    private String name; // Nombre de la moneda
+    private String name; // Currency name
 
     @jakarta.persistence.Column(length = 10)
-    private String symbol = "$"; // Símbolo de la moneda
+    private String symbol = "$"; // Currency symbol
 
     /**
-     * Tasa de cambio respecto a la moneda base de la empresa.
-     * Ejemplo: si la base es CUP y esta es USD, rate podría ser 24.0
+     * Exchange rate relative to the company's base currency.
+     * Example: if base is CUP and this is USD, rate could be 24.0
      */
     @jakarta.persistence.Column(precision = 18, scale = 6)
     private BigDecimal exchangeRate = BigDecimal.ONE;
 
     /**
-     * Fecha de vigencia de la tasa de cambio
+     * Date when the exchange rate is valid
      */
     @jakarta.persistence.Column(name = "rate_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime rateDate;
 
     /**
-     * Indica si es la moneda base del sistema
+     * Indicates if this is the base currency of the system
      */
     @jakarta.persistence.Column(name = "is_base")
     private Boolean isBase = false;
 
     /**
-     * Estado: ACTIVE, INACTIVE
+     * Status: ACTIVE, INACTIVE
      */
     @jakarta.persistence.Column(length = 20)
     private String status = "ACTIVE";
 
     /**
-     * Número de decimales para esta moneda
+     * Number of decimal places for this currency
      */
     @jakarta.persistence.Column(name = "decimal_places")
     private Integer decimalPlaces = 2;
@@ -64,7 +58,7 @@ public class Currency extends BaseEntity {
     @Version
     private Long version;
 
-    // Constructores
+    // Constructors
     public Currency() {
     }
 
@@ -77,15 +71,7 @@ public class Currency extends BaseEntity {
         this.status = "ACTIVE";
     }
 
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // Getters and Setters
     public String getCode() {
         return code;
     }
