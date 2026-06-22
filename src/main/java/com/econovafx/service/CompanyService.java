@@ -75,7 +75,7 @@ public class CompanyService {
     @Transactional
     public void delete(Long companyId) {
         // Cerrar conexión a la BD del tenant
-        DatabaseConfig.closeTenantDatabase(companyId);
+        DatabaseConfig.closeTenantDataSource(companyId);
         
         // Eliminar registro
         companyRepository.deleteById(companyId);
@@ -107,11 +107,9 @@ public class CompanyService {
             throw new IllegalStateException("La empresa '" + company.getName() + "' no está activa");
         }
 
-        // Establecer en el contexto
+        // Establecer en el contexto - Ebean automáticamente usará el DataSource correcto
+        // vía TenantDataSourceProvider cuando se realicen operaciones de base de datos
         TenantContext.setCurrentTenant(company);
-        
-        // Inicializar/obtener la BD del tenant
-        DatabaseConfig.getOrCreateTenantDatabase(company);
         
         logger.info("Tenant seleccionado: {} ({})", company.getName(), company.getCode());
     }

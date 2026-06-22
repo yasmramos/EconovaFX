@@ -1,5 +1,9 @@
 package com.econovafx.model;
 
+import com.econovafx.domain.BaseEntity;
+import io.ebean.annotation.DbEnumValue;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,8 +11,10 @@ import java.time.LocalDateTime;
 /**
  * Entity representing a Cash Movement (Income, Expense, Transfer).
  */
-public class CashMovement {
-    
+@Entity
+@Table(name = "cash_movement")
+public class CashMovement extends BaseEntity {
+
     public enum MovementType {
         INCOME, EXPENSE, TRANSFER
     }
@@ -17,34 +23,56 @@ public class CashMovement {
         PENDING, POSTED, CANCELLED
     }
 
-    private Long id;
+    @Column(name = "document_number", nullable = false, unique = true)
     private String documentNumber;
+
+    @Column(nullable = false)
     private LocalDate date;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "movement_type", nullable = false)
     private MovementType movementType;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "source_account_id")
     private Long sourceAccountId;
+
+    @Column(name = "destination_account_id")
     private Long destinationAccountId;
+
+    @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
+
+    @Column(nullable = false, length = 3)
     private String currency;
+
+    @Column(name = "contra_account")
     private String contraAccount;
+
+    @Column(name = "cost_center")
     private String costCenter;
-    private Status status;
-    private boolean reconciled;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status = Status.PENDING;
+
+    @Column(nullable = false)
+    private Boolean reconciled = false;
+
+    @Column(name = "posted_at")
     private LocalDateTime postedAt;
+
+    @Column(name = "posted_by")
     private String postedBy;
-    private LocalDateTime createdAt;
-    private String createdBy;
-    private LocalDateTime updatedAt;
-    private String updatedBy;
 
     public CashMovement() {
+        super();
         this.status = Status.PENDING;
         this.reconciled = false;
-        this.createdAt = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
     public String getDocumentNumber() { return documentNumber; }
     public void setDocumentNumber(String documentNumber) { this.documentNumber = documentNumber; }
     public LocalDate getDate() { return date; }
@@ -67,18 +95,10 @@ public class CashMovement {
     public void setCostCenter(String costCenter) { this.costCenter = costCenter; }
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
-    public boolean isReconciled() { return reconciled; }
-    public void setReconciled(boolean reconciled) { this.reconciled = reconciled; }
+    public Boolean getReconciled() { return reconciled; }
+    public void setReconciled(Boolean reconciled) { this.reconciled = reconciled; }
     public LocalDateTime getPostedAt() { return postedAt; }
     public void setPostedAt(LocalDateTime postedAt) { this.postedAt = postedAt; }
     public String getPostedBy() { return postedBy; }
     public void setPostedBy(String postedBy) { this.postedBy = postedBy; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-    public String getUpdatedBy() { return updatedBy; }
-    public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
 }

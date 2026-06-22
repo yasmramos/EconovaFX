@@ -15,10 +15,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "companies")
-public class Company {
-
-    @Id
-    private Long id;
+public class Company extends BaseEntity {
 
     private String name;
 
@@ -69,14 +66,6 @@ public class Company {
     }
 
     // Getters y Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -155,22 +144,6 @@ public class Company {
 
     public void setVersion(Long version) {
         this.version = version;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     @Override

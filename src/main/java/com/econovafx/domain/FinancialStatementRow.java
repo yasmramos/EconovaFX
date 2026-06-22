@@ -7,7 +7,7 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(name = "financial_statement_row")
-public class FinancialStatementRow {
+public class FinancialStatementRow extends BaseEntity {
 
     public enum RowType {
         HEADER,
@@ -15,10 +15,6 @@ public class FinancialStatementRow {
         TOTAL,
         DATA
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "model_id", nullable = false)
@@ -54,9 +50,6 @@ public class FinancialStatementRow {
     private Integer indentLevel = 0;
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
     public FinancialStatementModel getModel() { return model; }
     public void setModel(FinancialStatementModel model) { this.model = model; }
 

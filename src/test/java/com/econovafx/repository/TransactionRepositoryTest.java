@@ -121,7 +121,6 @@ class TransactionRepositoryTest {
         account.setName(name);
         account.setType(type);
         account.setBalance(BigDecimal.ZERO);
-        account.setCompany(company);
         return account;
     }
     
@@ -132,7 +131,6 @@ class TransactionRepositoryTest {
         transaction.setType("INCOME");
         transaction.setDescription("Test transaction");
         transaction.setReference("REF-" + number);
-        transaction.setCompany(account.getCompany());
         return transaction;
     }
 
@@ -357,7 +355,6 @@ class TransactionRepositoryTest {
         thirdParty.setType(ThirdParty.ThirdPartyType.CUSTOMER);
         thirdParty.setEmail("test@thirdparty.com");
         thirdParty.setIsActive(true);
-        thirdParty.setCompany(account1.getCompany());
         
         // Save third party using a direct database insert since we don't have a repository in this test
         db.insert(thirdParty);
