@@ -63,6 +63,10 @@ public class FixedAssetCategory extends BaseEntity {
     public String getAssetAccount() { return assetAccount; }
     public void setAssetAccount(String assetAccount) { this.assetAccount = assetAccount; }
 
+    // Helper methods for DepreciationService compatibility
+    public String getDepreciationExpenseAccountCode() { return depreciationExpenseAccount; }
+    public String getAccumulatedDepreciationAccountCode() { return accumulatedDepreciationAccount; }
+
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 }
