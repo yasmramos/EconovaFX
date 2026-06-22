@@ -70,9 +70,6 @@ public class ExchangeRate extends BaseEntity {
     @Column(length = 20)
     private String status = "ACTIVE";
 
-    @Version
-    private Long version;
-
     public enum RateType {
         OFICIAL,      // Official rate from Central Bank
         MERCADO,      // Market rate
