@@ -27,7 +27,7 @@ public class CashMovementService {
     public CashMovement registerMovement(CashMovement movement, String currentUser) {
         validateMovement(movement);
         
-        movement.setCreatedBy(currentUser);
+        // createdBy se maneja automáticamente vía @TenantId y audit
         movement.setStatus(CashMovement.Status.PENDING);
         
         return movementRepository.save(movement);
@@ -117,7 +117,7 @@ public class CashMovementService {
         if (movement.getStatus() == CashMovement.Status.CANCELLED) {
             throw new IllegalStateException("Movement is already cancelled");
         }
-        if (movement.isReconciled()) {
+        if (movement.getReconciled()) {
             throw new IllegalStateException("Cannot cancel a reconciled movement");
         }
         
@@ -126,8 +126,7 @@ public class CashMovementService {
         }
         
         movement.setStatus(CashMovement.Status.CANCELLED);
-        movement.setUpdatedBy(currentUser);
-        movement.setUpdatedAt(LocalDateTime.now());
+        // updatedBy se maneja automáticamente vía audit
         
         return movementRepository.save(movement);
     }

@@ -1,33 +1,41 @@
 package com.econovafx.model;
 
+import com.econovafx.domain.BaseEntity;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * Entity representing a Cash Box according to Resolution 340/2004.
  */
-public class CashBox {
-    
-    private Long id;
+@Entity
+@Table(name = "cash_box")
+public class CashBox extends BaseEntity {
+
+    @Column(nullable = false, unique = true)
     private String code;
+
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false, length = 3)
     private String currency;
+
+    @Column(name = "accounting_account")
     private String accountingAccount;
-    private BigDecimal balance;
-    private boolean open;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String createdBy;
-    private String updatedBy;
+
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal balance = BigDecimal.ZERO;
+
+    @Column(nullable = false)
+    private Boolean open = true;
 
     public CashBox() {
+        super();
         this.balance = BigDecimal.ZERO;
         this.open = true;
-        this.createdAt = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
     public String getDescription() { return description; }
@@ -38,14 +46,6 @@ public class CashBox {
     public void setAccountingAccount(String accountingAccount) { this.accountingAccount = accountingAccount; }
     public BigDecimal getBalance() { return balance; }
     public void setBalance(BigDecimal balance) { this.balance = balance; }
-    public boolean isOpen() { return open; }
-    public void setOpen(boolean open) { this.open = open; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-    public String getUpdatedBy() { return updatedBy; }
-    public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
+    public Boolean getOpen() { return open; }
+    public void setOpen(Boolean open) { this.open = open; }
 }
