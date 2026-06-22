@@ -55,9 +55,6 @@ public class Currency extends BaseEntity {
     @jakarta.persistence.Column(name = "decimal_places")
     private Integer decimalPlaces = 2;
 
-    @Version
-    private Long version;
-
     // Constructors
     public Currency() {
     }
