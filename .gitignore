@@ -4,60 +4,18 @@
 *.o
 *.obj
 *.out
-build/
 target/
-
 # Dependencies
-.gradle/
-.mypy_cache/
-.pytest_cache/
-__pycache__/
-coverage/
-htmlcov/
-.dist-info/
-
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-*.swo
-
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# Generated sources
+target/generated-sources/
+# Test reports
+target/surefire-reports/
+# Coverage
+jacoco.exec
+# Maven status
+target/maven-status/
 ```

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.ui.controller.TransactionEntryController"
+      spacing="20"
+      styleClass="p-5, bg-white"
+      prefWidth="800" prefHeight="600">
+
+    <!-- Header -->
+    <Label fx:id="titleLabel" text="Nueva Transacción" styleClass="text-2xl, font-bold, text-gray-800"/>
+
+    <!-- Transaction Info -->
+    <GridPane hgap="15" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="70"/>
+        </columnConstraints>
+
+        <Label text="Fecha:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+        <DatePicker fx:id="datePicker" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="rounded-md"/>
+
+        <Label text="Tipo:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+        <ComboBox fx:id="typeComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="rounded-md"/>
+
+        <Label text="Descripción:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+        <TextField fx:id="descriptionField" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="rounded-md"/>
+
+        <Label text="Referencia:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+        <TextField fx:id="referenceField" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="rounded-md"/>
+    </GridPane>
+    
+    <!-- Entries -->
+    <VBox VBox.vgrow="ALWAYS" spacing="10">
+        <Label text="Asientos Contables" styleClass="text-lg, font-semibold, text-gray-700"/>
+
+        <TableView fx:id="entriesTable" VBox.vgrow="ALWAYS" styleClass="rounded-lg, border, border-gray-200">
+            <columns>
+                <TableColumn fx:id="colAccount" text="Cuenta" prefWidth="250"/>
+                <TableColumn fx:id="colDescription" text="Descripción" prefWidth="200"/>
+                <TableColumn fx:id="colDebit" text="Débito" prefWidth="120"/>
+                <TableColumn fx:id="colCredit" text="Crédito" prefWidth="120"/>
+                <TableColumn fx:id="colActions" text="Acciones" prefWidth="100"/>
+            </columns>
+        </TableView>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="Agregar Asiento" onAction="#addEntry" styleClass="bg-blue-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-blue-600"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox alignment="CENTER_RIGHT" spacing="5">
+                <HBox spacing="20">
+                    <HBox spacing="5">
+                        <Label text="Total Débito:" styleClass="text-sm, font-medium, text-gray-700"/>
+                        <Label fx:id="totalDebitLabel" text="0.00" styleClass="font-bold, text-lg, text-gray-800"/>
+                    </HBox>
+                    <HBox spacing="5">
+                        <Label text="Total Crédito:" styleClass="text-sm, font-medium, text-gray-700"/>
+                        <Label fx:id="totalCreditLabel" text="0.00" styleClass="font-bold, text-lg, text-gray-800"/>
+                    </HBox>
+                    <HBox spacing="5">
+                        <Label text="Diferencia:" styleClass="text-sm, font-medium, text-gray-700"/>
+                        <Label fx:id="differenceLabel" text="0.00" styleClass="font-bold, text-lg, text-gray-800"/>
+                    </HBox>
+                </HBox>
+            </VBox>
+        </HBox>
+    </VBox>
+    
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" onAction="#cancel" styleClass="bg-gray-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-gray-600"/>
+        <Button text="Guardar" onAction="#save" styleClass="bg-green-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-green-600"/>
+    </HBox>
+    
+</VBox>
