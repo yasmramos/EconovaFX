@@ -34,7 +34,7 @@ public class BankAccountRepository {
 
     public List<BankAccount> findActiveAccounts() {
         return database.values().stream()
-                .filter(BankAccount::isActive)
+                .filter(BankAccount::getActive)
                 .collect(Collectors.toList());
     }
 

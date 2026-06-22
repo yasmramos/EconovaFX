@@ -3,9 +3,9 @@ package com.econovafx.service;
 import com.econovafx.domain.AuditLog;
 import com.econovafx.domain.User;
 import com.econovafx.repository.UserRepository;
+import com.econovafx.security.PasswordService;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
-import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,11 +23,13 @@ public class UserService {
     
     private final UserRepository userRepository;
     private final AuditService auditService;
+    private final PasswordService passwordService;
     
     @Inject
-    public UserService(UserRepository userRepository, AuditService auditService) {
+    public UserService(UserRepository userRepository, AuditService auditService, PasswordService passwordService) {
         this.userRepository = userRepository;
         this.auditService = auditService;
+        this.passwordService = passwordService;
     }
     
     public Optional<User> getUserById(Long id) {
@@ -65,7 +67,7 @@ public class UserService {
             throw new IllegalArgumentException("Email already exists: " + user.getEmail());
         }
         
-        user.setPassword(hashPassword(plainPassword));
+        user.setPassword(passwordService.hashPassword(plainPassword));
         
         User saved = userRepository.save(user);
         logger.info("User created: {}", saved.getUsername());
@@ -152,7 +154,7 @@ public class UserService {
             return false;
         }
         
-        boolean success = verifyPassword(password, user.getPassword());
+        boolean success = passwordService.checkPassword(password, user.getPassword());
         
         if (success) {
             // Update last login
@@ -183,33 +185,6 @@ public class UserService {
     }
     
     /**
-     * Hash password using BCrypt with salt
-     * @param password plain text password
-     * @return hashed password
-     */
-    private String hashPassword(String password) {
-        // BCrypt.gensalt() generates a salt with default log rounds (10)
-        // Higher log rounds = more secure but slower
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-    
-    /**
-     * Verify password against hashed value
-     * @param plainPassword plain text password
-     * @param hashedPassword stored hashed password
-     * @return true if password matches
-     */
-    private boolean verifyPassword(String plainPassword, String hashedPassword) {
-        try {
-            return BCrypt.checkpw(plainPassword, hashedPassword);
-        } catch (IllegalArgumentException e) {
-            // Handle case where hashed password is not in BCrypt format
-            logger.warn("Invalid hash format for user authentication");
-            return false;
-        }
-    }
-    
-    /**
      * Change user password with audit logging
      */
     public void changePassword(Long userId, String oldPassword, String newPassword, String currentUser) {
@@ -217,7 +192,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
         
         // Verify old password
-        if (!verifyPassword(oldPassword, user.getPassword())) {
+        if (!passwordService.checkPassword(oldPassword, user.getPassword())) {
             auditService.logFailure(currentUser, AuditLog.OperationType.PASSWORD_CHANGE, "User",
                                    userId, "Change password - invalid old password", "Old password incorrect");
             throw new IllegalArgumentException("Current password is incorrect");
@@ -233,7 +208,7 @@ public class UserService {
         String oldValues = buildUserJson(user);
         
         // Update password
-        user.setPassword(hashPassword(newPassword));
+        user.setPassword(passwordService.hashPassword(newPassword));
         userRepository.update(user);
         
         // Audit log

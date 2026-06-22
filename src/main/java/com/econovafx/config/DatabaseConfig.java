@@ -3,9 +3,12 @@ package com.econovafx.config;
 import com.econovafx.domain.Company;
 import io.ebean.Database;
 import io.ebean.DatabaseBuilder;
-import io.ebean.DatabaseFactory;
+import io.ebean.config.CurrentTenantProvider;
+import io.ebean.config.TenantDataSourceProvider;
+import io.ebean.config.TenantMode;
 import io.ebean.datasource.DataSourceConfig;
 import io.ebean.datasource.DataSourceFactory;
+import io.ebean.platform.h2.H2Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +19,9 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Configuración de base de datos con soporte multi-tenant.
- * Gestiona una base de datos maestra para empresas y bases de datos separadas por tenant.
+ * Configuración de base de datos con soporte multi-tenant nativo de Ebean.
+ * Usa TenantMode.DB con CurrentTenantProvider y TenantDataSourceProvider para
+ * gestionar bases de datos separadas por tenant de forma nativa en Ebean.
  */
 public class DatabaseConfig {
 
@@ -26,14 +30,18 @@ public class DatabaseConfig {
     // Base de datos maestra (gestión de empresas)
     private static Database masterDatabase;
     
-    // Cache de bases de datos por empresa (tenant)
-    private static final ConcurrentHashMap<Long, Database> tenantDatabases = new ConcurrentHashMap<>();
+    // Base de datos multi-tenant configurada nativamente
+    private static Database tenantDatabase;
+    
+    // Cache de DataSources por empresa (tenant)
+    private static final ConcurrentHashMap<Long, DataSource> tenantDataSources = new ConcurrentHashMap<>();
 
     /**
-     * Inicializa la base de datos maestra para gestión de empresas.
+     * Inicializa la configuración multi-tenant nativa de Ebean.
      */
     public static void initialize() {
         initializeMaster();
+        initializeMultiTenant();
     }
 
     public static void initializeMaster() {
@@ -57,8 +65,7 @@ public class DatabaseConfig {
                 .addPackage("com.econovafx.domain")
                 .ddlGenerate(true)
                 .ddlRun(true)
-                .setDefaultServer(true)
-                .databasePlatform(new io.ebean.platform.h2.H2Platform());
+                .databasePlatform(new H2Platform());
             
             Database masterDb = builder.build();
             
@@ -73,13 +80,63 @@ public class DatabaseConfig {
     }
 
     /**
-     * Inicializa o recupera la base de datos de un tenant específico.
-     * @param company La empresa (tenant) para la cual inicializar la BD
-     * @return La instancia de Database para el tenant
+     * Inicializa la base de datos multi-tenant usando configuración nativa de Ebean.
+     * Configura TenantMode.DB con CurrentTenantProvider y TenantDataSourceProvider.
      */
-    public static Database getOrCreateTenantDatabase(Company company) {
-        return tenantDatabases.computeIfAbsent(company.getId(), id -> {
-            logger.info("Creating database for tenant: {} ({})", company.getName(), company.getCode());
+    public static void initializeMultiTenant() {
+        try {
+            // CurrentTenantProvider: obtiene el tenant actual del contexto
+            CurrentTenantProvider tenantProvider = () -> {
+                Company currentTenant = TenantContext.getCurrentTenant();
+                return currentTenant != null ? currentTenant.getId() : null;
+            };
+
+            // TenantDataSourceProvider: obtiene el DataSource según el tenant
+            TenantDataSourceProvider dataSourceProvider = tenantId -> {
+                if (tenantId == null) {
+                    throw new IllegalStateException("No tenant ID provided");
+                }
+                Long companyId = (Long) tenantId;
+                return getOrCreateDataSource(companyId);
+            };
+
+            DatabaseBuilder builder = Database.builder();
+            builder.name("econova-multi-tenant")
+                .loadFromProperties()
+                .setRegister(true)
+                .setDefaultServer(true)
+                .setTenantMode(TenantMode.DB)
+                .setCurrentTenantProvider(tenantProvider)
+                .setTenantDataSourceProvider(dataSourceProvider)
+                .setDatabasePlatform(new H2Platform())
+                .addPackage("com.econovafx.domain")
+                .addPackage("com.econovafx.model")
+                .ddlGenerate(true)
+                .ddlRun(true);
+            
+            tenantDatabase = builder.build();
+            
+            logger.info("Multi-tenant database initialized successfully with TenantMode.DB");
+
+        } catch (Exception e) {
+            logger.error("Failed to initialize multi-tenant database", e);
+            throw new RuntimeException("Multi-tenant database initialization failed", e);
+        }
+    }
+
+    /**
+     * Obtiene o crea un DataSource para un tenant específico.
+     * @param companyId ID de la empresa
+     * @return DataSource configurado para el tenant
+     */
+    private static DataSource getOrCreateDataSource(Long companyId) {
+        return tenantDataSources.computeIfAbsent(companyId, id -> {
+            Company company = getCompanyById(id);
+            if (company == null) {
+                throw new RuntimeException("Company not found for ID: " + id);
+            }
+            
+            logger.info("Creating DataSource for tenant: {} ({})", company.getName(), company.getCode());
             
             try {
                 DataSourceConfig dsConfig = new DataSourceConfig();
@@ -88,7 +145,7 @@ public class DatabaseConfig {
                 
                 if (company.getDatabaseUser() != null && !company.getDatabaseUser().isEmpty()) {
                     dsConfig.setUsername(company.getDatabaseUser());
-                    dsConfig.setPassword(""); // Se puede mejorar con encriptación
+                    dsConfig.setPassword("");
                 } else {
                     dsConfig.setUsername("sa");
                     dsConfig.setPassword("");
@@ -98,38 +155,36 @@ public class DatabaseConfig {
                 dsConfig.setMaxConnections(10);
 
                 DataSource dataSource = DataSourceFactory.create("econova-tenant-" + company.getCode(), dsConfig);
-
-                DatabaseBuilder builder = Database.builder();
-                builder.name("econova-tenant-" + company.getCode())
-                    .dataSource(dataSource)
-                    .addPackage("com.econovafx.domain")
-                    .addPackage("com.econovafx.model")
-                    .ddlGenerate(true)
-                    .ddlRun(true);
-                
-                Database tenantDb = builder.build();
-                    
-                logger.info("Tenant database created successfully for: {}", company.getCode());
-                return tenantDb;
+                logger.info("DataSource created successfully for: {}", company.getCode());
+                return dataSource;
 
             } catch (Exception e) {
-                logger.error("Failed to create tenant database for {}", company.getCode(), e);
-                throw new RuntimeException("Tenant database creation failed", e);
+                logger.error("Failed to create DataSource for {}", company.getCode(), e);
+                throw new RuntimeException("DataSource creation failed", e);
             }
         });
     }
 
     /**
-     * Obtiene la base de datos del tenant actual desde el contexto.
-     * @return La base de datos del tenant activo
-     * @throws IllegalStateException si no hay un tenant configurado
+     * Obtiene una empresa por su ID desde la base de datos maestra.
+     * @param companyId ID de la empresa
+     * @return La empresa o null si no existe
      */
-    public static Database getCurrentTenantDatabase() {
-        Company currentTenant = TenantContext.getCurrentTenant();
-        if (currentTenant == null) {
-            throw new IllegalStateException("No tenant configured in current context");
+    private static Company getCompanyById(Long companyId) {
+        if (masterDatabase == null) {
+            initializeMaster();
         }
-        return getOrCreateTenantDatabase(currentTenant);
+        return masterDatabase.find(Company.class, companyId);
+    }
+
+    /**
+     * Cambia el contexto al tenant especificado.
+     * Ebean automáticamente usará el DataSource correcto vía TenantDataSourceProvider.
+     * @param company La empresa a establecer como tenant activo
+     */
+    public static void switchToTenant(Company company) {
+        TenantContext.setCurrentTenant(company);
+        logger.debug("Switched to tenant: {} ({})", company.getCode(), company.getId());
     }
 
     /**
@@ -144,11 +199,22 @@ public class DatabaseConfig {
     }
 
     /**
+     * Obtiene la base de datos multi-tenant.
+     * @return La base de datos multi-tenant
+     */
+    public static Database getTenantDatabase() {
+        if (tenantDatabase == null) {
+            initializeMultiTenant();
+        }
+        return tenantDatabase;
+    }
+
+    /**
      * Obtiene el servidor de base de datos por defecto.
      * @return La base de datos por defecto
      */
     public static Database getServer() {
-        return getMasterDatabase();
+        return getTenantDatabase();
     }
 
     private static Properties loadProperties() throws IOException {
@@ -163,14 +229,13 @@ public class DatabaseConfig {
     }
 
     /**
-     * Cierra la base de datos de un tenant específico.
+     * Cierra el DataSource de un tenant específico.
      * @param companyId ID de la empresa
      */
-    public static void closeTenantDatabase(Long companyId) {
-        Database db = tenantDatabases.remove(companyId);
-        if (db != null) {
-            db.shutdown();
-            logger.info("Tenant database closed for company ID: {}", companyId);
+    public static void closeTenantDataSource(Long companyId) {
+        DataSource ds = tenantDataSources.remove(companyId);
+        if (ds != null) {
+            logger.info("DataSource closed for company ID: {}", companyId);
         }
     }
 
@@ -178,9 +243,11 @@ public class DatabaseConfig {
      * Cierra todas las conexiones de base de datos.
      */
     public static void shutdown() {
-        // Cerrar todas las bases de datos de tenants
-        tenantDatabases.values().forEach(Database::shutdown);
-        tenantDatabases.clear();
+        // Cerrar base de datos multi-tenant
+        if (tenantDatabase != null) {
+            tenantDatabase.shutdown();
+            logger.info("Multi-tenant database shutdown complete");
+        }
         
         // Cerrar base de datos maestra
         if (masterDatabase != null) {
@@ -188,6 +255,9 @@ public class DatabaseConfig {
             logger.info("Master database shutdown complete");
         }
         
-        logger.info("All databases shutdown complete");
+        // Limpiar cache de DataSources
+        tenantDataSources.clear();
+        
+        logger.info("All databases and DataSources shutdown complete");
     }
 }
