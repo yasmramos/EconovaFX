@@ -26,7 +26,7 @@ public class CashMovement extends BaseEntity {
     @Column(name = "document_number", nullable = false, unique = true)
     private String documentNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
@@ -36,10 +36,10 @@ public class CashMovement extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "source_account_id")
+    @Column(name = "source_account_id", columnDefinition = "BIGINT")
     private Long sourceAccountId;
 
-    @Column(name = "destination_account_id")
+    @Column(name = "destination_account_id", columnDefinition = "BIGINT")
     private Long destinationAccountId;
 
     @Column(nullable = false, precision = 19, scale = 4)

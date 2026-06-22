@@ -1,17 +1,12 @@
 package com.econovafx.model;
 
-import io.ebean.annotation.WhenCreated;
-import io.ebean.annotation.WhenModified;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
-import java.time.LocalDateTime;
-
 /**
- * Entidad que representa una Empresa en el sistema multi-tenant.
- * Cada empresa tiene su propia base de datos independiente.
+ * Entity representing a Company in the multi-tenant system.
+ * Each company has its own independent database.
  */
 @Entity
 @Table(name = "companies")
@@ -30,31 +25,22 @@ public class Company extends BaseEntity {
     private String email;
 
     /**
-     * Ruta o nombre de la base de datos asociada a esta empresa.
-     * Ejemplo: "jdbc:h2:./db/econova_company1" o "jdbc:postgresql://localhost/company1_db"
+     * Path or name of the database associated with this company.
+     * Example: "jdbc:h2:./db/econova_company1" or "jdbc:postgresql://localhost/company1_db"
      */
     private String databaseUrl;
 
     /**
-     * Usuario de la base de datos (si aplica)
+     * Database user (if applicable)
      */
     private String databaseUser;
 
     /**
-     * Estado de la empresa: ACTIVE, INACTIVE, SUSPENDED
+     * Company status: ACTIVE, INACTIVE, SUSPENDED
      */
     private String status;
 
-    @Version
-    private Long version;
-
-    @WhenCreated
-    private LocalDateTime createdAt;
-
-    @WhenModified
-    private LocalDateTime updatedAt;
-
-    // Constructores
+    // Constructors
     public Company() {
     }
 
@@ -65,7 +51,7 @@ public class Company extends BaseEntity {
         this.status = "ACTIVE";
     }
 
-    // Getters y Setters
+    // Getters and Setters
     public String getName() {
         return name;
     }

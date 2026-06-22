@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 /**
  * Base entity class with common fields including native Ebean multi-tenant support.
- * Usa @TenantId para soporte nativo de multi-tenancy en Ebean 17+.
+ * Uses @TenantId for native multi-tenancy support in Ebean 17+.
  */
 @MappedSuperclass
 public abstract class BaseEntity {
@@ -19,13 +19,17 @@ public abstract class BaseEntity {
     protected Long id;
 
     /**
-     * Tenant ID para aislamiento de datos usando soporte nativo de Ebean.
-     * Todas las entidades transaccionales deben tener este campo.
-     * Ebean automáticamente filtra por este valor en todas las consultas.
+     * Tenant ID for data isolation using native Ebean support.
+     * All transactional entities must have this field.
+     * Ebean automatically filters by this value in all queries.
      */
     @TenantId
-    @Column(name = "tenant_id", nullable = false, updatable = false)
+    @Column(name = "tenant_id", nullable = false, updatable = false, columnDefinition = "BIGINT")
     private Long tenantId;
+
+    @Version
+    @Column(name = "version")
+    protected Long version;
 
     @WhenCreated
     @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP")
@@ -76,5 +80,13 @@ public abstract class BaseEntity {
 
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
