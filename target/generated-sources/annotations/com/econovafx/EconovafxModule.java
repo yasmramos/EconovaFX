@@ -14,16 +14,21 @@ import com.econovafx.core.service.AccountingReportService$DI;
 import com.econovafx.repository.AccountRepository$DI;
 import com.econovafx.repository.AccountingPeriodRepository$DI;
 import com.econovafx.repository.AuditLogRepository$DI;
+import com.econovafx.repository.BillingSeriesRepository$DI;
 import com.econovafx.repository.CompanyRepository$DI;
 import com.econovafx.repository.CurrencyRepository$DI;
+import com.econovafx.repository.DepreciationRecordRepository$DI;
 import com.econovafx.repository.ExchangeRateRepository$DI;
 import com.econovafx.repository.FinancialStatementModelRepository$DI;
 import com.econovafx.repository.FinancialStatementRowRepository$DI;
+import com.econovafx.repository.FixedAssetRepository$DI;
 import com.econovafx.repository.InventoryCategoryRepository$DI;
 import com.econovafx.repository.InventoryItemRepository$DI;
 import com.econovafx.repository.InventoryMovementRepository$DI;
 import com.econovafx.repository.ReportDefinitionRepository$DI;
+import com.econovafx.repository.SalesInvoiceRepository$DI;
 import com.econovafx.repository.SystemConfigRepository$DI;
+import com.econovafx.repository.TaxRateRepository$DI;
 import com.econovafx.repository.ThirdPartyRepository$DI;
 import com.econovafx.repository.TransactionRepository$DI;
 import com.econovafx.repository.UserRepository$DI;
@@ -35,14 +40,17 @@ import com.econovafx.service.AccountingPeriodService$DI;
 import com.econovafx.service.AuditService$DI;
 import com.econovafx.service.BCCExchangeRateClient$DI;
 import com.econovafx.service.BCCExchangeRateFetcher$DI;
+import com.econovafx.service.BillingService$DI;
 import com.econovafx.service.CashMovementService$DI;
 import com.econovafx.service.CompanyService$DI;
+import com.econovafx.service.DepreciationService$DI;
 import com.econovafx.service.ExchangeRateScheduler$DI;
 import com.econovafx.service.ExchangeRateService$DI;
 import com.econovafx.service.ExportService$DI;
 import com.econovafx.service.FinancialStatementService$DI;
 import com.econovafx.service.InventoryService$DI;
 import com.econovafx.service.NotificationService$DI;
+import com.econovafx.service.SequentialNumberService$DI;
 import com.econovafx.service.SystemConfigService$DI;
 import com.econovafx.service.ThirdPartyService$DI;
 import com.econovafx.service.TransactionService$DI;
@@ -99,15 +107,20 @@ public final class EconovafxModule implements AvajeModule {
     build_service_AccountingReportService(builder);
     build_repository_AccountRepository(builder);
     build_repository_AuditLogRepository(builder);
+    build_repository_BillingSeriesRepository(builder);
     build_repository_CurrencyRepository(builder);
+    build_repository_DepreciationRecordRepository(builder);
     build_repository_ExchangeRateRepository(builder);
     build_repository_FinancialStatementModelRepository(builder);
     build_repository_FinancialStatementRowRepository(builder);
+    build_repository_FixedAssetRepository(builder);
     build_repository_InventoryCategoryRepository(builder);
     build_repository_InventoryItemRepository(builder);
     build_repository_InventoryMovementRepository(builder);
     build_repository_ReportDefinitionRepository(builder);
+    build_repository_SalesInvoiceRepository(builder);
     build_repository_SystemConfigRepository(builder);
+    build_repository_TaxRateRepository(builder);
     build_repository_ThirdPartyRepository(builder);
     build_repository_TransactionRepository(builder);
     build_repository_UserRepository(builder);
@@ -116,10 +129,13 @@ public final class EconovafxModule implements AvajeModule {
     build_service_AuditService(builder);
     build_service_ExchangeRateService(builder);
     build_service_FinancialStatementService(builder);
+    build_service_SequentialNumberService(builder);
     build_service_SystemConfigService(builder);
     build_service_ThirdPartyService(builder);
     build_service_TransactionService(builder);
     build_service_UserService(builder);
+    build_service_BillingService(builder);
+    build_service_DepreciationService(builder);
     build_service_ExchangeRateScheduler(builder);
   }
 
@@ -131,16 +147,21 @@ public final class EconovafxModule implements AvajeModule {
       "com.econovafx.repository.AccountRepository",
       "com.econovafx.repository.AccountingPeriodRepository",
       "com.econovafx.repository.AuditLogRepository",
+      "com.econovafx.repository.BillingSeriesRepository",
       "com.econovafx.repository.CompanyRepository",
       "com.econovafx.repository.CurrencyRepository",
+      "com.econovafx.repository.DepreciationRecordRepository",
       "com.econovafx.repository.ExchangeRateRepository",
       "com.econovafx.repository.FinancialStatementModelRepository",
       "com.econovafx.repository.FinancialStatementRowRepository",
+      "com.econovafx.repository.FixedAssetRepository",
       "com.econovafx.repository.InventoryCategoryRepository",
       "com.econovafx.repository.InventoryItemRepository",
       "com.econovafx.repository.InventoryMovementRepository",
       "com.econovafx.repository.ReportDefinitionRepository",
+      "com.econovafx.repository.SalesInvoiceRepository",
       "com.econovafx.repository.SystemConfigRepository",
+      "com.econovafx.repository.TaxRateRepository",
       "com.econovafx.repository.ThirdPartyRepository",
       "com.econovafx.repository.TransactionRepository",
       "com.econovafx.repository.UserRepository",
@@ -152,14 +173,17 @@ public final class EconovafxModule implements AvajeModule {
       "com.econovafx.service.AuditService",
       "com.econovafx.service.BCCExchangeRateClient",
       "com.econovafx.service.BCCExchangeRateFetcher",
+      "com.econovafx.service.BillingService",
       "com.econovafx.service.CashMovementService",
       "com.econovafx.service.CompanyService",
+      "com.econovafx.service.DepreciationService",
       "com.econovafx.service.ExchangeRateScheduler",
       "com.econovafx.service.ExchangeRateService",
       "com.econovafx.service.ExportService",
       "com.econovafx.service.FinancialStatementService",
       "com.econovafx.service.InventoryService",
       "com.econovafx.service.NotificationService",
+      "com.econovafx.service.SequentialNumberService",
       "com.econovafx.service.SystemConfigService",
       "com.econovafx.service.ThirdPartyService",
       "com.econovafx.service.TransactionService",
@@ -178,16 +202,21 @@ public final class EconovafxModule implements AvajeModule {
       com.econovafx.repository.AccountRepository.class,
       com.econovafx.repository.AccountingPeriodRepository.class,
       com.econovafx.repository.AuditLogRepository.class,
+      com.econovafx.repository.BillingSeriesRepository.class,
       com.econovafx.repository.CompanyRepository.class,
       com.econovafx.repository.CurrencyRepository.class,
+      com.econovafx.repository.DepreciationRecordRepository.class,
       com.econovafx.repository.ExchangeRateRepository.class,
       com.econovafx.repository.FinancialStatementModelRepository.class,
       com.econovafx.repository.FinancialStatementRowRepository.class,
+      com.econovafx.repository.FixedAssetRepository.class,
       com.econovafx.repository.InventoryCategoryRepository.class,
       com.econovafx.repository.InventoryItemRepository.class,
       com.econovafx.repository.InventoryMovementRepository.class,
       com.econovafx.repository.ReportDefinitionRepository.class,
+      com.econovafx.repository.SalesInvoiceRepository.class,
       com.econovafx.repository.SystemConfigRepository.class,
+      com.econovafx.repository.TaxRateRepository.class,
       com.econovafx.repository.ThirdPartyRepository.class,
       com.econovafx.repository.TransactionRepository.class,
       com.econovafx.repository.UserRepository.class,
@@ -199,14 +228,17 @@ public final class EconovafxModule implements AvajeModule {
       com.econovafx.service.AuditService.class,
       com.econovafx.service.BCCExchangeRateClient.class,
       com.econovafx.service.BCCExchangeRateFetcher.class,
+      com.econovafx.service.BillingService.class,
       com.econovafx.service.CashMovementService.class,
       com.econovafx.service.CompanyService.class,
+      com.econovafx.service.DepreciationService.class,
       com.econovafx.service.ExchangeRateScheduler.class,
       com.econovafx.service.ExchangeRateService.class,
       com.econovafx.service.ExportService.class,
       com.econovafx.service.FinancialStatementService.class,
       com.econovafx.service.InventoryService.class,
       com.econovafx.service.NotificationService.class,
+      com.econovafx.service.SequentialNumberService.class,
       com.econovafx.service.SystemConfigService.class,
       com.econovafx.service.ThirdPartyService.class,
       com.econovafx.service.TransactionService.class,
@@ -353,11 +385,27 @@ public final class EconovafxModule implements AvajeModule {
   }
 
   @DependencyMeta(
+      type = "com.econovafx.repository.BillingSeriesRepository",
+      provides = {"com.econovafx.repository.BillingSeriesRepository"},
+      dependsOn = {"io.ebean.Database"})
+  public static void build_repository_BillingSeriesRepository(Builder builder) {
+    BillingSeriesRepository$DI.build(builder);
+  }
+
+  @DependencyMeta(
       type = "com.econovafx.repository.CurrencyRepository",
       provides = {"com.econovafx.repository.CurrencyRepository"},
       dependsOn = {"io.ebean.Database"})
   public static void build_repository_CurrencyRepository(Builder builder) {
     CurrencyRepository$DI.build(builder);
+  }
+
+  @DependencyMeta(
+      type = "com.econovafx.repository.DepreciationRecordRepository",
+      provides = {"com.econovafx.repository.DepreciationRecordRepository"},
+      dependsOn = {"io.ebean.Database"})
+  public static void build_repository_DepreciationRecordRepository(Builder builder) {
+    DepreciationRecordRepository$DI.build(builder);
   }
 
   @DependencyMeta(
@@ -382,6 +430,14 @@ public final class EconovafxModule implements AvajeModule {
       dependsOn = {"io.ebean.Database"})
   public static void build_repository_FinancialStatementRowRepository(Builder builder) {
     FinancialStatementRowRepository$DI.build(builder);
+  }
+
+  @DependencyMeta(
+      type = "com.econovafx.repository.FixedAssetRepository",
+      provides = {"com.econovafx.repository.FixedAssetRepository"},
+      dependsOn = {"io.ebean.Database"})
+  public static void build_repository_FixedAssetRepository(Builder builder) {
+    FixedAssetRepository$DI.build(builder);
   }
 
   @DependencyMeta(
@@ -417,11 +473,27 @@ public final class EconovafxModule implements AvajeModule {
   }
 
   @DependencyMeta(
+      type = "com.econovafx.repository.SalesInvoiceRepository",
+      provides = {"com.econovafx.repository.SalesInvoiceRepository"},
+      dependsOn = {"io.ebean.Database"})
+  public static void build_repository_SalesInvoiceRepository(Builder builder) {
+    SalesInvoiceRepository$DI.build(builder);
+  }
+
+  @DependencyMeta(
       type = "com.econovafx.repository.SystemConfigRepository",
       provides = {"com.econovafx.repository.SystemConfigRepository"},
       dependsOn = {"io.ebean.Database"})
   public static void build_repository_SystemConfigRepository(Builder builder) {
     SystemConfigRepository$DI.build(builder);
+  }
+
+  @DependencyMeta(
+      type = "com.econovafx.repository.TaxRateRepository",
+      provides = {"com.econovafx.repository.TaxRateRepository"},
+      dependsOn = {"io.ebean.Database"})
+  public static void build_repository_TaxRateRepository(Builder builder) {
+    TaxRateRepository$DI.build(builder);
   }
 
   @DependencyMeta(
@@ -497,6 +569,14 @@ public final class EconovafxModule implements AvajeModule {
   }
 
   @DependencyMeta(
+      type = "com.econovafx.service.SequentialNumberService",
+      provides = {"com.econovafx.service.SequentialNumberService"},
+      dependsOn = {"com.econovafx.repository.BillingSeriesRepository"})
+  public static void build_service_SequentialNumberService(Builder builder) {
+    SequentialNumberService$DI.build(builder);
+  }
+
+  @DependencyMeta(
       type = "com.econovafx.service.SystemConfigService",
       provides = {"com.econovafx.service.SystemConfigService"},
       dependsOn = {"com.econovafx.repository.SystemConfigRepository"})
@@ -534,6 +614,37 @@ public final class EconovafxModule implements AvajeModule {
       })
   public static void build_service_UserService(Builder builder) {
     UserService$DI.build(builder);
+  }
+
+  @DependencyMeta(
+      type = "com.econovafx.service.BillingService",
+      provides = {"com.econovafx.service.BillingService"},
+      dependsOn = {
+        "com.econovafx.repository.SalesInvoiceRepository",
+        "com.econovafx.repository.BillingSeriesRepository",
+        "com.econovafx.service.SequentialNumberService",
+        "com.econovafx.service.TransactionService",
+        "com.econovafx.service.InventoryService",
+        "com.econovafx.repository.AccountRepository",
+        "com.econovafx.repository.TaxRateRepository",
+        "com.econovafx.service.AuditService"
+      })
+  public static void build_service_BillingService(Builder builder) {
+    BillingService$DI.build(builder);
+  }
+
+  @DependencyMeta(
+      type = "com.econovafx.service.DepreciationService",
+      provides = {"com.econovafx.service.DepreciationService"},
+      dependsOn = {
+        "com.econovafx.repository.FixedAssetRepository",
+        "com.econovafx.repository.DepreciationRecordRepository",
+        "com.econovafx.service.TransactionService",
+        "com.econovafx.repository.AccountRepository",
+        "com.econovafx.service.AuditService"
+      })
+  public static void build_service_DepreciationService(Builder builder) {
+    DepreciationService$DI.build(builder);
   }
 
   @DependencyMeta(
