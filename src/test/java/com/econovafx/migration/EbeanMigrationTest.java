@@ -2,14 +2,11 @@ package com.econovafx.migration;
 
 import io.ebean.DB;
 import io.ebean.Database;
-import io.ebean.annotation.TxIsolation;
-import io.ebean.annotation.TxType;
 import io.ebean.test.LoggedSql;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Pruebas para verificar la correcta ejecución de las migraciones de Ebean.
@@ -22,6 +19,15 @@ public class EbeanMigrationTest {
 
     @BeforeAll
     public static void initDB() {
+        // Inicializar base de datos para tests
+        System.setProperty("ebean.datasource.default.driver", "org.h2.Driver");
+        System.setProperty("ebean.datasource.default.url", "jdbc:h2:mem:test_ebean_migrations;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
+        System.setProperty("ebean.datasource.default.username", "sa");
+        System.setProperty("ebean.datasource.default.password", "");
+        System.setProperty("ebean.migration.auto", "true");
+        System.setProperty("ebean.migration.run", "true");
+        System.setProperty("ebean.migration.generate", "false");
+        
         db = DB.getDefault();
         assertNotNull(db, "La base de datos por defecto no debería ser nula");
     }
