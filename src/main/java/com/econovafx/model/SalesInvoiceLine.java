@@ -21,6 +21,10 @@ public class SalesInvoiceLine extends BaseEntity {
     @Column(name = "product_code", length = 50)
     private String productCode;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private InventoryItem item;
+
     @Column(nullable = false, length = 255)
     private String description;
 
@@ -58,6 +62,9 @@ public class SalesInvoiceLine extends BaseEntity {
 
     public String getProductCode() { return productCode; }
     public void setProductCode(String productCode) { this.productCode = productCode; }
+
+    public InventoryItem getItem() { return item; }
+    public void setItem(InventoryItem item) { this.item = item; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
