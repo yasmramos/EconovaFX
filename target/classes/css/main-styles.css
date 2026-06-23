@@ -1,0 +1,154 @@
+/* =============================================================================
+ * MAIN APPLICATION STYLES - EconoNova FX
+ * ============================================================================= */
+
+/* Root styles */
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", "Arial", sans-serif;
+    -fx-base: #f9fafb;
+}
+
+/* Background colors */
+.bg-gray-50 {
+    -fx-background-color: #f9fafb;
+}
+
+.bg-slate-800 {
+    -fx-background-color: #1e293b;
+}
+
+/* Padding utilities */
+.p-6 {
+    -fx-padding: 24px;
+}
+
+.pb-2 {
+    -fx-padding: 0 0 8px 0;
+}
+
+.p-4 {
+    -fx-padding: 16px;
+}
+
+/* Margin utilities */
+.mt-1 {
+    -fx-margin: 4px 0 0 0;
+}
+
+/* Text styles */
+.text-white {
+    -fx-text-fill: white;
+}
+
+.text-slate-400 {
+    -fx-text-fill: #94a3b8;
+}
+
+.text-gray-500 {
+    -fx-text-fill: #6b7280;
+}
+
+.text-xl {
+    -fx-font-size: 20px;
+}
+
+.text-xs {
+    -fx-font-size: 11px;
+}
+
+.font-bold {
+    -fx-font-weight: 700;
+}
+
+.font-medium {
+    -fx-font-weight: 500;
+}
+
+/* Flexbox-like behavior */
+.grow {
+    -fx-grow: ALWAYS;
+}
+
+/* Ensure proper layering in BorderPane */
+.border-pane {
+    -fx-background-color: transparent;
+}
+
+/* StackPane for content area */
+.stack-pane {
+    -fx-background-color: #f9fafb;
+}
+
+/* Ensure VBox fills available space */
+.vbox {
+    -fx-fill-width: true;
+}
+
+/* HBox should fill height */
+.hbox {
+    -fx-fill-height: true;
+}
+
+/* ScrollPane styling */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #f9fafb;
+}
+
+/* Button base styles */
+.button {
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 1);
+}
+
+/* Label base styles */
+.label {
+    -fx-wrap-text: false;
+}
+
+/* Separator */
+.separator {
+    -fx-padding: 1px 0;
+}
+
+.separator > .line {
+    -fx-background-color: #e5e7eb;
+}
+
+/* Ensure content area expands properly */
+.content-area {
+    -fx-background-color: #f9fafb;
+    -fx-min-width: 600;
+    -fx-min-height: 400;
+}
+
+/* Sidebar should not overlap with content */
+.sidebar {
+    -fx-background-color: #1e293b;
+    -fx-pref-width: 260;
+    -fx-max-width: 260;
+    -fx-min-width: 260;
+}
+
+/* Header should be on top */
+.header {
+    -fx-background-color: linear-gradient(to right, #1e40af, #1e3a8a);
+    -fx-min-height: 48px;
+    -fx-pref-height: 48px;
+}
+
+/* Status bar at bottom */
+.status-bar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1px 0 0 0;
+    -fx-min-height: 28px;
+    -fx-pref-height: 28px;
+}

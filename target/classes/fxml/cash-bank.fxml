@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.ui.controller.CashBankController"
+      spacing="16"
+      styleClass="bg-gray-50, p-6"
+      fx:id="rootVBox">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label text="💵 Cash &amp; Bank Management" styleClass="text-xl, font-bold, text-slate-800"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnNewMovement" text="➕ New Movement" onAction="#handleNewMovement" 
+                styleClass="btn, btn-primary"/>
+        <Button fx:id="btnReconciliation" text="📋 Bank Reconciliation" onAction="#handleReconciliation" 
+                styleClass="btn, btn-secondary" layoutX="200" layoutY="10"/>
+    </HBox>
+
+    <!-- Tabs for different views -->
+    <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        
+        <!-- Bank Accounts Tab -->
+        <Tab text="🏦 Bank Accounts" fx:id="tabBankAccounts">
+            <VBox spacing="12" styleClass="p-4">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <TextField fx:id="txtSearchBank" promptText="Search bank account..." 
+                               HBox.hgrow="ALWAYS" onKeyTyped="#handleSearchBank"/>
+                    <Button text="🔍 Search" onAction="#handleSearchBank"/>
+                    <Button text="➕ Add Bank" onAction="#handleAddBank" styleClass="btn, btn-primary"/>
+                </HBox>
+                
+                <TableView fx:id="tblBankAccounts" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colBankCode" text="Code" prefWidth="100"/>
+                        <TableColumn fx:id="colBankName" text="Account Name" prefWidth="200"/>
+                        <TableColumn fx:id="colBankNumber" text="Account Number" prefWidth="150"/>
+                        <TableColumn fx:id="colBankCurrency" text="Currency" prefWidth="80"/>
+                        <TableColumn fx:id="colBankBalance" text="Balance" prefWidth="120"/>
+                        <TableColumn fx:id="colBankStatus" text="Status" prefWidth="100"/>
+                        <TableColumn fx:id="colBankActions" text="Actions" prefWidth="150"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- Cash Boxes Tab -->
+        <Tab text="📦 Cash Boxes" fx:id="tabCashBoxes">
+            <VBox spacing="12" styleClass="p-4">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <TextField fx:id="txtSearchCash" promptText="Search cash box..." 
+                               HBox.hgrow="ALWAYS" onKeyTyped="#handleSearchCash"/>
+                    <Button text="🔍 Search" onAction="#handleSearchCash"/>
+                    <Button text="➕ Add Cash Box" onAction="#handleAddCashBox" styleClass="btn, btn-primary"/>
+                </HBox>
+                
+                <TableView fx:id="tblCashBoxes" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colCashCode" text="Code" prefWidth="100"/>
+                        <TableColumn fx:id="colCashName" text="Box Name" prefWidth="200"/>
+                        <TableColumn fx:id="colCashLocation" text="Location" prefWidth="150"/>
+                        <TableColumn fx:id="colCashCurrency" text="Currency" prefWidth="80"/>
+                        <TableColumn fx:id="colCashBalance" text="Balance" prefWidth="120"/>
+                        <TableColumn fx:id="colCashStatus" text="Status" prefWidth="100"/>
+                        <TableColumn fx:id="colCashActions" text="Actions" prefWidth="150"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- Movements Tab -->
+        <Tab text="📝 Movements" fx:id="tabMovements">
+            <VBox spacing="12" styleClass="p-4">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <TextField fx:id="txtSearchMovement" promptText="Search movement..." 
+                               HBox.hgrow="ALWAYS" onKeyTyped="#handleSearchMovement"/>
+                    <DatePicker fx:id="dpMovementFrom" promptText="From Date"/>
+                    <DatePicker fx:id="dpMovementTo" promptText="To Date"/>
+                    <ComboBox fx:id="cbMovementType" promptText="All Types" 
+                              items="${FXCollections.observableArrayList('ALL', 'INCOME', 'EXPENSE', 'TRANSFER')}"/>
+                    <Button text="🔍 Filter" onAction="#handleFilterMovements"/>
+                </HBox>
+                
+                <TableView fx:id="tblMovements" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colMovNumber" text="Number" prefWidth="120"/>
+                        <TableColumn fx:id="colMovDate" text="Date" prefWidth="100"/>
+                        <TableColumn fx:id="colMovType" text="Type" prefWidth="100"/>
+                        <TableColumn fx:id="colMovSource" text="Source" prefWidth="150"/>
+                        <TableColumn fx:id="colMovDescription" text="Description" prefWidth="250"/>
+                        <TableColumn fx:id="colMovAmount" text="Amount" prefWidth="120"/>
+                        <TableColumn fx:id="colMovStatus" text="Status" prefWidth="100"/>
+                        <TableColumn fx:id="colMovActions" text="Actions" prefWidth="150"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- Reconciliation Tab -->
+        <Tab text="🔄 Reconciliation" fx:id="tabReconciliation">
+            <VBox spacing="12" styleClass="p-4">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Bank Account:"/>
+                    <ComboBox fx:id="cbReconciliationBank" promptText="Select Bank Account" HBox.hgrow="ALWAYS"/>
+                    <Label text="From:"/>
+                    <DatePicker fx:id="dpReconciliationFrom"/>
+                    <Label text="To:"/>
+                    <DatePicker fx:id="dpReconciliationTo"/>
+                    <Button text="📊 Start Reconciliation" onAction="#handleStartReconciliation" 
+                            styleClass="btn, btn-primary"/>
+                </HBox>
+                
+                <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
+                    <!-- System Items -->
+                    <VBox spacing="8" styleClass="p-2">
+                        <Label text="📌 System Items" styleClass="font-bold, text-slate-700"/>
+                        <TableView fx:id="tblSystemItems" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colSysItemDate" text="Date" prefWidth="100"/>
+                                <TableColumn fx:id="colSysItemNumber" text="Number" prefWidth="100"/>
+                                <TableColumn fx:id="colSysItemDescription" text="Description" prefWidth="200"/>
+                                <TableColumn fx:id="colSysItemAmount" text="Amount" prefWidth="120"/>
+                                <TableColumn fx:id="colSysItemSelect" text="Select" prefWidth="80"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                    
+                    <!-- Bank Items -->
+                    <VBox spacing="8" styleClass="p-2">
+                        <Label text="🏦 Bank Statement Items" styleClass="font-bold, text-slate-700"/>
+                        <TableView fx:id="tblBankItems" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colBankItemDate" text="Date" prefWidth="100"/>
+                                <TableColumn fx:id="colBankItemNumber" text="Number" prefWidth="100"/>
+                                <TableColumn fx:id="colBankItemDescription" text="Description" prefWidth="200"/>
+                                <TableColumn fx:id="colBankItemAmount" text="Amount" prefWidth="120"/>
+                                <TableColumn fx:id="colBankItemSelect" text="Select" prefWidth="80"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </SplitPane>
+                
+                <!-- Reconciliation Summary -->
+                <TitledPane text="📊 Reconciliation Summary" expanded="true">
+                    <GridPane hgap="16" vgap="8">
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                        
+                        <Label text="System Balance:" GridPane.columnIndex="0"/>
+                        <Label fx:id="lblSystemBalance" text="0.00" GridPane.columnIndex="1" 
+                               styleClass="font-bold"/>
+                        
+                        <Label text="Bank Balance:" GridPane.columnIndex="2"/>
+                        <Label fx:id="lblBankBalance" text="0.00" GridPane.columnIndex="3" 
+                               styleClass="font-bold"/>
+                        
+                        <Label text="Difference:" GridPane.rowIndex="1"/>
+                        <Label fx:id="lblDifference" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" 
+                               styleClass="font-bold"/>
+                        
+                        <Label text="Status:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                        <Label fx:id="lblReconciliationStatus" text="In Progress" 
+                               GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                        
+                        <HBox spacing="8" GridPane.columnSpan="4" GridPane.rowIndex="2" 
+                              alignment="CENTER_RIGHT">
+                            <Button text="💾 Save" onAction="#handleSaveReconciliation" 
+                                    styleClass="btn, btn-primary"/>
+                            <Button text="✅ Post" onAction="#handlePostReconciliation" 
+                                    styleClass="btn, btn-success"/>
+                        </HBox>
+                    </GridPane>
+                </TitledPane>
+            </VBox>
+        </Tab>
+        
+    </TabPane>
+
+</VBox>
