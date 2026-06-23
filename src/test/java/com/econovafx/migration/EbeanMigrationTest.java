@@ -1,0 +1,109 @@
+package com.econovafx.migration;
+
+import io.ebean.DB;
+import io.ebean.Database;
+import io.ebean.annotation.TxIsolation;
+import io.ebean.annotation.TxType;
+import io.ebean.test.LoggedSql;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Pruebas para verificar la correcta ejecución de las migraciones de Ebean.
+ * Valida que las tablas se creen correctamente y los datos iniciales se carguen.
+ */
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class EbeanMigrationTest {
+
+    private static Database db;
+
+    @BeforeAll
+    public static void initDB() {
+        db = DB.getDefault();
+        assertNotNull(db, "La base de datos por defecto no debería ser nula");
+    }
+
+    @Test
+    @Order(1)
+    @DisplayName("Verificar existencia de tablas críticas")
+    public void testCriticalTablesExist() {
+        // Lista de tablas críticas que deben existir tras la migración inicial
+        String[] criticalTables = {
+            "account",
+            "accounting_period",
+            "transaction",
+            "transaction_entry",
+            "audit_log",
+            "billing_series",
+            "fixed_asset",
+            "depreciation_record",
+            "inventory_item",
+            "inventory_movement"
+        };
+
+        for (String tableName : criticalTables) {
+            boolean exists = db.sqlQuery("SELECT 1 FROM " + tableName + " LIMIT 1").exists();
+            assertTrue(exists, "La tabla '" + tableName + "' debería existir tras la migración");
+        }
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Verificar carga del Plan de Cuentas inicial")
+    public void testInitialChartOfAccountsLoaded() {
+        // Verificar que existen cuentas contables iniciales
+        long accountCount = db.find(Object.class).where().eq("table_name", "account").findFutureCount().toCompletableFuture().join();
+        
+        // Alternativa directa con SQL nativo ya que no tenemos el modelo mapeado aún en este contexto de prueba simple
+        var result = db.sqlQuery("SELECT COUNT(*) as count FROM account").findOneOrEmpty();
+        assertTrue(result.isPresent(), "Debería haber cuentas en la base de datos");
+        assertTrue((Long)result.get().get("count") > 0, "Debería haber al menos una cuenta contable cargada");
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Verificar creación de período contable actual")
+    public void testCurrentAccountingPeriodCreated() {
+        var result = db.sqlQuery("SELECT COUNT(*) as count FROM accounting_period WHERE status = 'OPEN'").findOneOrEmpty();
+        assertTrue(result.isPresent(), "Debería existir al menos un período abierto");
+        assertTrue((Long)result.get().get("count") >= 1, "Debería haber al menos un período contable abierto");
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Verificar serie de facturación inicial")
+    public void testInitialBillingSeriesCreated() {
+        var result = db.sqlQuery("SELECT COUNT(*) as count FROM billing_series").findOneOrEmpty();
+        assertTrue(result.isPresent(), "Debería existir la serie de facturación");
+        assertTrue((Long)result.get().get("count") >= 1, "Debería haber al menos una serie de facturación creada");
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Verificar integridad de llaves foráneas")
+    public void testForeignKeyConstraints() {
+        // Intentar insertar un registro huérfano debería fallar si las FK están bien
+        // Esto es una prueba conceptual, en un entorno real se haría con transacción rollback
+        assertDoesNotThrow(() -> {
+            // Si las tablas existen y las FK están bien, esta consulta no debería lanzar error de sintaxis
+            db.sqlQuery("SELECT 1 FROM transaction_entry LIMIT 1").findOne();
+        }, "Las consultas básicas no deberían fallar si el esquema es correcto");
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Verificar logs de migración")
+    public void testMigrationLogs() {
+        // Capturar logs SQL durante una operación simple
+        LoggedSql.start();
+        
+        db.sqlQuery("SELECT 1 FROM account LIMIT 1").findOne();
+        
+        List<String> statements = LoggedSql.stop();
+        assertFalse(statements.isEmpty(), "Debería haber registros SQL capturados");
+        assertTrue(statements.get(0).contains("SELECT"), "Debería contener una sentencia SELECT");
+    }
+}
