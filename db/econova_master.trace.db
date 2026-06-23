@@ -922,3 +922,276 @@ create table accounts (
   constraint uq_accounts_code unique (code),
   constraint pk_accounts primary key (id)
 ) [42001-224]
+2026-06-22 12:10:11.353711Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-06-22 12:10:11.412997Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-06-22 12:10:11.455279Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-06-22 12:10:11.511509Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-06-22 12:10:11.534488Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-06-22 12:10:11.571436Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-06-22 12:10:11.573538Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-06-22 12:10:11.591597Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-06-22 12:10:11.612453Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-06-22 12:10:11.614580Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-06-22 12:10:11.616237Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-06-22 12:10:11.617269Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-06-22 12:10:11.632785Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-06-22 12:10:11.635569Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-06-22 12:10:11.651870Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-06-22 12:10:11.672309Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-06-22 12:10:11.691247Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-06-22 12:10:11.713504Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-06-22 12:10:11.734206Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-06-22 12:10:11.735115Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-06-22 12:10:11.735673Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-06-22 12:10:11.736224Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-06-22 12:10:11.736807Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-06-22 12:10:11.737366Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-06-22 12:10:11.854120Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table accounts (\000a  id                            bigint generated by default as identity not null,\000a  tenant_id                     bigint not null,\000a  is_active                     boolean,\000a  code                          varchar(255) not null,\000a  name                          varchar(255) not null,\000a  type                          varchar(255) not null,\000a  balance                       decimal(19,4),\000a  description                   varchar(500),\000a  parent_account_id             bigint,\000a  version                       bigint[*](255) not null,\000a  created_at                    timestamp not null,\000a  updated_at                    timestamp not null,\000a  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),\000a  constraint uq_accounts_code unique (code),\000a  constraint pk_accounts primary key (id)\000a)"; expected "ARRAY, INVISIBLE, VISIBLE, NOT NULL, DEFAULT, GENERATED, ON UPDATE, NOT NULL, DEFAULT ON NULL, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, COMMENT, PRIMARY KEY, UNIQUE, NOT NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint(255) not null,
+  created_at                    timestamp not null,
+  updated_at                    timestamp not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [42001-224]
+2026-06-22 12:20:28.675951Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-06-22 12:20:28.692771Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-06-22 12:20:28.693984Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-06-22 12:20:28.695200Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-06-22 12:20:28.712113Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-06-22 12:20:28.713937Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-06-22 12:20:28.714767Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-06-22 12:20:28.715553Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-06-22 12:20:28.716483Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-06-22 12:20:28.717403Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-06-22 12:20:28.731980Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-06-22 12:20:28.732965Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-06-22 12:20:28.751412Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-06-22 12:20:28.753311Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-06-22 12:20:28.756114Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-06-22 12:20:28.771540Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-06-22 12:20:28.773280Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-06-22 12:20:28.775549Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-06-22 12:20:28.793519Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-06-22 12:20:28.795011Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-06-22 12:20:28.795548Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-06-22 12:20:28.796384Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-06-22 12:20:28.797492Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-06-22 12:20:28.812470Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-06-22 12:20:28.975608Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table accounts (\000a  id                            bigint generated by default as identity not null,\000a  tenant_id                     bigint not null,\000a  is_active                     boolean,\000a  code                          varchar(255) not null,\000a  name                          varchar(255) not null,\000a  type                          varchar(255) not null,\000a  balance                       decimal(19,4),\000a  description                   varchar(500),\000a  parent_account_id             bigint,\000a  version                       bigint[*](255) not null,\000a  created_at                    timestamp not null,\000a  updated_at                    timestamp not null,\000a  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),\000a  constraint uq_accounts_code unique (code),\000a  constraint pk_accounts primary key (id)\000a)"; expected "ARRAY, INVISIBLE, VISIBLE, NOT NULL, DEFAULT, GENERATED, ON UPDATE, NOT NULL, DEFAULT ON NULL, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, COMMENT, PRIMARY KEY, UNIQUE, NOT NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint(255) not null,
+  created_at                    timestamp not null,
+  updated_at                    timestamp not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [42001-224]
+2026-06-22 12:27:30.055446Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-06-22 12:27:30.057336Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-06-22 12:27:30.072789Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-06-22 12:27:30.073781Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-06-22 12:27:30.074374Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-06-22 12:27:30.074963Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-06-22 12:27:30.075480Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-06-22 12:27:30.076044Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-06-22 12:27:30.076550Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-06-22 12:27:30.077092Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-06-22 12:27:30.077600Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-06-22 12:27:30.091980Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-06-22 12:27:30.092804Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-06-22 12:27:30.093366Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-06-22 12:27:30.111554Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-06-22 12:27:30.112480Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-06-22 12:27:30.113194Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-06-22 12:27:30.131349Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-06-22 12:27:30.132527Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-06-22 12:27:30.133242Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-06-22 12:27:30.151330Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-06-22 12:27:30.152283Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-06-22 12:27:30.153219Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-06-22 12:27:30.153851Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-06-22 12:27:30.233104Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table accounts (\000a  id                            bigint generated by default as identity not null,\000a  tenant_id                     bigint not null,\000a  is_active                     boolean,\000a  code                          varchar(255) not null,\000a  name                          varchar(255) not null,\000a  type                          varchar(255) not null,\000a  balance                       decimal(19,4),\000a  description                   varchar(500),\000a  parent_account_id             bigint,\000a  version                       bigint[*](255) not null,\000a  created_at                    timestamp not null,\000a  updated_at                    timestamp not null,\000a  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),\000a  constraint uq_accounts_code unique (code),\000a  constraint pk_accounts primary key (id)\000a)"; expected "ARRAY, INVISIBLE, VISIBLE, NOT NULL, DEFAULT, GENERATED, ON UPDATE, NOT NULL, DEFAULT ON NULL, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, COMMENT, PRIMARY KEY, UNIQUE, NOT NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint(255) not null,
+  created_at                    timestamp not null,
+  updated_at                    timestamp not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [42001-224]
