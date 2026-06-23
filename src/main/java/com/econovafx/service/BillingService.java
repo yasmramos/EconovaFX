@@ -196,15 +196,11 @@ public class BillingService {
         BigDecimal taxAmount = invoice.getTaxAmount();
 
         // Obtener cuentas del cliente (cuenta por cobrar)
-        String receivableAccountCode = customer.getAccountCode();
-        if (receivableAccountCode == null || receivableAccountCode.trim().isEmpty()) {
+        Account receivableAccount = customer.getAccount();
+        if (receivableAccount == null) {
             throw new IllegalArgumentException(
                 "El cliente debe tener configurada su cuenta contable: " + customer.getName());
         }
-
-        Account receivableAccount = accountRepository.findByCode(receivableAccountCode)
-                .orElseThrow(() -> new IllegalArgumentException(
-                    "Cuenta por cobrar no encontrada: " + receivableAccountCode));
 
         // Cuenta de ingresos por ventas (configurable por defecto o por serie)
         String revenueAccountCode = "401-001"; // Configurable
