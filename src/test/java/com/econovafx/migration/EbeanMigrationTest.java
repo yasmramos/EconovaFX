@@ -45,8 +45,12 @@ public class EbeanMigrationTest {
         };
 
         for (String tableName : criticalTables) {
-            boolean exists = db.sqlQuery("SELECT 1 FROM " + tableName + " LIMIT 1").exists();
-            assertTrue(exists, "La tabla '" + tableName + "' debería existir tras la migración");
+            try {
+                var result = db.sqlQuery("SELECT 1 FROM " + tableName + " LIMIT 1").findOne();
+                assertNotNull(result, "La tabla '" + tableName + "' debería existir tras la migración");
+            } catch (Exception e) {
+                fail("La tabla '" + tableName + "' no existe: " + e.getMessage());
+            }
         }
     }
 
@@ -55,12 +59,10 @@ public class EbeanMigrationTest {
     @DisplayName("Verificar carga del Plan de Cuentas inicial")
     public void testInitialChartOfAccountsLoaded() {
         // Verificar que existen cuentas contables iniciales
-        long accountCount = db.find(Object.class).where().eq("table_name", "account").findFutureCount().toCompletableFuture().join();
-        
-        // Alternativa directa con SQL nativo ya que no tenemos el modelo mapeado aún en este contexto de prueba simple
-        var result = db.sqlQuery("SELECT COUNT(*) as count FROM account").findOneOrEmpty();
-        assertTrue(result.isPresent(), "Debería haber cuentas en la base de datos");
-        assertTrue((Long)result.get().get("count") > 0, "Debería haber al menos una cuenta contable cargada");
+        var result = db.sqlQuery("SELECT COUNT(*) as count FROM account").findOne();
+        assertNotNull(result, "Debería haber cuentas en la base de datos");
+        Long count = (Long) result.get("count");
+        assertTrue(count > 0, "Debería haber al menos una cuenta contable cargada");
     }
 
     @Test
