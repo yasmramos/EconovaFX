@@ -19,15 +19,7 @@ public class EbeanMigrationTest {
 
     @BeforeAll
     public static void initDB() {
-        // Inicializar base de datos para tests
-        System.setProperty("ebean.datasource.default.driver", "org.h2.Driver");
-        System.setProperty("ebean.datasource.default.url", "jdbc:h2:mem:test_ebean_migrations;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
-        System.setProperty("ebean.datasource.default.username", "sa");
-        System.setProperty("ebean.datasource.default.password", "");
-        System.setProperty("ebean.migration.auto", "true");
-        System.setProperty("ebean.migration.run", "true");
-        System.setProperty("ebean.migration.generate", "false");
-        
+        // La configuración se carga automáticamente desde ebean.properties en src/test/resources
         db = DB.getDefault();
         assertNotNull(db, "La base de datos por defecto no debería ser nula");
     }
