@@ -33,13 +33,13 @@ public class DepreciationRecordRepository {
 
     public List<DepreciationRecord> findAll() {
         return database.find(DepreciationRecord.class)
-                .orderBy().desc("processingDate").findList();
+                .orderBy("processingDate desc").findList();
     }
 
     public List<DepreciationRecord> findByFixedAssetId(Long fixedAssetId) {
         return database.find(DepreciationRecord.class)
                 .where().eq("fixedAsset.id", fixedAssetId)
-                .orderBy().desc("year").desc("month").findList();
+                .orderBy("year desc, month desc").findList();
     }
 
     public List<DepreciationRecord> findByYearAndMonth(Integer year, Integer month) {
@@ -47,14 +47,14 @@ public class DepreciationRecordRepository {
                 .where()
                 .eq("year", year)
                 .eq("month", month)
-                .orderBy().asc("fixedAsset.id")
+                .orderBy("fixedAsset.id asc")
                 .findList();
     }
 
     public List<DepreciationRecord> findByYear(Integer year) {
         return database.find(DepreciationRecord.class)
                 .where().eq("year", year)
-                .orderBy().asc("month").asc("fixedAsset.id")
+                .orderBy("month asc, fixedAsset.id asc")
                 .findList();
     }
 
@@ -62,7 +62,7 @@ public class DepreciationRecordRepository {
         return database.find(DepreciationRecord.class)
                 .where()
                 .eq("posted", false)
-                .orderBy().asc("processingDate")
+                .orderBy("processingDate asc")
                 .findList();
     }
 
@@ -116,7 +116,7 @@ public class DepreciationRecordRepository {
                 .where()
                 .ge("processingDate", startDate)
                 .le("processingDate", endDate)
-                .orderBy().desc("processingDate")
+                .orderBy("processingDate desc")
                 .findList();
     }
 }

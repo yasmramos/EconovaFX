@@ -35,13 +35,13 @@ public class ExchangeRate extends BaseEntity {
     /**
      * Date when the rate becomes effective
      */
-    @Column(name = "effective_date", nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "effective_date", nullable = false)
     private LocalDateTime effectiveDate;
 
     /**
      * End date of validity (optional, for temporary rates)
      */
-    @Column(name = "end_date", columnDefinition = "TIMESTAMP")
+    @Column(name = "end_date")
     private LocalDateTime endDate;
 
     /**

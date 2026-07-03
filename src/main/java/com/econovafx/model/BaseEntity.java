@@ -24,19 +24,18 @@ public abstract class BaseEntity {
      * Ebean automatically filters by this value in all queries.
      */
     @TenantId
-    @Column(name = "tenant_id", nullable = false, updatable = false, columnDefinition = "BIGINT")
+    @Column(name = "tenant_id", nullable = false, updatable = false)
     private Long tenantId;
 
     @Version
-    @Column(name = "version")
     protected Long version;
 
     @WhenCreated
-    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @WhenModified
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Column(name = "is_active")
