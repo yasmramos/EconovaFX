@@ -36,17 +36,17 @@ public class ThirdParty extends BaseEntity {
     @Column(name = "tax_id")
     private String taxId; // RUC or tax identification number
 
-    @Column(name = "credit_limit", columnDefinition = "DOUBLE PRECISION")
+    @Column(name = "credit_limit", precision = 19, scale = 4)
     private Double creditLimit = 0.0;
 
-    @Column(name = "current_balance", columnDefinition = "DOUBLE PRECISION")
+    @Column(name = "current_balance", precision = 19, scale = 4)
     private Double currentBalance = 0.0;
 
     @Column(name = "payment_days")
     private Integer paymentDays = 30;
 
 
-    @Column(name = "notes", columnDefinition = "TEXT")
+    @Column(name = "notes", length = 2000)
     @Lob
     private String notes;
 

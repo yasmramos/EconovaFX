@@ -26,7 +26,7 @@ public class ReconciliationItem extends BaseEntity {
     @Column(name = "origin_type", nullable = false)
     private OriginType originType;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 1000)
     private String description;
 
     @Column(nullable = false)
@@ -38,7 +38,7 @@ public class ReconciliationItem extends BaseEntity {
     @Column(nullable = false)
     private Boolean reconciled = false;
 
-    @Column(name = "cash_movement_id", columnDefinition = "BIGINT")
+    @Column(name = "cash_movement_id")
     private Long cashMovementId;
 
     @Column(name = "bank_reference")
