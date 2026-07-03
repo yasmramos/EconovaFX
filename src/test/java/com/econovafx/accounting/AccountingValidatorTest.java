@@ -70,7 +70,7 @@ class AccountingValidatorTest {
     @Test
     void testValidateOpenPeriod_Success() {
         // Given: Current date falls within an open accounting period
-        LocalDate transactionDate = LocalDate.now();
+        LocalDate transactionDate = LocalDate.of(2026, 6, 15);
         List<AccountingPeriod> periods = createOpenPeriods();
         
         // When: validateTransactionInOpenPeriod is called
