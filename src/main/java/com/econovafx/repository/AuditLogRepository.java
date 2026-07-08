@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +62,7 @@ public class AuditLogRepository {
                 .findList();
     }
     
-    public List<AuditLog> findByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<AuditLog> findByDateRange(Instant startDate, Instant endDate) {
         return database.find(AuditLog.class)
                 .where()
                 .ge("createdAt", startDate)

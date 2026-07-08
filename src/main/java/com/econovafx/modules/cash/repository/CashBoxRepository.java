@@ -18,7 +18,7 @@ public class CashBoxRepository {
         if (cashBox.getId() == null) {
             cashBox.setId(currentId++);
         }
-        cashBox.setUpdatedAt(java.time.LocalDateTime.now());
+        cashBox.setUpdatedAt(java.time.Instant.now());
         database.put(cashBox.getId(), cashBox);
         return cashBox;
     }
@@ -44,7 +44,7 @@ public class CashBoxRepository {
     public void updateBalance(Long id, BigDecimal newBalance) {
         findById(id).ifPresent(box -> {
             box.setBalance(newBalance);
-            box.setUpdatedAt(java.time.LocalDateTime.now());
+            box.setUpdatedAt(java.time.Instant.now());
             save(box);
         });
     }

@@ -10,7 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -193,8 +193,8 @@ public class AuditServiceTest {
     @Test
     public void testGetAuditLogsByDateRange_ShouldReturnLogsInRange() {
         // Arrange
-        LocalDateTime startDate = LocalDateTime.of(2024, 1, 1, 0, 0);
-        LocalDateTime endDate = LocalDateTime.of(2024, 12, 31, 23, 59);
+        Instant startDate = Instant.parse("2024-01-01T00:00:00Z");
+        Instant endDate = Instant.parse("2024-12-31T23:59:59Z");
         List<AuditLog> expectedLogs = Arrays.asList(
                 createAuditLog(1L, "user1", AuditLog.OperationType.CREATE)
         );
@@ -315,7 +315,7 @@ public class AuditServiceTest {
         logWithNulls.setEntityId(999L);
         logWithNulls.setDescription(null);
         logWithNulls.setSuccess(true);
-        logWithNulls.setCreatedAt(LocalDateTime.now());
+        logWithNulls.setCreatedAt(Instant.now());
 
         List<AuditLog> logs = Arrays.asList(logWithNulls);
 
@@ -357,7 +357,7 @@ public class AuditServiceTest {
         log.setEntityId(1L);
         log.setDescription("Test description");
         log.setSuccess(true);
-        log.setCreatedAt(LocalDateTime.now());
+        log.setCreatedAt(Instant.now());
         return log;
     }
 

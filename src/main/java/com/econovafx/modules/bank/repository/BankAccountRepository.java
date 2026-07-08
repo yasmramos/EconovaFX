@@ -19,7 +19,7 @@ public class BankAccountRepository {
         if (account.getId() == null) {
             account.setId(currentId++);
         }
-        account.setUpdatedAt(java.time.LocalDateTime.now());
+        account.setUpdatedAt(java.time.Instant.now());
         database.put(account.getId(), account);
         return account;
     }
@@ -51,7 +51,7 @@ public class BankAccountRepository {
     public void updateBalance(Long id, BigDecimal newBalance) {
         findById(id).ifPresent(account -> {
             account.setBalance(newBalance);
-            account.setUpdatedAt(java.time.LocalDateTime.now());
+            account.setUpdatedAt(java.time.Instant.now());
             save(account);
         });
     }
