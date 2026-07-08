@@ -37,7 +37,7 @@ public class DepreciationRecord extends BaseEntity {
     @Column(name = "journal_entry_id")
     private Long journalEntryId; // Referencia al asiento contable generado
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String notes;
 
     @Column(nullable = false)

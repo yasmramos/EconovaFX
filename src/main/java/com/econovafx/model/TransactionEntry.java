@@ -25,7 +25,7 @@ public class TransactionEntry extends BaseEntity {
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal creditAmount = BigDecimal.ZERO;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String description;
 
     public TransactionEntry() {

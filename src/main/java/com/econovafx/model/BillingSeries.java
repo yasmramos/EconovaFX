@@ -25,7 +25,7 @@ public class BillingSeries extends BaseEntity {
     @Column(nullable = false)
     private boolean active = true;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String description;
 
     @Column(name = "document_type", nullable = false)

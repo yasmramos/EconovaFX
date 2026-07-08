@@ -14,10 +14,10 @@ public class AccountingPeriod extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String name; // e.g., "Fiscal Year 2024", "January 2024"
 
-    @Column(nullable = false, columnDefinition = "DATE")
+    @Column(nullable = false)
     private LocalDate startDate;
 
-    @Column(nullable = false, columnDefinition = "DATE")
+    @Column(nullable = false)
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
@@ -28,10 +28,10 @@ public class AccountingPeriod extends BaseEntity {
     @Column(nullable = false)
     private PeriodType type = PeriodType.MONTHLY;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String closedBy;
 
-    @Column(columnDefinition = "DATE")
+    @Column
     private LocalDate closedDate;
 
     @Column(length = 500)

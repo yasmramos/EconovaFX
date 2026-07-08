@@ -26,10 +26,10 @@ public class ReportDefinition extends BaseEntity {
     @Column(nullable = false, length = 50)
     private ReportType reportType;
 
-    @Column(name = "parameters_json", columnDefinition = "TEXT")
+    @Column(name = "parameters_json", length = 2000)
     private String parametersJson;
 
-    @Column(name = "default_filters_json", columnDefinition = "TEXT")
+    @Column(name = "default_filters_json", length = 2000)
     private String defaultFiltersJson;
 
     @Column(name = "is_public")

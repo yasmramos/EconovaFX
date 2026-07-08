@@ -17,7 +17,7 @@ public class Transaction extends BaseEntity {
     @Column(nullable = false)
     private String number;
 
-    @Column(nullable = false, columnDefinition = "DATE")
+    @Column(nullable = false)
     private LocalDate date;
 
     @Column(nullable = false)
@@ -26,7 +26,7 @@ public class Transaction extends BaseEntity {
     @Column(length = 500)
     private String description;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String reference;
 
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)

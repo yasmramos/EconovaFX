@@ -26,7 +26,7 @@ public class AuditLog extends BaseEntity {
     @Column(nullable = false)
     private String entityType;
 
-    @Column(name = "entity_id", nullable = false, columnDefinition = "BIGINT")
+    @Column(name = "entity_id", nullable = false)
     private Long entityId;
 
     @Column(length = 2000)
@@ -38,10 +38,10 @@ public class AuditLog extends BaseEntity {
     @Column(length = 200)
     private String userAgent;
 
-    @Column(name = "old_values", columnDefinition = "TEXT")
+    @Column(name = "old_values", length = 2000)
     private String oldValues;
 
-    @Column(name = "new_values", columnDefinition = "TEXT")
+    @Column(name = "new_values", length = 2000)
     private String newValues;
 
     @Column(nullable = false)
