@@ -1,12 +1,60 @@
 ```
-# Compiled and build artifacts
+# Compiled Java classes
 *.class
+
+# Maven build artifacts
 target/
+
 # Database files
 *.mv.db
 *.trace.db
-# Generated sources
-target/generated-sources/
-# Maven status
-target/maven-status/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Package manager caches
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python virtual environments
+venv/
+.venv/
+__pycache__/
+*.pyc
+*$py.class
+
+# Gradle
+.gradle/
+build/
+
+# Local configuration
+local.properties
 ```

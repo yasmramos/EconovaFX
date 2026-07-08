@@ -17,7 +17,7 @@ public class FixedAssetCategory extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String description;
 
     @Column(nullable = false, precision = 5, scale = 2)

@@ -21,7 +21,7 @@ public class TaxRate extends BaseEntity {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal percentage;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String description;
 
     @Column(nullable = false)

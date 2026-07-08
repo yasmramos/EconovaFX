@@ -26,7 +26,7 @@ public class Transaction extends BaseEntity {
     @Column(length = 500)
     private String description;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String reference;
 
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -24,7 +24,7 @@ public abstract class BaseEntity {
      * Ebean automatically filters by this value in all queries.
      */
     @TenantId
-    @Column(name = "tenant_id", nullable = false, updatable = false)
+    @Column(name = "tenant_id", nullable = false, updatable = false, columnDefinition = "BIGINT")
     private Long tenantId;
 
     @Version

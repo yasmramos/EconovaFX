@@ -28,7 +28,7 @@ public class AccountingPeriod extends BaseEntity {
     @Column(nullable = false)
     private PeriodType type = PeriodType.MONTHLY;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String closedBy;
 
     @Column
