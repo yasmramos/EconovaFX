@@ -16,8 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Inject;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
@@ -120,9 +121,9 @@ public class AuditLogsController {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         
         timestampColumn.setCellValueFactory(cellData -> {
-            LocalDateTime createdAt = cellData.getValue().getCreatedAt();
+            Instant createdAt = cellData.getValue().getCreatedAt();
             return new javafx.beans.property.SimpleStringProperty(
-                createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                createdAt.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
             );
         });
         
@@ -227,8 +228,8 @@ public class AuditLogsController {
                 filteredLogs = auditService.getAuditLogsByOperationType(operationType);
             } else if (startDate != null && endDate != null) {
                 filteredLogs = auditService.getAuditLogsByDateRange(
-                    startDate.atStartOfDay(), 
-                    endDate.atTime(23, 59, 59)
+                    startDate.atStartOfDay(ZoneId.systemDefault()).toInstant(), 
+                    endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant()
                 );
             } else {
                 filteredLogs = auditService.getAllAuditLogs();
@@ -307,7 +308,7 @@ public class AuditLogsController {
         details.append("Entidad: ").append(log.getEntityType()).append("\n");
         details.append("ID Entidad: ").append(log.getEntityId()).append("\n");
         details.append("Descripción: ").append(log.getDescription()).append("\n");
-        details.append("Fecha: ").append(log.getCreatedAt().format(
+        details.append("Fecha: ").append(log.getCreatedAt().atZone(ZoneId.systemDefault()).format(
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))).append("\n\n");
         details.append("Estado: ").append(log.getSuccess() ? "Exitosa" : "Fallida").append("\n");
         
@@ -358,7 +359,7 @@ public class AuditLogsController {
     }
 
     private void updateLastUpdateTime() {
-        lastUpdateLabel.setText(LocalDateTime.now().format(
+        lastUpdateLabel.setText(Instant.now().atZone(ZoneId.systemDefault()).format(
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
     }
 

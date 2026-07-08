@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,7 +125,7 @@ public class AuditService {
     /**
      * Get audit logs within a date range
      */
-    public List<AuditLog> getAuditLogsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<AuditLog> getAuditLogsByDateRange(Instant startDate, Instant endDate) {
         return auditLogRepository.findByDateRange(startDate, endDate);
     }
     

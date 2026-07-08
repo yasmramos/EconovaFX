@@ -688,22 +688,18 @@ class TransactionServiceTest {
             return new ArrayList<>();
         }
 
-        @Override
         public List<AuditLog> findByEntityId(Long entityId) {
             return new ArrayList<>();
         }
 
-        @Override
-        public List<AuditLog> findByDateRange(java.time.LocalDateTime startDate, java.time.LocalDateTime endDate) {
+        public List<AuditLog> findByDateRange(java.time.Instant startDate, java.time.Instant endDate) {
             return new ArrayList<>();
         }
 
-        @Override
         public List<AuditLog> findFailedOperations() {
             return new ArrayList<>();
         }
 
-        @Override
         public AuditLog save(AuditLog log) {
             return log;
         }
