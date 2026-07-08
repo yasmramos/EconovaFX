@@ -2,6 +2,7 @@ package com.econovafx.service;
 
 import com.econovafx.model.AccountingPeriod;
 import com.econovafx.repository.AccountingPeriodRepository;
+import com.econovafx.security.RequiresTenant;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * Resolution 340/2004 Compliance: Validates dependent modules before closing.
  */
 @Component
+@RequiresTenant
 public class AccountingPeriodService {
 
     private static final Logger log = LoggerFactory.getLogger(AccountingPeriodService.class);

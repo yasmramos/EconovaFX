@@ -1,5 +1,6 @@
 package com.econovafx.service;
 import io.avaje.inject.Component;
+import com.econovafx.security.RequiresTenant;
 import com.econovafx.model.AccountingPeriod;
 
 import com.econovafx.model.CashMovement;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * Service for managing Cash Movements with Accounting integration.
  */
 @Component
+@RequiresTenant
 public class CashMovementService {
     
     private final CashMovementRepository movementRepository = new CashMovementRepository();

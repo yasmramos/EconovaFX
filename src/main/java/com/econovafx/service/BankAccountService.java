@@ -1,5 +1,8 @@
 package com.econovafx.service;
 
+import com.econovafx.security.RequiresTenant;
+import io.avaje.inject.Component;
+
 import com.econovafx.model.BankAccount;
 import com.econovafx.repository.BankAccountRepository;
 
@@ -9,6 +12,8 @@ import java.util.Optional;
 /**
  * Service for managing Bank Accounts.
  */
+@Component
+@RequiresTenant
 public class BankAccountService {
     
     private final BankAccountRepository repository = new BankAccountRepository();
