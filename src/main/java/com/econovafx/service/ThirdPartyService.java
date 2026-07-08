@@ -3,6 +3,7 @@ package com.econovafx.service;
 import com.econovafx.model.ThirdParty;
 import com.econovafx.repository.ThirdPartyRepository;
 import io.avaje.inject.Component;
+import com.econovafx.security.RequiresTenant;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import java.util.Optional;
  * Service for managing Third Parties (Customers and Suppliers)
  */
 @Component
+@RequiresTenant
 public class ThirdPartyService {
     
     private static final Logger logger = LoggerFactory.getLogger(ThirdPartyService.class);
