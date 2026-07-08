@@ -32,7 +32,7 @@ public class FinancialStatementModel extends BaseEntity {
     @Column(nullable = false, length = 20)
     private ModelType modelType;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 2000)
     private String description;
 
     @Column(name = "created_by", length = 50)

@@ -20,7 +20,7 @@ public class FixedAsset extends BaseEntity {
     @Column(nullable = false, length = 150)
     private String name;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String description;
 
     @ManyToOne(optional = false)

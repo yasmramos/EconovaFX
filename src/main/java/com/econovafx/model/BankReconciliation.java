@@ -21,13 +21,13 @@ public class BankReconciliation extends BaseEntity {
         IN_PROGRESS, COMPLETED, CANCELLED
     }
 
-    @Column(name = "bank_account_id", nullable = false, columnDefinition = "BIGINT")
+    @Column(name = "bank_account_id", nullable = false)
     private Long bankAccountId;
 
     @Column(name = "reconciliation_number", nullable = false, unique = true, length = 50)
     private String reconciliationNumber;
 
-    @Column(name = "statement_date", nullable = false, columnDefinition = "DATE")
+    @Column(name = "statement_date", nullable = false)
     private LocalDate statementDate;
 
     @Column(name = "bank_balance", nullable = false, precision = 19, scale = 4)
@@ -43,7 +43,7 @@ public class BankReconciliation extends BaseEntity {
     @Column(nullable = false)
     private Status status = Status.IN_PROGRESS;
 
-    @Column(name = "completed_at", columnDefinition = "TIMESTAMP")
+    @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
     @Column(name = "completed_by", length = 100)

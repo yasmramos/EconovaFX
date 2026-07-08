@@ -1,6 +1,5 @@
 package com.econovafx.model;
 
-import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,7 +21,7 @@ public class TaxRate extends BaseEntity {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal percentage;
 
-    @Column(length = 255)
+    @Column(length = 100)
     private String description;
 
     @Column(nullable = false)
@@ -31,7 +30,6 @@ public class TaxRate extends BaseEntity {
     @Column(name = "account_code")
     private String accountCode; // Cuenta contable asociada al impuesto
 
-    @WhenCreated
     @Column(name = "effective_from")
     private LocalDate effectiveFrom;
 

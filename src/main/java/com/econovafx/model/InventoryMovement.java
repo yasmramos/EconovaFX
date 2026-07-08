@@ -60,7 +60,7 @@ public class InventoryMovement extends BaseEntity {
     private User createdBy;
 
     @WhenCreated
-    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
+    @Column(nullable = false, updatable = false)
     private LocalDateTime movementDate;
 
     // Getters y Setters

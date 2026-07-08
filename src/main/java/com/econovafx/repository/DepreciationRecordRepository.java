@@ -116,7 +116,7 @@ public class DepreciationRecordRepository {
                 .where()
                 .ge("processingDate", startDate)
                 .le("processingDate", endDate)
-                .orderBy().desc("processingDate")
+                .orderBy("processingDate desc")
                 .findList();
     }
 }
