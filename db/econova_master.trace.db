@@ -3118,3 +3118,1945 @@ create table accounts (
   constraint uq_accounts_code unique (code),
   constraint pk_accounts primary key (id)
 ) [42001-224]
+2026-07-08 14:08:09.940338Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:08:09.941950Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:08:09.942453Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:08:09.960086Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:08:09.979764Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:08:09.980489Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:08:09.980993Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:08:09.981493Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:08:09.999836Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:08:10.000297Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:08:10.000684Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:08:10.001031Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:08:10.001368Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:08:10.001744Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:08:10.002090Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:08:10.002422Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:08:10.019852Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:08:10.020447Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:08:10.020999Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:08:10.021426Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:08:10.021840Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:08:10.022184Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:08:10.022543Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:08:10.022976Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:08:10.023308Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:08:10.023651Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:08:10.023979Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:08:10.024307Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:08:10.024633Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:08:10.024947Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:08:10.025264Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:08:10.039380Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:08:10.080923Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table accounts (\000a  id                            bigint generated by default as identity not null,\000a  tenant_id                     bigint[*](255) not null,\000a  is_active                     boolean,\000a  code                          varchar(255) not null,\000a  name                          varchar(255) not null,\000a  type                          varchar(255) not null,\000a  balance                       decimal(19,4),\000a  description                   varchar(500),\000a  parent_account_id             bigint,\000a  version                       bigint not null,\000a  created_at                    timestamp(255) not null,\000a  updated_at                    timestamp(255) not null,\000a  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),\000a  constraint uq_accounts_code unique (code),\000a  constraint pk_accounts primary key (id)\000a)"; expected "ARRAY, INVISIBLE, VISIBLE, NOT NULL, DEFAULT, GENERATED, ON UPDATE, NOT NULL, DEFAULT ON NULL, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, COMMENT, PRIMARY KEY, UNIQUE, NOT NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint(255) not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [42001-224]
+2026-07-08 14:10:38.059738Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:10:38.061502Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:10:38.062031Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:10:38.062419Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:10:38.062805Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:10:38.063169Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:10:38.063534Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:10:38.100053Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:10:38.103238Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:10:38.103967Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:10:38.104338Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:10:38.104705Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:10:38.105050Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:10:38.105383Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:10:38.119691Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:10:38.120286Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:10:38.120853Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:10:38.121332Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:10:38.121917Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:10:38.122309Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:10:38.122678Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:10:38.123015Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:10:38.123338Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:10:38.123730Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:10:38.124055Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:10:38.124393Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:10:38.124742Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:10:38.125067Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:10:38.125380Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:10:38.139730Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:10:38.140310Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:10:38.140887Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:10:38.182190Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table accounts (\000a  id                            bigint generated by default as identity not null,\000a  tenant_id                     bigint[*](255) not null,\000a  is_active                     boolean,\000a  code                          varchar(255) not null,\000a  name                          varchar(255) not null,\000a  type                          varchar(255) not null,\000a  balance                       decimal(19,4),\000a  description                   varchar(500),\000a  parent_account_id             bigint,\000a  version                       bigint not null,\000a  created_at                    timestamp(255) not null,\000a  updated_at                    timestamp(255) not null,\000a  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),\000a  constraint uq_accounts_code unique (code),\000a  constraint pk_accounts primary key (id)\000a)"; expected "ARRAY, INVISIBLE, VISIBLE, NOT NULL, DEFAULT, GENERATED, ON UPDATE, NOT NULL, DEFAULT ON NULL, SEQUENCE, SELECTIVITY, COMMENT, CONSTRAINT, COMMENT, PRIMARY KEY, UNIQUE, NOT NULL, CHECK, REFERENCES, ,, )"; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint(255) not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [42001-224]
+2026-07-08 14:14:03.844610Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:14:03.862029Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:14:03.862737Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:14:03.879669Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:14:03.899510Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:14:03.902036Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:14:03.919917Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:14:03.920875Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:14:03.921873Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:14:03.922672Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:14:03.923491Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:14:03.940264Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:14:03.941431Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:14:03.960265Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:14:03.961940Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:14:03.963292Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:14:03.981082Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:14:03.982675Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:14:04.000177Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:14:04.001809Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:14:04.002366Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:14:04.003443Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:14:04.004712Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:14:04.020161Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:14:04.020990Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:14:04.021387Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:14:04.022631Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:14:04.039635Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:14:04.041962Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:14:04.101222Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:14:04.102928Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:14:04.119918Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:14:04.223221Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Scale or fractional seconds precision ("255") must be between "0" and "9" inclusive; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [90151-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.command.Parser.parseTimestampType(Parser.java:6044)
+	at org.h2.command.Parser.readIfDataType1(Parser.java:5853)
+	at org.h2.command.Parser.readIfDataType(Parser.java:5704)
+	at org.h2.command.Parser.parseColumnWithType(Parser.java:5686)
+	at org.h2.command.Parser.parseColumnForTable(Parser.java:5565)
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8999)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939)
+	at org.h2.command.Parser.parseCreate(Parser.java:6404)
+	at org.h2.command.Parser.parsePrepared(Parser.java:666)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.ebean.ddlrunner.DdlRunner.runStatement(DdlRunner.java:101)
+	at io.ebean.ddlrunner.DdlRunner.runStatements(DdlRunner.java:72)
+	at io.ebean.ddlrunner.DdlRunner.runAll(DdlRunner.java:55)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runScript(DdlGenerator.java:163)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runCreateSql(DdlGenerator.java:201)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdlWith(DdlGenerator.java:128)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdl(DdlGenerator.java:113)
+	at io.ebeaninternal.dbmigration.DdlGenerator.execute(DdlGenerator.java:89)
+	at io.ebeaninternal.server.core.DefaultServer.executePlugins(DefaultServer.java:183)
+	at io.ebeaninternal.server.core.DefaultContainer.startServer(DefaultContainer.java:153)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:118)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:33)
+	at io.ebean.DatabaseFactory.createInternal(DatabaseFactory.java:129)
+	at io.ebean.DatabaseFactory.create(DatabaseFactory.java:77)
+	at io.ebean.config.DatabaseConfig.build(DatabaseConfig.java:533)
+	at com.econovafx.config.DatabaseConfig.initializeMaster(DatabaseConfig.java:70)
+	at com.econovafx.config.DatabaseConfig.initialize(DatabaseConfig.java:43)
+	at com.econovafx.repository.TransactionRepositoryTest.setUpAll(TransactionRepositoryTest.java:29)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeAllMethod(TimeoutExtension.java:70)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeBeforeAllMethods$13(ClassBasedTestDescriptor.java:412)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeBeforeAllMethods(ClassBasedTestDescriptor.java:410)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:216)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:85)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:148)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+2026-07-08 14:15:35.882607Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:15:35.884257Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:15:35.884775Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:15:35.885141Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:15:35.885491Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:15:35.900132Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:15:35.901010Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:15:35.901701Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:15:35.902172Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:15:35.902543Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:15:35.902966Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:15:35.903325Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:15:35.903720Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:15:35.904071Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:15:35.904416Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:15:35.904789Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:15:35.905186Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:15:35.905566Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:15:35.921087Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:15:35.921709Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:15:35.922075Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:15:35.922484Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:15:35.922941Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:15:35.923364Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:15:35.923749Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:15:35.924089Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:15:35.924422Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:15:35.924787Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:15:35.925117Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:15:35.925452Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:15:35.959805Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:15:35.960524Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:15:36.041781Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Scale or fractional seconds precision ("255") must be between "0" and "9" inclusive; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [90151-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.command.Parser.parseTimestampType(Parser.java:6044)
+	at org.h2.command.Parser.readIfDataType1(Parser.java:5853)
+	at org.h2.command.Parser.readIfDataType(Parser.java:5704)
+	at org.h2.command.Parser.parseColumnWithType(Parser.java:5686)
+	at org.h2.command.Parser.parseColumnForTable(Parser.java:5565)
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8999)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939)
+	at org.h2.command.Parser.parseCreate(Parser.java:6404)
+	at org.h2.command.Parser.parsePrepared(Parser.java:666)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.ebean.ddlrunner.DdlRunner.runStatement(DdlRunner.java:101)
+	at io.ebean.ddlrunner.DdlRunner.runStatements(DdlRunner.java:72)
+	at io.ebean.ddlrunner.DdlRunner.runAll(DdlRunner.java:55)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runScript(DdlGenerator.java:163)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runCreateSql(DdlGenerator.java:201)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdlWith(DdlGenerator.java:128)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdl(DdlGenerator.java:113)
+	at io.ebeaninternal.dbmigration.DdlGenerator.execute(DdlGenerator.java:89)
+	at io.ebeaninternal.server.core.DefaultServer.executePlugins(DefaultServer.java:183)
+	at io.ebeaninternal.server.core.DefaultContainer.startServer(DefaultContainer.java:153)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:118)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:33)
+	at io.ebean.DatabaseFactory.createInternal(DatabaseFactory.java:129)
+	at io.ebean.DatabaseFactory.create(DatabaseFactory.java:77)
+	at io.ebean.config.DatabaseConfig.build(DatabaseConfig.java:533)
+	at com.econovafx.config.DatabaseConfig.initializeMaster(DatabaseConfig.java:70)
+	at com.econovafx.config.DatabaseConfig.initialize(DatabaseConfig.java:43)
+	at com.econovafx.repository.TransactionRepositoryTest.setUpAll(TransactionRepositoryTest.java:29)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeAllMethod(TimeoutExtension.java:70)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeBeforeAllMethods$13(ClassBasedTestDescriptor.java:412)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeBeforeAllMethods(ClassBasedTestDescriptor.java:410)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:216)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:85)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:148)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+2026-07-08 14:16:51.382438Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:16:51.399478Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:16:51.400491Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:16:51.402047Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:16:51.402792Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:16:51.404316Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:16:51.404984Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:16:51.405571Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:16:51.420242Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:16:51.421238Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:16:51.422184Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:16:51.422871Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:16:51.424142Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:16:51.425319Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:16:51.440652Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:16:51.441823Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:16:51.443452Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:16:51.444446Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:16:51.459432Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:16:51.460850Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:16:51.461367Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:16:51.463059Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:16:51.463522Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:16:51.481715Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:16:51.482882Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:16:51.483997Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:16:51.485039Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:16:51.486263Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:16:51.501861Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:16:51.520038Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:16:51.521321Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:16:51.522254Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:16:51.640191Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Scale or fractional seconds precision ("255") must be between "0" and "9" inclusive; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [90151-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.command.Parser.parseTimestampType(Parser.java:6044)
+	at org.h2.command.Parser.readIfDataType1(Parser.java:5853)
+	at org.h2.command.Parser.readIfDataType(Parser.java:5704)
+	at org.h2.command.Parser.parseColumnWithType(Parser.java:5686)
+	at org.h2.command.Parser.parseColumnForTable(Parser.java:5565)
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8999)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939)
+	at org.h2.command.Parser.parseCreate(Parser.java:6404)
+	at org.h2.command.Parser.parsePrepared(Parser.java:666)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.ebean.ddlrunner.DdlRunner.runStatement(DdlRunner.java:101)
+	at io.ebean.ddlrunner.DdlRunner.runStatements(DdlRunner.java:72)
+	at io.ebean.ddlrunner.DdlRunner.runAll(DdlRunner.java:55)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runScript(DdlGenerator.java:163)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runCreateSql(DdlGenerator.java:201)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdlWith(DdlGenerator.java:128)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdl(DdlGenerator.java:113)
+	at io.ebeaninternal.dbmigration.DdlGenerator.execute(DdlGenerator.java:89)
+	at io.ebeaninternal.server.core.DefaultServer.executePlugins(DefaultServer.java:183)
+	at io.ebeaninternal.server.core.DefaultContainer.startServer(DefaultContainer.java:153)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:118)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:33)
+	at io.ebean.DatabaseFactory.createInternal(DatabaseFactory.java:129)
+	at io.ebean.DatabaseFactory.create(DatabaseFactory.java:77)
+	at io.ebean.config.DatabaseConfig.build(DatabaseConfig.java:533)
+	at com.econovafx.config.DatabaseConfig.initializeMaster(DatabaseConfig.java:70)
+	at com.econovafx.config.DatabaseConfig.initialize(DatabaseConfig.java:43)
+	at com.econovafx.repository.TransactionRepositoryTest.setUpAll(TransactionRepositoryTest.java:29)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeAllMethod(TimeoutExtension.java:70)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeBeforeAllMethods$13(ClassBasedTestDescriptor.java:412)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeBeforeAllMethods(ClassBasedTestDescriptor.java:410)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:216)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:85)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:148)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+2026-07-08 14:19:01.822478Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:19:01.840452Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:19:01.841185Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:19:01.841783Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:19:01.842298Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:19:01.842822Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:19:01.843339Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:19:01.859827Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:19:01.860270Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:19:01.860684Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:19:01.861076Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:19:01.861752Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:19:01.862217Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:19:01.879573Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:19:01.880233Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:19:01.880679Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:19:01.881091Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:19:01.881499Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:19:01.881930Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:19:01.882302Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:19:01.882856Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:19:01.883233Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:19:01.883584Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:19:01.883955Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:19:01.884261Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:19:01.884571Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:19:01.884891Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:19:01.885196Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:19:01.885508Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:19:01.899818Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:19:01.900323Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:19:01.900781Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:19:01.941644Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Scale or fractional seconds precision ("255") must be between "0" and "9" inclusive; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [90151-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.command.Parser.parseTimestampType(Parser.java:6044)
+	at org.h2.command.Parser.readIfDataType1(Parser.java:5853)
+	at org.h2.command.Parser.readIfDataType(Parser.java:5704)
+	at org.h2.command.Parser.parseColumnWithType(Parser.java:5686)
+	at org.h2.command.Parser.parseColumnForTable(Parser.java:5565)
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8999)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939)
+	at org.h2.command.Parser.parseCreate(Parser.java:6404)
+	at org.h2.command.Parser.parsePrepared(Parser.java:666)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.ebean.ddlrunner.DdlRunner.runStatement(DdlRunner.java:101)
+	at io.ebean.ddlrunner.DdlRunner.runStatements(DdlRunner.java:72)
+	at io.ebean.ddlrunner.DdlRunner.runAll(DdlRunner.java:55)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runScript(DdlGenerator.java:163)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runCreateSql(DdlGenerator.java:201)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdlWith(DdlGenerator.java:128)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdl(DdlGenerator.java:113)
+	at io.ebeaninternal.dbmigration.DdlGenerator.execute(DdlGenerator.java:89)
+	at io.ebeaninternal.server.core.DefaultServer.executePlugins(DefaultServer.java:183)
+	at io.ebeaninternal.server.core.DefaultContainer.startServer(DefaultContainer.java:153)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:118)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:33)
+	at io.ebean.DatabaseFactory.createInternal(DatabaseFactory.java:129)
+	at io.ebean.DatabaseFactory.create(DatabaseFactory.java:77)
+	at io.ebean.config.DatabaseConfig.build(DatabaseConfig.java:533)
+	at com.econovafx.config.DatabaseConfig.initializeMaster(DatabaseConfig.java:70)
+	at com.econovafx.config.DatabaseConfig.initialize(DatabaseConfig.java:43)
+	at com.econovafx.repository.TransactionRepositoryTest.setUpAll(TransactionRepositoryTest.java:29)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeAllMethod(TimeoutExtension.java:70)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeBeforeAllMethods$13(ClassBasedTestDescriptor.java:412)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeBeforeAllMethods(ClassBasedTestDescriptor.java:410)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:216)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:85)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:148)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+2026-07-08 14:19:58.383964Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:19:58.401057Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:19:58.401930Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:19:58.402771Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:19:58.403429Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:19:58.439669Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:19:58.440452Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:19:58.461272Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:19:58.462423Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:19:58.463287Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:19:58.464463Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:19:58.465350Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:19:58.480774Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:19:58.482823Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:19:58.484425Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:19:58.500349Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:19:58.503010Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:19:58.505281Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:19:58.521296Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:19:58.523052Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:19:58.525029Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:19:58.540812Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:19:58.541867Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:19:58.542306Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:19:58.543148Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:19:58.559859Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:19:58.560871Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:19:58.562296Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:19:58.563657Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:19:58.564543Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:19:58.579932Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:19:58.581068Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:19:58.665111Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Scale or fractional seconds precision ("255") must be between "0" and "9" inclusive; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [90151-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.command.Parser.parseTimestampType(Parser.java:6044)
+	at org.h2.command.Parser.readIfDataType1(Parser.java:5853)
+	at org.h2.command.Parser.readIfDataType(Parser.java:5704)
+	at org.h2.command.Parser.parseColumnWithType(Parser.java:5686)
+	at org.h2.command.Parser.parseColumnForTable(Parser.java:5565)
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8999)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939)
+	at org.h2.command.Parser.parseCreate(Parser.java:6404)
+	at org.h2.command.Parser.parsePrepared(Parser.java:666)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.ebean.ddlrunner.DdlRunner.runStatement(DdlRunner.java:101)
+	at io.ebean.ddlrunner.DdlRunner.runStatements(DdlRunner.java:72)
+	at io.ebean.ddlrunner.DdlRunner.runAll(DdlRunner.java:55)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runScript(DdlGenerator.java:163)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runCreateSql(DdlGenerator.java:201)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdlWith(DdlGenerator.java:128)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdl(DdlGenerator.java:113)
+	at io.ebeaninternal.dbmigration.DdlGenerator.execute(DdlGenerator.java:89)
+	at io.ebeaninternal.server.core.DefaultServer.executePlugins(DefaultServer.java:183)
+	at io.ebeaninternal.server.core.DefaultContainer.startServer(DefaultContainer.java:153)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:118)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:33)
+	at io.ebean.DatabaseFactory.createInternal(DatabaseFactory.java:129)
+	at io.ebean.DatabaseFactory.create(DatabaseFactory.java:77)
+	at io.ebean.config.DatabaseConfig.build(DatabaseConfig.java:533)
+	at com.econovafx.config.DatabaseConfig.initializeMaster(DatabaseConfig.java:70)
+	at com.econovafx.config.DatabaseConfig.initialize(DatabaseConfig.java:43)
+	at com.econovafx.repository.TransactionRepositoryTest.setUpAll(TransactionRepositoryTest.java:29)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeAllMethod(TimeoutExtension.java:70)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeBeforeAllMethods$13(ClassBasedTestDescriptor.java:412)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeBeforeAllMethods(ClassBasedTestDescriptor.java:410)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:216)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:85)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:148)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+2026-07-08 14:21:13.120464Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:21:13.123081Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:21:13.125340Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:21:13.140378Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:21:13.141113Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:21:13.143316Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:21:13.159762Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:21:13.160677Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:21:13.161523Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:21:13.162287Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:21:13.163358Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:21:13.164048Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:21:13.164841Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:21:13.180079Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:21:13.181677Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:21:13.183003Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:21:13.185405Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:21:13.200897Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:21:13.202239Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:21:13.220520Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:21:13.221070Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:21:13.222315Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:21:13.223214Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:21:13.240982Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:21:13.241664Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:21:13.242190Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:21:13.242898Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:21:13.243935Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:21:13.259969Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:21:13.261206Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:21:13.262639Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:21:13.263472Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:21:13.364240Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Scale or fractional seconds precision ("255") must be between "0" and "9" inclusive; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [90151-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.command.Parser.parseTimestampType(Parser.java:6044)
+	at org.h2.command.Parser.readIfDataType1(Parser.java:5853)
+	at org.h2.command.Parser.readIfDataType(Parser.java:5704)
+	at org.h2.command.Parser.parseColumnWithType(Parser.java:5686)
+	at org.h2.command.Parser.parseColumnForTable(Parser.java:5565)
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8999)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939)
+	at org.h2.command.Parser.parseCreate(Parser.java:6404)
+	at org.h2.command.Parser.parsePrepared(Parser.java:666)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.ebean.ddlrunner.DdlRunner.runStatement(DdlRunner.java:101)
+	at io.ebean.ddlrunner.DdlRunner.runStatements(DdlRunner.java:72)
+	at io.ebean.ddlrunner.DdlRunner.runAll(DdlRunner.java:55)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runScript(DdlGenerator.java:163)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runCreateSql(DdlGenerator.java:201)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdlWith(DdlGenerator.java:128)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdl(DdlGenerator.java:113)
+	at io.ebeaninternal.dbmigration.DdlGenerator.execute(DdlGenerator.java:89)
+	at io.ebeaninternal.server.core.DefaultServer.executePlugins(DefaultServer.java:183)
+	at io.ebeaninternal.server.core.DefaultContainer.startServer(DefaultContainer.java:153)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:118)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:33)
+	at io.ebean.DatabaseFactory.createInternal(DatabaseFactory.java:129)
+	at io.ebean.DatabaseFactory.create(DatabaseFactory.java:77)
+	at io.ebean.config.DatabaseConfig.build(DatabaseConfig.java:533)
+	at com.econovafx.config.DatabaseConfig.initializeMaster(DatabaseConfig.java:70)
+	at com.econovafx.config.DatabaseConfig.initialize(DatabaseConfig.java:43)
+	at com.econovafx.repository.TransactionRepositoryTest.setUpAll(TransactionRepositoryTest.java:29)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeAllMethod(TimeoutExtension.java:70)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeBeforeAllMethods$13(ClassBasedTestDescriptor.java:412)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeBeforeAllMethods(ClassBasedTestDescriptor.java:410)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:216)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:85)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:148)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+2026-07-08 14:22:19.241787Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:22:19.244178Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:22:19.244758Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:22:19.245462Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:22:19.260650Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:22:19.262980Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:22:19.280421Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:22:19.281672Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:22:19.282655Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:22:19.283418Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:22:19.284257Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:22:19.284843Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:22:19.299666Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:22:19.301229Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:22:19.302429Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:22:19.303435Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:22:19.305558Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:22:19.320739Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:22:19.340211Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:22:19.341537Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:22:19.360825Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:22:19.361947Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:22:19.379784Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:22:19.380239Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:22:19.383421Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:22:19.399989Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:22:19.400777Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:22:19.420113Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:22:19.421516Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:22:19.422447Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:22:19.439820Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:22:19.440808Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:22:19.502822Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Scale or fractional seconds precision ("255") must be between "0" and "9" inclusive; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [90151-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.command.Parser.parseTimestampType(Parser.java:6044)
+	at org.h2.command.Parser.readIfDataType1(Parser.java:5853)
+	at org.h2.command.Parser.readIfDataType(Parser.java:5704)
+	at org.h2.command.Parser.parseColumnWithType(Parser.java:5686)
+	at org.h2.command.Parser.parseColumnForTable(Parser.java:5565)
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8999)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939)
+	at org.h2.command.Parser.parseCreate(Parser.java:6404)
+	at org.h2.command.Parser.parsePrepared(Parser.java:666)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.ebean.ddlrunner.DdlRunner.runStatement(DdlRunner.java:101)
+	at io.ebean.ddlrunner.DdlRunner.runStatements(DdlRunner.java:72)
+	at io.ebean.ddlrunner.DdlRunner.runAll(DdlRunner.java:55)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runScript(DdlGenerator.java:163)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runCreateSql(DdlGenerator.java:201)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdlWith(DdlGenerator.java:128)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdl(DdlGenerator.java:113)
+	at io.ebeaninternal.dbmigration.DdlGenerator.execute(DdlGenerator.java:89)
+	at io.ebeaninternal.server.core.DefaultServer.executePlugins(DefaultServer.java:183)
+	at io.ebeaninternal.server.core.DefaultContainer.startServer(DefaultContainer.java:153)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:118)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:33)
+	at io.ebean.DatabaseFactory.createInternal(DatabaseFactory.java:129)
+	at io.ebean.DatabaseFactory.create(DatabaseFactory.java:77)
+	at io.ebean.config.DatabaseConfig.build(DatabaseConfig.java:533)
+	at com.econovafx.config.DatabaseConfig.initializeMaster(DatabaseConfig.java:70)
+	at com.econovafx.config.DatabaseConfig.initialize(DatabaseConfig.java:43)
+	at com.econovafx.repository.TransactionRepositoryTest.setUpAll(TransactionRepositoryTest.java:29)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeAllMethod(TimeoutExtension.java:70)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeBeforeAllMethods$13(ClassBasedTestDescriptor.java:412)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeBeforeAllMethods(ClassBasedTestDescriptor.java:410)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:216)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:85)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:148)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+2026-07-08 14:27:09.720483Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ACCOUNTS" not found; SQL statement:
+alter table accounts drop constraint if exists fk_accounts_parent_account_id [42102-224]
+2026-07-08 14:27:09.723168Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DEPRECIATION_RECORDS" not found; SQL statement:
+alter table depreciation_records drop constraint if exists fk_depreciation_records_fixed_asset_id [42102-224]
+2026-07-08 14:27:09.740499Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_from_currency_id [42102-224]
+2026-07-08 14:27:09.741449Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_to_currency_id [42102-224]
+2026-07-08 14:27:09.741939Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "EXCHANGE_RATES" not found; SQL statement:
+alter table exchange_rates drop constraint if exists fk_exchange_rates_created_by_user [42102-224]
+2026-07-08 14:27:09.760588Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_model_id [42102-224]
+2026-07-08 14:27:09.761224Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FINANCIAL_STATEMENT_ROW" not found; SQL statement:
+alter table financial_statement_row drop constraint if exists fk_financial_statement_row_parent_row_id [42102-224]
+2026-07-08 14:27:09.761928Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_category_id [42102-224]
+2026-07-08 14:27:09.762790Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "FIXED_ASSETS" not found; SQL statement:
+alter table fixed_assets drop constraint if exists fk_fixed_assets_supplier_id [42102-224]
+2026-07-08 14:27:09.763590Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_CATEGORIES" not found; SQL statement:
+alter table inventory_categories drop constraint if exists fk_inventory_categories_parent_id [42102-224]
+2026-07-08 14:27:09.764410Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_category_id [42102-224]
+2026-07-08 14:27:09.765084Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_ITEMS" not found; SQL statement:
+alter table inventory_items drop constraint if exists fk_inventory_items_supplier_id [42102-224]
+2026-07-08 14:27:09.779739Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_item_id [42102-224]
+2026-07-08 14:27:09.781449Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_warehouse_id [42102-224]
+2026-07-08 14:27:09.782771Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_third_party_id [42102-224]
+2026-07-08 14:27:09.799573Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_transaction_id [42102-224]
+2026-07-08 14:27:09.801295Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "INVENTORY_MOVEMENTS" not found; SQL statement:
+alter table inventory_movements drop constraint if exists fk_inventory_movements_created_by [42102-224]
+2026-07-08 14:27:09.802259Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "RECONCILIATION_ITEM" not found; SQL statement:
+alter table reconciliation_item drop constraint if exists fk_reconciliation_item_reconciliation_id [42102-224]
+2026-07-08 14:27:09.820461Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_billing_series_id [42102-224]
+2026-07-08 14:27:09.821719Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_third_party_id [42102-224]
+2026-07-08 14:27:09.822152Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICES" not found; SQL statement:
+alter table sales_invoices drop constraint if exists fk_sales_invoices_currency_id [42102-224]
+2026-07-08 14:27:09.823460Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_sales_invoice_id [42102-224]
+2026-07-08 14:27:09.840338Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SALES_INVOICE_LINES" not found; SQL statement:
+alter table sales_invoice_lines drop constraint if exists fk_sales_invoice_lines_tax_rate_id [42102-224]
+2026-07-08 14:27:09.842513Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_created_by [42102-224]
+2026-07-08 14:27:09.843480Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTIONS" not found; SQL statement:
+alter table transactions drop constraint if exists fk_transactions_third_party_id [42102-224]
+2026-07-08 14:27:09.860113Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_transaction_id [42102-224]
+2026-07-08 14:27:09.860996Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TRANSACTION_ENTRIES" not found; SQL statement:
+alter table transaction_entries drop constraint if exists fk_transaction_entries_account_id [42102-224]
+2026-07-08 14:27:09.862102Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_company_id [42102-224]
+2026-07-08 14:27:09.880923Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERS" not found; SQL statement:
+alter table users drop constraint if exists fk_users_preferred_currency_id [42102-224]
+2026-07-08 14:27:09.882259Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_users [42102-224]
+2026-07-08 14:27:09.883465Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER_COMPANIES" not found; SQL statement:
+alter table user_companies drop constraint if exists fk_user_companies_companies [42102-224]
+2026-07-08 14:27:09.900413Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WAREHOUSES" not found; SQL statement:
+alter table warehouses drop constraint if exists fk_warehouses_manager_id [42102-224]
+2026-07-08 14:27:09.960435Z jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Scale or fractional seconds precision ("255") must be between "0" and "9" inclusive; SQL statement:
+create table accounts (
+  id                            bigint generated by default as identity not null,
+  tenant_id                     bigint not null,
+  is_active                     boolean,
+  code                          varchar(255) not null,
+  name                          varchar(255) not null,
+  type                          varchar(255) not null,
+  balance                       decimal(19,4),
+  description                   varchar(500),
+  parent_account_id             bigint,
+  version                       bigint not null,
+  created_at                    timestamp(255) not null,
+  updated_at                    timestamp(255) not null,
+  constraint ck_accounts_type check ( type in ('ASSET','LIABILITY','EQUITY','REVENUE','EXPENSE')),
+  constraint uq_accounts_code unique (code),
+  constraint pk_accounts primary key (id)
+) [90151-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:644)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.command.Parser.parseTimestampType(Parser.java:6044)
+	at org.h2.command.Parser.readIfDataType1(Parser.java:5853)
+	at org.h2.command.Parser.readIfDataType(Parser.java:5704)
+	at org.h2.command.Parser.parseColumnWithType(Parser.java:5686)
+	at org.h2.command.Parser.parseColumnForTable(Parser.java:5565)
+	at org.h2.command.Parser.parseTableColumnDefinition(Parser.java:8999)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8939)
+	at org.h2.command.Parser.parseCreate(Parser.java:6404)
+	at org.h2.command.Parser.parsePrepared(Parser.java:666)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at io.ebean.ddlrunner.DdlRunner.runStatement(DdlRunner.java:101)
+	at io.ebean.ddlrunner.DdlRunner.runStatements(DdlRunner.java:72)
+	at io.ebean.ddlrunner.DdlRunner.runAll(DdlRunner.java:55)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runScript(DdlGenerator.java:163)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runCreateSql(DdlGenerator.java:201)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdlWith(DdlGenerator.java:128)
+	at io.ebeaninternal.dbmigration.DdlGenerator.runDdl(DdlGenerator.java:113)
+	at io.ebeaninternal.dbmigration.DdlGenerator.execute(DdlGenerator.java:89)
+	at io.ebeaninternal.server.core.DefaultServer.executePlugins(DefaultServer.java:183)
+	at io.ebeaninternal.server.core.DefaultContainer.startServer(DefaultContainer.java:153)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:118)
+	at io.ebeaninternal.server.core.DefaultContainer.createServer(DefaultContainer.java:33)
+	at io.ebean.DatabaseFactory.createInternal(DatabaseFactory.java:129)
+	at io.ebean.DatabaseFactory.create(DatabaseFactory.java:77)
+	at io.ebean.config.DatabaseConfig.build(DatabaseConfig.java:533)
+	at com.econovafx.config.DatabaseConfig.initializeMaster(DatabaseConfig.java:70)
+	at com.econovafx.config.DatabaseConfig.initialize(DatabaseConfig.java:43)
+	at com.econovafx.repository.TransactionRepositoryTest.setUpAll(TransactionRepositoryTest.java:29)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptBeforeAllMethod(TimeoutExtension.java:70)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeBeforeAllMethods$13(ClassBasedTestDescriptor.java:412)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeBeforeAllMethods(ClassBasedTestDescriptor.java:410)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:216)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:85)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:148)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
