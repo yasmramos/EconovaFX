@@ -210,4 +210,56 @@ public class ExchangeRateRepository {
                 .orderBy().desc("effectiveDate")
                 .findList();
     }
+
+    /**
+     * Obtiene la tasa de cambio para una moneda y fecha específicas.
+     * Busca tasas donde la moneda sea desde o hacia la moneda base.
+     */
+    public Optional<ExchangeRate> findByCurrencyAndDate(Currency currency, java.time.LocalDate date) {
+        ExchangeRate rate = database.find(ExchangeRate.class)
+                .where()
+                .and()
+                    .eq("fromCurrency", currency)
+                    .or()
+                        .eq("toCurrency", currency)
+                .le("effectiveDate", date.atStartOfDay())
+                .eq("status", "ACTIVE")
+                .orderBy().desc("effectiveDate")
+                .setMaxRows(1)
+                .findOne();
+        return Optional.ofNullable(rate);
+    }
+
+    /**
+     * Obtiene todas las tasas de cambio anteriores a una fecha para una moneda.
+     */
+    public List<ExchangeRate> findByCurrencyBeforeDate(Currency currency, java.time.LocalDate date) {
+        return database.find(ExchangeRate.class)
+                .where()
+                .and()
+                    .eq("fromCurrency", currency)
+                    .or()
+                        .eq("toCurrency", currency)
+                .le("effectiveDate", date.atStartOfDay())
+                .eq("status", "ACTIVE")
+                .orderBy().desc("effectiveDate")
+                .findList();
+    }
+
+    /**
+     * Obtiene la tasa de cambio actual para una moneda.
+     */
+    public Optional<ExchangeRate> findCurrentByCurrency(Currency currency) {
+        ExchangeRate rate = database.find(ExchangeRate.class)
+                .where()
+                .and()
+                    .eq("fromCurrency", currency)
+                    .or()
+                        .eq("toCurrency", currency)
+                .eq("status", "ACTIVE")
+                .orderBy().desc("effectiveDate")
+                .setMaxRows(1)
+                .findOne();
+        return Optional.ofNullable(rate);
+    }
 }
