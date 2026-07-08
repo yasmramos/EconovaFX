@@ -57,4 +57,12 @@ build/
 
 # Local configuration
 local.properties
-```target/
+
+# Generated sources
+target/generated-sources/
+# Test reports
+target/surefire-reports/
+# Coverage
+jacoco.exec
+# Maven status
+target/maven-status/

@@ -45,6 +45,9 @@ public class ThirdParty extends BaseEntity {
     @Column(name = "payment_days")
     private Integer paymentDays = 30;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
 
     @Column(name = "notes", length = 2000)
     @Lob
@@ -160,6 +163,13 @@ public class ThirdParty extends BaseEntity {
         this.paymentDays = paymentDays;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
     public String getNotes() {
         return notes;

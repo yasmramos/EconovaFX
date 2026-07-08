@@ -69,6 +69,12 @@
             <artifactId>ebean-ddl-generator</artifactId>
             <version>${ebean.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-test</artifactId>
+            <version>${ebean.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- H2 Database -->
         <dependency>
