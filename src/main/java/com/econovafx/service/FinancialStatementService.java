@@ -5,6 +5,7 @@ import com.econovafx.repository.AccountRepository;
 import com.econovafx.repository.FinancialStatementModelRepository;
 import com.econovafx.repository.FinancialStatementRowRepository;
 import io.avaje.inject.Component;
+import com.econovafx.security.RequiresTenant;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * Service for generating Financial Statements (Balance Sheet, Income Statement)
  */
 @Component
+@RequiresTenant
 public class FinancialStatementService {
 
     private static final Logger logger = LoggerFactory.getLogger(FinancialStatementService.class);

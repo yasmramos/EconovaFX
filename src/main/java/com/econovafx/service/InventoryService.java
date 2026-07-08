@@ -3,6 +3,7 @@ package com.econovafx.service;
 import com.econovafx.model.*;
 import com.econovafx.repository.*;
 import io.avaje.inject.Component;
+import com.econovafx.security.RequiresTenant;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * Implementa reglas de negocio y validaciones según Resolución 340/2004.
  */
 @Component
+@RequiresTenant
 public class InventoryService {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryService.class);

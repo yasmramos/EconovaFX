@@ -1,5 +1,8 @@
 package com.econovafx.service;
 
+import com.econovafx.security.RequiresTenant;
+import io.avaje.inject.Component;
+
 import com.econovafx.model.BankReconciliation;
 import com.econovafx.model.ReconciliationItem;
 import com.econovafx.repository.BankReconciliationRepository;
@@ -12,6 +15,8 @@ import java.util.Optional;
  * Service for Bank Reconciliation according to Resolution 340/2004.
  * Supports any reconciliation method (adjusted balance or direct).
  */
+@Component
+@RequiresTenant
 public class BankReconciliationService {
     
     private final BankReconciliationRepository repository = new BankReconciliationRepository();
