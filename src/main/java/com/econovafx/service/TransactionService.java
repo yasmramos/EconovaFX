@@ -3,6 +3,7 @@ package com.econovafx.service;
 import com.econovafx.model.*;
 import com.econovafx.repository.AccountRepository;
 import com.econovafx.repository.TransactionRepository;
+import com.econovafx.security.RequiresTenant;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import java.util.Optional;
  * Service for managing transactions with audit logging
  */
 @Component
+@RequiresTenant
 public class TransactionService {
     
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);

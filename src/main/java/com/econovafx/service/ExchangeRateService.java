@@ -7,6 +7,7 @@ import com.econovafx.repository.CurrencyRepository;
 import com.econovafx.repository.ExchangeRateRepository;
 import com.econovafx.security.SecurityUtil;
 import io.avaje.inject.Component;
+import com.econovafx.security.RequiresTenant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,7 @@ import java.util.Optional;
  * Soporta la obtención automática de tasas desde www.bc.gob.cu
  */
 @Component
+@RequiresTenant
 public class ExchangeRateService {
 
     private static final Logger log = LoggerFactory.getLogger(ExchangeRateService.class);

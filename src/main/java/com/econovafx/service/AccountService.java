@@ -4,6 +4,7 @@ import com.econovafx.model.Account;
 import com.econovafx.model.AccountType;
 import com.econovafx.repository.AccountRepository;
 import io.avaje.inject.Component;
+import com.econovafx.security.RequiresTenant;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import java.util.Optional;
  * Service for managing accounts
  */
 @Component
+@RequiresTenant
 public class AccountService {
     
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
