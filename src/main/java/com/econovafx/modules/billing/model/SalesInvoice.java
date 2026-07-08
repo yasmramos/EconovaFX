@@ -4,7 +4,6 @@ import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,10 +67,6 @@ public class SalesInvoice extends BaseEntity {
     @Column(name = "warehouse_id")
     private Long warehouseId; // Almacén de origen
 
-    @WhenCreated
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
     // Getters and Setters
     public String getInvoiceNumber() { return invoiceNumber; }
     public void setInvoiceNumber(String invoiceNumber) { this.invoiceNumber = invoiceNumber; }
@@ -124,9 +119,6 @@ public class SalesInvoice extends BaseEntity {
 
     public Long getWarehouseId() { return warehouseId; }
     public void setWarehouseId(Long warehouseId) { this.warehouseId = warehouseId; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public enum InvoiceStatus {
         DRAFT,       // Borrador

@@ -17,7 +17,7 @@ public class CashMovementRepository {
         if (movement.getId() == null) {
             movement.setId(currentId++);
         }
-        movement.setUpdatedAt(java.time.LocalDateTime.now());
+        movement.setUpdatedAt(java.time.Instant.now());
         database.put(movement.getId(), movement);
         return movement;
     }

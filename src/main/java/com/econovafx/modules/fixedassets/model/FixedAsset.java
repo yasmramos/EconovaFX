@@ -4,7 +4,6 @@ import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Activo Fijo individual.
@@ -65,10 +64,6 @@ public class FixedAsset extends BaseEntity {
     @Column(name = "responsible_user_id")
     private Long responsibleUserId; // Usuario responsable del activo
 
-    @WhenCreated
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
     // Getters and Setters
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
@@ -117,9 +112,6 @@ public class FixedAsset extends BaseEntity {
 
     public Long getResponsibleUserId() { return responsibleUserId; }
     public void setResponsibleUserId(Long responsibleUserId) { this.responsibleUserId = responsibleUserId; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public enum AssetStatus {
         ACTIVE,        // En uso

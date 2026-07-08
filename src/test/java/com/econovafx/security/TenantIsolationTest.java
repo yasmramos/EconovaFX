@@ -13,6 +13,7 @@ import com.econovafx.repository.TransactionRepository;
 import com.econovafx.repository.ThirdPartyRepository;
 import com.econovafx.repository.ExchangeRateRepository;
 import com.econovafx.repository.AuditLogRepository;
+import com.econovafx.repository.CompanyRepository;
 import io.ebean.DB;
 import io.ebean.Database;
 import org.junit.jupiter.api.*;
@@ -53,19 +54,31 @@ public class TenantIsolationTest {
         System.setProperty("ebean.datasource.tenant_b_test.driver", "org.h2.Driver");
     }
 
+    private AccountRepository accountRepository;
+    private TransactionRepository transactionRepository;
+    private ThirdPartyRepository thirdPartyRepository;
+    private ExchangeRateRepository exchangeRateRepository;
+    private AuditLogRepository auditLogRepository;
+    
     @BeforeEach
     void setUp() {
         db = DB.getDefault();
+        accountRepository = new AccountRepository(db);
+        transactionRepository = new TransactionRepository(db);
+        thirdPartyRepository = new ThirdPartyRepository(db);
+        exchangeRateRepository = new ExchangeRateRepository(db);
+        auditLogRepository = new AuditLogRepository(db);
+        
         cleanupData();
         
-        // Crear companies de prueba
+        // Crear companies de prueba directamente con Ebean
         companyA = new Company();
         companyA.setName("Empresa A Test");
         companyA.setCode(TENANT_A_CODE);
         companyA.setNif("NIF-A-TEST");
         companyA.setDatabaseUrl("jdbc:h2:mem:tenant_a_test");
         companyA.setStatus("ACTIVE");
-        companyA.save();
+        db.save(companyA);
         
         companyB = new Company();
         companyB.setName("Empresa B Test");
@@ -73,7 +86,7 @@ public class TenantIsolationTest {
         companyB.setNif("NIF-B-TEST");
         companyB.setDatabaseUrl("jdbc:h2:mem:tenant_b_test");
         companyB.setStatus("ACTIVE");
-        companyB.save();
+        db.save(companyB);
     }
 
     @AfterEach
@@ -105,11 +118,11 @@ public class TenantIsolationTest {
         // Crear transacción en Tenant A
         TenantContext.setCurrentTenant(companyA);
         Transaction transactionA = new Transaction();
-        transactionA.setDocumentNumber("TRANS-A-001");
+        transactionA.setNumber("TRANS-A-001");
         transactionA.setDate(LocalDate.now());
         transactionA.setDescription("Transacción Tenant A");
-        transactionA.setTotalAmount(BigDecimal.valueOf(1000));
-        transactionA.save();
+        transactionA.setTotalDebit(BigDecimal.valueOf(1000));
+        transactionRepository.save(transactionA);
         
         Long transactionAId = transactionA.getId();
         
@@ -117,7 +130,7 @@ public class TenantIsolationTest {
         TenantContext.clear();
         TenantContext.setCurrentTenant(companyB);
         
-        Optional<Transaction> foundTransaction = new TransactionRepository(db).findById(transactionAId);
+        Optional<Transaction> foundTransaction = transactionRepository.findById(transactionAId);
         
         // La transacción NO debe ser encontrada porque pertenece a otro tenant
         assertFalse(foundTransaction.isPresent(), 
@@ -125,25 +138,25 @@ public class TenantIsolationTest {
         
         // Crear transacción en Tenant B
         Transaction transactionB = new Transaction();
-        transactionB.setDocumentNumber("TRANS-B-001");
+        transactionB.setNumber("TRANS-B-001");
         transactionB.setDate(LocalDate.now());
         transactionB.setDescription("Transacción Tenant B");
-        transactionB.setTotalAmount(BigDecimal.valueOf(2000));
-        transactionB.save();
+        transactionB.setTotalDebit(BigDecimal.valueOf(2000));
+        transactionRepository.save(transactionB);
         
         // Verificar que Tenant B solo ve su propia transacción
-        List<Transaction> transactionsB = new TransactionRepository(db).findAll();
+        List<Transaction> transactionsB = transactionRepository.findAll();
         assertEquals(1, transactionsB.size(), 
             "Tenant B solo debería ver 1 transacción (la suya)");
-        assertEquals("TRANS-B-001", transactionsB.get(0).getDocumentNumber());
+        assertEquals("TRANS-B-001", transactionsB.get(0).getNumber());
         
         // Volver a Tenant A y verificar que solo ve su transacción
         TenantContext.clear();
         TenantContext.setCurrentTenant(companyA);
-        List<Transaction> transactionsA = new TransactionRepository(db).findAll();
+        List<Transaction> transactionsA = transactionRepository.findAll();
         assertEquals(1, transactionsA.size(), 
             "Tenant A solo debería ver 1 transacción (la suya)");
-        assertEquals("TRANS-A-001", transactionsA.get(0).getDocumentNumber());
+        assertEquals("TRANS-A-001", transactionsA.get(0).getNumber());
     }
 
     /**
@@ -158,7 +171,7 @@ public class TenantIsolationTest {
         accountA.setCode("1100-A");
         accountA.setName("Caja Tenant A");
         accountA.setType(AccountType.ASSET);
-        accountA.save();
+        accountRepository.save(accountA);
         
         Long accountAId = accountA.getId();
         
@@ -166,7 +179,7 @@ public class TenantIsolationTest {
         TenantContext.clear();
         TenantContext.setCurrentTenant(companyB);
         
-        Optional<Account> foundAccount = new AccountRepository(db).findById(accountAId);
+        Optional<Account> foundAccount = accountRepository.findById(accountAId);
         assertFalse(foundAccount.isPresent(), 
             "Tenant B no debería poder ver cuentas de Tenant A");
         
@@ -175,16 +188,16 @@ public class TenantIsolationTest {
         accountB.setCode("1100-B");
         accountB.setName("Caja Tenant B");
         accountB.setType(AccountType.ASSET);
-        accountB.save();
+        accountRepository.save(accountB);
         
         // Verificar conteo correcto por tenant
         TenantContext.clear();
         TenantContext.setCurrentTenant(companyA);
-        assertEquals(1, new AccountRepository(db).findAll().size());
+        assertEquals(1, accountRepository.findAll().size());
         
         TenantContext.clear();
         TenantContext.setCurrentTenant(companyB);
-        assertEquals(1, new AccountRepository(db).findAll().size());
+        assertEquals(1, accountRepository.findAll().size());
     }
 
     /**
@@ -200,7 +213,7 @@ public class TenantIsolationTest {
         thirdPartyA.setIdentificationNumber("900111222-A");
         thirdPartyA.setType(ThirdParty.ThirdPartyType.CUSTOMER);
         thirdPartyA.setEmail("cliente@tenant-a.com");
-        thirdPartyA.save();
+        thirdPartyRepository.save(thirdPartyA);
         
         Long thirdPartyAId = thirdPartyA.getId();
         
@@ -209,12 +222,12 @@ public class TenantIsolationTest {
         TenantContext.setCurrentTenant(companyB);
         
         // Intentar buscar tercero de Tenant A por ID
-        Optional<ThirdParty> found = new ThirdPartyRepository(db).findById(thirdPartyAId);
+        Optional<ThirdParty> found = thirdPartyRepository.findById(thirdPartyAId);
         assertFalse(found.isPresent(), 
             "Tenant B no debería poder ver terceros de Tenant A");
         
         // Intentar buscar por número de documento (debería retornar vacío)
-        List<ThirdParty> searchResult = new ThirdPartyRepository(db)
+        List<ThirdParty> searchResult = thirdPartyRepository
             .query()
             .eq("identificationNumber", "900111222-A")
             .findList();
@@ -233,7 +246,7 @@ public class TenantIsolationTest {
         ExchangeRate rateA = new ExchangeRate();
         rateA.setRate(BigDecimal.valueOf(4000));
         rateA.setEffectiveDate(java.time.LocalDateTime.now());
-        rateA.save();
+        exchangeRateRepository.save(rateA);
         
         Long rateAId = rateA.getId();
         
@@ -242,7 +255,7 @@ public class TenantIsolationTest {
         TenantContext.setCurrentTenant(companyB);
         
         // Verificar que no puede acceder a tasa de Tenant A
-        Optional<ExchangeRate> found = new ExchangeRateRepository(db).findById(rateAId);
+        Optional<ExchangeRate> found = exchangeRateRepository.findById(rateAId);
         assertFalse(found.isPresent(), 
             "Tenant B no debería poder ver tasas de cambio de Tenant A");
         
@@ -250,18 +263,18 @@ public class TenantIsolationTest {
         ExchangeRate rateB = new ExchangeRate();
         rateB.setRate(BigDecimal.valueOf(4500)); // Tasa diferente
         rateB.setEffectiveDate(java.time.LocalDateTime.now());
-        rateB.save();
+        exchangeRateRepository.save(rateB);
         
         // Verificar que cada tenant tiene su propia tasa
         TenantContext.clear();
         TenantContext.setCurrentTenant(companyA);
-        List<ExchangeRate> ratesA = new ExchangeRateRepository(db).findAll();
+        List<ExchangeRate> ratesA = exchangeRateRepository.findAllActive();
         assertEquals(1, ratesA.size());
         assertEquals(BigDecimal.valueOf(4000), ratesA.get(0).getRate());
         
         TenantContext.clear();
         TenantContext.setCurrentTenant(companyB);
-        List<ExchangeRate> ratesB = new ExchangeRateRepository(db).findAll();
+        List<ExchangeRate> ratesB = exchangeRateRepository.findAllActive();
         assertEquals(1, ratesB.size());
         assertEquals(BigDecimal.valueOf(4500), ratesB.get(0).getRate());
     }
@@ -281,7 +294,7 @@ public class TenantIsolationTest {
         logA.setEntityId(1L);
         logA.setDescription("Test log Tenant A");
         logA.setIpAddress("192.168.1.1");
-        logA.save();
+        auditLogRepository.save(logA);
         
         Long logAId = logA.getId();
         
@@ -290,12 +303,12 @@ public class TenantIsolationTest {
         TenantContext.setCurrentTenant(companyB);
         
         // Verificar aislamiento
-        Optional<AuditLog> found = new AuditLogRepository(db).findById(logAId);
+        Optional<AuditLog> found = auditLogRepository.findById(logAId);
         assertFalse(found.isPresent(), 
             "Tenant B no debería poder ver logs de auditoría de Tenant A");
         
         // Verificar conteo
-        assertEquals(0, new AuditLogRepository(db).findAll().size(), 
+        assertEquals(0, auditLogRepository.findAll().size(), 
             "Tenant B no debería tener logs visibles");
     }
 
@@ -315,7 +328,7 @@ public class TenantIsolationTest {
             account.setCode("FAIL-CODE");
             account.setName("Cuenta sin tenant");
             account.setType(AccountType.ASSET);
-            account.save();
+            accountRepository.save(account);
         }, "Debería fallar al intentar guardar sin tenant activo");
     }
 
@@ -335,10 +348,10 @@ public class TenantIsolationTest {
                     account.setCode("CONCURRENT-A-" + i);
                     account.setName("Cuenta Concurrente A" + i);
                     account.setType(AccountType.ASSET);
-                    account.save();
+                    accountRepository.save(account);
                     
                     // Verificar que solo ve cuentas de Tenant A
-                    long count = new AccountRepository(db).findAll().stream()
+                    long count = accountRepository.findAll().stream()
                         .filter(a -> a.getCode().startsWith("CONCURRENT-A"))
                         .count();
                     if (count != i + 1) {
@@ -362,10 +375,10 @@ public class TenantIsolationTest {
                     account.setCode("CONCURRENT-B-" + i);
                     account.setName("Cuenta Concurrente B" + i);
                     account.setType(AccountType.ASSET);
-                    account.save();
+                    accountRepository.save(account);
                     
                     // Verificar que solo ve cuentas de Tenant B
-                    long count = new AccountRepository(db).findAll().stream()
+                    long count = accountRepository.findAll().stream()
                         .filter(a -> a.getCode().startsWith("CONCURRENT-B"))
                         .count();
                     if (count != i + 1) {
@@ -392,14 +405,14 @@ public class TenantIsolationTest {
         // Verificación final: cada tenant tiene exactamente 10 cuentas
         TenantContext.clear();
         TenantContext.setCurrentTenant(companyA);
-        long countA = new AccountRepository(db).findAll().stream()
+        long countA = accountRepository.findAll().stream()
             .filter(a -> a.getCode().startsWith("CONCURRENT-A"))
             .count();
         assertEquals(10, countA);
         
         TenantContext.clear();
         TenantContext.setCurrentTenant(companyB);
-        long countB = new AccountRepository(db).findAll().stream()
+        long countB = accountRepository.findAll().stream()
             .filter(a -> a.getCode().startsWith("CONCURRENT-B"))
             .count();
         assertEquals(10, countB);
