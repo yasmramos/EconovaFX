@@ -438,7 +438,7 @@ class UserServiceTest {
         }
 
         @Override
-        public List<AuditLog> findByDateRange(java.time.LocalDateTime startDate, java.time.LocalDateTime endDate) {
+        public List<AuditLog> findByDateRange(java.time.Instant startDate, java.time.Instant endDate) {
             return logs.stream()
                 .filter(l -> !l.getCreatedAt().isBefore(startDate) && !l.getCreatedAt().isAfter(endDate))
                 .toList();

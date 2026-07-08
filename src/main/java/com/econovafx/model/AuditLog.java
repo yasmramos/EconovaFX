@@ -1,7 +1,6 @@
 package com.econovafx.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * Entity for audit logging of system operations
