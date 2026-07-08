@@ -57,4 +57,4 @@ build/
 
 # Local configuration
 local.properties
-```
+```target/
