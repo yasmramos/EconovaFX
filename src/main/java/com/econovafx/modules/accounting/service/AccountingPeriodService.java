@@ -2,6 +2,8 @@ package com.econovafx.modules.accounting.service;
 
 import com.econovafx.modules.accounting.model.AccountingPeriod;
 import com.econovafx.modules.accounting.repository.AccountingPeriodRepository;
+import com.econovafx.modules.cash.service.CashMovementService;
+import com.econovafx.modules.inventory.service.InventoryService;
 import com.econovafx.modules.core.security.RequiresTenant;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;

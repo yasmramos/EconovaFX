@@ -1,7 +1,14 @@
 package com.econovafx.modules.core.config;
 
 import com.econovafx.modules.core.model.*;
+import com.econovafx.modules.billing.model.BillingSeries;
 import com.econovafx.modules.billing.model.BillingSeries.DocumentType;
+import com.econovafx.modules.billing.model.TaxRate;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.inventory.model.Warehouse;
+import com.econovafx.modules.fixedassets.model.FixedAssetCategory;
+import com.econovafx.modules.core.model.ExchangeRate;
 import com.econovafx.modules.core.security.PasswordService;
 import io.ebean.DB;
 import jakarta.inject.Singleton;
