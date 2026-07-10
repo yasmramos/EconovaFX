@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.controller.ThirdPartyTransactionsController" prefWidth="900.0" prefHeight="600.0" styleClass="background">
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.billing.controller.ThirdPartyTransactionsController" prefWidth="900.0" prefHeight="600.0" styleClass="background">
     <children>
         <!-- Header -->
         <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="card" style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
