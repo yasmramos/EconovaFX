@@ -5,6 +5,7 @@ import com.econovafx.modules.accounting.repository.ExchangeDifferenceRepository;
 import com.econovafx.modules.core.repository.ExchangeRateRepository;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.core.model.AuditLog;
 import com.econovafx.modules.core.model.Currency;
 import com.econovafx.modules.core.model.ExchangeRate;
 import com.econovafx.modules.billing.model.ThirdParty;

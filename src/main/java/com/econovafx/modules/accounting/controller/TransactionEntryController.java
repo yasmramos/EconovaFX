@@ -223,7 +223,7 @@ public class TransactionEntryController implements Initializable {
                 return;
             }
             
-            com.econovafx.model.Transaction transaction = new com.econovafx.model.Transaction();
+            com.econovafx.modules.accounting.model.Transaction transaction = new com.econovafx.modules.accounting.model.Transaction();
             transaction.setDate(date);
             transaction.setType(type);
             transaction.setDescription(description);

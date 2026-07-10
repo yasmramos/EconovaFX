@@ -228,8 +228,8 @@ public class AuditLogsController {
                 filteredLogs = auditService.getAuditLogsByOperationType(operationType);
             } else if (startDate != null && endDate != null) {
                 filteredLogs = auditService.getAuditLogsByDateRange(
-                    startDate.atStartOfDay(), 
-                    endDate.atTime(23, 59, 59)
+                    Instant.from(startDate.atStartOfDay(ZoneId.systemDefault())), 
+                    Instant.from(endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()))
                 );
             } else {
                 filteredLogs = auditService.getAllAuditLogs();
@@ -308,7 +308,7 @@ public class AuditLogsController {
         details.append("Entidad: ").append(log.getEntityType()).append("\n");
         details.append("ID Entidad: ").append(log.getEntityId()).append("\n");
         details.append("Descripción: ").append(log.getDescription()).append("\n");
-        details.append("Fecha: ").append(log.getCreatedAt().format(
+        details.append("Fecha: ").append(log.getCreatedAt().atZone(ZoneId.systemDefault()).format(
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))).append("\n\n");
         details.append("Estado: ").append(log.getSuccess() ? "Exitosa" : "Fallida").append("\n");
         

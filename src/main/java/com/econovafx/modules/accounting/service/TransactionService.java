@@ -3,6 +3,7 @@ package com.econovafx.modules.accounting.service;
 import com.econovafx.modules.accounting.model.*;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
+import com.econovafx.modules.core.model.AuditLog;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.core.security.RequiresTenant;
 import io.avaje.inject.Component;
