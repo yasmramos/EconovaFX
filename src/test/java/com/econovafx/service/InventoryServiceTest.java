@@ -1,8 +1,10 @@
 package com.econovafx.service;
 
-import com.econovafx.model.*;
-import com.econovafx.repository.*;
-import com.econovafx.service.AuditService;
+import com.econovafx.modules.inventory.model.*;
+import com.econovafx.modules.inventory.repository.*;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.inventory.service.InventoryService;
+import com.econovafx.modules.core.service.AuditService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

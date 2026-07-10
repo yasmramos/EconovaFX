@@ -1,6 +1,6 @@
 package com.econovafx.ui.visual;
 
-import com.econovafx.ui.util.NotificationService;
+import com.econovafx.modules.core.ui.util.NotificationService;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

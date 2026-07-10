@@ -1,7 +1,8 @@
 package com.econovafx.service;
 
-import com.econovafx.model.BankReconciliation;
-import com.econovafx.model.ReconciliationItem;
+import com.econovafx.modules.bank.model.BankReconciliation;
+import com.econovafx.modules.bank.model.ReconciliationItem;
+import com.econovafx.modules.bank.service.BankReconciliationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

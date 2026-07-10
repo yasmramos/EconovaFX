@@ -13,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import com.econovafx.service.BCCExchangeRateClient;
-import com.econovafx.repository.ExchangeRateRepository;
-import com.econovafx.service.ExchangeRateService;
-import com.econovafx.repository.CurrencyRepository;
-import com.econovafx.service.BCCExchangeRateFetcher;
+import com.econovafx.modules.core.service.BCCExchangeRateClient;
+import com.econovafx.modules.core.repository.ExchangeRateRepository;
+import com.econovafx.modules.core.service.ExchangeRateService;
+import com.econovafx.modules.core.repository.CurrencyRepository;
+import com.econovafx.modules.core.service.BCCExchangeRateFetcher;
 
 /**
  * Unit tests for ExchangeRateService.

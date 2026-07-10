@@ -1,9 +1,13 @@
 package com.econovafx.service;
 
-import com.econovafx.model.*;
-import com.econovafx.repository.AccountRepository;
-import com.econovafx.repository.AuditLogRepository;
-import com.econovafx.repository.TransactionRepository;
+import com.econovafx.modules.core.model.*;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.core.repository.AuditLogRepository;
+import com.econovafx.modules.accounting.repository.TransactionRepository;
+import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.accounting.service.TransactionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

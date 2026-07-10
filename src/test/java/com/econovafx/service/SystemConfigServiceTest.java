@@ -1,7 +1,8 @@
 package com.econovafx.service;
 
-import com.econovafx.model.SystemConfiguration;
-import com.econovafx.repository.SystemConfigRepository;
+import com.econovafx.modules.core.model.SystemConfiguration;
+import com.econovafx.modules.core.service.SystemConfigService;
+import com.econovafx.modules.core.repository.SystemConfigRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

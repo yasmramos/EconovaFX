@@ -1,8 +1,8 @@
 package com.econovafx.repository;
 
-import com.econovafx.config.DatabaseConfig;
-import com.econovafx.model.*;
-import com.econovafx.model.User.UserRole;
+import com.econovafx.modules.core.config.DatabaseConfig;
+import com.econovafx.modules.core.model.*;
+import com.econovafx.modules.core.model.User.UserRole;
 import io.ebean.Database;
 import org.junit.jupiter.api.*;
 
