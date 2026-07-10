@@ -1,4 +1,5 @@
-package com.econovafx.model;
+package com.econovafx.modules.accounting.model;
+import com.econovafx.modules.core.model.BaseEntity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -21,11 +22,11 @@ public class AccountingPeriod extends BaseEntity {
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private PeriodStatus status = PeriodStatus.OPEN;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private PeriodType type = PeriodType.MONTHLY;
 
     @Column(length = 100)

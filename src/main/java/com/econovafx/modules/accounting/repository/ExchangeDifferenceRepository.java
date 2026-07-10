@@ -1,6 +1,6 @@
-package com.econovafx.repository;
+package com.econovafx.modules.accounting.repository;
 
-import com.econovafx.model.ExchangeDifference;
+import com.econovafx.modules.accounting.model.ExchangeDifference;
 import io.ebean.DB;
 import io.ebean.Database;
 import io.ebean.Transaction;

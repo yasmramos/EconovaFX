@@ -1,6 +1,6 @@
-package com.econovafx.repository;
+package com.econovafx.modules.billing.repository;
 
-import com.econovafx.model.ThirdParty;
+import com.econovafx.modules.billing.model.ThirdParty;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import io.ebean.ExpressionList;

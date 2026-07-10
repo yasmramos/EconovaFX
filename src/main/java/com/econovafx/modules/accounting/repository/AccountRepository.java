@@ -1,7 +1,7 @@
-package com.econovafx.repository;
+package com.econovafx.modules.accounting.repository;
 
-import com.econovafx.model.Account;
-import com.econovafx.model.AccountType;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import io.ebean.ExpressionList;

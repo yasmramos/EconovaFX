@@ -1,8 +1,8 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.accounting.controller;
 
-import com.econovafx.model.Account;
-import com.econovafx.model.AccountType;
-import com.econovafx.service.AccountService;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
+import com.econovafx.modules.accounting.service.AccountService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

@@ -1,10 +1,10 @@
-package com.econovafx.service;
+package com.econovafx.modules.bank.service;
 
-import com.econovafx.security.RequiresTenant;
+import com.econovafx.modules.core.security.RequiresTenant;
 import io.avaje.inject.Component;
 
-import com.econovafx.model.BankAccount;
-import com.econovafx.repository.BankAccountRepository;
+import com.econovafx.modules.bank.model.BankAccount;
+import com.econovafx.modules.bank.repository.BankAccountRepository;
 
 import java.util.List;
 import java.util.Optional;

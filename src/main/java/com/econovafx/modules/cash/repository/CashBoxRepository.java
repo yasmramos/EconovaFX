@@ -1,6 +1,6 @@
-package com.econovafx.repository;
+package com.econovafx.modules.cash.repository;
 
-import com.econovafx.model.CashBox;
+import com.econovafx.modules.cash.model.CashBox;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

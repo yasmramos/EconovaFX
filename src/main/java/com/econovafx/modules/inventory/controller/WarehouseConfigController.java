@@ -1,14 +1,14 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.inventory.controller;
 
-import com.econovafx.model.AuditLog;
-import com.econovafx.model.User;
-import com.econovafx.model.ValuationMethod;
-import com.econovafx.model.Warehouse;
-import com.econovafx.repository.UserRepository;
-import com.econovafx.repository.WarehouseRepository;
-import com.econovafx.service.AuditService;
-import com.econovafx.ui.util.ModernDialog;
-import com.econovafx.ui.util.NotificationService;
+import com.econovafx.modules.core.model.AuditLog;
+import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.inventory.model.ValuationMethod;
+import com.econovafx.modules.inventory.model.Warehouse;
+import com.econovafx.modules.core.repository.UserRepository;
+import com.econovafx.modules.inventory.repository.WarehouseRepository;
+import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.core.ui.util.ModernDialog;
+import com.econovafx.modules.core.ui.util.NotificationService;
 import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

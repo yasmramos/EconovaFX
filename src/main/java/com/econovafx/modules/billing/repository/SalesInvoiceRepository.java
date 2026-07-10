@@ -1,7 +1,7 @@
-package com.econovafx.repository;
+package com.econovafx.modules.billing.repository;
 
-import com.econovafx.model.SalesInvoice;
-import com.econovafx.model.SalesInvoice.InvoiceStatus;
+import com.econovafx.modules.billing.model.SalesInvoice;
+import com.econovafx.modules.billing.model.SalesInvoice.InvoiceStatus;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;

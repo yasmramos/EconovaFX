@@ -1,10 +1,10 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.accounting.controller;
 
-import com.econovafx.model.Account;
-import com.econovafx.model.Transaction;
-import com.econovafx.service.AccountService;
-import com.econovafx.service.TransactionService;
-import com.econovafx.service.TransactionService.TransactionEntryData;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.accounting.service.TransactionService.TransactionEntryData;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -223,7 +223,7 @@ public class TransactionEntryController implements Initializable {
                 return;
             }
             
-            com.econovafx.model.Transaction transaction = new com.econovafx.model.Transaction();
+            com.econovafx.modules.accounting.model.Transaction transaction = new com.econovafx.modules.accounting.model.Transaction();
             transaction.setDate(date);
             transaction.setType(type);
             transaction.setDescription(description);

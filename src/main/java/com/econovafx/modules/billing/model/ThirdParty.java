@@ -1,5 +1,9 @@
-package com.econovafx.model;
+package com.econovafx.modules.billing.model;
+import com.econovafx.modules.core.model.BaseEntity;
 
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.core.model.Company;
+import com.econovafx.modules.accounting.model.Transaction;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

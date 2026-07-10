@@ -1,9 +1,14 @@
-package com.econovafx.service;
+package com.econovafx.modules.fixedassets.service;
 
-import com.econovafx.model.*;
-import com.econovafx.repository.*;
+import com.econovafx.modules.fixedassets.model.*;
+import com.econovafx.modules.fixedassets.repository.*;
+import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.core.service.AuditService;
 import io.avaje.inject.Component;
-import com.econovafx.security.RequiresTenant;
+import com.econovafx.modules.core.security.RequiresTenant;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
