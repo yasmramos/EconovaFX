@@ -51,6 +51,17 @@ public class DatabaseConfig {
     public static void initializeMasterOnly() {
         initializeMaster();
     }
+    
+    /**
+     * Inicializa la configuración para tests aislados.
+     * Usa una base de datos en memoria separada para evitar conflictos.
+     */
+    public static void initializeForTest() {
+        // Solo inicializar master si no está ya inicializado
+        if (masterDatabase == null) {
+            initializeMaster();
+        }
+    }
 
     public static void initializeMaster() {
         try {
@@ -70,7 +81,13 @@ public class DatabaseConfig {
             DatabaseBuilder builder = Database.builder();
             builder.name("econova-master")
                 .dataSource(dataSource)
-                .addPackage("com.econovafx.model")
+                .addPackage("com.econovafx.modules.core.model")
+                .addPackage("com.econovafx.modules.accounting.model")
+                .addPackage("com.econovafx.modules.billing.model")
+                .addPackage("com.econovafx.modules.bank.model")
+                .addPackage("com.econovafx.modules.cash.model")
+                .addPackage("com.econovafx.modules.inventory.model")
+                .addPackage("com.econovafx.modules.fixedassets.model")
                 .ddlGenerate(true)
                 .ddlRun(true)
                 .databasePlatform(new H2Platform());
@@ -117,8 +134,13 @@ public class DatabaseConfig {
                 .setCurrentTenantProvider(tenantProvider)
                 .setTenantDataSourceProvider(dataSourceProvider)
                 .setDatabasePlatform(new H2Platform())
-                .addPackage("com.econovafx.model")
-                .addPackage("com.econovafx.model")
+                .addPackage("com.econovafx.modules.core.model")
+                .addPackage("com.econovafx.modules.accounting.model")
+                .addPackage("com.econovafx.modules.billing.model")
+                .addPackage("com.econovafx.modules.bank.model")
+                .addPackage("com.econovafx.modules.cash.model")
+                .addPackage("com.econovafx.modules.inventory.model")
+                .addPackage("com.econovafx.modules.fixedassets.model")
                 .ddlGenerate(true)
                 .ddlRun(true);
             
