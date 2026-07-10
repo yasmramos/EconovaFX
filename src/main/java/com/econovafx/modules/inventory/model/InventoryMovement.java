@@ -1,5 +1,9 @@
 package com.econovafx.modules.inventory.model;
 
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.core.model.BaseEntity;
+import com.econovafx.modules.core.model.User;
 import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;
 import java.math.BigDecimal;

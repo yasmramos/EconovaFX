@@ -1,7 +1,10 @@
 package com.econovafx.modules.fixedassets.service;
 
 import com.econovafx.modules.fixedassets.model.*;
-import com.econovafx.modules.core.repository.*;
+import com.econovafx.modules.fixedassets.repository.*;
+import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.service.AuditService;
 import io.avaje.inject.Component;
 import com.econovafx.modules.core.security.RequiresTenant;
 import jakarta.inject.Inject;

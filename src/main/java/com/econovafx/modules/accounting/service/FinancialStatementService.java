@@ -1,9 +1,9 @@
 package com.econovafx.modules.accounting.service;
 
 import com.econovafx.modules.accounting.model.*;
-import com.econovafx.modules.core.repository.AccountRepository;
-import com.econovafx.modules.core.repository.FinancialStatementModelRepository;
-import com.econovafx.modules.core.repository.FinancialStatementRowRepository;
+import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.accounting.repository.FinancialStatementModelRepository;
+import com.econovafx.modules.accounting.repository.FinancialStatementRowRepository;
 import io.avaje.inject.Component;
 import com.econovafx.modules.core.security.RequiresTenant;
 import jakarta.inject.Inject;

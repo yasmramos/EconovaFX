@@ -1,15 +1,15 @@
 package com.econovafx.modules.core.config;
 
-import com.econovafx.modules.core.repository.AccountRepository;
-import com.econovafx.modules.core.repository.TransactionRepository;
-import com.econovafx.modules.core.repository.ThirdPartyRepository;
+import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.accounting.repository.TransactionRepository;
+import com.econovafx.modules.billing.repository.ThirdPartyRepository;
 import com.econovafx.modules.core.repository.UserRepository;
 import com.econovafx.modules.accounting.service.AccountService;
-import com.econovafx.modules.core.service.TransactionService;
+import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.service.UserService;
-import com.econovafx.modules.core.service.ThirdPartyService;
+import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.core.service.ExportService;
-import com.econovafx.modules.core.service.AccountingPeriodService;
+import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.core.service.ExchangeRateService;
 import com.econovafx.modules.core.ui.controller.*;

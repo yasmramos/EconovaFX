@@ -1,10 +1,10 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.core.ui.controller;
 
-import com.econovafx.service.AccountService;
-import com.econovafx.service.TransactionService;
-import com.econovafx.service.UserService;
-import com.econovafx.ui.util.NotificationService;
-import com.econovafx.ui.view.ViewFactory;
+import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.service.UserService;
+import com.econovafx.modules.core.ui.util.NotificationService;
+import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;

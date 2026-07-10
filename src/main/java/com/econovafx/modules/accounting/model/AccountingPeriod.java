@@ -1,4 +1,5 @@
 package com.econovafx.modules.accounting.model;
+import com.econovafx.modules.core.model.BaseEntity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;

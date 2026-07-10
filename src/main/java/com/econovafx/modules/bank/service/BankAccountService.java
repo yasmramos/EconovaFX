@@ -4,7 +4,7 @@ import com.econovafx.modules.core.security.RequiresTenant;
 import io.avaje.inject.Component;
 
 import com.econovafx.modules.bank.model.BankAccount;
-import com.econovafx.modules.core.repository.BankAccountRepository;
+import com.econovafx.modules.bank.repository.BankAccountRepository;
 
 import java.util.List;
 import java.util.Optional;

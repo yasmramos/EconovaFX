@@ -1,9 +1,9 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.core.ui.controller;
 
-import com.econovafx.model.SystemConfiguration;
-import com.econovafx.service.AuditService;
-import com.econovafx.service.NotificationService;
-import com.econovafx.service.SystemConfigService;
+import com.econovafx.modules.core.model.SystemConfiguration;
+import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.core.service.NotificationService;
+import com.econovafx.modules.core.service.SystemConfigService;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

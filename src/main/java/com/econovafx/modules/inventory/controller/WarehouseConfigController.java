@@ -5,7 +5,7 @@ import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.inventory.model.ValuationMethod;
 import com.econovafx.modules.inventory.model.Warehouse;
 import com.econovafx.modules.core.repository.UserRepository;
-import com.econovafx.modules.core.repository.WarehouseRepository;
+import com.econovafx.modules.inventory.repository.WarehouseRepository;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.core.ui.util.NotificationService;

@@ -1,7 +1,7 @@
 package com.econovafx.modules.billing.controller;
 
 import com.econovafx.modules.billing.model.ThirdParty;
-import com.econovafx.modules.core.service.ThirdPartyService;
+import com.econovafx.modules.billing.service.ThirdPartyService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
