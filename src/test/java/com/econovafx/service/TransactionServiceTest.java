@@ -3,6 +3,9 @@ package com.econovafx.service;
 import com.econovafx.modules.core.model.*;
 import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.AccountType;
+import com.econovafx.modules.accounting.model.TransactionEntry;
+import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.core.repository.AuditLogRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

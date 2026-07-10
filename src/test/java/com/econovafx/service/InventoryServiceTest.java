@@ -3,7 +3,9 @@ package com.econovafx.service;
 import com.econovafx.modules.inventory.model.InventoryItem;
 import com.econovafx.modules.inventory.model.Warehouse;
 import com.econovafx.modules.inventory.model.InventoryMovement;
-import com.econovafx.modules.inventory.model.MovementType;
+import com.econovafx.modules.accounting.model.AccountingPeriod;
+import com.econovafx.modules.inventory.model.InventoryCategory;
+import com.econovafx.modules.inventory.model.ValuationMethod;
 import com.econovafx.modules.inventory.repository.*;
 import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.accounting.service.TransactionService;
@@ -24,6 +26,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+
+import com.econovafx.modules.inventory.model.InventoryMovement.MovementType;
 
 /**
  * Tests unitarios para el servicio de inventarios.

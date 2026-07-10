@@ -14,11 +14,13 @@ import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.core.repository.UserRepository;
 import com.econovafx.modules.core.repository.CompanyRepository;
+import com.econovafx.modules.billing.model.ThirdParty;
 import io.ebean.Database;
 import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
