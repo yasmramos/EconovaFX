@@ -39,8 +39,8 @@ class TransactionRepositoryTest {
 
     @BeforeAll
     void setUpAll() {
-        // Initialize master database only (skip multi-tenant to avoid conflicts)
-        DatabaseConfig.initializeMasterOnly();
+        // Initialize test database with DDL disabled to avoid H2 syntax errors
+        DatabaseConfig.initializeForTest();
         db = DatabaseConfig.getServer();
         
         companyRepository = new CompanyRepository();

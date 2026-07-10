@@ -55,11 +55,25 @@ public class DatabaseConfig {
     /**
      * Inicializa la configuración para tests aislados.
      * Usa una base de datos en memoria separada para evitar conflictos.
+     * Deshabilita DDL automático para evitar errores de sintaxis en H2.
      */
     public static void initializeForTest() {
         // Solo inicializar master si no está ya inicializado
         if (masterDatabase == null) {
-            initializeMaster();
+            DataSourceConfig config = new DataSourceConfig();
+            config.setUsername("sa");
+            config.setPassword("");
+            config.setUrl("jdbc:h2:mem:econova-test-master;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
+            
+            io.ebean.config.DatabaseConfig dbConfig = new io.ebean.config.DatabaseConfig();
+            dbConfig.setName("econova-master");
+            dbConfig.setDataSourceConfig(config);
+            dbConfig.setDefaultServer(true);
+            dbConfig.setDdlGenerate(false);  // Deshabilitar generación DDL
+            dbConfig.setDdlRun(false);       // Deshabilitar ejecución DDL
+            
+            masterDatabase = io.ebean.DatabaseFactory.create(dbConfig);
+            logger.info("Master database initialized for test (DDL disabled)");
         }
     }
 
