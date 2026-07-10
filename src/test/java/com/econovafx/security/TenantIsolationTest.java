@@ -1,16 +1,16 @@
 package com.econovafx.security;
 
-import com.econovafx.config.TenantContext;
-import com.econovafx.modules.core.model.Account;
-import com.econovafx.modules.core.model.Transaction;
-import com.econovafx.modules.core.model.ThirdParty;
+import com.econovafx.modules.core.config.TenantContext;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.core.model.ExchangeRate;
 import com.econovafx.modules.core.model.AuditLog;
 import com.econovafx.modules.core.model.Company;
-import com.econovafx.modules.core.model.AccountType;
-import com.econovafx.modules.core.repository.AccountRepository;
-import com.econovafx.modules.core.repository.TransactionRepository;
-import com.econovafx.modules.core.repository.ThirdPartyRepository;
+import com.econovafx.modules.accounting.model.AccountType;
+import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.accounting.repository.TransactionRepository;
+import com.econovafx.modules.billing.repository.ThirdPartyRepository;
 import com.econovafx.modules.core.repository.ExchangeRateRepository;
 import com.econovafx.modules.core.repository.AuditLogRepository;
 import com.econovafx.modules.core.repository.CompanyRepository;

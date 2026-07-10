@@ -74,7 +74,7 @@ public class DashboardControllerTest extends ApplicationTest {
         Account account = new Account();
         account.setCode(code);
         account.setName(name);
-        account.setType(com.econovafx.model.AccountType.valueOf(type));
+        account.setType(com.econovafx.modules.accounting.model.AccountType.valueOf(type));
         account.setBalance(balance);
         return account;
     }
