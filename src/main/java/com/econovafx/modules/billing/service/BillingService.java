@@ -1,9 +1,9 @@
-package com.econovafx.service;
+package com.econovafx.modules.billing.service;
 
-import com.econovafx.model.*;
-import com.econovafx.repository.*;
+import com.econovafx.modules.billing.model.*;
+import com.econovafx.modules.core.repository.*;
 import io.avaje.inject.Component;
-import com.econovafx.security.RequiresTenant;
+import com.econovafx.modules.core.security.RequiresTenant;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

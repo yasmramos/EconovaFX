@@ -1,11 +1,11 @@
-package com.econovafx.service;
+package com.econovafx.modules.bank.service;
 
-import com.econovafx.security.RequiresTenant;
+import com.econovafx.modules.core.security.RequiresTenant;
 import io.avaje.inject.Component;
 
-import com.econovafx.model.BankReconciliation;
-import com.econovafx.model.ReconciliationItem;
-import com.econovafx.repository.BankReconciliationRepository;
+import com.econovafx.modules.bank.model.BankReconciliation;
+import com.econovafx.modules.bank.model.ReconciliationItem;
+import com.econovafx.modules.core.repository.BankReconciliationRepository;
 
 import java.math.BigDecimal;
 import java.util.List;

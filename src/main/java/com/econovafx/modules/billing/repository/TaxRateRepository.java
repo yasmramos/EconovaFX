@@ -1,6 +1,6 @@
-package com.econovafx.repository;
+package com.econovafx.modules.billing.repository;
 
-import com.econovafx.model.TaxRate;
+import com.econovafx.modules.billing.model.TaxRate;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;

@@ -1,4 +1,4 @@
-package com.econovafx.model;
+package com.econovafx.modules.accounting.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

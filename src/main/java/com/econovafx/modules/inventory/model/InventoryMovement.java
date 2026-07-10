@@ -1,4 +1,4 @@
-package com.econovafx.model;
+package com.econovafx.modules.inventory.model;
 
 import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;

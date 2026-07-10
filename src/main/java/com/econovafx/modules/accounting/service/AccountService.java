@@ -1,10 +1,10 @@
-package com.econovafx.service;
+package com.econovafx.modules.accounting.service;
 
-import com.econovafx.model.Account;
-import com.econovafx.model.AccountType;
-import com.econovafx.repository.AccountRepository;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
+import com.econovafx.modules.core.repository.AccountRepository;
 import io.avaje.inject.Component;
-import com.econovafx.security.RequiresTenant;
+import com.econovafx.modules.core.security.RequiresTenant;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

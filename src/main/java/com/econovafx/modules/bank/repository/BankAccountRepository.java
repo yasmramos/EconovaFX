@@ -1,6 +1,6 @@
-package com.econovafx.repository;
+package com.econovafx.modules.bank.repository;
 
-import com.econovafx.model.BankAccount;
+import com.econovafx.modules.bank.model.BankAccount;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

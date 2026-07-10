@@ -1,68 +1,16 @@
 ```
-# Compiled Java classes
+# Compiled and build artifacts
 *.class
-
-# Maven build artifacts
+*.o
+*.obj
+*.out
+# Dependencies
 target/
-
-# Database files
-*.mv.db
-*.trace.db
-
-# IDE files
+.gradle/
+# Logs and temp files
+*.log
+*.tmp
+# Editors
 .vscode/
 .idea/
-*.iml
-*.ipr
-*.iws
-
-# Logs
-*.log
-
-# Environment
-.env
-.env.local
-*.env.*
-
-# Temporary files
-*.tmp
-*.swp
-*.swo
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Package manager caches
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Python virtual environments
-venv/
-.venv/
-__pycache__/
-*.pyc
-*$py.class
-
-# Gradle
-.gradle/
-build/
-
-# Local configuration
-local.properties
-
-# Generated sources
-target/generated-sources/
-# Test reports
-target/surefire-reports/
-# Coverage
-jacoco.exec
-# Maven status
-target/maven-status/
+```

@@ -1,6 +1,6 @@
-package com.econovafx.repository;
+package com.econovafx.modules.fixedassets.repository;
 
-import com.econovafx.model.DepreciationRecord;
+import com.econovafx.modules.fixedassets.model.DepreciationRecord;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;

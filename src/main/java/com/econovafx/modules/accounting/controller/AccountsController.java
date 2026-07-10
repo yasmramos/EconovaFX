@@ -1,9 +1,9 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.accounting.controller;
 
-import com.econovafx.model.Account;
-import com.econovafx.model.AccountType;
-import com.econovafx.service.AccountService;
-import com.econovafx.ui.view.ViewFactory;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
+import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.collections.FXCollections;

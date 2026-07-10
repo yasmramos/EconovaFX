@@ -1,12 +1,12 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.billing.controller;
 
 import com.econovafx.controller.ThirdPartyTransactionsController;
-import com.econovafx.model.ThirdParty;
-import com.econovafx.service.ExportService;
-import com.econovafx.service.NotificationService;
-import com.econovafx.service.ThirdPartyService;
-import com.econovafx.ui.util.ModernDialog;
-import com.econovafx.ui.view.ViewFactory;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.core.service.ExportService;
+import com.econovafx.modules.core.service.NotificationService;
+import com.econovafx.modules.core.service.ThirdPartyService;
+import com.econovafx.modules.core.ui.util.ModernDialog;
+import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.collections.FXCollections;

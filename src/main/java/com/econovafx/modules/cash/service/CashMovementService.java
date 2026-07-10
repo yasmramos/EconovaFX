@@ -1,14 +1,14 @@
-package com.econovafx.service;
+package com.econovafx.modules.cash.service;
 import io.avaje.inject.Component;
-import com.econovafx.security.RequiresTenant;
-import com.econovafx.model.AccountingPeriod;
+import com.econovafx.modules.core.security.RequiresTenant;
+import com.econovafx.modules.accounting.model.AccountingPeriod;
 
-import com.econovafx.model.CashMovement;
-import com.econovafx.model.BankAccount;
-import com.econovafx.model.CashBox;
-import com.econovafx.repository.CashMovementRepository;
-import com.econovafx.repository.BankAccountRepository;
-import com.econovafx.repository.CashBoxRepository;
+import com.econovafx.modules.cash.model.CashMovement;
+import com.econovafx.modules.bank.model.BankAccount;
+import com.econovafx.modules.cash.model.CashBox;
+import com.econovafx.modules.core.repository.CashMovementRepository;
+import com.econovafx.modules.core.repository.BankAccountRepository;
+import com.econovafx.modules.core.repository.CashBoxRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
