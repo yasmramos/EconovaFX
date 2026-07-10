@@ -26,7 +26,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Integration tests for TransactionRepository with proper isolation
+ * Integration tests for TransactionRepository with isolated test database
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TransactionRepositoryTest {
@@ -39,8 +39,8 @@ class TransactionRepositoryTest {
 
     @BeforeAll
     void setUpAll() {
-        // Initialize full multi-tenant configuration for this test
-        DatabaseConfig.initialize();
+        // Initialize master database only (skip multi-tenant to avoid conflicts)
+        DatabaseConfig.initializeMasterOnly();
         db = DatabaseConfig.getServer();
         
         companyRepository = new CompanyRepository();
