@@ -1,8 +1,8 @@
-package com.econovafx.service;
+package com.econovafx.modules.accounting.service;
 
-import com.econovafx.model.AccountingPeriod;
-import com.econovafx.repository.AccountingPeriodRepository;
-import com.econovafx.security.RequiresTenant;
+import com.econovafx.modules.accounting.model.AccountingPeriod;
+import com.econovafx.modules.core.repository.AccountingPeriodRepository;
+import com.econovafx.modules.core.security.RequiresTenant;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;

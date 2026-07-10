@@ -1,6 +1,6 @@
-package com.econovafx.model;
+package com.econovafx.modules.bank.model;
 
-import com.econovafx.model.BaseEntity;
+import com.econovafx.modules.core.model.BaseEntity;
 import io.ebean.annotation.DbEnumValue;
 import jakarta.persistence.*;
 

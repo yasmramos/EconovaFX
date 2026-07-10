@@ -1,4 +1,4 @@
-package com.econovafx.model;
+package com.econovafx.modules.billing.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

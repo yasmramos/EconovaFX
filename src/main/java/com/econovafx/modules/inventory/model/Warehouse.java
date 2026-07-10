@@ -1,4 +1,4 @@
-package com.econovafx.model;
+package com.econovafx.modules.inventory.model;
 
 import jakarta.persistence.*;
 

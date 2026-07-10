@@ -1,4 +1,4 @@
-package com.econovafx.model;
+package com.econovafx.modules.fixedassets.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

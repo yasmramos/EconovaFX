@@ -1,6 +1,6 @@
-package com.econovafx.repository;
+package com.econovafx.modules.accounting.repository;
 
-import com.econovafx.model.AccountingPeriod;
+import com.econovafx.modules.accounting.model.AccountingPeriod;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;
