@@ -56,7 +56,7 @@ class ExchangeRateServiceTest {
         // Mock currency repository to return existing CUP currency
         when(mockCurrencyRepository.findByCode("CUP")).thenReturn(Optional.empty());
         when(mockCurrencyRepository.save(any())).thenAnswer(invocation -> {
-            com.econovafx.model.Currency c = invocation.getArgument(0);
+            com.econovafx.modules.core.model.Currency c = invocation.getArgument(0);
             c.setId(1L);
             return c;
         });
@@ -65,13 +65,13 @@ class ExchangeRateServiceTest {
         
         // Mock exchange rate repository save
         when(mockRepository.save(any())).thenAnswer(invocation -> {
-            com.econovafx.model.ExchangeRate er = invocation.getArgument(0);
+            com.econovafx.modules.core.model.ExchangeRate er = invocation.getArgument(0);
             er.setId(1L);
             return er;
         });
 
         // When: fetchAndSaveRatesFromBCC is called
-        List<com.econovafx.model.ExchangeRate> result = service.fetchAndSaveRatesFromBCC();
+        List<com.econovafx.modules.core.model.ExchangeRate> result = service.fetchAndSaveRatesFromBCC();
 
         // Then: Should save rates to repository
         assertNotNull(result);
@@ -85,7 +85,7 @@ class ExchangeRateServiceTest {
         when(mockBccFetcher.fetchCurrentRates()).thenReturn(List.of());
 
         // When: fetchAndSaveRatesFromBCC is called
-        List<com.econovafx.model.ExchangeRate> result = service.fetchAndSaveRatesFromBCC();
+        List<com.econovafx.modules.core.model.ExchangeRate> result = service.fetchAndSaveRatesFromBCC();
 
         // Then: Should return empty list
         assertTrue(result.isEmpty());
@@ -95,13 +95,13 @@ class ExchangeRateServiceTest {
     @Test
     void testGetAllActiveRates_DelegatesToRepository() {
         // Given: Repository has active rates
-        List<com.econovafx.model.ExchangeRate> mockRates = List.of(
-            new com.econovafx.model.ExchangeRate(null, null, java.math.BigDecimal.ONE, java.time.LocalDateTime.now())
+        List<com.econovafx.modules.core.model.ExchangeRate> mockRates = List.of(
+            new com.econovafx.modules.core.model.ExchangeRate(null, null, java.math.BigDecimal.ONE, java.time.LocalDateTime.now())
         );
         when(mockRepository.findAllActive()).thenReturn(mockRates);
 
         // When: getAllActiveRates is called
-        List<com.econovafx.model.ExchangeRate> result = service.getAllActiveRates();
+        List<com.econovafx.modules.core.model.ExchangeRate> result = service.getAllActiveRates();
 
         // Then: Should return rates from repository
         assertEquals(1, result.size());
@@ -124,14 +124,14 @@ class ExchangeRateServiceTest {
     void testGetExchangeRateById_DelegatesToRepository() {
         // Given: Exchange rate ID
         Long rateId = 1L;
-        com.econovafx.model.ExchangeRate mockRate = new com.econovafx.model.ExchangeRate(
+        com.econovafx.modules.core.model.ExchangeRate mockRate = new com.econovafx.modules.core.model.ExchangeRate(
             null, null, java.math.BigDecimal.ONE, java.time.LocalDateTime.now()
         );
         mockRate.setId(rateId);
         when(mockRepository.findById(rateId)).thenReturn(Optional.of(mockRate));
 
         // When: getExchangeRateById is called
-        Optional<com.econovafx.model.ExchangeRate> result = service.getExchangeRateById(rateId);
+        Optional<com.econovafx.modules.core.model.ExchangeRate> result = service.getExchangeRateById(rateId);
 
         // Then: Should return rate from repository
         assertTrue(result.isPresent());
@@ -154,13 +154,13 @@ class ExchangeRateServiceTest {
     @Test
     void testGetLatestRatesForAllCurrencies_DelegatesToGetAllActive() {
         // Given: Active rates exist
-        List<com.econovafx.model.ExchangeRate> mockRates = List.of(
-            new com.econovafx.model.ExchangeRate(null, null, java.math.BigDecimal.ONE, java.time.LocalDateTime.now())
+        List<com.econovafx.modules.core.model.ExchangeRate> mockRates = List.of(
+            new com.econovafx.modules.core.model.ExchangeRate(null, null, java.math.BigDecimal.ONE, java.time.LocalDateTime.now())
         );
         when(mockRepository.findAllActive()).thenReturn(mockRates);
 
         // When: getLatestRatesForAllCurrencies is called
-        List<com.econovafx.model.ExchangeRate> result = service.getLatestRatesForAllCurrencies();
+        List<com.econovafx.modules.core.model.ExchangeRate> result = service.getLatestRatesForAllCurrencies();
 
         // Then: Should return all active rates
         assertEquals(1, result.size());

@@ -1,8 +1,10 @@
 package com.econovafx.service;
 
-import com.econovafx.modules.core.model.Account;
-import com.econovafx.modules.core.model.AccountType;
-import com.econovafx.modules.core.repository.AccountRepository;
+import com.econovafx.modules.accounting.service.AccountService;
+
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
+import com.econovafx.modules.accounting.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
