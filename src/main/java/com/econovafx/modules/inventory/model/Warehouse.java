@@ -1,5 +1,7 @@
-package com.econovafx.model;
+package com.econovafx.modules.inventory.model;
+import com.econovafx.modules.core.model.BaseEntity;
 
+import com.econovafx.modules.core.model.User;
 import jakarta.persistence.*;
 
 /**

@@ -1,6 +1,6 @@
-package com.econovafx.repository;
+package com.econovafx.modules.cash.repository;
 
-import com.econovafx.model.CashMovement;
+import com.econovafx.modules.cash.model.CashMovement;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;

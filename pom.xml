@@ -20,7 +20,7 @@
         <ebean.version>17.11.0</ebean.version>
         <h2.version>2.2.224</h2.version>
         <logback.version>1.4.14</logback.version>
-        <jacoco.version>0.8.11</jacoco.version>
+        <jacoco.version>0.8.12</jacoco.version>
         <testfx.version>4.0.17</testfx.version>
         <monocle.version>3.1.0</monocle.version>
     </properties>

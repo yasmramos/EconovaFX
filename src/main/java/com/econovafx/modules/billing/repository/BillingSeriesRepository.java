@@ -1,7 +1,7 @@
-package com.econovafx.repository;
+package com.econovafx.modules.billing.repository;
 
-import com.econovafx.model.BillingSeries;
-import com.econovafx.model.BillingSeries.DocumentType;
+import com.econovafx.modules.billing.model.BillingSeries;
+import com.econovafx.modules.billing.model.BillingSeries.DocumentType;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;

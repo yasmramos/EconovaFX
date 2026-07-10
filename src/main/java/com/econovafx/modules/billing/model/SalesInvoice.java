@@ -1,5 +1,7 @@
-package com.econovafx.model;
+package com.econovafx.modules.billing.model;
 
+import com.econovafx.modules.core.model.BaseEntity;
+import com.econovafx.modules.core.model.Currency;
 import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;
 import java.math.BigDecimal;

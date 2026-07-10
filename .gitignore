@@ -1,68 +1,62 @@
 ```
-# Compiled Java classes
+# Compiled and build artifacts
 *.class
-
-# Maven build artifacts
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
 target/
+build/
 
-# Database files
-*.mv.db
-*.trace.db
+# Dependencies
+lib/
+*.jar
+*.war
+*.ear
 
-# IDE files
-.vscode/
-.idea/
-*.iml
-*.ipr
-*.iws
-
-# Logs
+# Logs and temp files
 *.log
+*.tmp
+*.swp
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Temporary files
-*.tmp
-*.swp
-*.swo
+# Editors
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
+# Test and coverage
+test-results/
+*.dump
+*.pid
+*.seed
 
-# Package manager caches
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Python virtual environments
-venv/
-.venv/
-__pycache__/
-*.pyc
-*$py.class
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.maven-timestamp
 
 # Gradle
 .gradle/
+!gradle/wrapper/gradle-wrapper.jar
 build/
-
-# Local configuration
-local.properties
-
-# Generated sources
-target/generated-sources/
-# Test reports
-target/surefire-reports/
-# Coverage
-jacoco.exec
-# Maven status
-target/maven-status/
+.libs/
+```

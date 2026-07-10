@@ -1,10 +1,10 @@
 package com.econovafx;
 
-import com.econovafx.config.AppContext;
-import com.econovafx.config.DatabaseConfig;
-import com.econovafx.ui.controller.MainViewController;
-import com.econovafx.ui.view.SplashController;
-import com.econovafx.ui.view.ViewFactory;
+import com.econovafx.modules.core.config.AppContext;
+import com.econovafx.modules.core.config.DatabaseConfig;
+import com.econovafx.modules.core.ui.controller.MainViewController;
+import com.econovafx.modules.core.ui.view.SplashController;
+import com.econovafx.modules.core.ui.view.ViewFactory;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

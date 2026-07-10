@@ -1,7 +1,7 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.accounting.controller;
 
-import com.econovafx.model.AccountingPeriod;
-import com.econovafx.service.AccountingPeriodService;
+import com.econovafx.modules.accounting.model.AccountingPeriod;
+import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;

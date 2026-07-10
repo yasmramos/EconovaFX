@@ -1,10 +1,9 @@
 package com.econovafx.ui.visual;
 
-import com.econovafx.config.AppContext;
-import com.econovafx.repository.*;
-import com.econovafx.service.*;
-import com.econovafx.ui.controller.*;
-import com.econovafx.ui.view.ViewFactory;
+import com.econovafx.modules.core.config.AppContext;
+import com.econovafx.modules.core.repository.*;
+import com.econovafx.modules.core.ui.controller.*;
+import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.ebean.Database;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

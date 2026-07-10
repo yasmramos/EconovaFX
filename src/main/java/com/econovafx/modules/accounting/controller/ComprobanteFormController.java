@@ -1,14 +1,14 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.accounting.controller;
 
-import com.econovafx.model.Account;
-import com.econovafx.model.ThirdParty;
-import com.econovafx.model.Transaction;
-import com.econovafx.model.TransactionEntry;
-import com.econovafx.service.AccountService;
-import com.econovafx.service.ThirdPartyService;
-import com.econovafx.service.TransactionService;
-import com.econovafx.ui.util.ModernDialog;
-import com.econovafx.ui.util.NotificationService;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.TransactionEntry;
+import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.billing.service.ThirdPartyService;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.ui.util.ModernDialog;
+import com.econovafx.modules.core.ui.util.NotificationService;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.beans.property.SimpleObjectProperty;

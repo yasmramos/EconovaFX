@@ -1,7 +1,7 @@
-package com.econovafx.repository;
+package com.econovafx.modules.fixedassets.repository;
 
-import com.econovafx.model.FixedAsset;
-import com.econovafx.model.FixedAsset.AssetStatus;
+import com.econovafx.modules.fixedassets.model.FixedAsset;
+import com.econovafx.modules.fixedassets.model.FixedAsset.AssetStatus;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;

@@ -1,11 +1,12 @@
 package com.econovafx.ui.controller;
 
-import com.econovafx.model.Account;
-import com.econovafx.model.Transaction;
-import com.econovafx.service.AccountService;
-import com.econovafx.service.TransactionService;
-import com.econovafx.ui.view.ViewFactory;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.ui.view.ViewFactory;
 import javafx.scene.Scene;
+import com.econovafx.modules.core.ui.controller.DashboardController;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -73,7 +74,7 @@ public class DashboardControllerTest extends ApplicationTest {
         Account account = new Account();
         account.setCode(code);
         account.setName(name);
-        account.setType(com.econovafx.model.AccountType.valueOf(type));
+        account.setType(com.econovafx.modules.accounting.model.AccountType.valueOf(type));
         account.setBalance(balance);
         return account;
     }
