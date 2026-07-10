@@ -383,4 +383,20 @@ public class CashModuleController {
         logger.info("Printing reconciliation report");
         showAlert("Info", "Reconciliation report would be printed here.");
     }
+
+    /**
+     * Shows an alert dialog with the specified title and message.
+     * @param title the title of the alert
+     * @param message the message content
+     */
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        if (btnRefresh != null && btnRefresh.getScene() != null) {
+            alert.initOwner(btnRefresh.getScene().getWindow());
+        }
+        alert.showAndWait();
+    }
 }
