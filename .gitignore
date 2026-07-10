@@ -3,36 +3,60 @@
 *.class
 *.o
 *.obj
+*.exe
+*.dll
+*.so
+*.a
 *.out
-build/
 target/
+build/
 
 # Dependencies
-.gradle/
 lib/
-libs/
+*.jar
+*.war
+*.ear
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
 
-# Editors
-.vscode/
-.idea/
-*.iml
-*.iws
-*.ipr
-
 # Environment
 .env
 .env.local
 *.env.*
 
-# OS specific
+# Editors
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Testing
+# Test and coverage
 test-results/
+*.dump
+*.pid
+*.seed
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.maven-timestamp
+
+# Gradle
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+build/
+.libs/
 ```

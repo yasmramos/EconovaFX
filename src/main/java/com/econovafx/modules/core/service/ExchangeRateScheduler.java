@@ -111,7 +111,7 @@ public class ExchangeRateScheduler {
                         "CUP",  // Moneda base
                         rateDTO.getTasa(),
                         rateDTO.getFecha().atStartOfDay(),
-                        com.econovafx.model.ExchangeRate.RateType.OFICIAL,
+                        com.econovafx.modules.core.model.ExchangeRate.RateType.OFICIAL,
                         "Tasa oficial del Banco Central de Cuba - " + rateDTO.getFuente()
                 );
                 log.debug("Tasa persistida: 1 {} = {} CUP", rateDTO.getCodigoMoneda(), rateDTO.getTasa());

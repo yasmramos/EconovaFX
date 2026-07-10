@@ -2,6 +2,7 @@ package com.econovafx.modules.accounting.validation;
 
 import com.econovafx.modules.accounting.model.*;
 import com.econovafx.modules.core.model.AuditLog;
+import com.econovafx.modules.billing.model.ThirdParty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
