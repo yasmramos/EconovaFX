@@ -1,6 +1,6 @@
 package com.econovafx.modules.accounting.controller;
 
-import com.econovafx.modules.core.service.AccountingPeriodService;
+import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;

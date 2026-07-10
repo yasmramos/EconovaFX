@@ -1,5 +1,7 @@
 package com.econovafx.modules.accounting.model;
 import com.econovafx.modules.core.model.BaseEntity;
+import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.billing.model.ThirdParty;
 
 import jakarta.persistence.*;
 

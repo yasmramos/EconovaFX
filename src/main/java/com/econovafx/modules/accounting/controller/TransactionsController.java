@@ -2,7 +2,7 @@ package com.econovafx.modules.accounting.controller;
 
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.service.AccountService;
-import com.econovafx.modules.core.service.TransactionService;
+import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
