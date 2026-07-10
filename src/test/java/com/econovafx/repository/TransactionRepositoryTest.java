@@ -39,6 +39,7 @@ class TransactionRepositoryTest {
 
     @BeforeAll
     void setUpAll() {
+        // Initialize full multi-tenant configuration for this test
         DatabaseConfig.initialize();
         db = DatabaseConfig.getServer();
         

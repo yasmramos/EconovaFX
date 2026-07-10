@@ -44,6 +44,14 @@ public class DatabaseConfig {
         initializeMultiTenant();
     }
 
+    /**
+     * Inicializa solo la base de datos maestra, sin multi-tenant.
+     * Útil para tests que no requieren aislamiento de tenants.
+     */
+    public static void initializeMasterOnly() {
+        initializeMaster();
+    }
+
     public static void initializeMaster() {
         try {
             Properties props = loadProperties();
@@ -211,9 +219,14 @@ public class DatabaseConfig {
 
     /**
      * Obtiene el servidor de base de datos por defecto.
+     * Usa la base de datos maestra si no hay multi-tenant inicializado.
      * @return La base de datos por defecto
      */
     public static Database getServer() {
+        // Return master database if tenant database is not initialized
+        if (tenantDatabase == null && masterDatabase != null) {
+            return masterDatabase;
+        }
         return getTenantDatabase();
     }
 
