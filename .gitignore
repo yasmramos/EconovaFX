@@ -9,60 +9,30 @@ target/
 
 # Dependencies
 .gradle/
-.mypy_cache/
-.pytest_cache/
-__pycache__/
-node_modules/
-venv/
-.venv/
-.julia/
-zig*/
+lib/
+libs/
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-*.swo
+
+# Editors
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Editors
-.vscode/
-.idea/
-
-# OS
+# OS specific
 .DS_Store
 Thumbs.db
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Archives
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# Testing
+test-results/
 ```

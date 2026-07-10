@@ -17,7 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.inject.Inject;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
@@ -120,9 +121,9 @@ public class AuditLogsController {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         
         timestampColumn.setCellValueFactory(cellData -> {
-            LocalDateTime createdAt = cellData.getValue().getCreatedAt();
+            Instant createdAt = cellData.getValue().getCreatedAt();
             return new javafx.beans.property.SimpleStringProperty(
-                createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                createdAt.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
             );
         });
         
@@ -254,13 +255,13 @@ public class AuditLogsController {
         LocalDate endDate = endDatePicker.getValue();
         
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            notificationService.showWarning("Fechas inválidas: " + 
-                "La fecha de inicio no puede ser posterior a la fecha de fin");
+            notificationService.showWarning("Fechas inválidas. " 
+                 + "La fecha de inicio no puede ser posterior a la fecha de fin");
             return;
         }
         
         loadAuditLogs(selectedUser, selectedOperation, startDate, endDate);
-        notificationService.showSuccess("Filtros aplicados", "Se han aplicado los filtros seleccionados");
+        notificationService.showSuccess("Filtros aplicados. Se han aplicado los filtros seleccionados.");
     }
 
     @FXML
@@ -280,7 +281,7 @@ public class AuditLogsController {
         try {
             List<AuditLog> logsToExport = auditLogsData;
             if (logsToExport.isEmpty()) {
-                notificationService.showWarning("Sin datos", "No hay registros para exportar");
+                notificationService.showWarning("Sin datos. No hay registros para exportar.");
                 return;
             }
             
@@ -290,8 +291,8 @@ public class AuditLogsController {
             // For now, we'll just show a success message
             logger.info("CSV Export generated with {} rows", logsToExport.size());
             
-            notificationService.showSuccess("Exportación exitosa: " + 
-                String.format("Se exportaron %d registros de auditoría", logsToExport.size()));
+            notificationService.showSuccess("Exportación exitosa. " 
+                 + String.format("Se exportaron %d registros de auditoría", logsToExport.size()));
             
         } catch (Exception e) {
             logger.error("Error exporting audit logs", e);
@@ -358,7 +359,7 @@ public class AuditLogsController {
     }
 
     private void updateLastUpdateTime() {
-        lastUpdateLabel.setText(LocalDateTime.now().format(
+        lastUpdateLabel.setText(Instant.now().atZone(ZoneId.systemDefault()).format(
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
     }
 
