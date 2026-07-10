@@ -5,6 +5,7 @@ import com.econovafx.modules.fixedassets.repository.*;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.core.service.AuditService;
 import io.avaje.inject.Component;
 import com.econovafx.modules.core.security.RequiresTenant;
