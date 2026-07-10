@@ -1,8 +1,8 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.core.ui.controller;
 
-import com.econovafx.model.ExchangeRate;
-import com.econovafx.service.ExchangeRateService;
-import com.econovafx.ui.util.ModernDialog;
+import com.econovafx.modules.core.model.ExchangeRate;
+import com.econovafx.modules.core.service.ExchangeRateService;
+import com.econovafx.modules.core.ui.util.ModernDialog;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

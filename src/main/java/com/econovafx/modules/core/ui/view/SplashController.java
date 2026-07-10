@@ -1,8 +1,8 @@
-package com.econovafx.ui.view;
+package com.econovafx.modules.core.ui.view;
 
-import com.econovafx.config.DatabaseConfig;
-import com.econovafx.security.AuthService;
-import com.econovafx.service.CompanyService;
+import com.econovafx.modules.core.config.DatabaseConfig;
+import com.econovafx.modules.core.security.AuthService;
+import com.econovafx.modules.core.service.CompanyService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;

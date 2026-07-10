@@ -1,5 +1,8 @@
 package com.econovafx.modules.accounting.model;
+import com.econovafx.modules.core.model.BaseEntity;
 
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.core.model.Currency;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;

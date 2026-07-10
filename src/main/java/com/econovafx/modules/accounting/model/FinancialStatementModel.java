@@ -1,4 +1,5 @@
 package com.econovafx.modules.accounting.model;
+import com.econovafx.modules.core.model.BaseEntity;
 
 import io.ebean.annotation.DbEnumType;
 import io.ebean.annotation.DbEnumValue;

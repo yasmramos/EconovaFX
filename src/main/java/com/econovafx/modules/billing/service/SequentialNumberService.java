@@ -2,7 +2,7 @@ package com.econovafx.modules.billing.service;
 
 import com.econovafx.modules.billing.model.BillingSeries;
 import com.econovafx.modules.billing.model.BillingSeries.DocumentType;
-import com.econovafx.modules.core.repository.BillingSeriesRepository;
+import com.econovafx.modules.billing.repository.BillingSeriesRepository;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;

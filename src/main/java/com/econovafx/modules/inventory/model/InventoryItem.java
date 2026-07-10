@@ -1,5 +1,7 @@
 package com.econovafx.modules.inventory.model;
 
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.core.model.BaseEntity;
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
 import jakarta.persistence.*;

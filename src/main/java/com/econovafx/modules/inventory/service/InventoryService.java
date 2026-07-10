@@ -1,7 +1,8 @@
 package com.econovafx.modules.inventory.service;
 
 import com.econovafx.modules.inventory.model.*;
-import com.econovafx.modules.core.repository.*;
+import com.econovafx.modules.inventory.repository.*;
+import com.econovafx.modules.accounting.repository.AccountingPeriodRepository;
 import io.avaje.inject.Component;
 import com.econovafx.modules.core.security.RequiresTenant;
 import jakarta.inject.Inject;

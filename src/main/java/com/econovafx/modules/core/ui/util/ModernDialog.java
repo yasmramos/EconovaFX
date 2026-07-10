@@ -1,4 +1,4 @@
-package com.econovafx.ui.util;
+package com.econovafx.modules.core.ui.util;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;

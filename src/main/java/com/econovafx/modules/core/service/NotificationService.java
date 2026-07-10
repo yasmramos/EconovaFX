@@ -1,4 +1,4 @@
-package com.econovafx.core.service;
+package com.econovafx.modules.core.service;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;

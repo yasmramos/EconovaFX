@@ -6,9 +6,9 @@ import com.econovafx.modules.accounting.model.AccountingPeriod;
 import com.econovafx.modules.cash.model.CashMovement;
 import com.econovafx.modules.bank.model.BankAccount;
 import com.econovafx.modules.cash.model.CashBox;
-import com.econovafx.modules.core.repository.CashMovementRepository;
-import com.econovafx.modules.core.repository.BankAccountRepository;
-import com.econovafx.modules.core.repository.CashBoxRepository;
+import com.econovafx.modules.cash.repository.CashMovementRepository;
+import com.econovafx.modules.bank.repository.BankAccountRepository;
+import com.econovafx.modules.cash.repository.CashBoxRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

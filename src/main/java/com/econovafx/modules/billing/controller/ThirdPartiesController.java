@@ -4,7 +4,7 @@ import com.econovafx.controller.ThirdPartyTransactionsController;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.core.service.NotificationService;
-import com.econovafx.modules.core.service.ThirdPartyService;
+import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;

@@ -1,5 +1,7 @@
 package com.econovafx.modules.billing.model;
+import com.econovafx.modules.core.model.BaseEntity;
 
+import com.econovafx.modules.inventory.model.InventoryItem;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
