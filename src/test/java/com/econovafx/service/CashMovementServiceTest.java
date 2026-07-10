@@ -1,6 +1,6 @@
 package com.econovafx.service;
 
-import com.econovafx.model.CashMovement;
+import com.econovafx.modules.core.model.CashMovement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

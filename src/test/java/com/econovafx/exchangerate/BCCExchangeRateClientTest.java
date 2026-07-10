@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import com.econovafx.service.BCCExchangeRateClient;
+import com.econovafx.modules.core.service.BCCExchangeRateClient;
 
 /**
  * Unit tests for BCCExchangeRateClient.

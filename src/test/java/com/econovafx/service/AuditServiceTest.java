@@ -1,9 +1,10 @@
 package com.econovafx.service;
 
-import com.econovafx.model.AuditLog;
-import com.econovafx.model.User;
-import com.econovafx.repository.AuditLogRepository;
+import com.econovafx.modules.core.model.AuditLog;
+import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.core.repository.AuditLogRepository;
 import org.junit.jupiter.api.BeforeEach;
+import com.econovafx.modules.core.service.AuditService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

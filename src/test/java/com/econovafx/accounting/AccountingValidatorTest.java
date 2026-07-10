@@ -10,13 +10,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.econovafx.validation.AccountingValidator;
-import com.econovafx.model.Account;
-import com.econovafx.model.AccountType;
-import com.econovafx.model.Transaction;
-import com.econovafx.model.TransactionEntry;
-import com.econovafx.model.AccountingPeriod;
-import com.econovafx.model.AccountingPeriod.PeriodStatus;
+import com.econovafx.modules.accounting.validation.AccountingValidator;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.TransactionEntry;
+import com.econovafx.modules.accounting.model.AccountingPeriod;
+import com.econovafx.modules.accounting.model.AccountingPeriod.PeriodStatus;
 
 /**
  * Unit tests for AccountingValidator.

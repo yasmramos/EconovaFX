@@ -1,10 +1,12 @@
 package com.econovafx.service;
 
-import com.econovafx.model.AuditLog;
-import com.econovafx.model.User;
-import com.econovafx.repository.AuditLogRepository;
-import com.econovafx.repository.UserRepository;
-import com.econovafx.security.PasswordService;
+import com.econovafx.modules.core.model.AuditLog;
+import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.core.repository.AuditLogRepository;
+import com.econovafx.modules.core.repository.UserRepository;
+import com.econovafx.modules.core.security.PasswordService;
+import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.core.service.UserService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
