@@ -2,7 +2,6 @@ package com.econovafx.ui.visual;
 
 import com.econovafx.modules.core.config.AppContext;
 import com.econovafx.modules.core.repository.*;
-import com.econovafx.service.*;
 import com.econovafx.modules.core.ui.controller.*;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.ebean.Database;

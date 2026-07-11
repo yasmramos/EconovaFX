@@ -1,4 +1,4 @@
-package com.econovafx.accounting;
+package com.econovafx.modules.accounting.validation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.econovafx.modules.accounting.validation.AccountingValidator;
 import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.model.AccountType;
 import com.econovafx.modules.accounting.model.Transaction;
