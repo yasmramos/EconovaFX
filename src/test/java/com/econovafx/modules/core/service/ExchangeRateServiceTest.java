@@ -1,4 +1,4 @@
-package com.econovafx.exchangerate;
+package com.econovafx.modules.core.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

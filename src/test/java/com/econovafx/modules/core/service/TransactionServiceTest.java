@@ -1,4 +1,4 @@
-package com.econovafx.service;
+package com.econovafx.modules.core.service;
 
 import com.econovafx.modules.core.model.*;
 import com.econovafx.modules.accounting.model.Account;

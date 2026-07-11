@@ -1,4 +1,4 @@
-package com.econovafx.exchangerate;
+package com.econovafx.modules.core.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,14 +6,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-import com.econovafx.modules.core.service.BCCExchangeRateClient;
 
 /**
  * Unit tests for BCCExchangeRateClient.
