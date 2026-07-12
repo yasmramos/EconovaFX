@@ -166,4 +166,83 @@ public class AppConfig {
     public static Duration getDuration(String key, String defaultValue) {
         return Config.getDuration(key, defaultValue);
     }
+
+    /**
+     * Sets a string configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, String value) {
+        Config.setProperty(key, value);
+        logger.debug("Configuration property updated: {} = {}", key, value);
+    }
+
+    /**
+     * Sets an integer configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, int value) {
+        Config.setProperty(key, String.valueOf(value));
+        logger.debug("Configuration property updated: {} = {}", key, value);
+    }
+
+    /**
+     * Sets a boolean configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, boolean value) {
+        Config.setProperty(key, String.valueOf(value));
+        logger.debug("Configuration property updated: {} = {}", key, value);
+    }
+
+    /**
+     * Sets a long configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, long value) {
+        Config.setProperty(key, String.valueOf(value));
+        logger.debug("Configuration property updated: {} = {}", key, value);
+    }
+
+    /**
+     * Saves the current configuration to the properties file.
+     * This persists all dynamic changes made via setProperty.
+     * Note: Avaje Config 5.x does not support saving to file directly.
+     * This method logs the current configuration for manual persistence.
+     */
+    public static void save() {
+        logger.info("Configuration snapshot - use external mechanism to persist changes");
+        logger.info("Current properties count: {}", Config.asProperties().size());
+    }
+
+    /**
+     * Reloads configuration from the properties file.
+     * This discards any unsaved dynamic changes.
+     * Note: Avaje Config 5.x does not support reload directly.
+     * Use onChange listeners for dynamic updates.
+     */
+    public static void reload() {
+        logger.warn("Reload not supported in Avaje Config 5.x - use onChange listeners instead");
+    }
+
+    /**
+     * Removes a configuration property.
+     * @param key Configuration key to remove
+     */
+    public static void removeProperty(String key) {
+        Config.clearProperty(key);
+        logger.debug("Configuration property removed: {}", key);
+    }
+
+    /**
+     * Checks if a configuration key exists.
+     * @param key Configuration key
+     * @return true if key exists, false otherwise
+     */
+    public static boolean containsKey(String key) {
+        return Config.getOptional(key).isPresent();
+    }
 }
