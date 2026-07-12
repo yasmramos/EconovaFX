@@ -84,11 +84,10 @@ public class DatabaseConfig {
             Properties props = loadProperties();
 
             DataSourceConfig dsConfig = new DataSourceConfig();
-            dsConfig.setDriver(props.getProperty("ebean.datasource.master.driver", "org.h2.Driver"));
-            dsConfig.setUrl(props.getProperty("ebean.datasource.master.url",
-                    "jdbc:h2:./db/econova_master;DB_CLOSE_DELAY=-1"));
-            dsConfig.setUsername(props.getProperty("ebean.datasource.master.username", "sa"));
-            dsConfig.setPassword(props.getProperty("ebean.datasource.master.password", ""));
+            dsConfig.setDriver(props.getProperty("ebean.datasource.master.driver", AppConfig.MASTER_DB_DRIVER));
+            dsConfig.setUrl(props.getProperty("ebean.datasource.master.url", AppConfig.MASTER_DB_URL));
+            dsConfig.setUsername(props.getProperty("ebean.datasource.master.username", AppConfig.MASTER_DB_USERNAME));
+            dsConfig.setPassword(props.getProperty("ebean.datasource.master.password", AppConfig.MASTER_DB_PASSWORD));
             dsConfig.setMinConnections(1);
             dsConfig.setMaxConnections(10);
 
@@ -275,6 +274,19 @@ public class DatabaseConfig {
             if (input != null) {
                 props.load(input);
             }
+        }
+        // Fallback to Avaje Config for any missing properties
+        if (props.getProperty("ebean.datasource.master.driver") == null) {
+            props.setProperty("ebean.datasource.master.driver", AppConfig.MASTER_DB_DRIVER);
+        }
+        if (props.getProperty("ebean.datasource.master.url") == null) {
+            props.setProperty("ebean.datasource.master.url", AppConfig.MASTER_DB_URL);
+        }
+        if (props.getProperty("ebean.datasource.master.username") == null) {
+            props.setProperty("ebean.datasource.master.username", AppConfig.MASTER_DB_USERNAME);
+        }
+        if (props.getProperty("ebean.datasource.master.password") == null) {
+            props.setProperty("ebean.datasource.master.password", AppConfig.MASTER_DB_PASSWORD);
         }
         return props;
     }
