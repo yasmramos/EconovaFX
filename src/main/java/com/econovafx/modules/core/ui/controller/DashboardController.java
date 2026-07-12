@@ -353,7 +353,7 @@ public class DashboardController implements Initializable {
                 .map(Transaction::getTotalDebit)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .divide(BigDecimal.valueOf(allTransactions.stream().filter(Transaction::getIsPosted).count()), 
-                        BigDecimal.ROUND_HALF_UP);
+                        java.math.RoundingMode.HALF_UP);
         
         final BigDecimal finalRevenue = totalRevenue;
         final BigDecimal finalExpenses = totalExpenses;
@@ -472,7 +472,7 @@ public class DashboardController implements Initializable {
         }
 
         monthlyBarChart.getData().clear();
-        monthlyBarChart.getData().addAll(incomeSeries, expenseSeries);
+        monthlyBarChart.getData().addAll(List.of(incomeSeries, expenseSeries));
         monthlyBarChart.setLegendVisible(true);
         monthlyBarChart.setLegendSide(javafx.geometry.Side.BOTTOM);
     }
@@ -512,7 +512,7 @@ public class DashboardController implements Initializable {
         
         if (cashFlowLineChart != null) {
             cashFlowLineChart.getData().clear();
-            cashFlowLineChart.getData().addAll(cashFlowSeries);
+            cashFlowLineChart.getData().addAll(List.of(cashFlowSeries));
             cashFlowLineChart.setLegendVisible(true);
             cashFlowLineChart.setLegendSide(javafx.geometry.Side.BOTTOM);
             
