@@ -19,8 +19,6 @@ module econonovafx {
     requires io.ebean.datasource.api;
     requires io.ebean.core;
     requires io.ebean.core.json;
-    requires io.avaje.classpath.scanner;
-    requires io.avaje.classpath.scanner.api;
     requires io.ebean.migration.auto;
     requires io.ebean.core.type;
     requires io.ebean.joda.time;
@@ -81,4 +79,6 @@ module econonovafx {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.core;
+    
+    provides io.avaje.inject.spi.InjectExtension with com.econovafx.EconovafxModule;
 }

@@ -65,14 +65,16 @@ public class DatabaseConfig {
             config.setPassword("");
             config.setUrl("jdbc:h2:mem:econova-test-master;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
             
-            io.ebean.config.DatabaseConfig dbConfig = new io.ebean.config.DatabaseConfig();
-            dbConfig.setName("econova-master");
-            dbConfig.setDataSourceConfig(config);
-            dbConfig.setDefaultServer(true);
-            dbConfig.setDdlGenerate(false);  // Deshabilitar generación DDL
-            dbConfig.setDdlRun(false);       // Deshabilitar ejecución DDL
+            DataSource dataSource = DataSourceFactory.create("econova-test-master", config);
             
-            masterDatabase = io.ebean.DatabaseFactory.create(dbConfig);
+            DatabaseBuilder builder = Database.builder();
+            builder.name("econova-test-master")
+                .dataSource(dataSource)
+                .setDefaultServer(true)
+                .ddlGenerate(false)  // Deshabilitar generación DDL
+                .ddlRun(false);      // Deshabilitar ejecución DDL
+            
+            masterDatabase = builder.build();
             logger.info("Master database initialized for test (DDL disabled)");
         }
     }
