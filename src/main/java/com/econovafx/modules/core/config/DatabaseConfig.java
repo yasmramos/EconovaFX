@@ -36,6 +36,10 @@ public class DatabaseConfig {
     // Cache de DataSources por empresa (tenant)
     private static final ConcurrentHashMap<Long, DataSource> tenantDataSources = new ConcurrentHashMap<>();
 
+    // Variables para testing
+    public static boolean closeTenantDataSourceCalled = false;
+    public static Long lastClosedTenantId = null;
+
     /**
      * Inicializa la configuración multi-tenant nativa de Ebean.
      */
@@ -300,6 +304,9 @@ public class DatabaseConfig {
         if (ds != null) {
             logger.info("DataSource closed for company ID: {}", companyId);
         }
+        // Para testing
+        closeTenantDataSourceCalled = true;
+        lastClosedTenantId = companyId;
     }
 
     /**

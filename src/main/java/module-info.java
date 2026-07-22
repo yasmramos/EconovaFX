@@ -81,4 +81,14 @@ module econonovafx {
     requires com.fasterxml.jackson.core;
     
     provides io.avaje.inject.spi.InjectExtension with com.econovafx.EconovafxModule;
+    
+    // Open packages for reflection-based testing
+    opens com.econovafx.modules.accounting.repository to org.junit.platform.commons;
+    opens com.econovafx.modules.accounting.validation to org.junit.platform.commons;
+    opens com.econovafx.modules.core.security to org.junit.platform.commons;
+    opens com.econovafx.modules.core.service to org.junit.platform.commons;
+    opens com.econovafx.modules.core.repository to org.junit.platform.commons;
+    opens com.econovafx.modules.core.config to org.junit.platform.commons;
+    opens com.econovafx.modules.core.ui.controller to org.junit.platform.commons;
+    opens com.econovafx.modules.core.ui.util to org.junit.platform.commons;
 }

@@ -1,4 +1,4 @@
-package com.econovafx.ui.visual;
+package com.econovafx.modules.core.ui.util;
 
 import com.econovafx.modules.core.config.AppContext;
 import com.econovafx.modules.core.repository.*;
@@ -16,7 +16,7 @@ import org.testfx.util.WaitForAsyncUtils;
 import java.io.IOException;
 import java.net.URL;
 
-import static com.econovafx.ui.visual.VisualTestUtils.captureAndSave;
+import static com.econovafx.modules.core.ui.util.VisualTestUtils.captureAndSave;
 
 public class MainViewVisualTest extends ApplicationTest {
 

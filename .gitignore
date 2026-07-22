@@ -1,53 +1,38 @@
 ```
-# IDE and editor files
-.vscode/
-
-# Build artifacts (if any Java build system is used)
-target/
+# Compiled and build artifacts
+*.class
+*.o
+*.obj
+*.out
 build/
-dist/
+target/
 
-# Dependencies (if any)
-node_modules/
-venv/
-.venv/
+# Dependencies
+.gradle/
+.mypy_cache/
+.pytest_cache/
 __pycache__/
-*.egg-info/
+coverage/
+htmlcov/
+*.coverage
 
-# Environment files
-.env
-.env.local
-*.env.*
-
-# Logs and temporary files
+# Logs and temp files
 *.log
 *.tmp
 *.swp
 
-# OS specific files
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
 .DS_Store
 Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Compiled files
-*.class
-*.pyc
-*.o
-*.obj
-*.so
-*.dll
-*.exe
-
-# Gradle specific
-.gradle/
-
-# MyPy cache
-.mypy_cache/
-
-# PyTest cache
-.pytest_cache/
 ```
