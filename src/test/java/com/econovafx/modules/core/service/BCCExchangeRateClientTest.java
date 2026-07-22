@@ -7,6 +7,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Unit tests for BCCExchangeRateClient.
  * Note: These tests mock the HTTP client behavior since we can't hit the real API in unit tests.

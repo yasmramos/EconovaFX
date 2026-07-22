@@ -1,4 +1,4 @@
-package com.econovafx.security;
+package com.econovafx.modules.core.security;
 
 import com.econovafx.modules.core.config.TenantContext;
 import com.econovafx.modules.accounting.model.Account;

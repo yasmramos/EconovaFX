@@ -1,4 +1,4 @@
-package com.econovafx.ui.controller;
+package com.econovafx.modules.core.ui.controller;
 
 import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.model.Transaction;

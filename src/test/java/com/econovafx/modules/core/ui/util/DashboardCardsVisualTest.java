@@ -1,4 +1,4 @@
-package com.econovafx.ui.visual;
+package com.econovafx.modules.core.ui.util;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -12,7 +12,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.math.BigDecimal;
-import static com.econovafx.ui.visual.VisualTestUtils.captureNode;
+import static com.econovafx.modules.core.ui.util.VisualTestUtils.captureNode;
 
 /**
  * Visual tests for Dashboard KPI Cards component.

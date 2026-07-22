@@ -1,4 +1,4 @@
-package com.econovafx.ui.visual;
+package com.econovafx.modules.core.ui.util;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;

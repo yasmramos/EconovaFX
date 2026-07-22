@@ -1,4 +1,4 @@
-package com.econovafx.ui.visual;
+package com.econovafx.modules.core.ui.util;
 
 import com.econovafx.modules.core.ui.util.NotificationService;
 import javafx.scene.Scene;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
-import static com.econovafx.ui.visual.VisualTestUtils.captureNode;
+import static com.econovafx.modules.core.ui.util.VisualTestUtils.captureNode;
 
 /**
  * Visual tests for Notification Toast component.
