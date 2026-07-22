@@ -85,6 +85,7 @@ module econonovafx {
     
     // Open packages for reflection-based testing
     opens com.econovafx.modules.accounting.repository to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.accounting.service to org.junit.platform.commons, org.junit.jupiter.api;
     opens com.econovafx.modules.accounting.validation to org.junit.platform.commons, org.junit.jupiter.api;
     opens com.econovafx.modules.core.security to org.junit.platform.commons, org.junit.jupiter.api;
     opens com.econovafx.modules.core.service to org.junit.platform.commons, org.junit.jupiter.api;
