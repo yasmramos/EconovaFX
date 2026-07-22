@@ -1,4 +1,4 @@
-package com.econovafx.ui.visual;
+package com.econovafx.modules.core.ui.util;
 
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import javafx.scene.Scene;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import static com.econovafx.ui.visual.VisualTestUtils.captureNode;
+import static com.econovafx.modules.core.ui.util.VisualTestUtils.captureNode;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
