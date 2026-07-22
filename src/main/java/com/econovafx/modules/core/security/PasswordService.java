@@ -22,6 +22,9 @@ public class PasswordService {
      * Verifica si una contraseña en texto plano coincide con un hash.
      */
     public boolean checkPassword(String plainPassword, String hashedPassword) {
+        if (plainPassword == null || hashedPassword == null) {
+            throw new IllegalArgumentException("Password and hashed password cannot be null");
+        }
         try {
             return BCrypt.checkpw(plainPassword, hashedPassword);
         } catch (IllegalArgumentException e) {
