@@ -2,6 +2,7 @@ package com.econovafx.modules.core.repository;
 
 import com.econovafx.modules.core.model.Company;
 import io.ebean.annotation.Transactional;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -13,8 +14,18 @@ import java.util.Optional;
 @Singleton
 public class CompanyRepository {
 
-    private final io.ebean.Database database;
+    private io.ebean.Database database;
 
+    // Constructor para testing - no inicializa Ebean
+    protected CompanyRepository(boolean initialize) {
+        this.database = null;
+    }
+
+    public CompanyRepository(io.ebean.Database database) {
+        this.database = database != null ? database : io.ebean.DB.getDefault();
+    }
+
+    @Inject
     public CompanyRepository() {
         // Usamos la base de datos maestra (default) para gestionar las empresas
         this.database = io.ebean.DB.getDefault();
