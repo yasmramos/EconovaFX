@@ -85,7 +85,7 @@ class AuthServiceTest {
 
             when(DB.find(User.class)).thenReturn(mockQuery);
             when(mockQuery.where()).thenReturn(mockExpressionList);
-            when(mockExpressionList.eq("email", anyString())).thenReturn(mockExpressionList);
+            when(mockExpressionList.eq("email", "nonexistent@example.com")).thenReturn(mockExpressionList);
             when(mockExpressionList.query()).thenReturn(mockQuery);
             when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.empty());
 
