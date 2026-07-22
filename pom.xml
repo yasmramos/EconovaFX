@@ -237,7 +237,7 @@
                         <exclude>**/MainViewVisualTest.java</exclude>
                     </excludes>
                     <forkCount>1</forkCount>
-                    <argLine>@{argLine} -Xmx1024m -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Djava.awt.headless=true --add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED --add-opens org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED --add-opens org.junit.platform.commons/org.junit.platform.commons.function=ALL-UNNAMED --add-opens org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED</argLine>
+                    <argLine>@{argLine} -Xmx1024m -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Djava.awt.headless=true --add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED --add-opens org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED --add-opens org.junit.platform.commons/org.junit.platform.commons.function=ALL-UNNAMED --add-opens org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED --add-reads econonovafx=org.junit.jupiter.api --add-reads econonovafx=org.junit.jupiter.engine</argLine>
                 </configuration>
             </plugin>
             <!-- JaCoCo Plugin for Code Coverage -->
