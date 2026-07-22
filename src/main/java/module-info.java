@@ -79,19 +79,17 @@ module econonovafx {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.core;
-    requires org.junit.jupiter.api;
-    requires org.junit.jupiter.engine;
     requires java.desktop;
     
     provides io.avaje.inject.spi.InjectExtension with com.econovafx.EconovafxModule;
     
     // Open packages for reflection-based testing
-    opens com.econovafx.modules.accounting.repository to org.junit.platform.commons;
-    opens com.econovafx.modules.accounting.validation to org.junit.platform.commons;
-    opens com.econovafx.modules.core.security to org.junit.platform.commons;
-    opens com.econovafx.modules.core.service to org.junit.platform.commons;
-    opens com.econovafx.modules.core.repository to org.junit.platform.commons;
-    opens com.econovafx.modules.core.config to org.junit.platform.commons;
-    opens com.econovafx.modules.core.ui.controller to org.junit.platform.commons;
-    opens com.econovafx.modules.core.ui.util to org.junit.platform.commons;
+    opens com.econovafx.modules.accounting.repository to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.accounting.validation to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.security to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.service to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.repository to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.config to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.ui.controller to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.ui.util to org.junit.platform.commons, org.junit.jupiter.api;
 }
