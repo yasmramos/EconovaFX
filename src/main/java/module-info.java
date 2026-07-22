@@ -79,6 +79,9 @@ module econonovafx {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.core;
+    requires org.junit.jupiter.api;
+    requires org.junit.jupiter.engine;
+    requires java.desktop;
     
     provides io.avaje.inject.spi.InjectExtension with com.econovafx.EconovafxModule;
     
