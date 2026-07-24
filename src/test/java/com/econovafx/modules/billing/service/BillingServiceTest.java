@@ -3,6 +3,7 @@ package com.econovafx.modules.billing.service;
 import com.econovafx.modules.billing.model.*;
 import com.econovafx.modules.billing.repository.SalesInvoiceRepository;
 import com.econovafx.modules.billing.repository.BillingSeriesRepository;
+import com.econovafx.modules.billing.repository.TaxRateRepository;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.inventory.service.InventoryService;
