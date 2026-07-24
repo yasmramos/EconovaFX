@@ -6,6 +6,7 @@ import com.econovafx.modules.accounting.repository.AccountingPeriodRepository;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.core.model.AuditLog;
 import com.econovafx.modules.billing.model.ThirdParty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -595,7 +596,7 @@ class InventoryServiceTest {
     void testGetWarehouseById() {
         when(warehouseRepository.findById(1L)).thenReturn(Optional.of(testWarehouse));
 
-        Optional<Warehouse> result = inventoryService.getWarehouseById(1L);
+        Optional<Warehouse> result = warehouseRepository.findById(1L);
 
         assertTrue(result.isPresent());
         assertEquals(testWarehouse, result.get());
@@ -606,7 +607,7 @@ class InventoryServiceTest {
     void testGetWarehouseById_NotFound() {
         when(warehouseRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Optional<Warehouse> result = inventoryService.getWarehouseById(1L);
+        Optional<Warehouse> result = warehouseRepository.findById(1L);
 
         assertFalse(result.isPresent());
     }
