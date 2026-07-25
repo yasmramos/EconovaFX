@@ -10,6 +10,7 @@ import java.time.Instant;
 /**
  * Base entity class with common fields including native Ebean multi-tenant support.
  * Uses @TenantId for native multi-tenancy support in Ebean 17+.
+ * Includes audit fields for tracking user actions.
  */
 @MappedSuperclass
 public abstract class BaseEntity {
@@ -40,6 +41,20 @@ public abstract class BaseEntity {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
+
+    /**
+     * User ID who created this record (for audit purposes).
+     * Should be set automatically by the application before persisting.
+     */
+    @Column(name = "created_by", updatable = false)
+    private Long createdBy;
+
+    /**
+     * User ID who last modified this record (for audit purposes).
+     * Should be set automatically by the application before updating.
+     */
+    @Column(name = "updated_by")
+    private Long updatedBy;
 
     public Long getId() {
         return id;
@@ -87,5 +102,21 @@ public abstract class BaseEntity {
 
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Long getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }
