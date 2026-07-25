@@ -226,32 +226,28 @@ class ThirdPartyServiceTest {
 
     @Test
     void testCreateThirdParty_WithNullEmail_ThrowsException() {
-        ThirdParty thirdParty = new ThirdParty();
-        thirdParty.setName("Test Customer");
-        thirdParty.setIdentificationNumber("12345678901");
-        thirdParty.setType(ThirdParty.ThirdPartyType.CUSTOMER);
-        // Email is null
+        ThirdParty thirdParty = createThirdParty(null, "Test Customer", "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
+        thirdParty.setEmail(null);
         
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             thirdPartyService.createThirdParty(thirdParty);
         });
         
         assertEquals("Email is required", exception.getMessage());
+        verify(thirdPartyRepository, never()).save(any());
     }
 
     @Test
     void testCreateThirdParty_WithNullType_ThrowsException() {
-        ThirdParty thirdParty = new ThirdParty();
-        thirdParty.setName("Test Customer");
-        thirdParty.setEmail("test@example.com");
-        thirdParty.setIdentificationNumber("12345678901");
-        // Type is null
+        ThirdParty thirdParty = createThirdParty(null, "Test Customer", "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
+        thirdParty.setType(null);
         
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             thirdPartyService.createThirdParty(thirdParty);
         });
         
         assertEquals("Type is required", exception.getMessage());
+        verify(thirdPartyRepository, never()).save(any());
     }
 
     @Test
