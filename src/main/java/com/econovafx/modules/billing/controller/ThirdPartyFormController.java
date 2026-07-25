@@ -2,6 +2,7 @@ package com.econovafx.modules.billing.controller;
 
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.service.ThirdPartyService;
+import com.econovafx.modules.core.exception.GlobalExceptionHandler;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Third Party form controller for creating and editing customers/suppliers
@@ -21,6 +25,7 @@ import java.util.ResourceBundle;
 public class ThirdPartyFormController implements Initializable {
     
     private static final Logger logger = LoggerFactory.getLogger(ThirdPartyFormController.class);
+    private static final ExecutorService backgroundExecutor = Executors.newCachedThreadPool();
     
     private final ThirdPartyService thirdPartyService;
     
@@ -161,39 +166,75 @@ public class ThirdPartyFormController implements Initializable {
             return;
         }
         
-        if (editingThirdParty == null) {
-            editingThirdParty = new ThirdParty();
-        }
+        // Disable UI during save operation
+        setUIEnabled(false);
         
-        editingThirdParty.setName(nameField.getText().trim());
-        editingThirdParty.setIdentificationNumber(identificationField.getText().trim());
-        editingThirdParty.setType(typeComboBox.getValue());
-        editingThirdParty.setEmail(emailField.getText().trim());
-        editingThirdParty.setPhone(phoneField.getText().trim());
-        editingThirdParty.setAddress(addressField.getText().trim());
-        editingThirdParty.setCity(cityField.getText().trim());
-        editingThirdParty.setCountry(countryField.getText().trim());
-        editingThirdParty.setTaxId(taxIdField.getText().trim());
-        
-        try {
-            editingThirdParty.setCreditLimit(Double.parseDouble(creditLimitField.getText().trim()));
-        } catch (NumberFormatException e) {
-            editingThirdParty.setCreditLimit(0.0);
-        }
-        
-        try {
-            editingThirdParty.setPaymentDays(Integer.parseInt(paymentDaysField.getText().trim()));
-        } catch (NumberFormatException e) {
-            editingThirdParty.setPaymentDays(30);
-        }
-        
-        editingThirdParty.setIsActive(activeCheckBox.isSelected());
-        editingThirdParty.setNotes(notesArea.getText().trim());
-        
-        saved = true;
-        closeDialog();
-        
-        logger.info("Third party form saved: {}", editingThirdParty.getName());
+        CompletableFuture.runAsync(() -> {
+            try {
+                if (editingThirdParty == null) {
+                    editingThirdParty = new ThirdParty();
+                }
+                
+                // Update entity with form data
+                editingThirdParty.setName(nameField.getText().trim());
+                editingThirdParty.setIdentificationNumber(identificationField.getText().trim());
+                editingThirdParty.setType(typeComboBox.getValue());
+                editingThirdParty.setEmail(emailField.getText().trim());
+                editingThirdParty.setPhone(phoneField.getText().trim());
+                editingThirdParty.setAddress(addressField.getText().trim());
+                editingThirdParty.setCity(cityField.getText().trim());
+                editingThirdParty.setCountry(countryField.getText().trim());
+                editingThirdParty.setTaxId(taxIdField.getText().trim());
+                
+                try {
+                    editingThirdParty.setCreditLimit(Double.parseDouble(creditLimitField.getText().trim()));
+                } catch (NumberFormatException e) {
+                    editingThirdParty.setCreditLimit(0.0);
+                }
+                
+                try {
+                    editingThirdParty.setPaymentDays(Integer.parseInt(paymentDaysField.getText().trim()));
+                } catch (NumberFormatException e) {
+                    editingThirdParty.setPaymentDays(30);
+                }
+                
+                editingThirdParty.setIsActive(activeCheckBox.isSelected());
+                editingThirdParty.setNotes(notesArea.getText().trim());
+                
+                // Save to database in background thread
+                thirdPartyService.createThirdParty(editingThirdParty);
+                
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    saved = true;
+                    closeDialog();
+                    logger.info("Third party saved successfully: {}", editingThirdParty.getName());
+                });
+                
+            } catch (Exception ex) {
+                javafx.application.Platform.runLater(() -> {
+                    showError("Save Error", GlobalExceptionHandler.handleException(ex));
+                    logger.error("Error saving third party", ex);
+                    setUIEnabled(true);
+                });
+            }
+        }, backgroundExecutor);
+    }
+    
+    private void setUIEnabled(boolean enabled) {
+        nameField.setDisable(!enabled);
+        identificationField.setDisable(!enabled);
+        typeComboBox.setDisable(!enabled);
+        emailField.setDisable(!enabled);
+        phoneField.setDisable(!enabled);
+        addressField.setDisable(!enabled);
+        cityField.setDisable(!enabled);
+        countryField.setDisable(!enabled);
+        taxIdField.setDisable(!enabled);
+        creditLimitField.setDisable(!enabled);
+        paymentDaysField.setDisable(!enabled);
+        activeCheckBox.setDisable(!enabled);
+        notesArea.setDisable(!enabled);
     }
     
     @FXML
@@ -206,32 +247,32 @@ public class ThirdPartyFormController implements Initializable {
     
     private boolean validateForm() {
         if (nameField.getText().trim().isEmpty()) {
-            showError("Name is required");
+            showError("Validation Error", "Name is required");
             return false;
         }
         
         if (identificationField.getText().trim().isEmpty()) {
-            showError("Identification number is required");
+            showError("Validation Error", "Identification number is required");
             return false;
         }
         
         if (emailField.getText().trim().isEmpty()) {
-            showError("Email is required");
+            showError("Validation Error", "Email is required");
             return false;
         }
         
         // Validate email format
         if (!emailField.getText().trim().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            showError("Invalid email format");
+            showError("Validation Error", "Invalid email format");
             return false;
         }
         
         return true;
     }
     
-    private void showError(String message) {
+    private void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Validation Error");
+        alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

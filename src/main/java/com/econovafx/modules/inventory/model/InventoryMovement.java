@@ -59,9 +59,8 @@ public class InventoryMovement extends BaseEntity {
     @JoinColumn(name = "transaction_id")
     private Transaction relatedTransaction;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    private User createdBy;
+    @Column(name = "created_by", updatable = false)
+    private Long createdByUserId;
 
     @WhenCreated
     @Column(nullable = false, updatable = false)
