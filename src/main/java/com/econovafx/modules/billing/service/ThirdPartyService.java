@@ -2,6 +2,7 @@ package com.econovafx.modules.billing.service;
 
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.repository.ThirdPartyRepository;
+import com.econovafx.modules.core.config.UserContext;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
 import com.econovafx.modules.core.exception.ValidationException;
 import io.avaje.inject.Component;
@@ -10,6 +11,7 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +25,12 @@ public class ThirdPartyService {
     private static final Logger logger = LoggerFactory.getLogger(ThirdPartyService.class);
     
     private final ThirdPartyRepository thirdPartyRepository;
+    private final UserContext userContext;
     
     @Inject
-    public ThirdPartyService(ThirdPartyRepository thirdPartyRepository) {
+    public ThirdPartyService(ThirdPartyRepository thirdPartyRepository, UserContext userContext) {
         this.thirdPartyRepository = thirdPartyRepository;
+        this.userContext = userContext;
     }
     
     public Optional<ThirdParty> getThirdPartyById(Long id) {
@@ -79,9 +83,17 @@ public class ThirdPartyService {
             );
         }
         
+        // Set audit fields
+        Long currentUserId = userContext.getCurrentUserId();
+        if (currentUserId != null) {
+            thirdParty.setCreatedBy(currentUserId);
+            thirdParty.setUpdatedBy(currentUserId);
+        }
+        
         ThirdParty saved = thirdPartyRepository.save(thirdParty);
         if (saved != null) {
-            logger.info("ThirdParty created: {} ({})", saved.getName(), saved.getIdentificationNumber());
+            logger.info("ThirdParty created: {} ({}) by user ID: {}", 
+                saved.getName(), saved.getIdentificationNumber(), currentUserId);
         }
         return saved;
     }
@@ -93,8 +105,14 @@ public class ThirdPartyService {
             throw new EntityNotFoundException(ThirdParty.class, thirdParty.getId());
         }
         
+        // Set audit field for update
+        Long currentUserId = userContext.getCurrentUserId();
+        if (currentUserId != null) {
+            thirdParty.setUpdatedBy(currentUserId);
+        }
+        
         thirdPartyRepository.update(thirdParty);
-        logger.info("ThirdParty updated: {}", thirdParty.getName());
+        logger.info("ThirdParty updated: {} by user ID: {}", thirdParty.getName(), currentUserId);
         return thirdParty;
     }
     
