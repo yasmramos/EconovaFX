@@ -2,6 +2,8 @@ package com.econovafx.modules.billing.service;
 
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.repository.ThirdPartyRepository;
+import com.econovafx.modules.core.exception.EntityNotFoundException;
+import com.econovafx.modules.core.exception.ValidationException;
 import io.avaje.inject.Component;
 import com.econovafx.modules.core.security.RequiresTenant;
 import jakarta.inject.Inject;
@@ -71,7 +73,10 @@ public class ThirdPartyService {
         validateThirdParty(thirdParty);
         
         if (thirdPartyRepository.existsByIdentificationNumber(thirdParty.getIdentificationNumber())) {
-            throw new IllegalArgumentException("Identification number already exists: " + thirdParty.getIdentificationNumber());
+            throw new ValidationException(
+                "identificationNumber",
+                "Identification number already exists: " + thirdParty.getIdentificationNumber()
+            );
         }
         
         ThirdParty saved = thirdPartyRepository.save(thirdParty);
@@ -85,7 +90,7 @@ public class ThirdPartyService {
         validateThirdParty(thirdParty);
         
         if (!thirdPartyRepository.existsById(thirdParty.getId())) {
-            throw new IllegalArgumentException("ThirdParty not found with ID: " + thirdParty.getId());
+            throw new EntityNotFoundException(ThirdParty.class, thirdParty.getId());
         }
         
         thirdPartyRepository.update(thirdParty);
@@ -95,7 +100,7 @@ public class ThirdPartyService {
     
     public void deleteThirdParty(Long id) {
         ThirdParty thirdParty = thirdPartyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ThirdParty not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(ThirdParty.class, id));
         
         thirdPartyRepository.delete(thirdParty);
         logger.info("ThirdParty deleted: {}", thirdParty.getName());
@@ -103,7 +108,7 @@ public class ThirdPartyService {
     
     public void deactivateThirdParty(Long id) {
         ThirdParty thirdParty = thirdPartyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ThirdParty not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(ThirdParty.class, id));
         
         thirdParty.setIsActive(false);
         thirdPartyRepository.update(thirdParty);
@@ -112,7 +117,7 @@ public class ThirdPartyService {
     
     public void activateThirdParty(Long id) {
         ThirdParty thirdParty = thirdPartyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ThirdParty not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(ThirdParty.class, id));
         
         thirdParty.setIsActive(true);
         thirdPartyRepository.update(thirdParty);
@@ -121,13 +126,13 @@ public class ThirdPartyService {
     
     private void validateThirdParty(ThirdParty thirdParty) {
         if (thirdParty.getName() == null || thirdParty.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Name is required");
+            throw new ValidationException("name", "Name is required");
         }
         if (thirdParty.getEmail() == null || thirdParty.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("Email is required");
+            throw new ValidationException("email", "Email is required");
         }
         if (thirdParty.getType() == null) {
-            throw new IllegalArgumentException("Type is required");
+            throw new ValidationException("type", "Type is required");
         }
     }
     
