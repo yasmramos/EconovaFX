@@ -75,7 +75,9 @@ public class ThirdPartyService {
         }
         
         ThirdParty saved = thirdPartyRepository.save(thirdParty);
-        logger.info("ThirdParty created: {} ({})", saved.getName(), saved.getIdentificationNumber());
+        if (saved != null) {
+            logger.info("ThirdParty created: {} ({})", saved.getName(), saved.getIdentificationNumber());
+        }
         return saved;
     }
     
