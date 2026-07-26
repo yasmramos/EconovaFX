@@ -117,8 +117,8 @@ class TransactionServiceTest {
             new TransactionService.TransactionEntryData(2L, BigDecimal.ZERO, new BigDecimal("100.00"), "Credit")
         );
 
-        BusinessException exception = assertThrows(
-            BusinessException.class,
+        ValidationException exception = assertThrows(
+            ValidationException.class,
             () -> transactionService.createTransaction(transaction, entries)
         );
 
@@ -135,8 +135,8 @@ class TransactionServiceTest {
             new TransactionService.TransactionEntryData(2L, BigDecimal.ZERO, new BigDecimal("100.00"), "Credit")
         );
 
-        BusinessException exception = assertThrows(
-            BusinessException.class,
+        ValidationException exception = assertThrows(
+            ValidationException.class,
             () -> transactionService.createTransaction(transaction, entries)
         );
 
@@ -153,8 +153,8 @@ class TransactionServiceTest {
             new TransactionService.TransactionEntryData(1L, new BigDecimal("100.00"), BigDecimal.ZERO, "Debit")
         );
 
-        BusinessException exception = assertThrows(
-            BusinessException.class,
+        ValidationException exception = assertThrows(
+            ValidationException.class,
             () -> transactionService.createTransaction(transaction, entries)
         );
 
@@ -217,8 +217,8 @@ class TransactionServiceTest {
         transaction.setIsPosted(true);
         transactionRepository.save(transaction);
 
-        IllegalStateException exception = assertThrows(
-            IllegalStateException.class,
+        ValidationException exception = assertThrows(
+            ValidationException.class,
             () -> transactionService.postTransaction(1L)
         );
 
@@ -234,8 +234,8 @@ class TransactionServiceTest {
         transaction.setTotalCredit(new BigDecimal("800.00"));
         transactionRepository.save(transaction);
 
-        IllegalStateException exception = assertThrows(
-            IllegalStateException.class,
+        ValidationException exception = assertThrows(
+            ValidationException.class,
             () -> transactionService.postTransaction(1L)
         );
 
@@ -378,8 +378,8 @@ class TransactionServiceTest {
         transaction.setIsPosted(false);
         transactionRepository.save(transaction);
 
-        IllegalStateException exception = assertThrows(
-            IllegalStateException.class,
+        ValidationException exception = assertThrows(
+            ValidationException.class,
             () -> transactionService.reverseTransaction(1L, "Test reason")
         );
 
@@ -417,8 +417,8 @@ class TransactionServiceTest {
         transaction.setIsPosted(true);
         transactionRepository.save(transaction);
 
-        IllegalStateException exception = assertThrows(
-            IllegalStateException.class,
+        ValidationException exception = assertThrows(
+            ValidationException.class,
             () -> transactionService.deleteTransaction(1L)
         );
 
