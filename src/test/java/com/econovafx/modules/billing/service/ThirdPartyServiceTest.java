@@ -2,6 +2,7 @@ package com.econovafx.modules.billing.service;
 
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.repository.ThirdPartyRepository;
+import com.econovafx.modules.core.config.UserContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,12 +22,15 @@ class ThirdPartyServiceTest {
 
     @Mock
     private ThirdPartyRepository thirdPartyRepository;
+    
+    @Mock
+    private UserContext userContext;
 
     private ThirdPartyService thirdPartyService;
 
     @BeforeEach
     void setUp() {
-        thirdPartyService = new ThirdPartyService(thirdPartyRepository);
+        thirdPartyService = new ThirdPartyService(thirdPartyRepository, userContext);
     }
 
     @Test
