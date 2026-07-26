@@ -59,10 +59,6 @@ public class InventoryMovement extends BaseEntity {
     @JoinColumn(name = "transaction_id")
     private Transaction relatedTransaction;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    private User createdBy;
-
     @WhenCreated
     @Column(nullable = false, updatable = false)
     private LocalDateTime movementDate;
@@ -154,14 +150,6 @@ public class InventoryMovement extends BaseEntity {
 
     public void setRelatedTransaction(Transaction relatedTransaction) {
         this.relatedTransaction = relatedTransaction;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
     }
 
     public LocalDateTime getMovementDate() {
