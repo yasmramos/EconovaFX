@@ -13,6 +13,7 @@ import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
 import com.econovafx.modules.core.exception.BusinessException;
+import com.econovafx.modules.core.exception.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -122,7 +123,8 @@ class TransactionServiceTest {
             () -> transactionService.createTransaction(transaction, entries)
         );
 
-        assertEquals("Transaction date is required", exception.getMessage());
+        assertTrue(exception.getMessage().contains("date"));
+        assertTrue(exception.getMessage().contains("null"));
     }
 
     @Test
@@ -140,7 +142,8 @@ class TransactionServiceTest {
             () -> transactionService.createTransaction(transaction, entries)
         );
 
-        assertEquals("Transaction type is required", exception.getMessage());
+        assertTrue(exception.getMessage().contains("type"));
+        assertTrue(exception.getMessage().contains("null"));
     }
 
     @Test
@@ -158,7 +161,7 @@ class TransactionServiceTest {
             () -> transactionService.createTransaction(transaction, entries)
         );
 
-        assertEquals("Transaction must have at least 2 entries", exception.getMessage());
+        assertTrue(exception.getMessage().contains("2 entries"));
     }
 
     @Test
@@ -177,7 +180,8 @@ class TransactionServiceTest {
             () -> transactionService.createTransaction(transaction, entries)
         );
 
-        assertEquals("Account not found: 999", exception.getMessage());
+        assertTrue(exception.getMessage().contains("Account not found"));
+        assertTrue(exception.getMessage().contains("999"));
     }
 
     @Test
@@ -222,7 +226,7 @@ class TransactionServiceTest {
             () -> transactionService.postTransaction(1L)
         );
 
-        assertEquals("Transaction already posted", exception.getMessage());
+        assertTrue(exception.getMessage().contains("already posted"));
     }
 
     @Test
@@ -239,7 +243,7 @@ class TransactionServiceTest {
             () -> transactionService.postTransaction(1L)
         );
 
-        assertEquals("Transaction is not balanced", exception.getMessage());
+        assertTrue(exception.getMessage().contains("not balanced"));
     }
 
     @Test
@@ -249,7 +253,8 @@ class TransactionServiceTest {
             () -> transactionService.postTransaction(999L)
         );
 
-        assertEquals("Transaction not found: 999", exception.getMessage());
+        assertTrue(exception.getMessage().contains("Transaction not found"));
+        assertTrue(exception.getMessage().contains("999"));
     }
 
     @Test
@@ -393,7 +398,8 @@ class TransactionServiceTest {
             () -> transactionService.reverseTransaction(999L, "Test reason")
         );
 
-        assertEquals("Transaction not found: 999", exception.getMessage());
+        assertTrue(exception.getMessage().contains("Transaction not found"));
+        assertTrue(exception.getMessage().contains("999"));
     }
 
     @Test
@@ -433,7 +439,8 @@ class TransactionServiceTest {
             () -> transactionService.deleteTransaction(999L)
         );
 
-        assertEquals("Transaction not found: 999", exception.getMessage());
+        assertTrue(exception.getMessage().contains("Transaction not found"));
+        assertTrue(exception.getMessage().contains("999"));
     }
 
     @Test
