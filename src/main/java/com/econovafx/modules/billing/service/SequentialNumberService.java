@@ -44,7 +44,7 @@ public class SequentialNumberService {
         }
 
         // Verificar si se alcanzó el límite
-        if (series.getCurrentNumber() > series.getEndNumber()) {
+        if (series.getCurrentNumber() >= series.getEndNumber()) {
             throw new IllegalStateException(
                 String.format("Se alcanzó el límite de la serie %s (%d). Límite: %d",
                     series.getSeriesCode(), series.getCurrentNumber(), series.getEndNumber()));
