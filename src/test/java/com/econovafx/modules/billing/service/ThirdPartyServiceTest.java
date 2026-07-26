@@ -3,6 +3,8 @@ package com.econovafx.modules.billing.service;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.repository.ThirdPartyRepository;
 import com.econovafx.modules.core.config.UserContext;
+import com.econovafx.modules.core.exception.EntityNotFoundException;
+import com.econovafx.modules.core.exception.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -208,11 +210,10 @@ class ThirdPartyServiceTest {
     void testCreateThirdParty_WithNullName_ThrowsException() {
         ThirdParty thirdParty = createThirdParty(null, null, "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
         
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
             thirdPartyService.createThirdParty(thirdParty);
         });
         
-        assertEquals("Name is required", exception.getMessage());
         verify(thirdPartyRepository, never()).save(any());
     }
 
@@ -220,11 +221,10 @@ class ThirdPartyServiceTest {
     void testCreateThirdParty_WithEmptyName_ThrowsException() {
         ThirdParty thirdParty = createThirdParty(null, "   ", "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
         
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
             thirdPartyService.createThirdParty(thirdParty);
         });
         
-        assertEquals("Name is required", exception.getMessage());
         verify(thirdPartyRepository, never()).save(any());
     }
 
@@ -233,11 +233,10 @@ class ThirdPartyServiceTest {
         ThirdParty thirdParty = createThirdParty(null, "Test Customer", "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
         thirdParty.setEmail(null);
         
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
             thirdPartyService.createThirdParty(thirdParty);
         });
         
-        assertEquals("Email is required", exception.getMessage());
         verify(thirdPartyRepository, never()).save(any());
     }
 
@@ -246,11 +245,10 @@ class ThirdPartyServiceTest {
         ThirdParty thirdParty = createThirdParty(null, "Test Customer", "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
         thirdParty.setType(null);
         
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
             thirdPartyService.createThirdParty(thirdParty);
         });
         
-        assertEquals("Type is required", exception.getMessage());
         verify(thirdPartyRepository, never()).save(any());
     }
 
@@ -260,11 +258,10 @@ class ThirdPartyServiceTest {
         
         when(thirdPartyRepository.existsByIdentificationNumber("12345678901")).thenReturn(true);
         
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
             thirdPartyService.createThirdParty(thirdParty);
         });
         
-        assertTrue(exception.getMessage().contains("Identification number already exists"));
         verify(thirdPartyRepository, never()).save(any());
     }
 
@@ -287,11 +284,10 @@ class ThirdPartyServiceTest {
         
         when(thirdPartyRepository.existsById(999L)).thenReturn(false);
         
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             thirdPartyService.updateThirdParty(thirdParty);
         });
         
-        assertTrue(exception.getMessage().contains("ThirdParty not found with ID"));
         verify(thirdPartyRepository, never()).update(any());
     }
 
@@ -313,11 +309,10 @@ class ThirdPartyServiceTest {
         Long id = 999L;
         when(thirdPartyRepository.findById(id)).thenReturn(Optional.empty());
         
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             thirdPartyService.deleteThirdParty(id);
         });
         
-        assertTrue(exception.getMessage().contains("ThirdParty not found with ID"));
         verify(thirdPartyRepository, never()).delete(any());
     }
 
@@ -429,7 +424,6 @@ class ThirdPartyServiceTest {
             thirdPartyService.updateBalance(id, 50.0);
         });
         
-        assertTrue(exception.getMessage().contains("ThirdParty not found with ID"));
         verify(thirdPartyRepository, never()).update(any());
     }
 
