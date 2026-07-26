@@ -30,7 +30,7 @@ public class BankReconciliation extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_user_id")
-    private com.econovafx.modules.security.model.User completedBy;
+    private com.econovafx.modules.core.model.User completedBy;
 
     @Column
     private LocalDate completedDate;
@@ -54,8 +54,8 @@ public class BankReconciliation extends BaseEntity {
     public boolean isCompleted() { return isCompleted; }
     public void setCompleted(boolean completed) { isCompleted = completed; }
     
-    public com.econovafx.modules.security.model.User getCompletedBy() { return completedBy; }
-    public void setCompletedBy(com.econovafx.modules.security.model.User completedBy) { this.completedBy = completedBy; }
+    public com.econovafx.modules.core.model.User getCompletedBy() { return completedBy; }
+    public void setCompletedBy(com.econovafx.modules.core.model.User completedBy) { this.completedBy = completedBy; }
     
     public LocalDate getCompletedDate() { return completedDate; }
     public void setCompletedDate(LocalDate completedDate) { this.completedDate = completedDate; }
