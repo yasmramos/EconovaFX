@@ -11,6 +11,8 @@ import com.econovafx.modules.core.repository.AuditLogRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.exception.EntityNotFoundException;
+import com.econovafx.modules.core.exception.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -96,8 +98,8 @@ class TransactionServiceTest {
             new TransactionService.TransactionEntryData(2L, BigDecimal.ZERO, new BigDecimal("800.00"), "Credit")
         );
 
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        BusinessException exception = assertThrows(
+            BusinessException.class,
             () -> transactionService.createTransaction(transaction, entries)
         );
 
@@ -115,8 +117,8 @@ class TransactionServiceTest {
             new TransactionService.TransactionEntryData(2L, BigDecimal.ZERO, new BigDecimal("100.00"), "Credit")
         );
 
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        BusinessException exception = assertThrows(
+            BusinessException.class,
             () -> transactionService.createTransaction(transaction, entries)
         );
 
@@ -133,8 +135,8 @@ class TransactionServiceTest {
             new TransactionService.TransactionEntryData(2L, BigDecimal.ZERO, new BigDecimal("100.00"), "Credit")
         );
 
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        BusinessException exception = assertThrows(
+            BusinessException.class,
             () -> transactionService.createTransaction(transaction, entries)
         );
 
@@ -151,8 +153,8 @@ class TransactionServiceTest {
             new TransactionService.TransactionEntryData(1L, new BigDecimal("100.00"), BigDecimal.ZERO, "Debit")
         );
 
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        BusinessException exception = assertThrows(
+            BusinessException.class,
             () -> transactionService.createTransaction(transaction, entries)
         );
 
@@ -170,8 +172,8 @@ class TransactionServiceTest {
             new TransactionService.TransactionEntryData(2L, BigDecimal.ZERO, new BigDecimal("100.00"), "Credit")
         );
 
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        EntityNotFoundException exception = assertThrows(
+            EntityNotFoundException.class,
             () -> transactionService.createTransaction(transaction, entries)
         );
 
@@ -242,8 +244,8 @@ class TransactionServiceTest {
 
     @Test
     void testPostTransactionFailsWhenNotFound() {
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        EntityNotFoundException exception = assertThrows(
+            EntityNotFoundException.class,
             () -> transactionService.postTransaction(999L)
         );
 
@@ -386,8 +388,8 @@ class TransactionServiceTest {
 
     @Test
     void testReverseTransactionFailsWhenNotFound() {
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        EntityNotFoundException exception = assertThrows(
+            EntityNotFoundException.class,
             () -> transactionService.reverseTransaction(999L, "Test reason")
         );
 
@@ -426,8 +428,8 @@ class TransactionServiceTest {
 
     @Test
     void testDeleteTransactionFailsWhenNotFound() {
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
+        EntityNotFoundException exception = assertThrows(
+            EntityNotFoundException.class,
             () -> transactionService.deleteTransaction(999L)
         );
 
