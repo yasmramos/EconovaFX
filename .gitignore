@@ -1,55 +1,34 @@
-*.class
-*.pyc
-*.o
-*.obj
-*.exe
-*.dll
-*.so
-*.a
-*.out
-node_modules/
-venv/
+```
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Dependencies
 .venv/
-__pycache__/
+venv/
+node_modules/
+
+# Build artifacts
 dist/
 build/
 target/
-.mypy_cache/
-.pytest_cache/
-.gradle/
-.vscode/
-.idea/
-*.swp
-*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Original rules preserved
 *.log
-*.tmp
-.DS_Store
-Thumbs.db
-.env
-.env.local
-*.env.*
-coverage/
-htmlcov/
-.coverage
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+```
