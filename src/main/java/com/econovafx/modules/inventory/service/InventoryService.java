@@ -301,7 +301,7 @@ public class InventoryService {
         movement.setDocumentNumber(documentNumber);
         movement.setNotes(notes);
         movement.setThirdParty(supplier);
-        movement.setCreatedBy(currentUser);
+        movement.setCreatedBy(currentUser.getId());
         movement.calculateTotalAmount();
         
         movementRepository.save(movement);
@@ -361,7 +361,7 @@ public class InventoryService {
         movement.setUnitCost(unitCost);
         movement.setDocumentNumber(documentNumber);
         movement.setNotes(notes);
-        movement.setCreatedBy(currentUser);
+        movement.setCreatedBy(currentUser.getId());
         movement.calculateTotalAmount();
         
         movementRepository.save(movement);
@@ -410,7 +410,7 @@ public class InventoryService {
         movement.setUnitCost(item.getUnitCost());
         movement.setDocumentNumber(documentNumber);
         movement.setNotes(reason);
-        movement.setCreatedBy(currentUser);
+        movement.setCreatedBy(currentUser.getId());
         movement.calculateTotalAmount();
         
         movementRepository.save(movement);
