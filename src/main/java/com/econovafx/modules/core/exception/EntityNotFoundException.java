@@ -36,8 +36,20 @@ public class EntityNotFoundException extends BusinessException {
     /**
      * Creates an exception for entity not found by ID
      */
+
+    private static Class<?> getEntityClass(String entityType) {
+        try {
+            return Class.forName("com.econovafx.modules.accounting.model." + entityType);
+        } catch (ClassNotFoundException e) {
+            try {
+                return Class.forName("com.econovafx.modules.core.model." + entityType);
+            } catch (ClassNotFoundException ex) {
+                return Object.class;
+            }
+        }
+    }
     public static EntityNotFoundException notFound(String entityType, Long id) {
-        return new EntityNotFoundException(entityType + " not found with ID: " + id);
+        return new EntityNotFoundException(getEntityClass(entityType), id);
     }
     
     public Class<?> getEntityType() {
