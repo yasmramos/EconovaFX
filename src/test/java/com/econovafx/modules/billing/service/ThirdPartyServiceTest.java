@@ -226,7 +226,8 @@ class ThirdPartyServiceTest {
 
     @Test
     void testCreateThirdParty_WithNullEmail_ThrowsException() {
-        ThirdParty thirdParty = createThirdParty(null, "Test Customer", null, ThirdParty.ThirdPartyType.CUSTOMER);
+        ThirdParty thirdParty = createThirdParty(null, "Test Customer", "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
+        thirdParty.setEmail(null);
         
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             thirdPartyService.createThirdParty(thirdParty);
@@ -238,9 +239,8 @@ class ThirdPartyServiceTest {
 
     @Test
     void testCreateThirdParty_WithNullType_ThrowsException() {
-        ThirdParty thirdParty = new ThirdParty();
-        thirdParty.setName("Test Customer");
-        thirdParty.setEmail("test@example.com");
+        ThirdParty thirdParty = createThirdParty(null, "Test Customer", "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
+        thirdParty.setType(null);
         
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             thirdPartyService.createThirdParty(thirdParty);
@@ -435,7 +435,9 @@ class ThirdPartyServiceTest {
         thirdParty.setName(name);
         thirdParty.setIdentificationNumber(identification);
         thirdParty.setType(type);
-        thirdParty.setEmail("test@example.com");
+        if (name != null && !name.trim().isEmpty()) {
+            thirdParty.setEmail("test@example.com");
+        }
         thirdParty.setIsActive(true);
         thirdParty.setCurrentBalance(0.0);
         return thirdParty;

@@ -36,12 +36,6 @@ public class FinancialStatementModel extends BaseEntity {
     @Column(length = 2000)
     private String description;
 
-    @Column(name = "created_by", length = 50)
-    private String createdBy;
-
-    @Column(name = "updated_by", length = 50)
-    private String updatedBy;
-
     // Getters and Setters
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
@@ -54,12 +48,6 @@ public class FinancialStatementModel extends BaseEntity {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-
-    public String getUpdatedBy() { return updatedBy; }
-    public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
 
     @Override
     public String toString() {

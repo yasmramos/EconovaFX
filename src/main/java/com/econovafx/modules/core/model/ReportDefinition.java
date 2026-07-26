@@ -35,12 +35,6 @@ public class ReportDefinition extends BaseEntity {
     @Column(name = "is_public")
     private Boolean isPublic = true;
 
-    @Column(name = "created_by", length = 50)
-    private String createdBy;
-
-    @Column(name = "updated_by", length = 50)
-    private String updatedBy;
-
     // Getters and Setters
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
@@ -59,12 +53,6 @@ public class ReportDefinition extends BaseEntity {
 
     public Boolean getIsPublic() { return isPublic; }
     public void setIsPublic(Boolean aPublic) { isPublic = aPublic; }
-
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-
-    public String getUpdatedBy() { return updatedBy; }
-    public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
 
     @Override
     public String toString() {

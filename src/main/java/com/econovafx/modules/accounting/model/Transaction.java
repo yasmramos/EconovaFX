@@ -35,9 +35,8 @@ public class Transaction extends BaseEntity {
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransactionEntry> entries = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by")
-    private User createdBy;
+    @Column(name = "created_by", updatable = false)
+    private Long createdByUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "third_party_id")
@@ -103,13 +102,12 @@ public class Transaction extends BaseEntity {
     public void setEntries(List<TransactionEntry> entries) {
         this.entries = entries;
     }
-
-    public User getCreatedBy() {
-        return createdBy;
+    public Long getCreatedBy() {
+        return createdByUserId;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedBy(Long createdByUserId) {
+        this.createdByUserId = createdByUserId;
     }
 
     public ThirdParty getThirdParty() {
