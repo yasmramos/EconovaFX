@@ -282,13 +282,13 @@ public class TransactionService {
     
     private void validateTransaction(Transaction transaction, List<TransactionEntryData> entries) {
         if (transaction.getDate() == null) {
-            throw ValidationException.nullValue("Transaction date");
+            throw new ValidationException("date", "Transaction date cannot be null");
         }
         if (transaction.getType() == null || transaction.getType().trim().isEmpty()) {
-            throw ValidationException.nullValue("Transaction type");
+            throw new ValidationException("type", "Transaction type cannot be null");
         }
         if (entries == null || entries.size() < 2) {
-            throw ValidationException.invalidValue("Transaction must have at least 2 entries");
+            throw new ValidationException("entries", "Transaction must have at least 2 entries");
         }
     }
     
