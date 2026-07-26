@@ -32,7 +32,7 @@ public class Transaction extends BaseEntity {
     @Column(length = 100)
     private String reference;
 
-    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TransactionEntry> entries = new ArrayList<>();
 
     @Column(name = "created_by", updatable = false)
@@ -48,7 +48,12 @@ public class Transaction extends BaseEntity {
     @Column(precision = 19, scale = 4)
     private BigDecimal totalCredit = BigDecimal.ZERO;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private TransactionStatus status = TransactionStatus.DRAFT;
+
     @Column(name = "is_posted")
+    @Deprecated // Use status field instead
     private Boolean isPosted = false;
 
     public Transaction() {
@@ -138,8 +143,29 @@ public class Transaction extends BaseEntity {
         return isPosted;
     }
 
+    @Deprecated // Use getStatus instead
     public void setIsPosted(Boolean posted) {
         isPosted = posted;
+        // Keep status in sync for backward compatibility
+        if (posted != null && posted) {
+            this.status = TransactionStatus.POSTED;
+        } else if (posted != null && !posted) {
+            this.status = TransactionStatus.DRAFT;
+        }
+    }
+
+    public TransactionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransactionStatus status) {
+        this.status = status;
+        // Keep isPosted in sync for backward compatibility
+        if (status == TransactionStatus.POSTED) {
+            this.isPosted = true;
+        } else if (status == TransactionStatus.DRAFT) {
+            this.isPosted = false;
+        }
     }
 
     public void addEntry(TransactionEntry entry) {
@@ -155,5 +181,21 @@ public class Transaction extends BaseEntity {
 
     public boolean isBalanced() {
         return totalDebit.compareTo(totalCredit) == 0;
+    }
+
+    /**
+     * Recalculate totals from entries to ensure consistency
+     */
+    public void recalculateTotals() {
+        totalDebit = BigDecimal.ZERO;
+        totalCredit = BigDecimal.ZERO;
+        for (TransactionEntry entry : entries) {
+            if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) > 0) {
+                totalDebit = totalDebit.add(entry.getDebitAmount());
+            }
+            if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+                totalCredit = totalCredit.add(entry.getCreditAmount());
+            }
+        }
     }
 }

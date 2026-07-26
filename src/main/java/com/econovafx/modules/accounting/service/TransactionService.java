@@ -79,6 +79,9 @@ public class TransactionService {
             transaction.setNumber(nextNumber);
         }
         
+        // Set initial status to DRAFT
+        transaction.setStatus(TransactionStatus.DRAFT);
+        
         BigDecimal totalDebit = BigDecimal.ZERO;
         BigDecimal totalCredit = BigDecimal.ZERO;
         
@@ -88,8 +91,8 @@ public class TransactionService {
             
             TransactionEntry entry = new TransactionEntry();
             entry.setAccount(account);
-            entry.setDebitAmount(entryData.getDebitAmount());
-            entry.setCreditAmount(entryData.getCreditAmount());
+            entry.setDebitAmount(entryData.getDebitAmount().setScale(4, java.math.RoundingMode.HALF_UP));
+            entry.setCreditAmount(entryData.getCreditAmount().setScale(4, java.math.RoundingMode.HALF_UP));
             entry.setDescription(entryData.getDescription());
             
             transaction.addEntry(entry);
@@ -98,6 +101,11 @@ public class TransactionService {
             totalCredit = totalCredit.add(entryData.getCreditAmount());
         }
         
+        // Recalculate totals from entries to ensure consistency
+        transaction.recalculateTotals();
+        totalDebit = transaction.getTotalDebit();
+        totalCredit = transaction.getTotalCredit();
+        
         if (totalDebit.compareTo(totalCredit) != 0) {
             String errorMsg = "Transaction is not balanced. Debit: " + totalDebit + ", Credit: " + totalCredit;
             auditService.logFailure(username, AuditLog.OperationType.CREATE, "Transaction", null, 
@@ -105,12 +113,11 @@ public class TransactionService {
             throw ValidationException.unbalancedTransaction(totalDebit, totalCredit);
         }
         
-        transaction.setTotalDebit(totalDebit);
-        transaction.setTotalCredit(totalCredit);
-        transaction.setIsPosted(false);
+        transaction.setTotalDebit(totalDebit.setScale(4, java.math.RoundingMode.HALF_UP));
+        transaction.setTotalCredit(totalCredit.setScale(4, java.math.RoundingMode.HALF_UP));
         
         Transaction saved = transactionRepository.save(transaction);
-        logger.info("Transaction created: {}", saved.getNumber());
+        logger.info("Transaction created: {} with status: {}", saved.getNumber(), saved.getStatus());
         
         // Audit log
         auditService.logWithValues(username, AuditLog.OperationType.CREATE, "Transaction", 
@@ -134,9 +141,11 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> EntityNotFoundException.notFound("Transaction", transactionId));
         
-        if (transaction.getIsPosted()) {
+        // Check if transaction can be posted based on status
+        if (!transaction.getStatus().canPost()) {
+            String errorMsg = "Transaction cannot be posted in current status: " + transaction.getStatus().getDescription();
             auditService.logFailure(username, AuditLog.OperationType.PUBLISH_TRANSACTION, "Transaction", 
-                                   transactionId, "Post transaction - already posted", "Transaction already posted");
+                                   transactionId, "Post transaction - invalid status", errorMsg);
             throw ValidationException.transactionAlreadyPosted();
         }
         
@@ -173,10 +182,11 @@ public class TransactionService {
             accountRepository.update(account);
         }
         
-        transaction.setIsPosted(true);
+        // Update status to POSTED
+        transaction.setStatus(TransactionStatus.POSTED);
         transactionRepository.update(transaction);
         
-        logger.info("Transaction posted: {}", transaction.getNumber());
+        logger.info("Transaction posted: {} with status: {}", transaction.getNumber(), transaction.getStatus());
         
         // Audit log
         auditService.logSuccess(username, AuditLog.OperationType.PUBLISH_TRANSACTION, "Transaction",
@@ -199,9 +209,11 @@ public class TransactionService {
         Transaction original = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> EntityNotFoundException.notFound("Transaction", transactionId));
         
-        if (!original.getIsPosted()) {
+        // Check if transaction can be reversed based on status
+        if (!original.getStatus().canReverse()) {
+            String errorMsg = "Transaction cannot be reversed in current status: " + original.getStatus().getDescription();
             auditService.logFailure(username, AuditLog.OperationType.REJECT, "Transaction",
-                                   transactionId, "Reverse transaction - not posted", "Cannot reverse unposted transaction");
+                                   transactionId, "Reverse transaction - invalid status", errorMsg);
             throw ValidationException.cannotReverseUnpostedTransaction();
         }
         
@@ -220,6 +232,10 @@ public class TransactionService {
                 .toList();
         
         Transaction savedReversal = createTransaction(reversal, reverseEntries, username);
+        
+        // Update original transaction status to REVERSED
+        original.setStatus(TransactionStatus.REVERSED);
+        transactionRepository.update(original);
         
         // Audit log for reversal
         auditService.logWithValues(username, AuditLog.OperationType.REJECT, "Transaction",
@@ -240,9 +256,11 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> EntityNotFoundException.notFound("Transaction", id));
         
-        if (transaction.getIsPosted()) {
+        // Only DRAFT transactions can be deleted
+        if (!transaction.getStatus().canModify()) {
             auditService.logFailure(username, AuditLog.OperationType.DELETE, "Transaction",
-                                   id, "Delete transaction - is posted", "Cannot delete posted transaction. Please reverse it.");
+                                   id, "Delete transaction - invalid status", 
+                                   "Cannot delete transaction in status: " + transaction.getStatus().getDescription() + ". Please reverse it first.");
             throw ValidationException.cannotDeletePostedTransaction();
         }
         
