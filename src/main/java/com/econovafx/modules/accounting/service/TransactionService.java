@@ -3,6 +3,8 @@ package com.econovafx.modules.accounting.service;
 import com.econovafx.modules.accounting.model.*;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
+import com.econovafx.modules.core.exception.EntityNotFoundException;
+import com.econovafx.modules.core.exception.ValidationException;
 import com.econovafx.modules.core.model.AuditLog;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.core.security.RequiresTenant;
@@ -82,8 +84,7 @@ public class TransactionService {
         
         for (TransactionEntryData entryData : entries) {
             Account account = accountRepository.findById(entryData.getAccountId())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Account not found: " + entryData.getAccountId()));
+                    .orElseThrow(() -> EntityNotFoundException.notFound("Account", entryData.getAccountId()));
             
             TransactionEntry entry = new TransactionEntry();
             entry.setAccount(account);
@@ -101,7 +102,7 @@ public class TransactionService {
             String errorMsg = "Transaction is not balanced. Debit: " + totalDebit + ", Credit: " + totalCredit;
             auditService.logFailure(username, AuditLog.OperationType.CREATE, "Transaction", null, 
                                    "Create transaction - validation failed", errorMsg);
-            throw new IllegalArgumentException(errorMsg);
+            throw ValidationException.unbalancedTransaction(totalDebit, totalCredit);
         }
         
         transaction.setTotalDebit(totalDebit);
@@ -131,19 +132,18 @@ public class TransactionService {
      */
     public Transaction postTransaction(Long transactionId, String username) {
         Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Transaction not found: " + transactionId));
+                .orElseThrow(() -> EntityNotFoundException.notFound("Transaction", transactionId));
         
         if (transaction.getIsPosted()) {
             auditService.logFailure(username, AuditLog.OperationType.PUBLISH_TRANSACTION, "Transaction", 
                                    transactionId, "Post transaction - already posted", "Transaction already posted");
-            throw new IllegalStateException("Transaction already posted");
+            throw ValidationException.transactionAlreadyPosted();
         }
         
         if (!transaction.isBalanced()) {
             auditService.logFailure(username, AuditLog.OperationType.PUBLISH_TRANSACTION, "Transaction", 
                                    transactionId, "Post transaction - not balanced", "Transaction is not balanced");
-            throw new IllegalStateException("Transaction is not balanced");
+            throw ValidationException.unbalancedTransaction(transaction.getTotalDebit(), transaction.getTotalCredit());
         }
         
         for (TransactionEntry entry : transaction.getEntries()) {
@@ -197,13 +197,12 @@ public class TransactionService {
      */
     public Transaction reverseTransaction(Long transactionId, String reason, String username) {
         Transaction original = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Transaction not found: " + transactionId));
+                .orElseThrow(() -> EntityNotFoundException.notFound("Transaction", transactionId));
         
         if (!original.getIsPosted()) {
             auditService.logFailure(username, AuditLog.OperationType.REJECT, "Transaction",
                                    transactionId, "Reverse transaction - not posted", "Cannot reverse unposted transaction");
-            throw new IllegalStateException("Cannot reverse unposted transaction");
+            throw ValidationException.cannotReverseUnpostedTransaction();
         }
         
         Transaction reversal = new Transaction();
@@ -239,13 +238,12 @@ public class TransactionService {
     
     public void deleteTransaction(Long id, String username) {
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Transaction not found: " + id));
+                .orElseThrow(() -> EntityNotFoundException.notFound("Transaction", id));
         
         if (transaction.getIsPosted()) {
             auditService.logFailure(username, AuditLog.OperationType.DELETE, "Transaction",
                                    id, "Delete transaction - is posted", "Cannot delete posted transaction. Please reverse it.");
-            throw new IllegalStateException("Cannot delete posted transaction. Please reverse it.");
+            throw ValidationException.cannotDeletePostedTransaction();
         }
         
         Long entityId = transaction.getId();

@@ -33,6 +33,13 @@ public class EntityNotFoundException extends BusinessException {
         this.entityId = null;
     }
     
+    /**
+     * Creates an exception for entity not found by ID
+     */
+    public static EntityNotFoundException notFound(String entityType, Long id) {
+        return new EntityNotFoundException(entityType + " not found with ID: " + id);
+    }
+    
     public Class<?> getEntityType() {
         return entityType;
     }
