@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.ui.controller.AccountsController"
+      spacing="20"
+      styleClass="p-5">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Plan de Cuentas" styleClass="text-2xl, font-bold, text-gray-800"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Buscar cuenta..." styleClass="w-64, rounded-md"/>
+        <Button text="Buscar" onAction="#searchAccounts" styleClass="bg-blue-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-blue-600"/>
+        <Button text="Nueva Cuenta" onAction="#newAccount" styleClass="bg-green-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-green-600"/>
+    </HBox>
+    
+    <!-- Account Tree and List -->
+    <HBox VBox.vgrow="ALWAYS" spacing="20">
+
+        <!-- Account Types Filter -->
+        <VBox styleClass="w-48" spacing="10">
+            <Label text="Tipos de Cuenta" styleClass="text-lg, font-semibold, text-gray-700"/>
+            <ListView fx:id="accountTypeList" VBox.vgrow="ALWAYS" styleClass="rounded-md, border, border-gray-200">
+            </ListView>
+        </VBox>
+
+        <!-- Accounts Table -->
+        <VBox HBox.hgrow="ALWAYS" spacing="10">
+            <TableView fx:id="accountsTable" VBox.vgrow="ALWAYS" styleClass="rounded-lg, border, border-gray-200">
+                <columns>
+                    <TableColumn fx:id="colCode" text="Código" prefWidth="100"/>
+                    <TableColumn fx:id="colName" text="Nombre" prefWidth="250"/>
+                    <TableColumn fx:id="colType" text="Tipo" prefWidth="120"/>
+                    <TableColumn fx:id="colBalance" text="Saldo" prefWidth="120"/>
+                    <TableColumn fx:id="colParent" text="Cuenta Padre" prefWidth="150"/>
+                    <TableColumn fx:id="colDescription" text="Descripción" prefWidth="200"/>
+                </columns>
+            </TableView>
+
+            <!-- Action Buttons -->
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Editar" onAction="#editAccount" styleClass="bg-blue-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-blue-600"/>
+                <Button text="Eliminar" onAction="#deleteAccount" styleClass="bg-red-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-red-600"/>
+                <Button text="Ver Movimientos" onAction="#viewTransactions" styleClass="bg-gray-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-gray-600"/>
+            </HBox>
+        </VBox>
+
+    </HBox>
+    
+</VBox>
