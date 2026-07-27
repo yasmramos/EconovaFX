@@ -124,4 +124,14 @@ public class Account extends BaseEntity {
     public String toString() {
         return code + " - " + name;
     }
+
+    /**
+     * Check if account has historical movements (transaction entries).
+     * Required for Resolution 340/2004 compliance to prevent deletion of accounts with history.
+     * 
+     * @return true if account has transaction entries, false otherwise
+     */
+    public boolean hasMovements() {
+        return transactionEntries != null && !transactionEntries.isEmpty();
+    }
 }
