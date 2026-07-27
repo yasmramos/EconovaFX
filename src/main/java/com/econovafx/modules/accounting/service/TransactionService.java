@@ -3,6 +3,7 @@ package com.econovafx.modules.accounting.service;
 import com.econovafx.modules.accounting.model.*;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
+import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
 import com.econovafx.modules.core.exception.ValidationException;
 import com.econovafx.modules.core.model.AuditLog;
@@ -30,14 +31,17 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
     private final AuditService auditService;
+    private final AccountingPeriodService accountingPeriodService;
     
     @Inject
     public TransactionService(TransactionRepository transactionRepository,
                              AccountRepository accountRepository,
-                             AuditService auditService) {
+                             AuditService auditService,
+                             AccountingPeriodService accountingPeriodService) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
         this.auditService = auditService;
+        this.accountingPeriodService = accountingPeriodService;
     }
     
     public Optional<Transaction> getTransactionById(Long id) {
@@ -136,10 +140,14 @@ public class TransactionService {
     
     /**
      * Post a transaction (apply to account balances)
+     * Resolution 340/2004: Validates period is open before posting
      */
     public Transaction postTransaction(Long transactionId, String username) {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> EntityNotFoundException.notFound("Transaction", transactionId));
+        
+        // Resolution 340/2004: Validate period is open before posting
+        accountingPeriodService.validatePeriodOpenForPosting(transaction.getDate());
         
         // Check if transaction can be posted based on status
         if (!transaction.getStatus().canPost()) {

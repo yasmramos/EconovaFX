@@ -276,10 +276,48 @@ public class AccountingPeriodService {
 
     /**
      * Validate if a date falls within an open period.
+     * Resolution 340/2004: Cannot post transactions to closed periods.
      */
     public boolean isValidTransactionDate(LocalDate date) {
         Optional<AccountingPeriod> period = getPeriodByDate(date);
         return period.isPresent() && period.get().isOpen();
+    }
+    
+    /**
+     * Validate that a period is open for posting transactions.
+     * Resolution 340/2004: Strict validation against closed periods.
+     * 
+     * @param date Transaction date to validate
+     * @throws IllegalStateException if period is closed or locked
+     */
+    public void validatePeriodOpenForPosting(LocalDate date) {
+        Optional<AccountingPeriod> periodOpt = getPeriodByDate(date);
+        
+        if (periodOpt.isEmpty()) {
+            throw new IllegalStateException(
+                "No accounting period found for date: " + date + 
+                ". Cannot post transaction without a valid period."
+            );
+        }
+        
+        AccountingPeriod period = periodOpt.get();
+        
+        if (period.getStatus() == AccountingPeriod.PeriodStatus.CLOSED) {
+            throw new IllegalStateException(
+                "Cannot post transaction to closed period: " + period.getName() + 
+                " (" + period.getStartDate() + " to " + period.getEndDate() + "). " +
+                "Resolution 340/2004: Closed periods cannot accept new transactions."
+            );
+        }
+        
+        if (period.getStatus() == AccountingPeriod.PeriodStatus.LOCKED) {
+            throw new IllegalStateException(
+                "Cannot post transaction to locked period: " + period.getName() + 
+                ". Resolution 340/2004: Locked periods are immutable."
+            );
+        }
+        
+        log.debug("Period validated as open for posting: {} - Status: {}", period.getName(), period.getStatus());
     }
 
     /**

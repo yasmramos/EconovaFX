@@ -7,6 +7,7 @@ import jakarta.persistence.Version;
 /**
  * Entity representing a Company in the multi-tenant system.
  * Each company has its own independent database.
+ * Resolution 340/2004 Cuba Compliance: Includes required fiscal data.
  */
 @Entity
 @Table(name = "companies")
@@ -16,7 +17,27 @@ public class Company extends BaseEntity {
 
     private String code;
 
+    /**
+     * NIF (Número de Identificación Fiscal) - Cuba
+     * Required by Resolution 340/2004 for fiscal identification
+     */
     private String nif;
+
+    /**
+     * Billing Resolution Number issued by Cuban tax authorities (ONAT)
+     * Required by Resolution 340/2004 for legal billing operations
+     */
+    private String billingResolutionNumber;
+
+    /**
+     * Date when the billing resolution was issued
+     */
+    private String billingResolutionDate;
+
+    /**
+     * Tax regime classification according to Cuban regulations
+     */
+    private String taxRegime;
 
     private String address;
 
@@ -122,6 +143,30 @@ public class Company extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getBillingResolutionNumber() {
+        return billingResolutionNumber;
+    }
+
+    public void setBillingResolutionNumber(String billingResolutionNumber) {
+        this.billingResolutionNumber = billingResolutionNumber;
+    }
+
+    public String getBillingResolutionDate() {
+        return billingResolutionDate;
+    }
+
+    public void setBillingResolutionDate(String billingResolutionDate) {
+        this.billingResolutionDate = billingResolutionDate;
+    }
+
+    public String getTaxRegime() {
+        return taxRegime;
+    }
+
+    public void setTaxRegime(String taxRegime) {
+        this.taxRegime = taxRegime;
     }
 
     public Long getVersion() {
