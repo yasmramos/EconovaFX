@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Third Party entity for managing Customers and Suppliers
- * Compliant with Dominican Republic DGII Resolution 340-2004
+ * Compliant with Cuba ONAT Resolution 340-2004
  */
 @Entity
 @Table(name = "third_parties")
@@ -21,7 +21,7 @@ public class ThirdParty extends BaseEntity {
     private String name;
 
     @Column(unique = true, nullable = false, length = 20)
-    private String identificationNumber; // RNC, Cédula, NITE, or Passport
+    private String identificationNumber; // NIT, Cédula, or Passport
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -29,7 +29,7 @@ public class ThirdParty extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tax_classification", nullable = false)
-    private TaxClassification taxClassification = TaxClassification.CONTRIBUTOR;
+    private TaxClassification taxClassification = TaxClassification.STATE_ENTITY;
 
     @Column(nullable = false)
     private String email;
@@ -40,10 +40,10 @@ public class ThirdParty extends BaseEntity {
 
     private String city;
 
-    private String country = "República Dominicana";
+    private String country = "Cuba";
 
     @Column(name = "tax_id")
-    private String taxId; // RNC or tax identification number
+    private String taxId; // NIT (Número de Identificación Tributaria)
 
     @Column(name = "withholding_isr", precision = 19, scale = 4)
     private Double withholdingIsr = 0.0; // Income Tax Withholding
@@ -72,15 +72,15 @@ public class ThirdParty extends BaseEntity {
     private List<Transaction> transactions = new ArrayList<>();
 
     /**
-     * Tax Classification types according to DGII Resolution 340-2004
+     * Tax Classification types according to Cuba ONAT Resolution 340-2004
      */
     public enum TaxClassification {
-        CONTRIBUTOR,              // Contribuyente Ordinario
-        SIMPLIFIED,               // Régimen Simplificado
-        NON_TAXPAYER,             // No Responsable
-        GOVERNMENT,               // Gobierno
-        FOREIGN,                  // Extranjero
-        SPECIAL                   // Regímenes Especiales
+        STATE_ENTITY,           // Entidad Estatal Cubana
+        NON_STATE_ENTITY,       // Entidad No Estatal (TCP, CNA, etc.)
+        FOREIGN_COMPANY,        // Empresa Extranjera
+        GOVERNMENT_ORG,         // Organismo Gubernamental
+        INDIVIDUAL,             // Persona Natural
+        DIPLOMATIC              // Representación Diplomática
     }
 
     public enum ThirdPartyType {
