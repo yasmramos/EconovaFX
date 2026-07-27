@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Transaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.accounting.model</a> &gt; <span class="el_source">Transaction.java</span></div><h1>Transaction.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">package com.econovafx.modules.accounting.model;</span>
+<span class="nc" id="L2">import com.econovafx.modules.core.model.BaseEntity;</span>
+<span class="nc" id="L3">import com.econovafx.modules.core.model.User;</span>
+<span class="nc" id="L4">import com.econovafx.modules.billing.model.ThirdParty;</span>
+
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Accounting Transaction entity
+ */
+@Entity
+@Table(name = &quot;transactions&quot;)
+public class Transaction extends BaseEntity {
+
+    @Column(nullable = false)
+    private String number;
+
+    @Column(nullable = false)
+    private LocalDate date;
+
+    @Column(nullable = false)
+    private String type;
+
+    @Column(length = 500)
+    private String description;
+
+    @Column(length = 100)
+    private String reference;
+
+    @OneToMany(mappedBy = &quot;transaction&quot;, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List&lt;TransactionEntry&gt; entries = new ArrayList&lt;&gt;();
+
+    @Column(name = &quot;created_by&quot;, updatable = false)
+    private Long createdByUserId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;third_party_id&quot;)
+    private ThirdParty thirdParty;
+
+<span class="fc" id="L45">    @Column(precision = 19, scale = 4)</span>
+    private BigDecimal totalDebit = BigDecimal.ZERO;
+
+<span class="fc" id="L48">    @Column(precision = 19, scale = 4)</span>
+    private BigDecimal totalCredit = BigDecimal.ZERO;
+
+<span class="fc" id="L51">    @Enumerated(EnumType.STRING)</span>
+    @Column(name = &quot;status&quot;, nullable = false)
+    private TransactionStatus status = TransactionStatus.DRAFT;
+
+    @Column(name = &quot;is_posted&quot;)
+    @Deprecated // Use status field instead
+<span class="fc" id="L57">    private Boolean isPosted = false;</span>
+
+<span class="fc" id="L59">    public Transaction() {</span>
+<span class="fc" id="L60">    }</span>
+
+    // Getters and Setters
+    public String getNumber() {
+<span class="fc" id="L64">        return number;</span>
+    }
+
+    public void setNumber(String number) {
+<span class="fc" id="L68">        this.number = number;</span>
+<span class="fc" id="L69">    }</span>
+
+    public LocalDate getDate() {
+<span class="fc" id="L72">        return date;</span>
+    }
+
+    public void setDate(LocalDate date) {
+<span class="fc" id="L76">        this.date = date;</span>
+<span class="fc" id="L77">    }</span>
+
+    public String getType() {
+<span class="fc" id="L80">        return type;</span>
+    }
+
+    public void setType(String type) {
+<span class="fc" id="L84">        this.type = type;</span>
+<span class="fc" id="L85">    }</span>
+
+    public String getDescription() {
+<span class="fc" id="L88">        return description;</span>
+    }
+
+    public void setDescription(String description) {
+<span class="fc" id="L92">        this.description = description;</span>
+<span class="fc" id="L93">    }</span>
+
+    public String getReference() {
+<span class="nc" id="L96">        return reference;</span>
+    }
+
+    public void setReference(String reference) {
+<span class="fc" id="L100">        this.reference = reference;</span>
+<span class="fc" id="L101">    }</span>
+
+    public List&lt;TransactionEntry&gt; getEntries() {
+<span class="fc" id="L104">        return entries;</span>
+    }
+
+    public void setEntries(List&lt;TransactionEntry&gt; entries) {
+<span class="fc" id="L108">        this.entries = entries;</span>
+<span class="fc" id="L109">    }</span>
+    public Long getCreatedBy() {
+<span class="nc" id="L111">        return createdByUserId;</span>
+    }
+
+    public void setCreatedBy(Long createdByUserId) {
+<span class="nc" id="L115">        this.createdByUserId = createdByUserId;</span>
+<span class="nc" id="L116">    }</span>
+
+    public ThirdParty getThirdParty() {
+<span class="nc" id="L119">        return thirdParty;</span>
+    }
+
+    public void setThirdParty(ThirdParty thirdParty) {
+<span class="nc" id="L123">        this.thirdParty = thirdParty;</span>
+<span class="nc" id="L124">    }</span>
+
+    public BigDecimal getTotalDebit() {
+<span class="fc" id="L127">        return totalDebit;</span>
+    }
+
+    public void setTotalDebit(BigDecimal totalDebit) {
+<span class="fc" id="L131">        this.totalDebit = totalDebit;</span>
+<span class="fc" id="L132">    }</span>
+
+    public BigDecimal getTotalCredit() {
+<span class="fc" id="L135">        return totalCredit;</span>
+    }
+
+    public void setTotalCredit(BigDecimal totalCredit) {
+<span class="fc" id="L139">        this.totalCredit = totalCredit;</span>
+<span class="fc" id="L140">    }</span>
+
+    public Boolean getIsPosted() {
+<span class="fc" id="L143">        return isPosted;</span>
+    }
+
+    @Deprecated // Use getStatus instead
+    public void setIsPosted(Boolean posted) {
+<span class="fc" id="L148">        isPosted = posted;</span>
+        // Keep status in sync for backward compatibility
+<span class="pc bpc" id="L150" title="1 of 4 branches missed.">        if (posted != null &amp;&amp; posted) {</span>
+<span class="fc" id="L151">            this.status = TransactionStatus.POSTED;</span>
+<span class="pc bpc" id="L152" title="2 of 4 branches missed.">        } else if (posted != null &amp;&amp; !posted) {</span>
+<span class="fc" id="L153">            this.status = TransactionStatus.DRAFT;</span>
+        }
+<span class="fc" id="L155">    }</span>
+
+    public TransactionStatus getStatus() {
+<span class="fc" id="L158">        return status;</span>
+    }
+
+    public void setStatus(TransactionStatus status) {
+<span class="fc" id="L162">        this.status = status;</span>
+        // Keep isPosted in sync for backward compatibility
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (status == TransactionStatus.POSTED) {</span>
+<span class="fc" id="L165">            this.isPosted = true;</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        } else if (status == TransactionStatus.DRAFT) {</span>
+<span class="fc" id="L167">            this.isPosted = false;</span>
+        }
+<span class="fc" id="L169">    }</span>
+
+    public void addEntry(TransactionEntry entry) {
+<span class="fc" id="L172">        entries.add(entry);</span>
+<span class="fc" id="L173">        entry.setTransaction(this);</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+<span class="fc" id="L175">            totalDebit = totalDebit.add(entry.getDebitAmount());</span>
+        }
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+<span class="fc" id="L178">            totalCredit = totalCredit.add(entry.getCreditAmount());</span>
+        }
+<span class="fc" id="L180">    }</span>
+
+    public boolean isBalanced() {
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        return totalDebit.compareTo(totalCredit) == 0;</span>
+    }
+
+    /**
+     * Recalculate totals from entries to ensure consistency
+     */
+    public void recalculateTotals() {
+<span class="fc" id="L190">        totalDebit = BigDecimal.ZERO;</span>
+<span class="fc" id="L191">        totalCredit = BigDecimal.ZERO;</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        for (TransactionEntry entry : entries) {</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+<span class="fc" id="L194">                totalDebit = totalDebit.add(entry.getDebitAmount());</span>
+            }
+<span class="fc bfc" id="L196" title="All 2 branches covered.">            if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+<span class="fc" id="L197">                totalCredit = totalCredit.add(entry.getCreditAmount());</span>
+            }
+<span class="fc" id="L199">        }</span>
+<span class="fc" id="L200">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

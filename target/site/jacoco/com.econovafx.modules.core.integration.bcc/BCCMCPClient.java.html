@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BCCMCPClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.integration.bcc</a> &gt; <span class="el_source">BCCMCPClient.java</span></div><h1>BCCMCPClient.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.integration.bcc;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * Cliente para el Model Context Protocol (MCP) del Banco Central de Cuba.
+ * Permite conectar asistentes y agentes de IA con datos oficiales de tasas de cambio.
+ * 
+ * Uso básico:
+ * 1. Inicializar sesión con initialize()
+ * 2. Usar el sessionId retornado para llamar a tools/call
+ */
+public class BCCMCPClient {
+
+<span class="nc" id="L28">    private static final Logger log = LoggerFactory.getLogger(BCCMCPClient.class);</span>
+    private static final String MCP_ENDPOINT = &quot;https://api.bc.gob.cu/v1/mcp&quot;;
+    
+    private final HttpClient httpClient;
+    private final ObjectMapper objectMapper;
+    private String sessionId;
+<span class="nc" id="L34">    private boolean initialized = false;</span>
+
+<span class="nc" id="L36">    public BCCMCPClient() {</span>
+<span class="nc" id="L37">        this.httpClient = HttpClient.newBuilder()</span>
+<span class="nc" id="L38">                .connectTimeout(Duration.ofSeconds(30))</span>
+<span class="nc" id="L39">                .build();</span>
+<span class="nc" id="L40">        this.objectMapper = new ObjectMapper();</span>
+<span class="nc" id="L41">    }</span>
+
+    /**
+     * Inicializa la sesión MCP con el servidor del Banco Central.
+     * Debe llamarse antes de usar cualquier herramienta.
+     * 
+     * @return El ID de sesión para usar en llamadas posteriores
+     * @throws IOException si falla la conexión
+     * @throws InterruptedException si se interrumpe la llamada HTTP
+     */
+    public String initialize() throws IOException, InterruptedException {
+<span class="nc" id="L52">        log.info(&quot;Inicializando sesión MCP con el Banco Central de Cuba...&quot;);</span>
+        
+<span class="nc" id="L54">        Map&lt;String, Object&gt; request = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L55">        request.put(&quot;jsonrpc&quot;, &quot;2.0&quot;);</span>
+<span class="nc" id="L56">        request.put(&quot;id&quot;, 1);</span>
+<span class="nc" id="L57">        request.put(&quot;method&quot;, &quot;initialize&quot;);</span>
+        
+<span class="nc" id="L59">        Map&lt;String, String&gt; params = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L60">        params.put(&quot;protocolVersion&quot;, &quot;2025-11-25&quot;);</span>
+<span class="nc" id="L61">        request.put(&quot;params&quot;, params);</span>
+
+<span class="nc" id="L63">        HttpRequest httpRequest = HttpRequest.newBuilder()</span>
+<span class="nc" id="L64">                .uri(URI.create(MCP_ENDPOINT))</span>
+<span class="nc" id="L65">                .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="nc" id="L66">                .header(&quot;Accept&quot;, &quot;application/json, text/event-stream&quot;)</span>
+<span class="nc" id="L67">                .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(request)))</span>
+<span class="nc" id="L68">                .timeout(Duration.ofSeconds(30))</span>
+<span class="nc" id="L69">                .build();</span>
+
+<span class="nc" id="L71">        HttpResponse&lt;String&gt; response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());</span>
+        
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (response.statusCode() != 200) {</span>
+<span class="nc" id="L74">            throw new IOException(&quot;Error al inicializar MCP: HTTP &quot; + response.statusCode() + &quot; - &quot; + response.body());</span>
+        }
+
+        // Extraer sessionId del header
+<span class="nc" id="L78">        this.sessionId = response.headers().firstValue(&quot;MCP-Session-Id&quot;).orElse(null);</span>
+<span class="nc bnc" id="L79" title="All 4 branches missed.">        if (this.sessionId == null || this.sessionId.isEmpty()) {</span>
+<span class="nc" id="L80">            throw new IOException(&quot;No se recibió MCP-Session-Id en la respuesta&quot;);</span>
+        }
+
+<span class="nc" id="L83">        this.initialized = true;</span>
+<span class="nc" id="L84">        log.info(&quot;Sesión MCP inicializada exitosamente. SessionId: {}&quot;, this.sessionId);</span>
+        
+<span class="nc" id="L86">        return this.sessionId;</span>
+    }
+
+    /**
+     * Llama a una herramienta MCP específica.
+     * 
+     * @param toolName Nombre de la herramienta (ej. &quot;get_active_rates&quot;)
+     * @param arguments Argumentos para la herramienta
+     * @return Respuesta JSON de la herramienta
+     * @throws IOException si falla la conexión
+     * @throws InterruptedException si se interrumpe la llamada HTTP
+     * @throws IllegalStateException si no se ha inicializado la sesión
+     */
+    public JsonNode callTool(String toolName, Map&lt;String, Object&gt; arguments) 
+            throws IOException, InterruptedException {
+        
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (!initialized) {</span>
+<span class="nc" id="L103">            throw new IllegalStateException(&quot;La sesión MCP no está inicializada. Llame a initialize() primero.&quot;);</span>
+        }
+
+<span class="nc" id="L106">        log.info(&quot;Llamando a herramienta MCP: {} con argumentos: {}&quot;, toolName, arguments);</span>
+
+<span class="nc" id="L108">        Map&lt;String, Object&gt; request = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L109">        request.put(&quot;jsonrpc&quot;, &quot;2.0&quot;);</span>
+<span class="nc" id="L110">        request.put(&quot;id&quot;, System.currentTimeMillis()); // ID único por llamada</span>
+<span class="nc" id="L111">        request.put(&quot;method&quot;, &quot;tools/call&quot;);</span>
+        
+<span class="nc" id="L113">        Map&lt;String, Object&gt; params = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L114">        params.put(&quot;name&quot;, toolName);</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        params.put(&quot;arguments&quot;, arguments != null ? arguments : new HashMap&lt;&gt;());</span>
+<span class="nc" id="L116">        request.put(&quot;params&quot;, params);</span>
+
+<span class="nc" id="L118">        HttpRequest httpRequest = HttpRequest.newBuilder()</span>
+<span class="nc" id="L119">                .uri(URI.create(MCP_ENDPOINT))</span>
+<span class="nc" id="L120">                .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="nc" id="L121">                .header(&quot;Accept&quot;, &quot;application/json, text/event-stream&quot;)</span>
+<span class="nc" id="L122">                .header(&quot;MCP-Session-Id&quot;, this.sessionId)</span>
+<span class="nc" id="L123">                .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(request)))</span>
+<span class="nc" id="L124">                .timeout(Duration.ofSeconds(30))</span>
+<span class="nc" id="L125">                .build();</span>
+
+<span class="nc" id="L127">        HttpResponse&lt;String&gt; response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());</span>
+        
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (response.statusCode() != 200) {</span>
+<span class="nc" id="L130">            throw new IOException(&quot;Error al llamar herramienta MCP: HTTP &quot; + response.statusCode() + &quot; - &quot; + response.body());</span>
+        }
+
+<span class="nc" id="L133">        JsonNode jsonResponse = objectMapper.readTree(response.body());</span>
+        
+        // Verificar errores en la respuesta JSON-RPC
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        if (jsonResponse.has(&quot;error&quot;)) {</span>
+<span class="nc" id="L137">            JsonNode error = jsonResponse.get(&quot;error&quot;);</span>
+<span class="nc" id="L138">            throw new IOException(&quot;Error MCP: &quot; + error.get(&quot;message&quot;).asText());</span>
+        }
+
+<span class="nc" id="L141">        log.info(&quot;Herramienta MCP ejecutada exitosamente: {}&quot;, toolName);</span>
+<span class="nc" id="L142">        return jsonResponse.get(&quot;result&quot;);</span>
+    }
+
+    /**
+     * Obtiene las tasas de cambio activas usando la herramienta MCP.
+     * 
+     * @param codigoMoneda Código de moneda opcional (ej. &quot;USD&quot;, &quot;EUR&quot;). Si es null, devuelve todas.
+     * @return Nodo JSON con las tasas activas
+     * @throws IOException si falla la conexión
+     * @throws InterruptedException si se interrumpe la llamada HTTP
+     */
+    public JsonNode getActiveRates(String codigoMoneda) throws IOException, InterruptedException {
+<span class="nc" id="L154">        Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L155" title="All 4 branches missed.">        if (codigoMoneda != null &amp;&amp; !codigoMoneda.isEmpty()) {</span>
+<span class="nc" id="L156">            args.put(&quot;codigoMoneda&quot;, codigoMoneda);</span>
+        }
+<span class="nc" id="L158">        return callTool(&quot;get_active_rates&quot;, args);</span>
+    }
+
+    /**
+     * Obtiene tasas de cambio para una fecha específica.
+     * 
+     * @param fecha Fecha en formato YYYY-MM-DD
+     * @param codigoMoneda Código de moneda opcional
+     * @return Nodo JSON con las tasas de la fecha
+     * @throws IOException si falla la conexión
+     * @throws InterruptedException si se interrumpe la llamada HTTP
+     */
+    public JsonNode getRatesByDate(String fecha, String codigoMoneda) throws IOException, InterruptedException {
+<span class="nc" id="L171">        Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L172">        args.put(&quot;fecha&quot;, fecha);</span>
+<span class="nc bnc" id="L173" title="All 4 branches missed.">        if (codigoMoneda != null &amp;&amp; !codigoMoneda.isEmpty()) {</span>
+<span class="nc" id="L174">            args.put(&quot;codigoMoneda&quot;, codigoMoneda);</span>
+        }
+<span class="nc" id="L176">        return callTool(&quot;get_rates_by_date&quot;, args);</span>
+    }
+
+    /**
+     * Obtiene histórico de tasas de cambio.
+     * 
+     * @param fechaInicio Fecha inicio YYYY-MM-DD
+     * @param fechaFin Fecha fin YYYY-MM-DD
+     * @param codigoMoneda Código de moneda opcional
+     * @return Nodo JSON con el histórico
+     * @throws IOException si falla la conexión
+     * @throws InterruptedException si se interrumpe la llamada HTTP
+     */
+    public JsonNode getHistoricalRates(String fechaInicio, String fechaFin, String codigoMoneda) 
+            throws IOException, InterruptedException {
+        
+<span class="nc" id="L192">        Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L193">        args.put(&quot;fechaInicio&quot;, fechaInicio);</span>
+<span class="nc" id="L194">        args.put(&quot;fechaFin&quot;, fechaFin);</span>
+<span class="nc bnc" id="L195" title="All 4 branches missed.">        if (codigoMoneda != null &amp;&amp; !codigoMoneda.isEmpty()) {</span>
+<span class="nc" id="L196">            args.put(&quot;codigoMoneda&quot;, codigoMoneda);</span>
+        }
+<span class="nc" id="L198">        return callTool(&quot;get_historical_rates&quot;, args);</span>
+    }
+
+    /**
+     * Verifica si la sesión está inicializada.
+     */
+    public boolean isInitialized() {
+<span class="nc" id="L205">        return initialized;</span>
+    }
+
+    /**
+     * Obtiene el ID de sesión actual.
+     */
+    public Optional&lt;String&gt; getSessionId() {
+<span class="nc" id="L212">        return Optional.ofNullable(sessionId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataInitializer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.config</a> &gt; <span class="el_source">DataInitializer.java</span></div><h1>DataInitializer.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.config;
+
+import com.econovafx.modules.core.model.*;
+import com.econovafx.modules.billing.model.BillingSeries;
+import com.econovafx.modules.billing.model.BillingSeries.DocumentType;
+import com.econovafx.modules.billing.model.TaxRate;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.inventory.model.Warehouse;
+import com.econovafx.modules.fixedassets.model.FixedAssetCategory;
+import com.econovafx.modules.core.model.ExchangeRate;
+import com.econovafx.modules.core.security.PasswordService;
+import io.ebean.DB;
+import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+
+/**
+ * Inicializador de datos de demostración.
+ * Crea usuario admin, empresa demo, tasas impositivas y series de facturación.
+ */
+@Singleton
+public class DataInitializer {
+
+<span class="nc" id="L27">    private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);</span>
+
+<span class="nc" id="L29">    public DataInitializer() {</span>
+<span class="nc" id="L30">        initialize();</span>
+<span class="nc" id="L31">    }</span>
+
+    private void initialize() {
+<span class="nc" id="L34">        log.info(&quot;Inicializando datos del sistema...&quot;);</span>
+
+<span class="nc" id="L36">        PasswordService passwordService = new PasswordService();</span>
+
+        // Crear empresa demo si no existe
+<span class="nc" id="L39">        Company demoCompany = DB.find(Company.class)</span>
+<span class="nc" id="L40">            .where().eq(&quot;name&quot;, &quot;Empresa Demo&quot;)</span>
+<span class="nc" id="L41">            .findOne();</span>
+
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (demoCompany == null) {</span>
+<span class="nc" id="L44">            demoCompany = new Company();</span>
+<span class="nc" id="L45">            demoCompany.setName(&quot;Empresa Demo&quot;);</span>
+<span class="nc" id="L46">            demoCompany.setCode(&quot;DEMO001&quot;);</span>
+<span class="nc" id="L47">            demoCompany.setNif(&quot;00000000001&quot;);</span>
+<span class="nc" id="L48">            demoCompany.setAddress(&quot;Dirección Demo&quot;);</span>
+<span class="nc" id="L49">            demoCompany.setPhone(&quot;000-000-0000&quot;);</span>
+<span class="nc" id="L50">            demoCompany.setEmail(&quot;demo@econovafx.com&quot;);</span>
+<span class="nc" id="L51">            demoCompany.setStatus(&quot;ACTIVE&quot;);</span>
+            
+<span class="nc" id="L53">            DB.save(demoCompany);</span>
+<span class="nc" id="L54">            log.info(&quot;Empresa demo creada: {}&quot;, demoCompany.getName());</span>
+        } else {
+<span class="nc" id="L56">            log.info(&quot;Empresa demo ya existe: {}&quot;, demoCompany.getName());</span>
+        }
+
+        // Crear usuario admin si no existe
+<span class="nc" id="L60">        User adminUser = DB.find(User.class)</span>
+<span class="nc" id="L61">            .where().eq(&quot;email&quot;, &quot;admin@econovafx.com&quot;)</span>
+<span class="nc" id="L62">            .findOne();</span>
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (adminUser == null) {</span>
+<span class="nc" id="L65">            adminUser = new User();</span>
+<span class="nc" id="L66">            adminUser.setUsername(&quot;admin&quot;);</span>
+<span class="nc" id="L67">            adminUser.setEmail(&quot;admin@econovafx.com&quot;);</span>
+<span class="nc" id="L68">            adminUser.setFullName(&quot;Administrador&quot;);</span>
+<span class="nc" id="L69">            adminUser.setPassword(passwordService.hashPassword(&quot;admin&quot;));</span>
+<span class="nc" id="L70">            adminUser.setRole(User.UserRole.ADMIN);</span>
+<span class="nc" id="L71">            adminUser.setCompany(demoCompany);</span>
+<span class="nc" id="L72">            adminUser.setStatus(&quot;ACTIVE&quot;);</span>
+            
+<span class="nc" id="L74">            DB.save(adminUser);</span>
+<span class="nc" id="L75">            log.info(&quot;Usuario admin creado: {}&quot;, adminUser.getUsername());</span>
+        } else {
+<span class="nc" id="L77">            log.info(&quot;Usuario admin ya existe: {}&quot;, adminUser.getUsername());</span>
+        }
+
+        // Crear tasas impositivas demo
+<span class="nc" id="L81">        initializeTaxRates();</span>
+
+        // Crear series de facturación demo
+<span class="nc" id="L84">        initializeBillingSeries();</span>
+
+        // Crear categorías de activos fijos demo
+<span class="nc" id="L87">        initializeFixedAssetCategories();</span>
+
+<span class="nc" id="L89">        log.info(&quot;Inicialización completada.&quot;);</span>
+<span class="nc" id="L90">    }</span>
+
+    /**
+     * Inicializa tasas impositivas de demostración.
+     */
+    private void initializeTaxRates() {
+        // Verificar si ya existen tasas impositivas
+<span class="nc" id="L97">        long taxRateCount = DB.find(TaxRate.class).findCount();</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (taxRateCount &gt; 0) {</span>
+<span class="nc" id="L99">            log.info(&quot;Tasas impositivas ya existen: {}&quot;, taxRateCount);</span>
+<span class="nc" id="L100">            return;</span>
+        }
+
+        // IVA 18% (Nicaragua)
+<span class="nc" id="L104">        TaxRate iva18 = new TaxRate();</span>
+<span class="nc" id="L105">        iva18.setCode(&quot;IVA18&quot;);</span>
+<span class="nc" id="L106">        iva18.setName(&quot;IVA 18%&quot;);</span>
+<span class="nc" id="L107">        iva18.setPercentage(new BigDecimal(&quot;18.00&quot;));</span>
+<span class="nc" id="L108">        iva18.setDescription(&quot;Impuesto al Valor Agregado - Tasa General&quot;);</span>
+<span class="nc" id="L109">        iva18.setAccountCode(&quot;203-001&quot;); // IVA por pagar</span>
+<span class="nc" id="L110">        iva18.setActive(true);</span>
+<span class="nc" id="L111">        DB.save(iva18);</span>
+<span class="nc" id="L112">        log.info(&quot;Tasa impositiva creada: IVA 18%&quot;);</span>
+
+        // IVA 0% (Exento)
+<span class="nc" id="L115">        TaxRate iva0 = new TaxRate();</span>
+<span class="nc" id="L116">        iva0.setCode(&quot;IVA0&quot;);</span>
+<span class="nc" id="L117">        iva0.setName(&quot;IVA 0%&quot;);</span>
+<span class="nc" id="L118">        iva0.setPercentage(BigDecimal.ZERO);</span>
+<span class="nc" id="L119">        iva0.setDescription(&quot;Operaciones exentas de IVA&quot;);</span>
+<span class="nc" id="L120">        iva0.setAccountCode(null);</span>
+<span class="nc" id="L121">        iva0.setActive(true);</span>
+<span class="nc" id="L122">        DB.save(iva0);</span>
+<span class="nc" id="L123">        log.info(&quot;Tasa impositiva creada: IVA 0%&quot;);</span>
+
+        // ISC 5% (Impuesto Selectivo al Consumo)
+<span class="nc" id="L126">        TaxRate isc5 = new TaxRate();</span>
+<span class="nc" id="L127">        isc5.setCode(&quot;ISC5&quot;);</span>
+<span class="nc" id="L128">        isc5.setName(&quot;ISC 5%&quot;);</span>
+<span class="nc" id="L129">        isc5.setPercentage(new BigDecimal(&quot;5.00&quot;));</span>
+<span class="nc" id="L130">        isc5.setDescription(&quot;Impuesto Selectivo al Consumo&quot;);</span>
+<span class="nc" id="L131">        isc5.setAccountCode(&quot;203-002&quot;); // ISC por pagar</span>
+<span class="nc" id="L132">        isc5.setActive(true);</span>
+<span class="nc" id="L133">        DB.save(isc5);</span>
+<span class="nc" id="L134">        log.info(&quot;Tasa impositiva creada: ISC 5%&quot;);</span>
+<span class="nc" id="L135">    }</span>
+
+    /**
+     * Inicializa series de facturación de demostración.
+     */
+    private void initializeBillingSeries() {
+        // Verificar si ya existen series
+<span class="nc" id="L142">        long seriesCount = DB.find(BillingSeries.class).findCount();</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if (seriesCount &gt; 0) {</span>
+<span class="nc" id="L144">            log.info(&quot;Series de facturación ya existen: {}&quot;, seriesCount);</span>
+<span class="nc" id="L145">            return;</span>
+        }
+
+        // Serie A - Facturas de Crédito Fiscal
+<span class="nc" id="L149">        BillingSeries serieA = new BillingSeries();</span>
+<span class="nc" id="L150">        serieA.setSeriesCode(&quot;A&quot;);</span>
+<span class="nc" id="L151">        serieA.setDocumentType(DocumentType.INVOICE);</span>
+<span class="nc" id="L152">        serieA.setDescription(&quot;Facturas de Crédito Fiscal&quot;);</span>
+<span class="nc" id="L153">        serieA.setStartNumber(1);</span>
+<span class="nc" id="L154">        serieA.setCurrentNumber(1);</span>
+<span class="nc" id="L155">        serieA.setEndNumber(1000);</span>
+<span class="nc" id="L156">        serieA.setActive(true);</span>
+<span class="nc" id="L157">        DB.save(serieA);</span>
+<span class="nc" id="L158">        log.info(&quot;Serie de facturación creada: A (Facturas)&quot;);</span>
+
+        // Serie B - Facturas de Consumidor Final
+<span class="nc" id="L161">        BillingSeries serieB = new BillingSeries();</span>
+<span class="nc" id="L162">        serieB.setSeriesCode(&quot;B&quot;);</span>
+<span class="nc" id="L163">        serieB.setDocumentType(DocumentType.INVOICE);</span>
+<span class="nc" id="L164">        serieB.setDescription(&quot;Facturas de Consumidor Final&quot;);</span>
+<span class="nc" id="L165">        serieB.setStartNumber(1);</span>
+<span class="nc" id="L166">        serieB.setCurrentNumber(1);</span>
+<span class="nc" id="L167">        serieB.setEndNumber(2000);</span>
+<span class="nc" id="L168">        serieB.setActive(true);</span>
+<span class="nc" id="L169">        DB.save(serieB);</span>
+<span class="nc" id="L170">        log.info(&quot;Serie de facturación creada: B (Consumidor Final)&quot;);</span>
+
+        // Serie NC - Notas de Crédito
+<span class="nc" id="L173">        BillingSeries serieNC = new BillingSeries();</span>
+<span class="nc" id="L174">        serieNC.setSeriesCode(&quot;NC&quot;);</span>
+<span class="nc" id="L175">        serieNC.setDocumentType(DocumentType.CREDIT_NOTE);</span>
+<span class="nc" id="L176">        serieNC.setDescription(&quot;Notas de Crédito&quot;);</span>
+<span class="nc" id="L177">        serieNC.setStartNumber(1);</span>
+<span class="nc" id="L178">        serieNC.setCurrentNumber(1);</span>
+<span class="nc" id="L179">        serieNC.setEndNumber(500);</span>
+<span class="nc" id="L180">        serieNC.setActive(true);</span>
+<span class="nc" id="L181">        DB.save(serieNC);</span>
+<span class="nc" id="L182">        log.info(&quot;Serie de facturación creada: NC (Notas de Crédito)&quot;);</span>
+
+        // Serie ND - Notas de Débito
+<span class="nc" id="L185">        BillingSeries serieND = new BillingSeries();</span>
+<span class="nc" id="L186">        serieND.setSeriesCode(&quot;ND&quot;);</span>
+<span class="nc" id="L187">        serieND.setDocumentType(DocumentType.DEBIT_NOTE);</span>
+<span class="nc" id="L188">        serieND.setDescription(&quot;Notas de Débito&quot;);</span>
+<span class="nc" id="L189">        serieND.setStartNumber(1);</span>
+<span class="nc" id="L190">        serieND.setCurrentNumber(1);</span>
+<span class="nc" id="L191">        serieND.setEndNumber(500);</span>
+<span class="nc" id="L192">        serieND.setActive(true);</span>
+<span class="nc" id="L193">        DB.save(serieND);</span>
+<span class="nc" id="L194">        log.info(&quot;Serie de facturación creada: ND (Notas de Débito)&quot;);</span>
+
+        // Serie R - Recibos
+<span class="nc" id="L197">        BillingSeries serieR = new BillingSeries();</span>
+<span class="nc" id="L198">        serieR.setSeriesCode(&quot;R&quot;);</span>
+<span class="nc" id="L199">        serieR.setDocumentType(DocumentType.RECEIPT);</span>
+<span class="nc" id="L200">        serieR.setDescription(&quot;Recibos de Ingreso&quot;);</span>
+<span class="nc" id="L201">        serieR.setStartNumber(1);</span>
+<span class="nc" id="L202">        serieR.setCurrentNumber(1);</span>
+<span class="nc" id="L203">        serieR.setEndNumber(3000);</span>
+<span class="nc" id="L204">        serieR.setActive(true);</span>
+<span class="nc" id="L205">        DB.save(serieR);</span>
+<span class="nc" id="L206">        log.info(&quot;Serie de facturación creada: R (Recibos)&quot;);</span>
+<span class="nc" id="L207">    }</span>
+
+    /**
+     * Inicializa categorías de activos fijos de demostración.
+     */
+    private void initializeFixedAssetCategories() {
+        // Verificar si ya existen categorías
+<span class="nc" id="L214">        long categoryCount = DB.find(FixedAssetCategory.class).findCount();</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        if (categoryCount &gt; 0) {</span>
+<span class="nc" id="L216">            log.info(&quot;Categorías de activos fijos ya existen: {}&quot;, categoryCount);</span>
+<span class="nc" id="L217">            return;</span>
+        }
+
+        // Vehículos
+<span class="nc" id="L221">        FixedAssetCategory vehiculos = new FixedAssetCategory();</span>
+<span class="nc" id="L222">        vehiculos.setCode(&quot;VEH&quot;);</span>
+<span class="nc" id="L223">        vehiculos.setName(&quot;Vehículos&quot;);</span>
+<span class="nc" id="L224">        vehiculos.setDescription(&quot;Automóviles, camiones, motocicletas&quot;);</span>
+<span class="nc" id="L225">        vehiculos.setUsefulLifeYears(5);</span>
+<span class="nc" id="L226">        vehiculos.setDepreciationRate(new BigDecimal(&quot;20.00&quot;));</span>
+<span class="nc" id="L227">        vehiculos.setAssetAccount(&quot;105-001&quot;);</span>
+<span class="nc" id="L228">        vehiculos.setAccumulatedDepreciationAccount(&quot;105-099&quot;);</span>
+<span class="nc" id="L229">        vehiculos.setDepreciationExpenseAccount(&quot;502-001&quot;);</span>
+<span class="nc" id="L230">        vehiculos.setActive(true);</span>
+<span class="nc" id="L231">        DB.save(vehiculos);</span>
+<span class="nc" id="L232">        log.info(&quot;Categoría de activo fijo creada: Vehículos&quot;);</span>
+
+        // Equipos de Oficina
+<span class="nc" id="L235">        FixedAssetCategory equiposOficina = new FixedAssetCategory();</span>
+<span class="nc" id="L236">        equiposOficina.setCode(&quot;EQO&quot;);</span>
+<span class="nc" id="L237">        equiposOficina.setName(&quot;Equipos de Oficina&quot;);</span>
+<span class="nc" id="L238">        equiposOficina.setDescription(&quot;Computadoras, impresoras, muebles&quot;);</span>
+<span class="nc" id="L239">        equiposOficina.setUsefulLifeYears(4);</span>
+<span class="nc" id="L240">        equiposOficina.setDepreciationRate(new BigDecimal(&quot;25.00&quot;));</span>
+<span class="nc" id="L241">        equiposOficina.setAssetAccount(&quot;106-001&quot;);</span>
+<span class="nc" id="L242">        equiposOficina.setAccumulatedDepreciationAccount(&quot;106-099&quot;);</span>
+<span class="nc" id="L243">        equiposOficina.setDepreciationExpenseAccount(&quot;502-002&quot;);</span>
+<span class="nc" id="L244">        equiposOficina.setActive(true);</span>
+<span class="nc" id="L245">        DB.save(equiposOficina);</span>
+<span class="nc" id="L246">        log.info(&quot;Categoría de activo fijo creada: Equipos de Oficina&quot;);</span>
+
+        // Maquinaria
+<span class="nc" id="L249">        FixedAssetCategory maquinaria = new FixedAssetCategory();</span>
+<span class="nc" id="L250">        maquinaria.setCode(&quot;MAQ&quot;);</span>
+<span class="nc" id="L251">        maquinaria.setName(&quot;Maquinaria Industrial&quot;);</span>
+<span class="nc" id="L252">        maquinaria.setDescription(&quot;Máquinas y equipos de producción&quot;);</span>
+<span class="nc" id="L253">        maquinaria.setUsefulLifeYears(10);</span>
+<span class="nc" id="L254">        maquinaria.setDepreciationRate(new BigDecimal(&quot;10.00&quot;));</span>
+<span class="nc" id="L255">        maquinaria.setAssetAccount(&quot;104-001&quot;);</span>
+<span class="nc" id="L256">        maquinaria.setAccumulatedDepreciationAccount(&quot;104-099&quot;);</span>
+<span class="nc" id="L257">        maquinaria.setDepreciationExpenseAccount(&quot;501-001&quot;);</span>
+<span class="nc" id="L258">        maquinaria.setActive(true);</span>
+<span class="nc" id="L259">        DB.save(maquinaria);</span>
+<span class="nc" id="L260">        log.info(&quot;Categoría de activo fijo creada: Maquinaria Industrial&quot;);</span>
+
+        // Edificios
+<span class="nc" id="L263">        FixedAssetCategory edificios = new FixedAssetCategory();</span>
+<span class="nc" id="L264">        edificios.setCode(&quot;EDI&quot;);</span>
+<span class="nc" id="L265">        edificios.setName(&quot;Edificios y Construcciones&quot;);</span>
+<span class="nc" id="L266">        edificios.setDescription(&quot;Construcciones, mejoras permanentes&quot;);</span>
+<span class="nc" id="L267">        edificios.setUsefulLifeYears(20);</span>
+<span class="nc" id="L268">        edificios.setDepreciationRate(new BigDecimal(&quot;5.00&quot;));</span>
+<span class="nc" id="L269">        edificios.setAssetAccount(&quot;103-001&quot;);</span>
+<span class="nc" id="L270">        edificios.setAccumulatedDepreciationAccount(&quot;103-099&quot;);</span>
+<span class="nc" id="L271">        edificios.setDepreciationExpenseAccount(&quot;502-003&quot;);</span>
+<span class="nc" id="L272">        edificios.setActive(true);</span>
+<span class="nc" id="L273">        DB.save(edificios);</span>
+<span class="nc" id="L274">        log.info(&quot;Categoría de activo fijo creada: Edificios y Construcciones&quot;);</span>
+<span class="nc" id="L275">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryItemRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.inventory.repository</a> &gt; <span class="el_source">InventoryItemRepository.java</span></div><h1>InventoryItemRepository.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.inventory.repository;
+
+import com.econovafx.modules.inventory.model.InventoryItem;
+import com.econovafx.modules.inventory.model.InventoryCategory;
+import com.econovafx.modules.inventory.model.Warehouse;
+import io.ebean.Database;
+import io.ebean.Query;
+import io.avaje.inject.Component;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Repositorio para gestión de productos del inventario.
+ */
+@Component
+public class InventoryItemRepository {
+
+    private final Database database;
+
+<span class="nc" id="L22">    public InventoryItemRepository(Database database) {</span>
+<span class="nc" id="L23">        this.database = database;</span>
+<span class="nc" id="L24">    }</span>
+
+    /**
+     * Guarda un producto en la base de datos.
+     */
+    public void save(InventoryItem item) {
+<span class="nc" id="L30">        database.save(item);</span>
+<span class="nc" id="L31">    }</span>
+
+    /**
+     * Actualiza un producto existente.
+     */
+    public void update(InventoryItem item) {
+<span class="nc" id="L37">        database.update(item);</span>
+<span class="nc" id="L38">    }</span>
+
+    /**
+     * Elimina un producto por su ID.
+     */
+    public void deleteById(Long id) {
+<span class="nc" id="L44">        database.delete(InventoryItem.class, id);</span>
+<span class="nc" id="L45">    }</span>
+
+    /**
+     * Busca un producto por su ID.
+     */
+    public Optional&lt;InventoryItem&gt; findById(Long id) {
+<span class="nc" id="L51">        return Optional.ofNullable(database.find(InventoryItem.class, id));</span>
+    }
+
+    /**
+     * Busca un producto por su código.
+     */
+    public Optional&lt;InventoryItem&gt; findByCode(String code) {
+<span class="nc" id="L58">        return database.find(InventoryItem.class)</span>
+<span class="nc" id="L59">                .where()</span>
+<span class="nc" id="L60">                .eq(&quot;code&quot;, code)</span>
+<span class="nc" id="L61">                .findOneOrEmpty();</span>
+    }
+
+    /**
+     * Obtiene todos los productos activos.
+     */
+    public List&lt;InventoryItem&gt; findAllActive() {
+<span class="nc" id="L68">        return database.find(InventoryItem.class)</span>
+<span class="nc" id="L69">                .where()</span>
+<span class="nc" id="L70">                .eq(&quot;active&quot;, true)</span>
+<span class="nc" id="L71">                .orderBy(&quot;name&quot;)</span>
+<span class="nc" id="L72">                .findList();</span>
+    }
+
+    /**
+     * Obtiene todos los productos (activos e inactivos).
+     */
+    public List&lt;InventoryItem&gt; findAll() {
+<span class="nc" id="L79">        return database.find(InventoryItem.class)</span>
+<span class="nc" id="L80">                .orderBy(&quot;name&quot;)</span>
+<span class="nc" id="L81">                .findList();</span>
+    }
+
+    /**
+     * Busca productos por categoría.
+     */
+    public List&lt;InventoryItem&gt; findByCategory(InventoryCategory category) {
+<span class="nc" id="L88">        return database.find(InventoryItem.class)</span>
+<span class="nc" id="L89">                .where()</span>
+<span class="nc" id="L90">                .eq(&quot;category&quot;, category)</span>
+<span class="nc" id="L91">                .eq(&quot;active&quot;, true)</span>
+<span class="nc" id="L92">                .orderBy(&quot;name&quot;)</span>
+<span class="nc" id="L93">                .findList();</span>
+    }
+
+    /**
+     * Busca productos con stock por debajo del mínimo.
+     */
+    public List&lt;InventoryItem&gt; findBelowMinimumStock() {
+<span class="nc" id="L100">        return database.find(InventoryItem.class)</span>
+<span class="nc" id="L101">                .where()</span>
+<span class="nc" id="L102">                .lt(&quot;currentStock&quot;, &quot;minimumStock&quot;)</span>
+<span class="nc" id="L103">                .eq(&quot;active&quot;, true)</span>
+<span class="nc" id="L104">                .orderBy(&quot;name&quot;)</span>
+<span class="nc" id="L105">                .findList();</span>
+    }
+
+    /**
+     * Busca productos por nombre (búsqueda parcial).
+     */
+    public List&lt;InventoryItem&gt; findByNameContaining(String name) {
+<span class="nc" id="L112">        return database.find(InventoryItem.class)</span>
+<span class="nc" id="L113">                .where()</span>
+<span class="nc" id="L114">                .ilike(&quot;name&quot;, &quot;%&quot; + name + &quot;%&quot;)</span>
+<span class="nc" id="L115">                .eq(&quot;active&quot;, true)</span>
+<span class="nc" id="L116">                .orderBy(&quot;name&quot;)</span>
+<span class="nc" id="L117">                .findList();</span>
+    }
+
+    /**
+     * Busca productos por código o nombre.
+     */
+    public List&lt;InventoryItem&gt; search(String query) {
+<span class="nc" id="L124">        String searchPattern = &quot;%&quot; + query.toLowerCase() + &quot;%&quot;;</span>
+<span class="nc" id="L125">        return database.find(InventoryItem.class)</span>
+<span class="nc" id="L126">                .where()</span>
+<span class="nc" id="L127">                .disjunction()</span>
+<span class="nc" id="L128">                    .ilike(&quot;code&quot;, searchPattern)</span>
+<span class="nc" id="L129">                    .ilike(&quot;name&quot;, searchPattern)</span>
+<span class="nc" id="L130">                .endJunction()</span>
+<span class="nc" id="L131">                .eq(&quot;active&quot;, true)</span>
+<span class="nc" id="L132">                .orderBy(&quot;name&quot;)</span>
+<span class="nc" id="L133">                .findList();</span>
+    }
+
+    /**
+     * Obtiene el valor total del inventario.
+     */
+    public BigDecimal getTotalInventoryValue() {
+<span class="nc" id="L140">        String sql = &quot;SELECT COALESCE(SUM(unit_cost * current_stock), 0) as value FROM inventory_items WHERE active = TRUE&quot;;</span>
+<span class="nc" id="L141">        io.ebean.SqlRow row = database.sqlQuery(sql).findOne();</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        return row != null ? row.getBigDecimal(&quot;value&quot;) : BigDecimal.ZERO;</span>
+    }
+
+    /**
+     * Cuenta el total de productos activos.
+     */
+    public int countActive() {
+<span class="nc" id="L149">        return database.find(InventoryItem.class)</span>
+<span class="nc" id="L150">                .where()</span>
+<span class="nc" id="L151">                .eq(&quot;active&quot;, true)</span>
+<span class="nc" id="L152">                .findCount();</span>
+    }
+
+    /**
+     * Verifica si existe un producto con el código dado (excluyendo el actual).
+     */
+    public boolean existsByCodeExclude(String code, Long excludeId) {
+<span class="nc" id="L159">        var query = database.find(InventoryItem.class)</span>
+<span class="nc" id="L160">                .where()</span>
+<span class="nc" id="L161">                .eq(&quot;code&quot;, code);</span>
+        
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (excludeId != null) {</span>
+<span class="nc" id="L164">            query.ne(&quot;id&quot;, excludeId);</span>
+        }
+        
+<span class="nc" id="L167">        return query.exists();</span>
+    }
+
+    /**
+     * Actualiza el stock de un producto.
+     */
+    public void updateStock(Long itemId, BigDecimal quantityChange) {
+<span class="nc" id="L174">        String sql = &quot;UPDATE inventory_items SET current_stock = current_stock + ?, updated_at = NOW() WHERE id = ?&quot;;</span>
+<span class="nc" id="L175">        database.sqlUpdate(sql)</span>
+<span class="nc" id="L176">                .setParameter(quantityChange)</span>
+<span class="nc" id="L177">                .setParameter(itemId)</span>
+<span class="nc" id="L178">                .execute();</span>
+<span class="nc" id="L179">    }</span>
+
+    /**
+     * Obtiene productos de un proveedor específico.
+     */
+    public List&lt;InventoryItem&gt; findBySupplier(Long supplierId) {
+<span class="nc" id="L185">        return database.find(InventoryItem.class)</span>
+<span class="nc" id="L186">                .fetch(&quot;supplier&quot;)</span>
+<span class="nc" id="L187">                .where()</span>
+<span class="nc" id="L188">                .eq(&quot;supplier.id&quot;, supplierId)</span>
+<span class="nc" id="L189">                .eq(&quot;active&quot;, true)</span>
+<span class="nc" id="L190">                .orderBy(&quot;name&quot;)</span>
+<span class="nc" id="L191">                .findList();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

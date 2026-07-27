@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransactionsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.accounting.controller</a> &gt; <span class="el_source">TransactionsController.java</span></div><h1>TransactionsController.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.accounting.controller;
+
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.ui.view.ViewFactory;
+import io.avaje.inject.Component;
+import jakarta.inject.Inject;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+/**
+ * Transactions controller
+ */
+public class TransactionsController implements Initializable {
+    
+<span class="nc" id="L30">    private static final Logger logger = LoggerFactory.getLogger(TransactionsController.class);</span>
+    
+    private final TransactionService transactionService;
+    private final AccountService accountService;
+    private final ViewFactory viewFactory;
+    
+    @FXML
+    private DatePicker fromDatePicker;
+    
+    @FXML
+    private DatePicker toDatePicker;
+    
+    @FXML
+    private TableView&lt;Transaction&gt; transactionsTable;
+    
+    @FXML
+    private TableColumn&lt;Transaction, LocalDate&gt; colDate;
+    
+    @FXML
+    private TableColumn&lt;Transaction, String&gt; colNumber;
+    
+    @FXML
+    private TableColumn&lt;Transaction, String&gt; colType;
+    
+    @FXML
+    private TableColumn&lt;Transaction, String&gt; colDescription;
+    
+    @FXML
+    private TableColumn&lt;Transaction, String&gt; colReference;
+    
+    @FXML
+    private TableColumn&lt;Transaction, BigDecimal&gt; colDebit;
+    
+    @FXML
+    private TableColumn&lt;Transaction, BigDecimal&gt; colCredit;
+    
+    @FXML
+    private TableColumn&lt;Transaction, Boolean&gt; colStatus;
+    
+    @Inject
+    public TransactionsController(TransactionService transactionService,
+                                  AccountService accountService,
+<span class="nc" id="L72">                                  ViewFactory viewFactory) {</span>
+<span class="nc" id="L73">        this.transactionService = transactionService;</span>
+<span class="nc" id="L74">        this.accountService = accountService;</span>
+<span class="nc" id="L75">        this.viewFactory = viewFactory;</span>
+<span class="nc" id="L76">    }</span>
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L80">        logger.info(&quot;TransactionsController initialized&quot;);</span>
+<span class="nc" id="L81">        initializeTableColumns();</span>
+<span class="nc" id="L82">        loadTransactions();</span>
+        
+<span class="nc" id="L84">        fromDatePicker.setValue(LocalDate.now().withDayOfMonth(1));</span>
+<span class="nc" id="L85">        toDatePicker.setValue(LocalDate.now());</span>
+<span class="nc" id="L86">    }</span>
+    
+    private void initializeTableColumns() {
+<span class="nc" id="L89">        colDate.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;date&quot;));</span>
+<span class="nc" id="L90">        colNumber.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;number&quot;));</span>
+<span class="nc" id="L91">        colType.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;type&quot;));</span>
+<span class="nc" id="L92">        colDescription.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;description&quot;));</span>
+<span class="nc" id="L93">        colReference.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;reference&quot;));</span>
+<span class="nc" id="L94">        colDebit.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;totalDebit&quot;));</span>
+<span class="nc" id="L95">        colCredit.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;totalCredit&quot;));</span>
+<span class="nc" id="L96">        colStatus.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;isPosted&quot;));</span>
+        
+<span class="nc" id="L98">        colStatus.setCellFactory(column -&gt; new TableCell&lt;&gt;() {</span>
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+<span class="nc" id="L101">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L102" title="All 4 branches missed.">                if (empty || item == null) {</span>
+<span class="nc" id="L103">                    setText(null);</span>
+                } else {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                    setText(item ? &quot;Publicado&quot; : &quot;Borrador&quot;);</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">                    setStyle(item ? &quot;-fx-text-fill: #27ae60;&quot; : &quot;-fx-text-fill: #f39c12;&quot;);</span>
+                }
+<span class="nc" id="L108">            }</span>
+        });
+<span class="nc" id="L110">    }</span>
+    
+    private void loadTransactions() {
+<span class="nc" id="L113">        List&lt;Transaction&gt; transactions = transactionService.getAllTransactions();</span>
+<span class="nc" id="L114">        ObservableList&lt;Transaction&gt; observableTransactions = FXCollections.observableArrayList(transactions);</span>
+<span class="nc" id="L115">        transactionsTable.setItems(observableTransactions);</span>
+<span class="nc" id="L116">    }</span>
+    
+    @FXML
+    private void filterTransactions() {
+<span class="nc" id="L120">        LocalDate fromDate = fromDatePicker.getValue();</span>
+<span class="nc" id="L121">        LocalDate toDate = toDatePicker.getValue();</span>
+        
+<span class="nc bnc" id="L123" title="All 4 branches missed.">        if (fromDate != null &amp;&amp; toDate != null) {</span>
+<span class="nc" id="L124">            List&lt;Transaction&gt; filtered = transactionService.getTransactionsByDateRange(fromDate, toDate);</span>
+<span class="nc" id="L125">            ObservableList&lt;Transaction&gt; observableTransactions = FXCollections.observableArrayList(filtered);</span>
+<span class="nc" id="L126">            transactionsTable.setItems(observableTransactions);</span>
+<span class="nc" id="L127">        } else {</span>
+<span class="nc" id="L128">            loadTransactions();</span>
+        }
+<span class="nc" id="L130">    }</span>
+    
+    @FXML
+    private void newTransaction() {
+<span class="nc" id="L134">        logger.debug(&quot;New transaction clicked&quot;);</span>
+<span class="nc" id="L135">        Optional&lt;Transaction&gt; result = viewFactory.showTransactionEntryDialog(null);</span>
+<span class="nc" id="L136">        result.ifPresent(transaction -&gt; {</span>
+<span class="nc" id="L137">            showAlert(Alert.AlertType.INFORMATION, &quot;Éxito&quot;, &quot;Transacción creada correctamente&quot;);</span>
+<span class="nc" id="L138">            loadTransactions();</span>
+<span class="nc" id="L139">        });</span>
+<span class="nc" id="L140">    }</span>
+    
+    @FXML
+    private void viewTransactionDetails() {
+<span class="nc" id="L144">        Transaction selected = transactionsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L146">            showAlert(Alert.AlertType.WARNING, &quot;Selección requerida&quot;, </span>
+                    &quot;Por favor seleccione una transacción para ver detalles&quot;);
+<span class="nc" id="L148">            return;</span>
+        }
+        
+<span class="nc" id="L151">        showAlert(Alert.AlertType.INFORMATION, &quot;Detalles&quot;, </span>
+<span class="nc" id="L152">                &quot;Transacción: &quot; + selected.getNumber() + &quot;\n&quot; +</span>
+<span class="nc" id="L153">                &quot;Fecha: &quot; + selected.getDate() + &quot;\n&quot; +</span>
+<span class="nc" id="L154">                &quot;Tipo: &quot; + selected.getType() + &quot;\n&quot; +</span>
+<span class="nc" id="L155">                &quot;Descripción: &quot; + selected.getDescription() + &quot;\n&quot; +</span>
+<span class="nc" id="L156">                &quot;Débito: &quot; + selected.getTotalDebit() + &quot;\n&quot; +</span>
+<span class="nc" id="L157">                &quot;Crédito: &quot; + selected.getTotalCredit());</span>
+<span class="nc" id="L158">    }</span>
+    
+    @FXML
+    private void postTransaction() {
+<span class="nc" id="L162">        Transaction selected = transactionsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L164">            showAlert(Alert.AlertType.WARNING, &quot;Selección requerida&quot;, </span>
+                    &quot;Por favor seleccione una transacción para publicar&quot;);
+<span class="nc" id="L166">            return;</span>
+        }
+        
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (selected.getIsPosted()) {</span>
+<span class="nc" id="L170">            showAlert(Alert.AlertType.WARNING, &quot;Ya publicada&quot;, </span>
+                    &quot;Esta transacción ya está publicada&quot;);
+<span class="nc" id="L172">            return;</span>
+        }
+        
+        try {
+<span class="nc" id="L176">            transactionService.postTransaction(selected.getId());</span>
+<span class="nc" id="L177">            showAlert(Alert.AlertType.INFORMATION, &quot;Éxito&quot;, &quot;Transacción publicada correctamente&quot;);</span>
+<span class="nc" id="L178">            loadTransactions();</span>
+<span class="nc" id="L179">        } catch (IllegalStateException e) {</span>
+<span class="nc" id="L180">            showAlert(Alert.AlertType.ERROR, &quot;Error&quot;, e.getMessage());</span>
+<span class="nc" id="L181">        }</span>
+<span class="nc" id="L182">    }</span>
+    
+    @FXML
+    private void reverseTransaction() {
+<span class="nc" id="L186">        Transaction selected = transactionsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L188">            showAlert(Alert.AlertType.WARNING, &quot;Selección requerida&quot;, </span>
+                    &quot;Por favor seleccione una transacción para reversar&quot;);
+<span class="nc" id="L190">            return;</span>
+        }
+        
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (!selected.getIsPosted()) {</span>
+<span class="nc" id="L194">            showAlert(Alert.AlertType.WARNING, &quot;No publicada&quot;, </span>
+                    &quot;Solo se pueden reversar transacciones publicadas&quot;);
+<span class="nc" id="L196">            return;</span>
+        }
+        
+<span class="nc" id="L199">        TextInputDialog dialog = new TextInputDialog();</span>
+<span class="nc" id="L200">        dialog.setTitle(&quot;Motivo de Reversión&quot;);</span>
+<span class="nc" id="L201">        dialog.setHeaderText(&quot;Ingrese el motivo para reversar esta transacción&quot;);</span>
+<span class="nc" id="L202">        dialog.setContentText(&quot;Motivo:&quot;);</span>
+        
+<span class="nc" id="L204">        Optional&lt;String&gt; result = dialog.showAndWait();</span>
+<span class="nc" id="L205">        result.ifPresent(motivo -&gt; {</span>
+            try {
+<span class="nc" id="L207">                transactionService.reverseTransaction(selected.getId(), motivo);</span>
+<span class="nc" id="L208">                showAlert(Alert.AlertType.INFORMATION, &quot;Éxito&quot;, &quot;Transacción reversada correctamente&quot;);</span>
+<span class="nc" id="L209">                loadTransactions();</span>
+<span class="nc" id="L210">            } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L211">                showAlert(Alert.AlertType.ERROR, &quot;Error&quot;, e.getMessage());</span>
+<span class="nc" id="L212">            }</span>
+<span class="nc" id="L213">        });</span>
+<span class="nc" id="L214">    }</span>
+    
+    @FXML
+    private void deleteTransaction() {
+<span class="nc" id="L218">        Transaction selected = transactionsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L220">            showAlert(Alert.AlertType.WARNING, &quot;Selección requerida&quot;, </span>
+                    &quot;Por favor seleccione una transacción para eliminar&quot;);
+<span class="nc" id="L222">            return;</span>
+        }
+        
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (selected.getIsPosted()) {</span>
+<span class="nc" id="L226">            showAlert(Alert.AlertType.WARNING, &quot;No se puede eliminar&quot;, </span>
+                    &quot;Las transacciones publicadas no se pueden eliminar. Debe reversarlas primero.&quot;);
+<span class="nc" id="L228">            return;</span>
+        }
+        
+<span class="nc" id="L231">        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);</span>
+<span class="nc" id="L232">        alert.setTitle(&quot;Confirmar Eliminación&quot;);</span>
+<span class="nc" id="L233">        alert.setHeaderText(&quot;¿Está seguro de eliminar esta transacción?&quot;);</span>
+<span class="nc" id="L234">        alert.setContentText(&quot;Transacción: &quot; + selected.getNumber());</span>
+        
+<span class="nc" id="L236">        Optional&lt;ButtonType&gt; buttonResult = alert.showAndWait();</span>
+<span class="nc bnc" id="L237" title="All 4 branches missed.">        if (buttonResult.isPresent() &amp;&amp; buttonResult.get() == ButtonType.OK) {</span>
+            try {
+<span class="nc" id="L239">                transactionService.deleteTransaction(selected.getId());</span>
+<span class="nc" id="L240">                showAlert(Alert.AlertType.INFORMATION, &quot;Éxito&quot;, &quot;Transacción eliminada correctamente&quot;);</span>
+<span class="nc" id="L241">                loadTransactions();</span>
+<span class="nc" id="L242">            } catch (IllegalStateException e) {</span>
+<span class="nc" id="L243">                showAlert(Alert.AlertType.ERROR, &quot;Error&quot;, e.getMessage());</span>
+<span class="nc" id="L244">            }</span>
+        }
+<span class="nc" id="L246">    }</span>
+    
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+<span class="nc" id="L249">        Alert alert = new Alert(alertType);</span>
+<span class="nc" id="L250">        alert.setTitle(title);</span>
+<span class="nc" id="L251">        alert.setHeaderText(null);</span>
+<span class="nc" id="L252">        alert.setContentText(message);</span>
+<span class="nc" id="L253">        alert.showAndWait();</span>
+<span class="nc" id="L254">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

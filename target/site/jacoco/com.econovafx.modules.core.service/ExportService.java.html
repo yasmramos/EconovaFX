@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExportService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.service</a> &gt; <span class="el_source">ExportService.java</span></div><h1>ExportService.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.service;
+
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.TransactionEntry;
+import com.econovafx.modules.billing.model.ThirdParty;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jakarta.inject.Singleton;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+/**
+ * Service for exporting transactions to PDF and Excel formats
+ */
+@Singleton
+<span class="nc" id="L28">public class ExportService {</span>
+
+<span class="nc" id="L30">    private static final Logger logger = LoggerFactory.getLogger(ExportService.class);</span>
+<span class="nc" id="L31">    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L32">    private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;);</span>
+
+    /**
+     * Export a single transaction to PDF
+     * @param transaction the transaction to export
+     * @return byte array containing the PDF content
+     * @throws IOException if an error occurs during PDF generation
+     */
+    public byte[] exportTransactionToPdf(Transaction transaction) throws IOException {
+<span class="nc" id="L41">        try (PDDocument document = new PDDocument()) {</span>
+<span class="nc" id="L42">            PDPage page = new PDPage();</span>
+<span class="nc" id="L43">            document.addPage(page);</span>
+
+<span class="nc" id="L45">            PDPageContentStream contentStream = new PDPageContentStream(document, page);</span>
+            
+            // Title
+<span class="nc" id="L48">            contentStream.beginText();</span>
+<span class="nc" id="L49">            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);</span>
+<span class="nc" id="L50">            contentStream.newLineAtOffset(50, 750);</span>
+<span class="nc" id="L51">            contentStream.showText(&quot;Accounting Voucher - &quot; + transaction.getNumber());</span>
+<span class="nc" id="L52">            contentStream.endText();</span>
+
+            // Transaction details
+<span class="nc" id="L55">            contentStream.beginText();</span>
+<span class="nc" id="L56">            contentStream.setFont(PDType1Font.HELVETICA, 12);</span>
+<span class="nc" id="L57">            contentStream.newLineAtOffset(50, 700);</span>
+<span class="nc" id="L58">            contentStream.showText(&quot;Date: &quot; + transaction.getDate().format(DATE_FORMATTER));</span>
+<span class="nc" id="L59">            contentStream.newLineAtOffset(0, -20);</span>
+<span class="nc" id="L60">            contentStream.showText(&quot;Type: &quot; + transaction.getType());</span>
+<span class="nc" id="L61">            contentStream.newLineAtOffset(0, -20);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            contentStream.showText(&quot;Status: &quot; + (transaction.getIsPosted() ? &quot;Posted&quot; : &quot;Draft&quot;));</span>
+<span class="nc" id="L63">            contentStream.newLineAtOffset(0, -20);</span>
+<span class="nc" id="L64">            contentStream.showText(&quot;Description: &quot; + transaction.getDescription());</span>
+            
+            // Third party info if exists
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            if (transaction.getThirdParty() != null) {</span>
+<span class="nc" id="L68">                ThirdParty tp = transaction.getThirdParty();</span>
+<span class="nc" id="L69">                contentStream.newLineAtOffset(0, -30);</span>
+<span class="nc" id="L70">                contentStream.showText(&quot;Third Party: &quot; + tp.getName() + &quot; (&quot; + tp.getIdentificationNumber() + &quot;)&quot;);</span>
+<span class="nc" id="L71">                contentStream.newLineAtOffset(0, -20);</span>
+<span class="nc" id="L72">                contentStream.showText(&quot;Third Party Type: &quot; + tp.getType());</span>
+            }
+            
+<span class="nc" id="L75">            contentStream.endText();</span>
+
+            // Table header
+<span class="nc" id="L78">            float yPosition = 550;</span>
+<span class="nc" id="L79">            contentStream.beginText();</span>
+<span class="nc" id="L80">            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 11);</span>
+<span class="nc" id="L81">            contentStream.newLineAtOffset(50, yPosition);</span>
+<span class="nc" id="L82">            contentStream.showText(&quot;Account Code&quot;);</span>
+<span class="nc" id="L83">            contentStream.newLineAtOffset(150, 0);</span>
+<span class="nc" id="L84">            contentStream.showText(&quot;Account Name&quot;);</span>
+<span class="nc" id="L85">            contentStream.newLineAtOffset(200, 0);</span>
+<span class="nc" id="L86">            contentStream.showText(&quot;Debit&quot;);</span>
+<span class="nc" id="L87">            contentStream.newLineAtOffset(100, 0);</span>
+<span class="nc" id="L88">            contentStream.showText(&quot;Credit&quot;);</span>
+<span class="nc" id="L89">            contentStream.endText();</span>
+
+            // Table lines
+<span class="nc" id="L92">            contentStream.moveTo(50, yPosition - 5);</span>
+<span class="nc" id="L93">            contentStream.lineTo(550, yPosition - 5);</span>
+<span class="nc" id="L94">            contentStream.stroke();</span>
+
+<span class="nc" id="L96">            yPosition -= 25;</span>
+<span class="nc" id="L97">            contentStream.setFont(PDType1Font.HELVETICA, 10);</span>
+
+<span class="nc bnc" id="L99" title="All 2 branches missed.">            for (TransactionEntry entry : transaction.getEntries()) {</span>
+<span class="nc" id="L100">                contentStream.beginText();</span>
+<span class="nc" id="L101">                contentStream.newLineAtOffset(50, yPosition);</span>
+<span class="nc" id="L102">                contentStream.showText(entry.getAccount().getCode());</span>
+<span class="nc" id="L103">                contentStream.newLineAtOffset(150, 0);</span>
+                
+<span class="nc" id="L105">                String accountName = entry.getAccount().getName();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">                if (accountName.length() &gt; 25) {</span>
+<span class="nc" id="L107">                    accountName = accountName.substring(0, 22) + &quot;...&quot;;</span>
+                }
+<span class="nc" id="L109">                contentStream.showText(accountName);</span>
+                
+<span class="nc" id="L111">                contentStream.newLineAtOffset(200, 0);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                contentStream.showText(entry.getDebitAmount().compareTo(BigDecimal.ZERO) &gt; 0 </span>
+<span class="nc" id="L113">                    ? entry.getDebitAmount().toPlainString() : &quot;-&quot;);</span>
+                
+<span class="nc" id="L115">                contentStream.newLineAtOffset(100, 0);</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">                contentStream.showText(entry.getCreditAmount().compareTo(BigDecimal.ZERO) &gt; 0 </span>
+<span class="nc" id="L117">                    ? entry.getCreditAmount().toPlainString() : &quot;-&quot;);</span>
+                
+<span class="nc" id="L119">                contentStream.endText();</span>
+<span class="nc" id="L120">                yPosition -= 20;</span>
+<span class="nc" id="L121">            }</span>
+
+            // Total
+<span class="nc" id="L124">            yPosition -= 30;</span>
+<span class="nc" id="L125">            contentStream.beginText();</span>
+<span class="nc" id="L126">            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);</span>
+<span class="nc" id="L127">            contentStream.newLineAtOffset(50, yPosition);</span>
+<span class="nc" id="L128">            contentStream.showText(&quot;Total Debit: &quot; + transaction.getTotalDebit().toPlainString());</span>
+<span class="nc" id="L129">            contentStream.newLineAtOffset(200, 0);</span>
+<span class="nc" id="L130">            contentStream.showText(&quot;Total Credit: &quot; + transaction.getTotalCredit().toPlainString());</span>
+<span class="nc" id="L131">            contentStream.endText();</span>
+
+<span class="nc" id="L133">            contentStream.close();</span>
+            
+<span class="nc" id="L135">            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L136">            document.save(outputStream);</span>
+<span class="nc" id="L137">            return outputStream.toByteArray();</span>
+        }
+    }
+
+    /**
+     * Export multiple transactions to Excel
+     * @param transactions list of transactions to export
+     * @return byte array containing the Excel workbook content
+     * @throws IOException if an error occurs during Excel generation
+     */
+    public byte[] exportTransactionsToExcel(List&lt;Transaction&gt; transactions) throws IOException {
+<span class="nc" id="L148">        try (Workbook workbook = new XSSFWorkbook()) {</span>
+<span class="nc" id="L149">            Sheet sheet = workbook.createSheet(&quot;Transactions&quot;);</span>
+
+            // Create header row
+<span class="nc" id="L152">            Row headerRow = sheet.createRow(0);</span>
+<span class="nc" id="L153">            String[] headers = {&quot;Number&quot;, &quot;Date&quot;, &quot;Type&quot;, &quot;Status&quot;, &quot;Description&quot;, </span>
+                               &quot;Third Party&quot;, &quot;Third Party ID&quot;, &quot;Account Code&quot;, 
+                               &quot;Account Name&quot;, &quot;Debit&quot;, &quot;Credit&quot;};
+            
+<span class="nc" id="L157">            CellStyle headerStyle = workbook.createCellStyle();</span>
+<span class="nc" id="L158">            Font headerFont = workbook.createFont();</span>
+<span class="nc" id="L159">            headerFont.setBold(true);</span>
+<span class="nc" id="L160">            headerStyle.setFont(headerFont);</span>
+<span class="nc" id="L161">            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());</span>
+<span class="nc" id="L162">            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);</span>
+
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            for (int i = 0; i &lt; headers.length; i++) {</span>
+<span class="nc" id="L165">                Cell cell = headerRow.createCell(i);</span>
+<span class="nc" id="L166">                cell.setCellValue(headers[i]);</span>
+<span class="nc" id="L167">                cell.setCellStyle(headerStyle);</span>
+            }
+
+            // Data rows
+<span class="nc" id="L171">            int rowNum = 1;</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            for (Transaction transaction : transactions) {</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">                for (TransactionEntry entry : transaction.getEntries()) {</span>
+<span class="nc" id="L174">                    Row row = sheet.createRow(rowNum++);</span>
+                    
+<span class="nc" id="L176">                    row.createCell(0).setCellValue(transaction.getNumber());</span>
+<span class="nc" id="L177">                    row.createCell(1).setCellValue(transaction.getDate().format(DATE_FORMATTER));</span>
+<span class="nc" id="L178">                    row.createCell(2).setCellValue(transaction.getType());</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                    row.createCell(3).setCellValue(transaction.getIsPosted() ? &quot;Posted&quot; : &quot;Draft&quot;);</span>
+<span class="nc" id="L180">                    row.createCell(4).setCellValue(transaction.getDescription());</span>
+                    
+                    // Third party info
+<span class="nc bnc" id="L183" title="All 2 branches missed.">                    if (transaction.getThirdParty() != null) {</span>
+<span class="nc" id="L184">                        row.createCell(5).setCellValue(transaction.getThirdParty().getName());</span>
+<span class="nc" id="L185">                        row.createCell(6).setCellValue(transaction.getThirdParty().getIdentificationNumber());</span>
+                    } else {
+<span class="nc" id="L187">                        row.createCell(5).setCellValue(&quot;&quot;);</span>
+<span class="nc" id="L188">                        row.createCell(6).setCellValue(&quot;&quot;);</span>
+                    }
+                    
+<span class="nc" id="L191">                    row.createCell(7).setCellValue(entry.getAccount().getCode());</span>
+<span class="nc" id="L192">                    row.createCell(8).setCellValue(entry.getAccount().getName());</span>
+<span class="nc" id="L193">                    row.createCell(9).setCellValue(entry.getDebitAmount().doubleValue());</span>
+<span class="nc" id="L194">                    row.createCell(10).setCellValue(entry.getCreditAmount().doubleValue());</span>
+<span class="nc" id="L195">                }</span>
+<span class="nc" id="L196">            }</span>
+
+            // Auto-size columns
+<span class="nc bnc" id="L199" title="All 2 branches missed.">            for (int i = 0; i &lt; headers.length; i++) {</span>
+<span class="nc" id="L200">                sheet.autoSizeColumn(i);</span>
+            }
+
+<span class="nc" id="L203">            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L204">            workbook.write(outputStream);</span>
+<span class="nc" id="L205">            return outputStream.toByteArray();</span>
+        }
+    }
+
+    /**
+     * Export a single transaction to Excel
+     * @param transaction the transaction to export
+     * @return byte array containing the Excel workbook content
+     * @throws IOException if an error occurs during Excel generation
+     */
+    public byte[] exportTransactionToExcel(Transaction transaction) throws IOException {
+<span class="nc" id="L216">        return exportTransactionsToExcel(List.of(transaction));</span>
+    }
+    
+    /**
+     * Export third parties to Excel file
+     * @param thirdParties list of third parties to export
+     * @param file the file to write to
+     * @throws IOException if an error occurs during Excel generation
+     */
+    public void exportThirdPartiesToExcel(List&lt;ThirdParty&gt; thirdParties, java.io.File file) throws IOException {
+<span class="nc" id="L226">        try (Workbook workbook = new XSSFWorkbook()) {</span>
+<span class="nc" id="L227">            Sheet sheet = workbook.createSheet(&quot;Third Parties&quot;);</span>
+
+            // Create header row
+<span class="nc" id="L230">            Row headerRow = sheet.createRow(0);</span>
+<span class="nc" id="L231">            String[] headers = {&quot;Name&quot;, &quot;ID Number&quot;, &quot;Type&quot;, &quot;Email&quot;, &quot;Phone&quot;, &quot;Address&quot;, </span>
+                               &quot;City&quot;, &quot;Country&quot;, &quot;Tax ID&quot;, &quot;Credit Limit&quot;, &quot;Payment Days&quot;, 
+                               &quot;Balance&quot;, &quot;Active&quot;};
+            
+<span class="nc" id="L235">            CellStyle headerStyle = workbook.createCellStyle();</span>
+<span class="nc" id="L236">            Font headerFont = workbook.createFont();</span>
+<span class="nc" id="L237">            headerFont.setBold(true);</span>
+<span class="nc" id="L238">            headerStyle.setFont(headerFont);</span>
+<span class="nc" id="L239">            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());</span>
+<span class="nc" id="L240">            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);</span>
+
+<span class="nc bnc" id="L242" title="All 2 branches missed.">            for (int i = 0; i &lt; headers.length; i++) {</span>
+<span class="nc" id="L243">                Cell cell = headerRow.createCell(i);</span>
+<span class="nc" id="L244">                cell.setCellValue(headers[i]);</span>
+<span class="nc" id="L245">                cell.setCellStyle(headerStyle);</span>
+            }
+
+            // Data rows
+<span class="nc" id="L249">            int rowNum = 1;</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">            for (ThirdParty tp : thirdParties) {</span>
+<span class="nc" id="L251">                Row row = sheet.createRow(rowNum++);</span>
+                
+<span class="nc" id="L253">                row.createCell(0).setCellValue(tp.getName());</span>
+<span class="nc" id="L254">                row.createCell(1).setCellValue(tp.getIdentificationNumber());</span>
+<span class="nc" id="L255">                row.createCell(2).setCellValue(tp.getType().toString());</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">                row.createCell(3).setCellValue(tp.getEmail() != null ? tp.getEmail() : &quot;&quot;);</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">                row.createCell(4).setCellValue(tp.getPhone() != null ? tp.getPhone() : &quot;&quot;);</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">                row.createCell(5).setCellValue(tp.getAddress() != null ? tp.getAddress() : &quot;&quot;);</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                row.createCell(6).setCellValue(tp.getCity() != null ? tp.getCity() : &quot;&quot;);</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">                row.createCell(7).setCellValue(tp.getCountry() != null ? tp.getCountry() : &quot;&quot;);</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">                row.createCell(8).setCellValue(tp.getTaxId() != null ? tp.getTaxId() : &quot;&quot;);</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">                row.createCell(9).setCellValue(tp.getCreditLimit() != null ? tp.getCreditLimit().doubleValue() : 0.0);</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">                row.createCell(10).setCellValue(tp.getPaymentDays() != null ? tp.getPaymentDays() : 30);</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">                row.createCell(11).setCellValue(tp.getCurrentBalance() != null ? tp.getCurrentBalance().doubleValue() : 0.0);</span>
+<span class="nc bnc" id="L265" title="All 4 branches missed.">                row.createCell(12).setCellValue(tp.getIsActive() != null &amp;&amp; tp.getIsActive() ? &quot;Active&quot; : &quot;Inactive&quot;);</span>
+<span class="nc" id="L266">            }</span>
+
+            // Auto-size columns
+<span class="nc bnc" id="L269" title="All 2 branches missed.">            for (int i = 0; i &lt; headers.length; i++) {</span>
+<span class="nc" id="L270">                sheet.autoSizeColumn(i);</span>
+            }
+
+<span class="nc" id="L273">            try (java.io.FileOutputStream fos = new java.io.FileOutputStream(file)) {</span>
+<span class="nc" id="L274">                workbook.write(fos);</span>
+            }
+            
+<span class="nc" id="L277">            logger.info(&quot;Exported {} third parties to Excel: {}&quot;, thirdParties.size(), file.getAbsolutePath());</span>
+        }
+<span class="nc" id="L279">    }</span>
+
+    /**
+     * Exports third party transactions to an Excel file.
+     *
+     * @param thirdParty the third party whose transactions are being exported
+     * @param transactions the list of transactions to export
+     * @param stage the parent stage for the file chooser dialog
+     * @throws IOException if an error occurs during Excel generation
+     */
+    public void exportThirdPartyTransactionsToExcel(ThirdParty thirdParty, List&lt;Transaction&gt; transactions, Stage stage) throws IOException {
+<span class="nc" id="L290">        FileChooser fileChooser = new FileChooser();</span>
+<span class="nc" id="L291">        fileChooser.setTitle(&quot;Save Transactions Excel Report&quot;);</span>
+<span class="nc" id="L292">        fileChooser.setInitialFileName(&quot;transactions_&quot; + thirdParty.getIdentificationNumber() + &quot;_&quot; + </span>
+<span class="nc" id="L293">            java.time.LocalDate.now().toString() + &quot;.xlsx&quot;);</span>
+<span class="nc" id="L294">        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(&quot;Excel Files&quot;, &quot;*.xlsx&quot;));</span>
+        
+<span class="nc" id="L296">        java.io.File file = fileChooser.showSaveDialog(stage);</span>
+<span class="nc bnc" id="L297" title="All 2 branches missed.">        if (file == null) {</span>
+<span class="nc" id="L298">            return; // User cancelled</span>
+        }
+        
+<span class="nc" id="L301">        try (Workbook workbook = new XSSFWorkbook()) {</span>
+<span class="nc" id="L302">            Sheet sheet = workbook.createSheet(&quot;Transactions&quot;);</span>
+            
+            // Create header row
+<span class="nc" id="L305">            Row headerRow = sheet.createRow(0);</span>
+<span class="nc" id="L306">            String[] headers = {&quot;Date&quot;, &quot;Voucher Type&quot;, &quot;Voucher Number&quot;, &quot;Description&quot;, &quot;Debit&quot;, &quot;Credit&quot;, &quot;Balance&quot;};</span>
+            
+<span class="nc" id="L308">            CellStyle headerStyle = workbook.createCellStyle();</span>
+<span class="nc" id="L309">            Font headerFont = workbook.createFont();</span>
+<span class="nc" id="L310">            headerFont.setBold(true);</span>
+<span class="nc" id="L311">            headerStyle.setFont(headerFont);</span>
+<span class="nc" id="L312">            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());</span>
+<span class="nc" id="L313">            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);</span>
+            
+<span class="nc bnc" id="L315" title="All 2 branches missed.">            for (int i = 0; i &lt; headers.length; i++) {</span>
+<span class="nc" id="L316">                Cell cell = headerRow.createCell(i);</span>
+<span class="nc" id="L317">                cell.setCellValue(headers[i]);</span>
+<span class="nc" id="L318">                cell.setCellStyle(headerStyle);</span>
+            }
+            
+            // Add third party info as a comment
+<span class="nc" id="L322">            CreationHelper createHelper = workbook.getCreationHelper();</span>
+<span class="nc" id="L323">            ClientAnchor anchor = createHelper.createClientAnchor();</span>
+<span class="nc" id="L324">            anchor.setCol1(0);</span>
+<span class="nc" id="L325">            anchor.setRow1(0);</span>
+<span class="nc" id="L326">            anchor.setCol2(3);</span>
+<span class="nc" id="L327">            anchor.setRow2(3);</span>
+<span class="nc" id="L328">            Drawing&lt;?&gt; drawing = sheet.createDrawingPatriarch();</span>
+<span class="nc" id="L329">            RichTextString richText = createHelper.createRichTextString(&quot;Third Party: &quot; + thirdParty.getName() + </span>
+<span class="nc" id="L330">                &quot;\nID: &quot; + thirdParty.getIdentificationNumber() + </span>
+<span class="nc" id="L331">                &quot;\nType: &quot; + thirdParty.getType());</span>
+<span class="nc" id="L332">            Comment comment = drawing.createCellComment(anchor);</span>
+<span class="nc" id="L333">            comment.setString(richText);</span>
+<span class="nc" id="L334">            comment.setAuthor(&quot;EconoNova FX&quot;);</span>
+            
+            // Data rows with running balance
+<span class="nc" id="L337">            int rowNum = 1;</span>
+<span class="nc" id="L338">            BigDecimal runningBalance = BigDecimal.ZERO;</span>
+<span class="nc" id="L339">            java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+            
+<span class="nc bnc" id="L341" title="All 2 branches missed.">            for (Transaction transaction : transactions) {</span>
+<span class="nc" id="L342">                Row row = sheet.createRow(rowNum++);</span>
+                
+<span class="nc" id="L344">                row.createCell(0).setCellValue(transaction.getDate().format(dateFormatter));</span>
+<span class="nc" id="L345">                row.createCell(1).setCellValue(transaction.getType());</span>
+<span class="nc" id="L346">                row.createCell(2).setCellValue(transaction.getNumber());</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">                row.createCell(3).setCellValue(transaction.getDescription() != null ? transaction.getDescription() : &quot;&quot;);</span>
+                
+<span class="nc bnc" id="L349" title="All 2 branches missed.">                BigDecimal debit = transaction.getTotalDebit() != null ? transaction.getTotalDebit() : BigDecimal.ZERO;</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">                BigDecimal credit = transaction.getTotalCredit() != null ? transaction.getTotalCredit() : BigDecimal.ZERO;</span>
+                
+<span class="nc" id="L352">                row.createCell(4).setCellValue(debit.doubleValue());</span>
+<span class="nc" id="L353">                row.createCell(5).setCellValue(credit.doubleValue());</span>
+                
+<span class="nc" id="L355">                runningBalance = runningBalance.add(debit).subtract(credit);</span>
+<span class="nc" id="L356">                row.createCell(6).setCellValue(runningBalance.doubleValue());</span>
+<span class="nc" id="L357">            }</span>
+            
+            // Auto-size columns
+<span class="nc bnc" id="L360" title="All 2 branches missed.">            for (int i = 0; i &lt; headers.length; i++) {</span>
+<span class="nc" id="L361">                sheet.autoSizeColumn(i);</span>
+            }
+            
+<span class="nc" id="L364">            try (java.io.FileOutputStream fos = new java.io.FileOutputStream(file)) {</span>
+<span class="nc" id="L365">                workbook.write(fos);</span>
+            }
+            
+<span class="nc" id="L368">            logger.info(&quot;Exported {} transactions to Excel for third party {}: {}&quot;, </span>
+<span class="nc" id="L369">                transactions.size(), thirdParty.getName(), file.getAbsolutePath());</span>
+        }
+<span class="nc" id="L371">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

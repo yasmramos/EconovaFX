@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExchangeRateService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.service</a> &gt; <span class="el_source">ExchangeRateService.java</span></div><h1>ExchangeRateService.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.service;
+
+import com.econovafx.modules.core.model.Currency;
+import com.econovafx.modules.core.model.ExchangeRate;
+import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.core.repository.CurrencyRepository;
+import com.econovafx.modules.core.repository.ExchangeRateRepository;
+import com.econovafx.modules.core.security.SecurityUtil;
+import io.avaje.inject.Component;
+import com.econovafx.modules.core.security.RequiresTenant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Servicio para gestión de tipos de cambio con integración al Banco Central de Cuba.
+ * Soporta la obtención automática de tasas desde www.bc.gob.cu
+ */
+@Component
+@RequiresTenant
+public class ExchangeRateService {
+
+<span class="nc" id="L28">    private static final Logger log = LoggerFactory.getLogger(ExchangeRateService.class);</span>
+
+    private final ExchangeRateRepository exchangeRateRepository;
+    private final CurrencyRepository currencyRepository;
+    private final BCCExchangeRateFetcher bccFetcher;
+
+    public ExchangeRateService(ExchangeRateRepository exchangeRateRepository,
+                               CurrencyRepository currencyRepository,
+<span class="nc" id="L36">                               BCCExchangeRateFetcher bccFetcher) {</span>
+<span class="nc" id="L37">        this.exchangeRateRepository = exchangeRateRepository;</span>
+<span class="nc" id="L38">        this.currencyRepository = currencyRepository;</span>
+<span class="nc" id="L39">        this.bccFetcher = bccFetcher;</span>
+<span class="nc" id="L40">    }</span>
+
+    /**
+     * Obtiene la tasa de cambio vigente entre dos monedas en una fecha determinada
+     */
+    public Optional&lt;ExchangeRate&gt; getExchangeRate(String fromCurrencyCode, 
+                                                   String toCurrencyCode, 
+                                                   LocalDateTime date) {
+<span class="nc" id="L48">        Currency fromCurrency = currencyRepository.findByCode(fromCurrencyCode)</span>
+<span class="nc" id="L49">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + fromCurrencyCode));</span>
+<span class="nc" id="L50">        Currency toCurrency = currencyRepository.findByCode(toCurrencyCode)</span>
+<span class="nc" id="L51">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + toCurrencyCode));</span>
+
+<span class="nc" id="L53">        return exchangeRateRepository.findCurrentRate(fromCurrency, toCurrency, date);</span>
+    }
+
+    /**
+     * Convierte un monto de una moneda a otra usando la tasa vigente
+     */
+    public BigDecimal convertAmount(BigDecimal amount, 
+                                    String fromCurrencyCode, 
+                                    String toCurrencyCode,
+                                    LocalDateTime date) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (date == null) {</span>
+<span class="nc" id="L64">            date = LocalDateTime.now();</span>
+        }
+
+<span class="nc" id="L67">        Currency fromCurrency = currencyRepository.findByCode(fromCurrencyCode)</span>
+<span class="nc" id="L68">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + fromCurrencyCode));</span>
+<span class="nc" id="L69">        Currency toCurrency = currencyRepository.findByCode(toCurrencyCode)</span>
+<span class="nc" id="L70">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + toCurrencyCode));</span>
+
+<span class="nc" id="L72">        return exchangeRateRepository.convertAmount(amount, fromCurrency, toCurrency, date);</span>
+    }
+
+    /**
+     * Registra manualmente una nueva tasa de cambio
+     */
+    public ExchangeRate registerExchangeRate(String fromCurrencyCode,
+                                              String toCurrencyCode,
+                                              BigDecimal rate,
+                                              LocalDateTime effectiveDate,
+                                              ExchangeRate.RateType rateType,
+                                              String observations) {
+<span class="nc" id="L84">        Currency fromCurrency = currencyRepository.findByCode(fromCurrencyCode)</span>
+<span class="nc" id="L85">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + fromCurrencyCode));</span>
+<span class="nc" id="L86">        Currency toCurrency = currencyRepository.findByCode(toCurrencyCode)</span>
+<span class="nc" id="L87">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + toCurrencyCode));</span>
+
+<span class="nc" id="L89">        ExchangeRate exchangeRate = new ExchangeRate(fromCurrency, toCurrency, rate, effectiveDate);</span>
+<span class="nc" id="L90">        exchangeRate.setRateType(rateType);</span>
+<span class="nc" id="L91">        exchangeRate.setObservations(observations);</span>
+<span class="nc" id="L92">        exchangeRate.setStatus(&quot;ACTIVE&quot;);</span>
+
+        // Usuario actual como creador
+<span class="nc" id="L95">        User currentUser = SecurityUtil.getCurrentUser();</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (currentUser != null) {</span>
+<span class="nc" id="L97">            exchangeRate.setCreatedByUser(currentUser);</span>
+        }
+
+<span class="nc" id="L100">        return exchangeRateRepository.save(exchangeRate);</span>
+    }
+
+    /**
+     * Obtiene tasas de cambio automáticamente desde el Banco Central de Cuba
+     * y las registra en el sistema
+     */
+    public List&lt;ExchangeRate&gt; fetchAndSaveRatesFromBCC() {
+<span class="nc" id="L108">        log.info(&quot;Iniciando obtención de tasas de cambio desde el Banco Central de Cuba...&quot;);</span>
+        
+        try {
+            // Obtener tasas desde el BC
+<span class="nc" id="L112">            List&lt;BCCExchangeRateFetcher.BCCRate&gt; bccRates = bccFetcher.fetchCurrentRates();</span>
+            
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (bccRates.isEmpty()) {</span>
+<span class="nc" id="L115">                log.warn(&quot;No se obtuvieron tasas de cambio del Banco Central de Cuba&quot;);</span>
+<span class="nc" id="L116">                return List.of();</span>
+            }
+
+            // Moneda base asumida: CUP (Código ISO para Peso Cubano)
+<span class="nc" id="L120">            Currency cupCurrency = currencyRepository.findByCode(&quot;CUP&quot;)</span>
+<span class="nc" id="L121">                    .orElseGet(() -&gt; {</span>
+<span class="nc" id="L122">                        Currency newCurrency = new Currency(&quot;CUP&quot;, &quot;Peso Cubano&quot;, &quot;$&quot;);</span>
+<span class="nc" id="L123">                        newCurrency.setIsBase(true);</span>
+<span class="nc" id="L124">                        newCurrency.setStatus(&quot;ACTIVE&quot;);</span>
+<span class="nc" id="L125">                        return currencyRepository.save(newCurrency);</span>
+                    });
+
+<span class="nc" id="L128">            List&lt;ExchangeRate&gt; savedRates = new java.util.ArrayList&lt;&gt;();</span>
+<span class="nc" id="L129">            LocalDateTime now = LocalDateTime.now();</span>
+
+<span class="nc bnc" id="L131" title="All 2 branches missed.">            for (BCCExchangeRateFetcher.BCCRate bccRate : bccRates) {</span>
+                try {
+                    // Buscar o crear la moneda
+<span class="nc" id="L134">                    Currency foreignCurrency = currencyRepository.findByCode(bccRate.currencyCode())</span>
+<span class="nc" id="L135">                            .orElseGet(() -&gt; {</span>
+<span class="nc" id="L136">                                Currency newCurrency = new Currency(</span>
+<span class="nc" id="L137">                                        bccRate.currencyCode(),</span>
+<span class="nc" id="L138">                                        bccRate.currencyName(),</span>
+<span class="nc" id="L139">                                        bccRate.symbol()</span>
+                                );
+<span class="nc" id="L141">                                newCurrency.setIsBase(false);</span>
+<span class="nc" id="L142">                                newCurrency.setStatus(&quot;ACTIVE&quot;);</span>
+<span class="nc" id="L143">                                return currencyRepository.save(newCurrency);</span>
+                            });
+
+                    // Registrar tasa: 1 unidad de moneda extranjera = X CUP
+<span class="nc" id="L147">                    ExchangeRate exchangeRate = new ExchangeRate(</span>
+                            foreignCurrency,
+                            cupCurrency,
+<span class="nc" id="L150">                            bccRate.rate(),</span>
+                            now
+                    );
+<span class="nc" id="L153">                    exchangeRate.setRateType(ExchangeRate.RateType.OFICIAL);</span>
+<span class="nc" id="L154">                    exchangeRate.setObservations(&quot;Tasa oficial del Banco Central de Cuba - &quot; + bccRate.source());</span>
+<span class="nc" id="L155">                    exchangeRate.setStatus(&quot;ACTIVE&quot;);</span>
+                    
+<span class="nc" id="L157">                    User currentUser = SecurityUtil.getCurrentUser();</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">                    if (currentUser != null) {</span>
+<span class="nc" id="L159">                        exchangeRate.setCreatedByUser(currentUser);</span>
+                    }
+
+<span class="nc" id="L162">                    ExchangeRate saved = exchangeRateRepository.save(exchangeRate);</span>
+<span class="nc" id="L163">                    savedRates.add(saved);</span>
+
+<span class="nc" id="L165">                    log.info(&quot;Tasa registrada: 1 {} = {} {} ({})&quot;, </span>
+<span class="nc" id="L166">                             bccRate.currencyCode(), </span>
+<span class="nc" id="L167">                             bccRate.rate(), </span>
+                             &quot;CUP&quot;,
+<span class="nc" id="L169">                             bccRate.source());</span>
+
+<span class="nc" id="L171">                } catch (Exception e) {</span>
+<span class="nc" id="L172">                    log.error(&quot;Error procesando tasa para {}: {}&quot;, bccRate.currencyCode(), e.getMessage());</span>
+<span class="nc" id="L173">                }</span>
+<span class="nc" id="L174">            }</span>
+
+<span class="nc" id="L176">            log.info(&quot;Se registraron {} tasas de cambio desde el Banco Central de Cuba&quot;, savedRates.size());</span>
+<span class="nc" id="L177">            return savedRates;</span>
+
+<span class="nc" id="L179">        } catch (Exception e) {</span>
+<span class="nc" id="L180">            log.error(&quot;Error obteniendo tasas del Banco Central de Cuba: {}&quot;, e.getMessage(), e);</span>
+<span class="nc" id="L181">            throw new RuntimeException(&quot;Error conectando con el Banco Central de Cuba: &quot; + e.getMessage(), e);</span>
+        }
+    }
+
+    /**
+     * Obtiene el histórico de tasas de cambio entre dos monedas
+     */
+    public List&lt;ExchangeRate&gt; getExchangeRateHistory(String fromCurrencyCode,
+                                                      String toCurrencyCode,
+                                                      int days) {
+<span class="nc" id="L191">        Currency fromCurrency = currencyRepository.findByCode(fromCurrencyCode)</span>
+<span class="nc" id="L192">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + fromCurrencyCode));</span>
+<span class="nc" id="L193">        Currency toCurrency = currencyRepository.findByCode(toCurrencyCode)</span>
+<span class="nc" id="L194">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + toCurrencyCode));</span>
+
+<span class="nc" id="L196">        return exchangeRateRepository.findHistory(fromCurrency, toCurrency, days);</span>
+    }
+
+    /**
+     * Obtiene todas las tasas de cambio activas
+     */
+    public List&lt;ExchangeRate&gt; getAllActiveRates() {
+<span class="nc" id="L203">        return exchangeRateRepository.findAllActive();</span>
+    }
+
+    /**
+     * Calcula la tasa de cambio cruzada entre dos monedas usando una base intermedia
+     */
+    public BigDecimal calculateCrossRate(String fromCurrencyCode,
+                                          String toCurrencyCode,
+                                          String baseCurrencyCode,
+                                          LocalDateTime date) {
+<span class="nc" id="L213">        Currency fromCurrency = currencyRepository.findByCode(fromCurrencyCode)</span>
+<span class="nc" id="L214">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + fromCurrencyCode));</span>
+<span class="nc" id="L215">        Currency toCurrency = currencyRepository.findByCode(toCurrencyCode)</span>
+<span class="nc" id="L216">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + toCurrencyCode));</span>
+<span class="nc" id="L217">        Currency baseCurrency = currencyRepository.findByCode(baseCurrencyCode)</span>
+<span class="nc" id="L218">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda base no encontrada: &quot; + baseCurrencyCode));</span>
+
+<span class="nc" id="L220">        return exchangeRateRepository.calculateCrossRate(fromCurrency, toCurrency, baseCurrency, date);</span>
+    }
+
+    /**
+     * Elimina/desactiva una tasa de cambio por ID
+     */
+    public void deactivateExchangeRate(Long id) {
+<span class="nc" id="L227">        exchangeRateRepository.deactivate(id);</span>
+<span class="nc" id="L228">        log.info(&quot;Tasa de cambio {} desactivada&quot;, id);</span>
+<span class="nc" id="L229">    }</span>
+
+    /**
+     * Obtiene una tasa de cambio específica por ID
+     */
+    public Optional&lt;ExchangeRate&gt; getExchangeRateById(Long id) {
+<span class="nc" id="L235">        return exchangeRateRepository.findById(id);</span>
+    }
+
+    /**
+     * Fetches and saves latest rates from BCC (alias for fetchAndSaveRatesFromBCC)
+     */
+    public List&lt;ExchangeRate&gt; fetchAndSaveLatestRates() {
+<span class="nc" id="L242">        return fetchAndSaveRatesFromBCC();</span>
+    }
+
+    /**
+     * Gets latest rates for all currencies (active rates)
+     */
+    public List&lt;ExchangeRate&gt; getLatestRatesForAllCurrencies() {
+<span class="nc" id="L249">        return getAllActiveRates();</span>
+    }
+
+    /**
+     * Gets exchange rates by date range and optional currency filter
+     */
+    public List&lt;ExchangeRate&gt; getExchangeRatesByDateRange(LocalDate from, LocalDate to, String currencyCode) {
+<span class="nc bnc" id="L256" title="All 4 branches missed.">        if (currencyCode != null &amp;&amp; !currencyCode.isEmpty()) {</span>
+<span class="nc" id="L257">            Currency currency = currencyRepository.findByCode(currencyCode)</span>
+<span class="nc" id="L258">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Moneda no encontrada: &quot; + currencyCode));</span>
+<span class="nc" id="L259">            return exchangeRateRepository.findRatesByDateRangeAndCurrency(from.atStartOfDay(), to.atTime(23, 59, 59), currency);</span>
+        } else {
+<span class="nc" id="L261">            return exchangeRateRepository.findRatesByDateRange(from.atStartOfDay(), to.atTime(23, 59, 59));</span>
+        }
+    }
+
+    /**
+     * Gets the last update time from the most recent exchange rate
+     */
+    public Optional&lt;LocalDateTime&gt; getLastUpdateTime() {
+<span class="nc" id="L269">        List&lt;ExchangeRate&gt; allRates = getAllActiveRates();</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">        if (allRates.isEmpty()) {</span>
+<span class="nc" id="L271">            return Optional.empty();</span>
+        }
+<span class="nc" id="L273">        return Optional.of(allRates.stream()</span>
+<span class="nc" id="L274">            .map(ExchangeRate::getEffectiveDate)</span>
+<span class="nc" id="L275">            .max(LocalDateTime::compareTo)</span>
+<span class="nc" id="L276">            .orElse(null));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

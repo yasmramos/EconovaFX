@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.config</a> &gt; <span class="el_source">AppConfig.java</span></div><h1>AppConfig.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.config;
+
+import io.avaje.config.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+
+/**
+ * Centralized configuration management using Avaje Config.
+ * Provides type-safe access to all application configuration properties.
+ */
+public class AppConfig {
+
+<span class="nc" id="L15">    private static final Logger logger = LoggerFactory.getLogger(AppConfig.class);</span>
+
+    // Application Configuration
+    public static final String APP_NAME;
+    public static final String APP_VERSION;
+    
+    // Database Configuration
+    public static final String DB_DRIVER;
+    public static final String DB_URL;
+    public static final String DB_USERNAME;
+    public static final String DB_PASSWORD;
+    public static final String DB_PATH;
+    
+    // Master Database Configuration
+    public static final String MASTER_DB_DRIVER;
+    public static final String MASTER_DB_URL;
+    public static final String MASTER_DB_USERNAME;
+    public static final String MASTER_DB_PASSWORD;
+    
+    // Ebean Configuration
+    public static final boolean EBEAN_DDL_GENERATE;
+    public static final boolean EBEAN_DDL_RUN;
+    public static final boolean EBEAN_MIGRATION_AUTO;
+    public static final boolean EBEAN_MIGRATION_RUN;
+    public static final String EBEAN_MIGRATION_PATH;
+    
+    // UI Configuration
+    public static final String UI_THEME;
+    public static final int UI_WIDTH;
+    public static final int UI_HEIGHT;
+    
+    // Exchange Rate Configuration
+    public static final int EXCHANGE_RATE_CACHE_TTL_MINUTES;
+    public static final boolean EXCHANGE_RATE_SCHEDULER_ENABLED;
+    public static final String EXCHANGE_RATE_SCHEDULER_CRON;
+    
+    // BCC API Configuration
+    public static final String BCC_API_BASE_URL;
+    public static final int BCC_API_TIMEOUT_SECONDS;
+    public static final int BCC_API_RETRY_MAX_ATTEMPTS;
+    public static final long BCC_API_RETRY_DELAY_MS;
+    
+    // Security Configuration
+    public static final String SESSION_TIMEOUT;
+    public static final int MAX_LOGIN_ATTEMPTS;
+    
+    static {
+<span class="nc" id="L62">        logger.info(&quot;Loading application configuration with Avaje Config...&quot;);</span>
+        
+        // Application
+<span class="nc" id="L65">        APP_NAME = Config.get(&quot;app.name&quot;, &quot;EconoNova FX&quot;);</span>
+<span class="nc" id="L66">        APP_VERSION = Config.get(&quot;app.version&quot;, &quot;1.0.0&quot;);</span>
+        
+        // Database
+<span class="nc" id="L69">        DB_DRIVER = Config.get(&quot;database.driver&quot;, &quot;org.h2.Driver&quot;);</span>
+<span class="nc" id="L70">        DB_URL = Config.get(&quot;database.url&quot;, &quot;jdbc:h2:./db/econovadb;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE&quot;);</span>
+<span class="nc" id="L71">        DB_USERNAME = Config.get(&quot;database.username&quot;, &quot;sa&quot;);</span>
+<span class="nc" id="L72">        DB_PASSWORD = Config.get(&quot;database.password&quot;, &quot;&quot;);</span>
+<span class="nc" id="L73">        DB_PATH = Config.get(&quot;app.database.path&quot;, &quot;./db/econovadb&quot;);</span>
+        
+        // Master Database
+<span class="nc" id="L76">        MASTER_DB_DRIVER = Config.get(&quot;ebean.datasource.master.driver&quot;, &quot;org.h2.Driver&quot;);</span>
+<span class="nc" id="L77">        MASTER_DB_URL = Config.get(&quot;ebean.datasource.master.url&quot;, &quot;jdbc:h2:./db/econova_master;DB_CLOSE_DELAY=-1&quot;);</span>
+<span class="nc" id="L78">        MASTER_DB_USERNAME = Config.get(&quot;ebean.datasource.master.username&quot;, &quot;sa&quot;);</span>
+<span class="nc" id="L79">        MASTER_DB_PASSWORD = Config.get(&quot;ebean.datasource.master.password&quot;, &quot;&quot;);</span>
+        
+        // Ebean
+<span class="nc" id="L82">        EBEAN_DDL_GENERATE = Config.getBool(&quot;ebean.ddl.generate&quot;, true);</span>
+<span class="nc" id="L83">        EBEAN_DDL_RUN = Config.getBool(&quot;ebean.ddl.run&quot;, true);</span>
+<span class="nc" id="L84">        EBEAN_MIGRATION_AUTO = Config.getBool(&quot;ebean.migration.auto&quot;, true);</span>
+<span class="nc" id="L85">        EBEAN_MIGRATION_RUN = Config.getBool(&quot;ebean.migration.run&quot;, true);</span>
+<span class="nc" id="L86">        EBEAN_MIGRATION_PATH = Config.get(&quot;ebean.migration.resourcePath&quot;, &quot;dbmigration&quot;);</span>
+        
+        // UI
+<span class="nc" id="L89">        UI_THEME = Config.get(&quot;ui.theme&quot;, &quot;modern&quot;);</span>
+<span class="nc" id="L90">        UI_WIDTH = Config.getInt(&quot;ui.width&quot;, 1200);</span>
+<span class="nc" id="L91">        UI_HEIGHT = Config.getInt(&quot;ui.height&quot;, 800);</span>
+        
+        // Exchange Rate
+<span class="nc" id="L94">        EXCHANGE_RATE_CACHE_TTL_MINUTES = Config.getInt(&quot;exchange.rate.cache.ttl.minutes&quot;, 60);</span>
+<span class="nc" id="L95">        EXCHANGE_RATE_SCHEDULER_ENABLED = Config.getBool(&quot;exchange.rate.scheduler.enabled&quot;, true);</span>
+<span class="nc" id="L96">        EXCHANGE_RATE_SCHEDULER_CRON = Config.get(&quot;exchange.rate.scheduler.cron&quot;, &quot;0 0 6 * * ?&quot;);</span>
+        
+        // BCC API
+<span class="nc" id="L99">        BCC_API_BASE_URL = Config.get(&quot;bcc.api.base.url&quot;, &quot;https://api.bc.gob.cu/v1/tasas-de-cambio&quot;);</span>
+<span class="nc" id="L100">        BCC_API_TIMEOUT_SECONDS = Config.getInt(&quot;bcc.api.timeout.seconds&quot;, 30);</span>
+<span class="nc" id="L101">        BCC_API_RETRY_MAX_ATTEMPTS = Config.getInt(&quot;bcc.api.retry.max.attempts&quot;, 3);</span>
+<span class="nc" id="L102">        BCC_API_RETRY_DELAY_MS = Config.getLong(&quot;bcc.api.retry.delay.ms&quot;, 2000L);</span>
+        
+        // Security
+<span class="nc" id="L105">        SESSION_TIMEOUT = Config.get(&quot;security.session.timeout&quot;, &quot;30m&quot;);</span>
+<span class="nc" id="L106">        MAX_LOGIN_ATTEMPTS = Config.getInt(&quot;security.login.max.attempts&quot;, 5);</span>
+        
+<span class="nc" id="L108">        logger.info(&quot;Configuration loaded successfully&quot;);</span>
+<span class="nc" id="L109">        logger.debug(&quot;App: {} v{}&quot;, APP_NAME, APP_VERSION);</span>
+<span class="nc" id="L110">        logger.debug(&quot;Database: {}&quot;, DB_URL);</span>
+<span class="nc" id="L111">        logger.debug(&quot;UI: {} ({}x{})&quot;, UI_THEME, UI_WIDTH, UI_HEIGHT);</span>
+<span class="nc" id="L112">    }</span>
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private AppConfig() {
+    }
+
+    /**
+     * Gets a string configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Configuration value or default
+     */
+    public static String getString(String key, String defaultValue) {
+<span class="nc" id="L127">        return Config.get(key, defaultValue);</span>
+    }
+
+    /**
+     * Gets an integer configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Configuration value or default
+     */
+    public static int getInt(String key, int defaultValue) {
+<span class="nc" id="L137">        return Config.getInt(key, defaultValue);</span>
+    }
+
+    /**
+     * Gets a boolean configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Configuration value or default
+     */
+    public static boolean getBoolean(String key, boolean defaultValue) {
+<span class="nc" id="L147">        return Config.getBool(key, defaultValue);</span>
+    }
+
+    /**
+     * Gets a long configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Configuration value or default
+     */
+    public static long getLong(String key, long defaultValue) {
+<span class="nc" id="L157">        return Config.getLong(key, defaultValue);</span>
+    }
+
+    /**
+     * Gets a duration configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Duration value or default
+     */
+    public static Duration getDuration(String key, String defaultValue) {
+<span class="nc" id="L167">        return Config.getDuration(key, defaultValue);</span>
+    }
+
+    /**
+     * Sets a string configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, String value) {
+<span class="nc" id="L176">        Config.setProperty(key, value);</span>
+<span class="nc" id="L177">        logger.debug(&quot;Configuration property updated: {} = {}&quot;, key, value);</span>
+<span class="nc" id="L178">    }</span>
+
+    /**
+     * Sets an integer configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, int value) {
+<span class="nc" id="L186">        Config.setProperty(key, String.valueOf(value));</span>
+<span class="nc" id="L187">        logger.debug(&quot;Configuration property updated: {} = {}&quot;, key, value);</span>
+<span class="nc" id="L188">    }</span>
+
+    /**
+     * Sets a boolean configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, boolean value) {
+<span class="nc" id="L196">        Config.setProperty(key, String.valueOf(value));</span>
+<span class="nc" id="L197">        logger.debug(&quot;Configuration property updated: {} = {}&quot;, key, value);</span>
+<span class="nc" id="L198">    }</span>
+
+    /**
+     * Sets a long configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, long value) {
+<span class="nc" id="L206">        Config.setProperty(key, String.valueOf(value));</span>
+<span class="nc" id="L207">        logger.debug(&quot;Configuration property updated: {} = {}&quot;, key, value);</span>
+<span class="nc" id="L208">    }</span>
+
+    /**
+     * Saves the current configuration to the properties file.
+     * This persists all dynamic changes made via setProperty.
+     * Note: Avaje Config 5.x does not support saving to file directly.
+     * This method logs the current configuration for manual persistence.
+     */
+    public static void save() {
+<span class="nc" id="L217">        logger.info(&quot;Configuration snapshot - use external mechanism to persist changes&quot;);</span>
+<span class="nc" id="L218">        logger.info(&quot;Current properties count: {}&quot;, Config.asProperties().size());</span>
+<span class="nc" id="L219">    }</span>
+
+    /**
+     * Reloads configuration from the properties file.
+     * This discards any unsaved dynamic changes.
+     * Note: Avaje Config 5.x does not support reload directly.
+     * Use onChange listeners for dynamic updates.
+     */
+    public static void reload() {
+<span class="nc" id="L228">        logger.warn(&quot;Reload not supported in Avaje Config 5.x - use onChange listeners instead&quot;);</span>
+<span class="nc" id="L229">    }</span>
+
+    /**
+     * Removes a configuration property.
+     * @param key Configuration key to remove
+     */
+    public static void removeProperty(String key) {
+<span class="nc" id="L236">        Config.clearProperty(key);</span>
+<span class="nc" id="L237">        logger.debug(&quot;Configuration property removed: {}&quot;, key);</span>
+<span class="nc" id="L238">    }</span>
+
+    /**
+     * Checks if a configuration key exists.
+     * @param key Configuration key
+     * @return true if key exists, false otherwise
+     */
+    public static boolean containsKey(String key) {
+<span class="nc" id="L246">        return Config.getOptional(key).isPresent();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

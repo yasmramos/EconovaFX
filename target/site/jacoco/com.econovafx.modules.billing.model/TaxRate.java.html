@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaxRate.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.billing.model</a> &gt; <span class="el_source">TaxRate.java</span></div><h1>TaxRate.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.billing.model;</span>
+<span class="nc" id="L2">import com.econovafx.modules.core.model.BaseEntity;</span>
+<span class="nc" id="L3"></span>
+<span class="nc" id="L4">import jakarta.persistence.*;</span>
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+/**
+ * Configuración de tasas impositivas (IVA, Impuestos Especiales).
+ * Requerido para el cálculo correcto de impuestos en facturas según Resolución 340/2004.
+ */
+@Entity
+@Table(name = &quot;tax_rates&quot;)
+<span class="nc" id="L14">public class TaxRate extends BaseEntity {</span>
+
+    @Column(nullable = false, unique = true)
+    private String code;
+
+    @Column(nullable = false, length = 100)
+    private String name;
+
+    @Column(nullable = false, precision = 5, scale = 2)
+    private BigDecimal percentage;
+
+    @Column(length = 100)
+    private String description;
+
+<span class="nc" id="L28">    @Column(nullable = false)</span>
+    private boolean active = true;
+
+    @Column(name = &quot;account_code&quot;)
+    private String accountCode; // Cuenta contable asociada al impuesto
+
+    @Column(name = &quot;effective_from&quot;)
+    private LocalDate effectiveFrom;
+
+    // Getters and Setters
+<span class="nc" id="L38">    public String getCode() { return code; }</span>
+<span class="nc" id="L39">    public void setCode(String code) { this.code = code; }</span>
+
+<span class="nc" id="L41">    public String getName() { return name; }</span>
+<span class="nc" id="L42">    public void setName(String name) { this.name = name; }</span>
+
+<span class="nc" id="L44">    public BigDecimal getPercentage() { return percentage; }</span>
+<span class="nc" id="L45">    public void setPercentage(BigDecimal percentage) { this.percentage = percentage; }</span>
+
+<span class="nc" id="L47">    public String getDescription() { return description; }</span>
+<span class="nc" id="L48">    public void setDescription(String description) { this.description = description; }</span>
+
+<span class="nc" id="L50">    public boolean isActive() { return active; }</span>
+<span class="nc" id="L51">    public void setActive(boolean active) { this.active = active; }</span>
+
+<span class="nc" id="L53">    public String getAccountCode() { return accountCode; }</span>
+<span class="nc" id="L54">    public void setAccountCode(String accountCode) { this.accountCode = accountCode; }</span>
+
+<span class="nc" id="L56">    public LocalDate getEffectiveFrom() { return effectiveFrom; }</span>
+<span class="nc" id="L57">    public void setEffectiveFrom(LocalDate effectiveFrom) { this.effectiveFrom = effectiveFrom; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

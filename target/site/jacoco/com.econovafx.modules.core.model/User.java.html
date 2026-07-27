@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.model</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.core.model;</span>
+<span class="nc" id="L2"></span>
+<span class="nc" id="L3">import jakarta.persistence.*;</span>
+<span class="nc" id="L4"></span>
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * User entity for system access with multi-tenant and multi-currency support
+ */
+@Entity
+@Table(name = &quot;users&quot;)
+public class User extends BaseEntity {
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String fullName;
+
+<span class="nc" id="L28">    @Enumerated(EnumType.STRING)</span>
+    private UserRole role = UserRole.USER;
+
+    @Column(name = &quot;last_login&quot;)
+    private LocalDateTime lastLogin;
+
+    /**
+     * Empresa/tenant al que pertenece este usuario.
+     * Un usuario puede estar asociado a una empresa específica.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;company_id&quot;)
+    private Company company;
+
+    /**
+     * Moneda preferida del usuario para visualización de importes.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;preferred_currency_id&quot;)
+    private Currency preferredCurrency;
+
+    /**
+     * Empresas a las que tiene acceso el usuario (para usuarios que trabajan con múltiples empresas).
+     */
+    @ManyToMany
+    @JoinTable(
+        name = &quot;user_companies&quot;,
+        joinColumns = @JoinColumn(name = &quot;user_id&quot;),
+        inverseJoinColumns = @JoinColumn(name = &quot;company_id&quot;)
+    )
+    private Set&lt;Company&gt; accessibleCompanies = new HashSet&lt;&gt;();
+
+    /**
+     * Estado del usuario: ACTIVE, INACTIVE, SUSPENDED
+     */
+<span class="nc" id="L63">    @Column(length = 20)</span>
+    private String status = &quot;ACTIVE&quot;;
+
+    // Constructores
+<span class="nc" id="L67">    public User() {</span>
+<span class="nc" id="L68">    }</span>
+
+<span class="nc" id="L70">    public User(String username, String email, String fullName) {</span>
+<span class="nc" id="L71">        this.username = username;</span>
+<span class="nc" id="L72">        this.email = email;</span>
+<span class="nc" id="L73">        this.fullName = fullName;</span>
+<span class="nc" id="L74">        this.status = &quot;ACTIVE&quot;;</span>
+<span class="nc" id="L75">    }</span>
+
+<span class="nc" id="L77">    public enum UserRole {</span>
+<span class="nc" id="L78">        ADMIN,</span>
+<span class="nc" id="L79">        ACCOUNTANT,</span>
+<span class="nc" id="L80">        USER,</span>
+<span class="nc" id="L81">        VIEWER</span>
+    }
+
+    // Getters and Setters
+    public String getUsername() {
+<span class="nc" id="L86">        return username;</span>
+    }
+
+    public void setUsername(String username) {
+<span class="nc" id="L90">        this.username = username;</span>
+<span class="nc" id="L91">    }</span>
+
+    public String getPassword() {
+<span class="nc" id="L94">        return password;</span>
+    }
+
+    public void setPassword(String password) {
+<span class="nc" id="L98">        this.password = password;</span>
+<span class="nc" id="L99">    }</span>
+
+    public String getEmail() {
+<span class="nc" id="L102">        return email;</span>
+    }
+
+    public void setEmail(String email) {
+<span class="nc" id="L106">        this.email = email;</span>
+<span class="nc" id="L107">    }</span>
+
+    public String getFullName() {
+<span class="nc" id="L110">        return fullName;</span>
+    }
+
+    public void setFullName(String fullName) {
+<span class="nc" id="L114">        this.fullName = fullName;</span>
+<span class="nc" id="L115">    }</span>
+
+    public UserRole getRole() {
+<span class="nc" id="L118">        return role;</span>
+    }
+
+    public void setRole(UserRole role) {
+<span class="nc" id="L122">        this.role = role;</span>
+<span class="nc" id="L123">    }</span>
+
+    public LocalDateTime getLastLogin() {
+<span class="nc" id="L126">        return lastLogin;</span>
+    }
+
+    public void setLastLogin(LocalDateTime lastLogin) {
+<span class="nc" id="L130">        this.lastLogin = lastLogin;</span>
+<span class="nc" id="L131">    }</span>
+
+    public Company getCompany() {
+<span class="nc" id="L134">        return company;</span>
+    }
+
+    public void setCompany(Company company) {
+<span class="nc" id="L138">        this.company = company;</span>
+<span class="nc" id="L139">    }</span>
+
+    public Currency getPreferredCurrency() {
+<span class="nc" id="L142">        return preferredCurrency;</span>
+    }
+
+    public void setPreferredCurrency(Currency preferredCurrency) {
+<span class="nc" id="L146">        this.preferredCurrency = preferredCurrency;</span>
+<span class="nc" id="L147">    }</span>
+
+    public Set&lt;Company&gt; getAccessibleCompanies() {
+<span class="nc" id="L150">        return accessibleCompanies;</span>
+    }
+
+    public void setAccessibleCompanies(Set&lt;Company&gt; accessibleCompanies) {
+<span class="nc" id="L154">        this.accessibleCompanies = accessibleCompanies;</span>
+<span class="nc" id="L155">    }</span>
+
+    public String getStatus() {
+<span class="nc" id="L158">        return status;</span>
+    }
+
+    public void setStatus(String status) {
+<span class="nc" id="L162">        this.status = status;</span>
+<span class="nc" id="L163">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

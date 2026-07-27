@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankReconciliation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.bank.model</a> &gt; <span class="el_source">BankReconciliation.java</span></div><h1>BankReconciliation.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.bank.model;</span>
+<span class="nc" id="L2"></span>
+<span class="nc" id="L3">import com.econovafx.modules.core.model.BaseEntity;</span>
+<span class="nc" id="L4">import io.ebean.annotation.DbEnumValue;</span>
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Entity representing a Bank Reconciliation according to Resolution 340/2004.
+ */
+@Entity
+@Table(name = &quot;bank_reconciliation&quot;)
+public class BankReconciliation extends BaseEntity {
+
+<span class="nc" id="L20">    public enum Status {</span>
+<span class="nc" id="L21">        IN_PROGRESS, COMPLETED, CANCELLED</span>
+    }
+
+    @Column(name = &quot;bank_account_id&quot;, nullable = false)
+    private Long bankAccountId;
+
+    @Column(name = &quot;reconciliation_number&quot;, nullable = false, unique = true, length = 50)
+    private String reconciliationNumber;
+
+    @Column(name = &quot;statement_date&quot;, nullable = false)
+    private LocalDate statementDate;
+
+    @Column(name = &quot;bank_balance&quot;, nullable = false, precision = 19, scale = 4)
+    private BigDecimal bankBalance;
+
+    @Column(name = &quot;system_balance&quot;, nullable = false, precision = 19, scale = 4)
+    private BigDecimal systemBalance;
+
+    @Column(name = &quot;reconciled_balance&quot;, precision = 19, scale = 4)
+    private BigDecimal reconciledBalance;
+
+<span class="nc" id="L42">    @Enumerated(EnumType.STRING)</span>
+    @Column(nullable = false)
+    private Status status = Status.IN_PROGRESS;
+
+    @Column(name = &quot;completed_at&quot;)
+    private LocalDateTime completedAt;
+
+    @Column(name = &quot;completed_by&quot;, length = 100)
+    private String completedBy;
+
+    @OneToMany(mappedBy = &quot;reconciliation&quot;, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List&lt;ReconciliationItem&gt; bankItems = new ArrayList&lt;&gt;();
+
+    @OneToMany(mappedBy = &quot;reconciliation&quot;, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List&lt;ReconciliationItem&gt; systemItems = new ArrayList&lt;&gt;();
+
+    public BankReconciliation() {
+<span class="nc" id="L59">        super();</span>
+<span class="nc" id="L60">        this.status = Status.IN_PROGRESS;</span>
+<span class="nc" id="L61">    }</span>
+
+<span class="nc" id="L63">    public Long getBankAccountId() { return bankAccountId; }</span>
+<span class="nc" id="L64">    public void setBankAccountId(Long bankAccountId) { this.bankAccountId = bankAccountId; }</span>
+<span class="nc" id="L65">    public String getReconciliationNumber() { return reconciliationNumber; }</span>
+<span class="nc" id="L66">    public void setReconciliationNumber(String reconciliationNumber) { this.reconciliationNumber = reconciliationNumber; }</span>
+<span class="nc" id="L67">    public LocalDate getStatementDate() { return statementDate; }</span>
+<span class="nc" id="L68">    public void setStatementDate(LocalDate statementDate) { this.statementDate = statementDate; }</span>
+<span class="nc" id="L69">    public BigDecimal getBankBalance() { return bankBalance; }</span>
+<span class="nc" id="L70">    public void setBankBalance(BigDecimal bankBalance) { this.bankBalance = bankBalance; }</span>
+<span class="nc" id="L71">    public BigDecimal getSystemBalance() { return systemBalance; }</span>
+<span class="nc" id="L72">    public void setSystemBalance(BigDecimal systemBalance) { this.systemBalance = systemBalance; }</span>
+<span class="nc" id="L73">    public BigDecimal getReconciledBalance() { return reconciledBalance; }</span>
+<span class="nc" id="L74">    public void setReconciledBalance(BigDecimal reconciledBalance) { this.reconciledBalance = reconciledBalance; }</span>
+<span class="nc" id="L75">    public Status getStatus() { return status; }</span>
+<span class="nc" id="L76">    public void setStatus(Status status) { this.status = status; }</span>
+<span class="nc" id="L77">    public LocalDateTime getCompletedAt() { return completedAt; }</span>
+<span class="nc" id="L78">    public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }</span>
+<span class="nc" id="L79">    public String getCompletedBy() { return completedBy; }</span>
+<span class="nc" id="L80">    public void setCompletedBy(String completedBy) { this.completedBy = completedBy; }</span>
+<span class="nc" id="L81">    public List&lt;ReconciliationItem&gt; getBankItems() { return bankItems; }</span>
+<span class="nc" id="L82">    public void setBankItems(List&lt;ReconciliationItem&gt; bankItems) { this.bankItems = bankItems; }</span>
+<span class="nc" id="L83">    public List&lt;ReconciliationItem&gt; getSystemItems() { return systemItems; }</span>
+<span class="nc" id="L84">    public void setSystemItems(List&lt;ReconciliationItem&gt; systemItems) { this.systemItems = systemItems; }</span>
+
+    public void addBankItem(ReconciliationItem item) {
+<span class="nc" id="L87">        item.setReconciliation(this);</span>
+<span class="nc" id="L88">        item.setOriginType(ReconciliationItem.OriginType.BANK);</span>
+<span class="nc" id="L89">        this.bankItems.add(item);</span>
+<span class="nc" id="L90">    }</span>
+
+    public void addSystemItem(ReconciliationItem item) {
+<span class="nc" id="L93">        item.setReconciliation(this);</span>
+<span class="nc" id="L94">        item.setOriginType(ReconciliationItem.OriginType.SYSTEM);</span>
+<span class="nc" id="L95">        this.systemItems.add(item);</span>
+<span class="nc" id="L96">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

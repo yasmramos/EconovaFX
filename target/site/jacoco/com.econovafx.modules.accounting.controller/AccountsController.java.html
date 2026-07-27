@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.accounting.controller</a> &gt; <span class="el_source">AccountsController.java</span></div><h1>AccountsController.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.accounting.controller;
+
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
+import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.core.ui.view.ViewFactory;
+import io.avaje.inject.Component;
+import jakarta.inject.Inject;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+/**
+ * Accounts controller
+ */
+public class AccountsController implements Initializable {
+    
+<span class="nc" id="L29">    private static final Logger logger = LoggerFactory.getLogger(AccountsController.class);</span>
+    
+    private final AccountService accountService;
+    private final ViewFactory viewFactory;
+    
+    @FXML
+    private TextField searchField;
+    
+    @FXML
+    private ListView&lt;AccountType&gt; accountTypeList;
+    
+    @FXML
+    private TableView&lt;Account&gt; accountsTable;
+    
+    @FXML
+    private TableColumn&lt;Account, String&gt; colCode;
+    
+    @FXML
+    private TableColumn&lt;Account, String&gt; colName;
+    
+    @FXML
+    private TableColumn&lt;Account, AccountType&gt; colType;
+    
+    @FXML
+    private TableColumn&lt;Account, BigDecimal&gt; colBalance;
+    
+    @FXML
+    private TableColumn&lt;Account, Account&gt; colParent;
+    
+    @FXML
+    private TableColumn&lt;Account, String&gt; colDescription;
+    
+<span class="nc" id="L61">    public AccountsController(AccountService accountService, ViewFactory viewFactory) {</span>
+<span class="nc" id="L62">        this.accountService = accountService;</span>
+<span class="nc" id="L63">        this.viewFactory = viewFactory;</span>
+<span class="nc" id="L64">    }</span>
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L68">        logger.info(&quot;AccountsController initialized&quot;);</span>
+<span class="nc" id="L69">        initializeTableColumns();</span>
+<span class="nc" id="L70">        initializeAccountTypeList();</span>
+<span class="nc" id="L71">        loadAccounts();</span>
+<span class="nc" id="L72">    }</span>
+    
+    private void initializeTableColumns() {
+<span class="nc" id="L75">        colCode.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;code&quot;));</span>
+<span class="nc" id="L76">        colName.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;name&quot;));</span>
+<span class="nc" id="L77">        colType.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;type&quot;));</span>
+<span class="nc" id="L78">        colBalance.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;balance&quot;));</span>
+<span class="nc" id="L79">        colParent.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;parentAccount&quot;));</span>
+<span class="nc" id="L80">        colDescription.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;description&quot;));</span>
+        
+<span class="nc" id="L82">        colType.setCellFactory(column -&gt; new TableCell&lt;&gt;() {</span>
+            @Override
+            protected void updateItem(AccountType item, boolean empty) {
+<span class="nc" id="L85">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L86" title="All 4 branches missed.">                if (empty || item == null) {</span>
+<span class="nc" id="L87">                    setText(null);</span>
+                } else {
+<span class="nc" id="L89">                    setText(item.getDisplayName());</span>
+                }
+<span class="nc" id="L91">            }</span>
+        });
+        
+<span class="nc" id="L94">        colParent.setCellFactory(column -&gt; new TableCell&lt;&gt;() {</span>
+            @Override
+            protected void updateItem(Account item, boolean empty) {
+<span class="nc" id="L97">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L98" title="All 4 branches missed.">                if (empty || item == null) {</span>
+<span class="nc" id="L99">                    setText(null);</span>
+                } else {
+<span class="nc" id="L101">                    setText(item.getName());</span>
+                }
+<span class="nc" id="L103">            }</span>
+        });
+<span class="nc" id="L105">    }</span>
+    
+    private void initializeAccountTypeList() {
+<span class="nc" id="L108">        ObservableList&lt;AccountType&gt; accountTypes = FXCollections.observableArrayList(AccountType.values());</span>
+<span class="nc" id="L109">        accountTypeList.setItems(accountTypes);</span>
+        
+<span class="nc" id="L111">        accountTypeList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -&gt; {</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (newVal != null) {</span>
+<span class="nc" id="L113">                filterByType(newVal);</span>
+            }
+<span class="nc" id="L115">        });</span>
+<span class="nc" id="L116">    }</span>
+    
+    private void loadAccounts() {
+<span class="nc" id="L119">        List&lt;Account&gt; accounts = accountService.getAllAccounts();</span>
+<span class="nc" id="L120">        ObservableList&lt;Account&gt; observableAccounts = FXCollections.observableArrayList(accounts);</span>
+<span class="nc" id="L121">        accountsTable.setItems(observableAccounts);</span>
+<span class="nc" id="L122">    }</span>
+    
+    private void filterByType(AccountType type) {
+<span class="nc" id="L125">        List&lt;Account&gt; accounts = accountService.getAccountsByType(type);</span>
+<span class="nc" id="L126">        ObservableList&lt;Account&gt; observableAccounts = FXCollections.observableArrayList(accounts);</span>
+<span class="nc" id="L127">        accountsTable.setItems(observableAccounts);</span>
+<span class="nc" id="L128">    }</span>
+    
+    @FXML
+    private void searchAccounts() {
+<span class="nc" id="L132">        String searchTerm = searchField.getText();</span>
+<span class="nc bnc" id="L133" title="All 4 branches missed.">        if (searchTerm != null &amp;&amp; !searchTerm.trim().isEmpty()) {</span>
+<span class="nc" id="L134">            List&lt;Account&gt; accounts = accountService.searchAccounts(searchTerm.trim());</span>
+<span class="nc" id="L135">            ObservableList&lt;Account&gt; observableAccounts = FXCollections.observableArrayList(accounts);</span>
+<span class="nc" id="L136">            accountsTable.setItems(observableAccounts);</span>
+<span class="nc" id="L137">        } else {</span>
+<span class="nc" id="L138">            loadAccounts();</span>
+        }
+<span class="nc" id="L140">    }</span>
+    
+    @FXML
+    private void newAccount() {
+<span class="nc" id="L144">        logger.debug(&quot;New account clicked&quot;);</span>
+<span class="nc" id="L145">        Optional&lt;Account&gt; result = viewFactory.showAccountFormDialog(null);</span>
+<span class="nc" id="L146">        result.ifPresent(account -&gt; {</span>
+<span class="nc" id="L147">            accountService.createAccount(account);</span>
+<span class="nc" id="L148">            loadAccounts();</span>
+<span class="nc" id="L149">            showAlert(Alert.AlertType.INFORMATION, &quot;Éxito&quot;, &quot;Cuenta creada correctamente&quot;);</span>
+<span class="nc" id="L150">        });</span>
+<span class="nc" id="L151">    }</span>
+    
+    @FXML
+    private void editAccount() {
+<span class="nc" id="L155">        Account selected = accountsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L157">            showAlert(Alert.AlertType.WARNING, &quot;Selección requerida&quot;, </span>
+                    &quot;Por favor seleccione una cuenta para editar&quot;);
+<span class="nc" id="L159">            return;</span>
+        }
+        
+<span class="nc" id="L162">        logger.debug(&quot;Edit account: {}&quot;, selected.getCode());</span>
+<span class="nc" id="L163">        Optional&lt;Account&gt; result = viewFactory.showAccountFormDialog(selected);</span>
+<span class="nc" id="L164">        result.ifPresent(account -&gt; {</span>
+<span class="nc" id="L165">            accountService.updateAccount(account);</span>
+<span class="nc" id="L166">            loadAccounts();</span>
+<span class="nc" id="L167">            showAlert(Alert.AlertType.INFORMATION, &quot;Éxito&quot;, &quot;Cuenta actualizada correctamente&quot;);</span>
+<span class="nc" id="L168">        });</span>
+<span class="nc" id="L169">    }</span>
+    
+    @FXML
+    private void deleteAccount() {
+<span class="nc" id="L173">        Account selected = accountsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L175">            showAlert(Alert.AlertType.WARNING, &quot;Selección requerida&quot;, </span>
+                    &quot;Por favor seleccione una cuenta para eliminar&quot;);
+<span class="nc" id="L177">            return;</span>
+        }
+        
+<span class="nc" id="L180">        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);</span>
+<span class="nc" id="L181">        alert.setTitle(&quot;Confirmar Eliminación&quot;);</span>
+<span class="nc" id="L182">        alert.setHeaderText(&quot;¿Está seguro de eliminar esta cuenta?&quot;);</span>
+<span class="nc" id="L183">        alert.setContentText(&quot;Cuenta: &quot; + selected.getCode() + &quot; - &quot; + selected.getName());</span>
+        
+<span class="nc" id="L185">        Optional&lt;ButtonType&gt; result = alert.showAndWait();</span>
+<span class="nc bnc" id="L186" title="All 4 branches missed.">        if (result.isPresent() &amp;&amp; result.get() == ButtonType.OK) {</span>
+            try {
+<span class="nc" id="L188">                accountService.deleteAccount(selected.getId());</span>
+<span class="nc" id="L189">                loadAccounts();</span>
+<span class="nc" id="L190">                showAlert(Alert.AlertType.INFORMATION, &quot;Éxito&quot;, &quot;Cuenta eliminada correctamente&quot;);</span>
+<span class="nc" id="L191">            } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L192">                showAlert(Alert.AlertType.ERROR, &quot;Error&quot;, e.getMessage());</span>
+<span class="nc" id="L193">            }</span>
+        }
+<span class="nc" id="L195">    }</span>
+    
+    @FXML
+    private void viewTransactions() {
+<span class="nc" id="L199">        Account selected = accountsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L201">            showAlert(Alert.AlertType.WARNING, &quot;Selección requerida&quot;, </span>
+                    &quot;Por favor seleccione una cuenta para ver movimientos&quot;);
+<span class="nc" id="L203">            return;</span>
+        }
+        
+<span class="nc" id="L206">        logger.debug(&quot;View transactions for account: {}&quot;, selected.getCode());</span>
+<span class="nc" id="L207">        showAlert(Alert.AlertType.INFORMATION, &quot;Próximamente&quot;, </span>
+                &quot;Vista de movimientos de cuenta en desarrollo&quot;);
+<span class="nc" id="L209">    }</span>
+    
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+<span class="nc" id="L212">        Alert alert = new Alert(alertType);</span>
+<span class="nc" id="L213">        alert.setTitle(title);</span>
+<span class="nc" id="L214">        alert.setHeaderText(null);</span>
+<span class="nc" id="L215">        alert.setContentText(message);</span>
+<span class="nc" id="L216">        alert.showAndWait();</span>
+<span class="nc" id="L217">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

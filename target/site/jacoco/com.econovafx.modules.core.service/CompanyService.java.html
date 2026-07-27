@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompanyService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.service</a> &gt; <span class="el_source">CompanyService.java</span></div><h1>CompanyService.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.core.service;</span>
+
+import com.econovafx.modules.core.config.DatabaseConfig;
+import com.econovafx.modules.core.config.TenantContext;
+import com.econovafx.modules.core.model.Company;
+import com.econovafx.modules.core.repository.CompanyRepository;
+import io.ebean.annotation.Transactional;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Servicio para la gestión de empresas en el sistema multi-tenant.
+ */
+@Singleton
+<span class="nc" id="L20">public class CompanyService {</span>
+
+<span class="nc" id="L22">    private static final Logger logger = LoggerFactory.getLogger(CompanyService.class);</span>
+
+    @Inject
+    public CompanyRepository companyRepository;
+
+    /**
+     * Obtiene todas las empresas activas.
+     */
+    public List&lt;Company&gt; findAllActive() {
+<span class="nc" id="L31">        return companyRepository.findAllActive();</span>
+    }
+
+    /**
+     * Obtiene todas las empresas (activas e inactivas).
+     */
+    public List&lt;Company&gt; findAll() {
+<span class="nc" id="L38">        return companyRepository.findAll();</span>
+    }
+
+    /**
+     * Busca una empresa por su ID.
+     */
+    public Optional&lt;Company&gt; findById(Long id) {
+<span class="nc" id="L45">        return companyRepository.findById(id);</span>
+    }
+
+    /**
+     * Busca una empresa por su código.
+     */
+    public Optional&lt;Company&gt; findByCode(String code) {
+<span class="nc" id="L52">        return companyRepository.findByCode(code);</span>
+    }
+
+    /**
+     * Crea o actualiza una empresa.
+     * Si es nueva, genera automáticamente la URL de la base de datos.
+     */
+    @Transactional
+    public Company save(Company company) {
+        // Generar URL de BD si no existe
+<span class="nc bnc" id="L62" title="All 4 branches missed.">        if (company.getDatabaseUrl() == null || company.getDatabaseUrl().isEmpty()) {</span>
+<span class="nc" id="L63">            String dbUrl = generateDatabaseUrl(company.getCode());</span>
+<span class="nc" id="L64">            company.setDatabaseUrl(dbUrl);</span>
+        }
+
+<span class="nc" id="L67">        Company saved = companyRepository.save(company);</span>
+<span class="nc" id="L68">        logger.info(&quot;Empresa guardada: {} ({})&quot;, saved.getName(), saved.getCode());</span>
+<span class="nc" id="L69">        return saved;</span>
+    }
+
+    /**
+     * Elimina una empresa y cierra su conexión a la base de datos.
+     */
+    @Transactional
+    public void delete(Long companyId) {
+        // Cerrar conexión a la BD del tenant
+<span class="nc" id="L78">        DatabaseConfig.closeTenantDataSource(companyId);</span>
+        
+        // Eliminar registro
+<span class="nc" id="L81">        companyRepository.deleteById(companyId);</span>
+<span class="nc" id="L82">        logger.info(&quot;Empresa eliminada: ID {}&quot;, companyId);</span>
+<span class="nc" id="L83">    }</span>
+
+    /**
+     * Cambia el estado de una empresa.
+     */
+    @Transactional
+    public void updateStatus(Long companyId, String status) {
+<span class="nc" id="L90">        companyRepository.updateStatus(companyId, status);</span>
+<span class="nc" id="L91">        logger.info(&quot;Estado de empresa actualizado: ID {} -&gt; {}&quot;, companyId, status);</span>
+<span class="nc" id="L92">    }</span>
+
+    /**
+     * Selecciona una empresa como tenant activo en el contexto actual.
+     * Esto configura la conexión a la base de datos específica de esa empresa.
+     */
+    public void selectTenant(Company company) {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (company == null) {</span>
+<span class="nc" id="L100">            TenantContext.clear();</span>
+<span class="nc" id="L101">            logger.info(&quot;Tenant context cleared&quot;);</span>
+<span class="nc" id="L102">            return;</span>
+        }
+
+        // Verificar que la empresa esté activa
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (!&quot;ACTIVE&quot;.equals(company.getStatus())) {</span>
+<span class="nc" id="L107">            throw new IllegalStateException(&quot;La empresa '&quot; + company.getName() + &quot;' no está activa&quot;);</span>
+        }
+
+        // Establecer en el contexto - Ebean automáticamente usará el DataSource correcto
+        // vía TenantDataSourceProvider cuando se realicen operaciones de base de datos
+<span class="nc" id="L112">        TenantContext.setCurrentTenant(company);</span>
+        
+<span class="nc" id="L114">        logger.info(&quot;Tenant seleccionado: {} ({})&quot;, company.getName(), company.getCode());</span>
+<span class="nc" id="L115">    }</span>
+
+    /**
+     * Obtiene la empresa actualmente seleccionada como tenant.
+     */
+    public Optional&lt;Company&gt; getCurrentTenant() {
+<span class="nc" id="L121">        return Optional.ofNullable(TenantContext.getCurrentTenant());</span>
+    }
+
+    /**
+     * Genera una URL de base de datos para una nueva empresa.
+     */
+    private String generateDatabaseUrl(String companyCode) {
+        // Para H2: jdbc:h2:./db/tenants/econova_{code}
+<span class="nc" id="L129">        return &quot;jdbc:h2:./db/tenants/econova_&quot; + companyCode.toLowerCase();</span>
+    }
+
+    /**
+     * Inicializa la empresa por defecto si no existe ninguna.
+     */
+    @Transactional
+    public void initializeDefaultCompany() {
+<span class="nc" id="L137">        List&lt;Company&gt; companies = companyRepository.findAll();</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (companies.isEmpty()) {</span>
+<span class="nc" id="L139">            logger.info(&quot;Creating default company...&quot;);</span>
+<span class="nc" id="L140">            Company defaultCompany = new Company(</span>
+                &quot;Empresa Demo&quot;,
+                &quot;DEMO&quot;,
+                &quot;000000000&quot;
+            );
+<span class="nc" id="L145">            defaultCompany.setAddress(&quot;Dirección Demo, Ciudad&quot;);</span>
+<span class="nc" id="L146">            defaultCompany.setPhone(&quot;+53 7 1234567&quot;);</span>
+<span class="nc" id="L147">            defaultCompany.setEmail(&quot;demo@econovafx.com&quot;);</span>
+<span class="nc" id="L148">            defaultCompany.setDatabaseUrl(generateDatabaseUrl(&quot;DEMO&quot;));</span>
+            
+<span class="nc" id="L150">            companyRepository.save(defaultCompany);</span>
+<span class="nc" id="L151">            logger.info(&quot;Default company created: {}&quot;, defaultCompany.getCode());</span>
+        }
+<span class="nc" id="L153">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

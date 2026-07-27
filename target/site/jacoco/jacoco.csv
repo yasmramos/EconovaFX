@@ -1,0 +1,212 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+EconoNova FX - Accounting System,com.econovafx.modules.fixedassets.repository,FixedAssetRepository,206,0,4,0,49,0,21,0,19,0
+EconoNova FX - Accounting System,com.econovafx.modules.fixedassets.repository,DepreciationRecordRepository,215,0,2,0,55,0,18,0,17,0
+EconoNova FX - Accounting System,com.econovafx.external.bc,TasaCambio,73,0,0,0,31,0,21,0,21,0
+EconoNova FX - Accounting System,com.econovafx.external.bc,TasasActivasResponse,24,0,0,0,10,0,7,0,7,0
+EconoNova FX - Accounting System,com.econovafx.modules.reporting.model,FinancialReport.ReportLine,102,0,0,0,22,0,14,0,14,0
+EconoNova FX - Accounting System,com.econovafx.modules.reporting.model,FinancialReport,131,0,0,0,20,0,17,0,17,0
+EconoNova FX - Accounting System,com.econovafx.modules.reporting.model,FinancialReport.ReportType,27,0,0,0,2,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.util,ModernDialog,495,0,30,0,114,0,27,0,12,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.util,NotificationService,259,0,10,0,59,0,17,0,12,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.model,InventoryCategory,125,0,2,0,25,0,17,0,16,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.model,Warehouse,133,0,0,0,26,0,17,0,17,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.model,InventoryItem,254,0,2,0,58,0,36,0,35,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.model,InventoryMovement.MovementType,27,0,0,0,5,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.model,InventoryMovement,212,0,6,0,46,0,31,0,28,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.model,ValuationMethod,28,0,0,0,7,0,3,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,SecurityUtil,543,0,90,0,128,0,78,0,33,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,RequiresRole.Logical,15,0,0,0,3,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,PermissionInterceptor,39,0,6,0,13,0,5,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,Permissions,802,0,10,0,156,0,11,0,6,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,RoleInterceptor,55,0,8,0,14,0,6,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,AuthorizationException,9,0,0,0,4,0,2,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,TenantValidationInterceptor,79,0,4,0,18,0,5,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,AuthService,55,0,10,0,15,0,9,0,4,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,AuthenticationInterceptor,14,0,2,0,5,0,3,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,PasswordService,24,0,4,0,7,0,5,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,RequiresPermission.Logical,15,0,0,0,3,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.security,Permission,62,0,6,0,16,0,11,0,8,0
+EconoNova FX - Accounting System,com.econovafx.modules.cash.repository,CashBoxRepository,93,0,4,0,20,0,10,0,8,0
+EconoNova FX - Accounting System,com.econovafx.modules.cash.repository,CashMovementRepository,138,0,14,0,21,0,19,0,12,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,Company,172,0,0,0,40,0,24,0,24,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,AuditLog.OperationType,0,123,0,0,0,21,0,1,0,1
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,User.UserRole,27,0,0,0,5,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,ReportDefinition,117,0,0,0,18,0,15,0,15,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,AuditLog,59,123,0,0,18,22,14,11,14,11
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,User,186,0,0,0,44,0,24,0,24,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,SystemConfiguration,494,0,0,0,126,0,69,0,69,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,ExchangeRate.RateType,27,0,0,0,5,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,ExchangeRate,207,0,4,0,46,0,26,0,24,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,ReportDefinition.ReportType,27,0,0,0,5,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,BaseEntity,59,56,0,0,24,7,15,4,15,4
+EconoNova FX - Accounting System,com.econovafx.modules.core.model,Currency,205,0,0,0,45,0,22,0,22,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,WarehouseConfigController.new TableCell() {...},35,0,8,0,7,0,6,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,ExchangeRatesController.new TableCell() {...},29,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,ExchangeRatesController.new TableCell() {...},29,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,ExchangeRatesController.new TableCell() {...},29,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,ExchangeRatesController.new TableCell() {...},29,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,WarehouseConfigController,979,0,78,0,212,0,63,0,24,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,ExchangeRatesController,417,0,8,0,93,0,32,0,28,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,AuditLogsController.new TableCell() {...},38,0,8,0,8,0,6,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,AuditLogsController.new TableCell() {...},49,0,2,0,13,0,4,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,SystemSettingsController,644,0,17,0,100,0,24,0,13,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,MainViewController,624,0,28,0,186,0,53,0,39,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,AuditLogsController,672,0,46,0,145,0,46,0,23,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,DashboardController.new TableCell() {...},35,0,8,0,8,0,6,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,DashboardController.new TimerTask() {...},23,0,0,0,8,0,3,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,DashboardController.new TableCell() {...},25,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,DashboardController.new TableCell() {...},25,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.controller,DashboardController,1400,0,91,0,319,0,92,0,44,0
+EconoNova FX - Accounting System,com.econovafx.modules.cash.service,CashMovementService,302,0,44,0,73,0,35,0,13,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,BCCExchangeRateClient.BCCRateDTO,33,0,0,0,6,0,6,0,6,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,BCCExchangeRateFetcher,491,0,92,0,117,0,64,0,11,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,ExportService,1144,0,66,0,212,0,40,0,7,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,ExchangeRateService,515,0,16,0,107,0,37,0,29,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,ExchangeRateScheduler,206,0,18,0,58,0,18,0,9,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,BCCExchangeRateClient,441,0,36,0,93,0,25,0,7,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,NotificationService,151,0,0,0,35,0,9,0,9,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,SystemConfigService,269,0,56,0,62,0,42,0,8,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,AuditService,156,181,10,2,28,33,17,7,12,6
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,BCCExchangeRateFetcher.BCCRate,21,0,0,0,1,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,CompanyService,223,0,10,0,42,0,18,0,13,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service,UserService,525,0,32,0,103,0,36,0,20,0
+EconoNova FX - Accounting System,com.econovafx.modules.fixedassets.model,FixedAssetCategory,157,0,0,0,26,0,23,0,23,0
+EconoNova FX - Accounting System,com.econovafx.modules.fixedassets.model,DepreciationRecord,162,0,0,0,26,0,23,0,23,0
+EconoNova FX - Accounting System,com.econovafx.modules.fixedassets.model,FixedAsset,231,0,0,0,39,0,35,0,35,0
+EconoNova FX - Accounting System,com.econovafx.modules.fixedassets.model,FixedAsset.AssetStatus,33,0,0,0,6,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.validation,AccountingValidator.ValidationResult,42,0,2,0,14,0,7,0,6,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.validation,AccountingValidator,497,0,80,0,101,0,48,0,8,0
+EconoNova FX - Accounting System,com.econovafx.modules.bank.model,BankReconciliation,200,0,0,0,38,0,27,0,27,0
+EconoNova FX - Accounting System,com.econovafx.modules.bank.model,BankAccount,151,0,0,0,35,0,19,0,19,0
+EconoNova FX - Accounting System,com.econovafx.modules.bank.model,ReconciliationItem,145,0,0,0,24,0,19,0,19,0
+EconoNova FX - Accounting System,com.econovafx.modules.bank.model,ReconciliationItem.OriginType,15,0,0,0,2,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.bank.model,BankReconciliation.Status,21,0,0,0,2,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.views,ExchangeRateView,964,0,40,0,180,0,44,0,24,0
+EconoNova FX - Accounting System,com.econovafx.modules.banking.model,BankReconciliation,137,0,0,0,21,0,19,0,19,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.controller,WarehouseConfigController,979,0,78,0,212,0,63,0,24,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.controller,WarehouseConfigController.new TableCell() {...},35,0,8,0,7,0,6,0,2,0
+EconoNova FX - Accounting System,com.econovafx.controller,ThirdPartyTransactionsController.new TableCell() {...},44,0,8,0,11,0,6,0,2,0
+EconoNova FX - Accounting System,com.econovafx.controller,ThirdPartyTransactionsController.new TableCell() {...},25,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.controller,ThirdPartyTransactionsController.new TableCell() {...},25,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.controller,ThirdPartyTransactionsController,477,0,38,0,118,0,45,0,26,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.exception,EntityNotFoundException,52,34,0,0,15,7,4,3,4,3
+EconoNova FX - Accounting System,com.econovafx.modules.core.exception,BusinessException,48,10,0,0,18,4,6,1,6,1
+EconoNova FX - Accounting System,com.econovafx.modules.core.exception,ValidationException,12,58,0,0,4,11,2,6,2,6
+EconoNova FX - Accounting System,com.econovafx.modules.core.exception,GlobalExceptionHandler,142,0,24,0,30,0,18,0,6,0
+EconoNova FX - Accounting System,com.econovafx.modules.bank.repository,BankAccountRepository,107,0,4,0,23,0,12,0,10,0
+EconoNova FX - Accounting System,com.econovafx.modules.bank.repository,BankReconciliationRepository,96,0,6,0,16,0,12,0,9,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.repository,TaxRateRepository,156,0,4,0,35,0,17,0,15,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.repository,SalesInvoiceRepository,191,0,2,0,47,0,19,0,18,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.repository,BillingSeriesRepository,177,0,4,0,46,0,18,0,16,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.repository,ThirdPartyRepository,232,0,2,0,48,0,22,0,21,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,FinancialStatementModel.ModelType,24,0,0,0,5,0,2,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,AccountingPeriod.PeriodType,21,0,0,0,4,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,ClosingEntry.ClosingType,27,0,0,0,2,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,AccountingPeriodStatus,21,0,0,0,4,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,Transaction,27,285,3,21,10,61,9,33,6,24
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,ExchangeDifference,228,0,0,0,38,0,35,0,35,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,TransactionEntry,19,118,0,0,5,25,3,12,3,12
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,ExchangeDifference.DifferenceType,21,0,0,0,4,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,FinancialStatementRow,175,0,0,0,31,0,23,0,23,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,AccountingPeriod.PeriodStatus,21,0,0,0,4,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,FinancialStatementRow.RowType,27,0,0,0,5,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,Account,67,93,2,0,24,11,17,5,16,5
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,ClosingEntry,104,0,0,0,15,0,13,0,13,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,AccountType,3,46,0,0,1,9,1,2,1,2
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,TransactionStatus,0,56,0,6,0,11,0,9,0,6
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,AccountingPeriod,218,0,10,0,47,0,30,0,25,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.model,FinancialStatementModel,91,0,0,0,12,0,11,0,11,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.repository,FinancialStatementRowRepository,79,0,0,0,23,0,10,0,10,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.repository,ExchangeDifferenceRepository,110,0,0,0,37,0,9,0,9,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.repository,TransactionRepository,249,10,0,0,65,4,21,2,21,2
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.repository,AccountRepository,209,10,4,0,45,4,20,2,18,2
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.repository,FinancialStatementModelRepository,75,0,0,0,17,0,10,0,10,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.repository,AccountingPeriodRepository,183,0,8,0,47,0,16,0,12,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.service,SequentialNumberService,261,0,12,0,45,0,18,0,12,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.service,ThirdPartyService,335,0,20,0,73,0,36,0,26,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.service,BillingService,598,0,44,0,139,0,40,0,18,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.controller,ThirdPartyFormController,574,0,53,0,134,0,45,0,18,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.controller,ThirdPartyFormController.new StringConverter() {...},42,0,6,0,6,0,6,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.controller,ThirdPartiesController.new TableCell() {...},35,0,8,0,7,0,6,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.controller,ThirdPartiesController.new TableCell() {...},149,0,6,0,28,0,11,0,8,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.controller,ThirdPartiesController.new TableCell() {...},25,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.controller,ThirdPartiesController,665,0,33,0,169,0,40,0,23,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.integration.bcc,BCCMCPClient,346,0,26,0,77,0,22,0,9,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.view,ViewFactory,731,0,16,0,167,0,44,0,36,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.ui.view,SplashController,128,0,2,0,44,0,11,0,10,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,TransactionEntryController,412,0,20,0,103,0,25,0,15,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,AccountFormController,242,0,14,0,63,0,17,0,10,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,AccountingPeriodsController,723,0,28,0,163,0,44,0,29,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,AccountingClosuresController,20,0,0,0,9,0,4,0,4,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,ComprobanteFormController.1.new StringConverter() {...},18,0,2,0,3,0,4,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,ComprobanteFormController,1151,0,78,0,256,0,97,0,58,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,ComprobanteFormController.EntryRow,116,0,8,0,30,0,22,0,18,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,AccountsController,333,0,16,0,92,0,26,0,18,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,AccountsController.new TableCell() {...},23,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,AccountsController.new TableCell() {...},23,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,ComprobantesController.new TableCell() {...},67,0,10,0,15,0,7,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,ComprobantesController.new TableCell() {...},95,0,2,0,21,0,5,0,4,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,TransactionsController,404,0,22,0,115,0,26,0,15,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,TransactionEntryController.new TableCell() {...},54,0,2,0,14,0,4,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,TransactionEntryController.new TableCell() {...},26,0,4,0,6,0,4,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,AccountingPeriodsController.new TableCell() {...},170,0,10,0,30,0,11,0,6,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,AccountFormController.new StringConverter() {...},18,0,2,0,3,0,4,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,AccountFormController.new StringConverter() {...},38,0,6,0,6,0,6,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,ComprobantesController.ComprobanteRow,99,0,0,0,25,0,16,0,16,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,TransactionsController.new TableCell() {...},35,0,8,0,7,0,6,0,2,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,TransactionEntryController.EntryRow,79,0,0,0,18,0,13,0,13,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,ComprobanteFormController.new TableCell() {...},166,0,16,0,38,0,13,0,5,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,ComprobanteFormController.new StringConverter() {...},21,0,4,0,5,0,5,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.controller,ComprobantesController,967,0,44,0,234,0,61,0,39,0
+EconoNova FX - Accounting System,com.econovafx.modules.cash.controller,CashBankController,629,0,18,0,164,0,72,0,63,0
+EconoNova FX - Accounting System,com.econovafx.modules.cash.controller,CashModuleController,603,0,4,0,159,0,64,0,62,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.service,AccountingPeriodService,532,0,48,0,106,0,42,0,18,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.service,FinancialStatementService,242,0,14,0,53,0,15,0,8,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.service,ExchangeDifferenceService,520,0,20,0,112,0,25,0,15,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.service,TransactionService.TransactionEntryData,0,27,0,0,0,10,0,5,0,5
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.service,AccountService,176,0,16,0,39,0,24,0,16,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.service,FinancialStatementService.FinancialStatementResult,38,0,0,0,11,0,11,0,11,0
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.service,TransactionService,16,677,8,36,3,142,8,41,1,26
+EconoNova FX - Accounting System,com.econovafx.modules.accounting.service,FinancialStatementService.StatementRowResult,45,0,0,0,13,0,13,0,13,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.repository,WarehouseRepository,132,0,2,0,46,0,14,0,13,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.repository,InventoryMovementRepository,254,0,2,0,90,0,16,0,15,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.repository,InventoryCategoryRepository,141,0,2,0,50,0,14,0,13,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.repository,InventoryItemRepository,215,0,4,0,76,0,19,0,17,0
+EconoNova FX - Accounting System,com.econovafx.modules.bank.service,BankReconciliationService,217,0,24,0,50,0,21,0,9,0
+EconoNova FX - Accounting System,com.econovafx.modules.bank.service,BankAccountService,89,0,14,0,18,0,15,0,8,0
+EconoNova FX - Accounting System,com.econovafx.core.service,AccountingReportService,532,0,20,0,98,0,15,0,5,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.config,TenantContext,37,0,4,0,10,0,9,0,7,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.config,DatabaseFactory,18,0,0,0,7,0,3,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.config,AppConfig,237,0,0,0,61,0,14,0,14,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.config,DataInitializer,586,0,10,0,181,0,11,0,6,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.config,DatabaseConfig,465,0,38,0,153,0,38,0,19,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.config,UserContext,76,0,14,0,19,0,15,0,8,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.config,SecurityModule,19,0,0,0,5,0,5,0,5,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.config,AppContext,396,0,4,0,62,0,21,0,19,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.model,SalesInvoice.InvoiceStatus,39,0,0,0,7,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.model,SalesInvoiceLine,204,0,0,0,35,0,29,0,29,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.model,ThirdParty.ThirdPartyType,21,0,0,0,4,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.model,TaxRate,129,0,0,0,20,0,17,0,17,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.model,SalesInvoice,252,0,0,0,46,0,36,0,36,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.model,BillingSeries,133,0,0,0,22,0,17,0,17,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.model,ThirdParty,228,0,0,0,57,0,33,0,33,0
+EconoNova FX - Accounting System,com.econovafx.modules.billing.model,BillingSeries.DocumentType,49,0,0,0,10,0,3,0,3,0
+EconoNova FX - Accounting System,com.econovafx.modules.inventory.service,InventoryService,968,0,101,0,214,0,89,0,38,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.service.backup,TenantBackupService,528,0,48,0,133,0,38,0,14,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.repository,ExchangeRateRepository,404,0,16,0,130,0,25,0,17,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.repository,AuditLogRepository,127,10,0,0,35,4,11,2,11,2
+EconoNova FX - Accounting System,com.econovafx.modules.core.repository,ReportDefinitionRepository,75,0,0,0,17,0,10,0,10,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.repository,UserRepository,142,0,2,0,31,0,17,0,16,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.repository,SystemConfigRepository,142,0,6,0,40,0,8,0,5,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.repository,CompanyRepository,163,0,6,0,37,0,15,0,12,0
+EconoNova FX - Accounting System,com.econovafx.modules.core.repository,CurrencyRepository,179,0,8,0,53,0,15,0,11,0
+EconoNova FX - Accounting System,com.econovafx.modules.fixedassets.service,DepreciationService,530,0,26,0,115,0,25,0,12,0
+EconoNova FX - Accounting System,com.econovafx.modules.security.model,Role,98,0,0,0,14,0,11,0,11,0
+EconoNova FX - Accounting System,com.econovafx.modules.cash.model,CashBox,129,0,0,0,23,0,15,0,15,0
+EconoNova FX - Accounting System,com.econovafx.modules.cash.model,CashMovement.Status,21,0,0,0,2,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.cash.model,CashMovement,217,0,0,0,38,0,31,0,31,0
+EconoNova FX - Accounting System,com.econovafx.modules.cash.model,CashMovement.MovementType,21,0,0,0,2,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx.modules.assets.model,FixedAsset,170,0,0,0,27,0,25,0,25,0
+EconoNova FX - Accounting System,com.econovafx.modules.assets.model,FixedAsset.DepreciationMethod,21,0,0,0,2,0,1,0,1,0
+EconoNova FX - Accounting System,com.econovafx,App,228,0,4,0,62,0,11,0,9,0
+EconoNova FX - Accounting System,com.econovafx,Launcher,6,0,0,0,3,0,2,0,2,0

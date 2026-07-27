@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryMovement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.inventory.model</a> &gt; <span class="el_source">InventoryMovement.java</span></div><h1>InventoryMovement.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.inventory.model;</span>
+
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.core.model.BaseEntity;
+import com.econovafx.modules.core.model.User;
+import io.ebean.annotation.WhenCreated;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+/**
+ * Entidad que representa un movimiento de inventario (entrada, salida, ajuste, transferencia).
+ * Cumple con los requisitos de trazabilidad según Resolución 340/2004.
+ */
+@Entity
+@Table(name = &quot;inventory_movements&quot;)
+<span class="nc" id="L18">public class InventoryMovement extends BaseEntity {</span>
+
+<span class="nc" id="L20">    public enum MovementType {</span>
+<span class="nc" id="L21">        ENTRY,        // Entrada por compra, producción o devolución</span>
+<span class="nc" id="L22">        OUTPUT,       // Salida por venta, consumo o merma</span>
+<span class="nc" id="L23">        ADJUSTMENT,   // Ajuste por inventario físico</span>
+<span class="nc" id="L24">        TRANSFER      // Transferencia entre almacenes</span>
+    }
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MovementType type;
+
+    @Column(nullable = false)
+    private String documentNumber;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;item_id&quot;, nullable = false)
+    private InventoryItem item;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;warehouse_id&quot;, nullable = false)
+    private Warehouse warehouse;
+
+<span class="nc" id="L42">    @Column(nullable = false, precision = 19, scale = 4)</span>
+    private BigDecimal quantity = BigDecimal.ZERO;
+
+<span class="nc" id="L45">    @Column(nullable = false, precision = 19, scale = 4)</span>
+    private BigDecimal unitCost = BigDecimal.ZERO;
+
+<span class="nc" id="L48">    @Column(precision = 19, scale = 4)</span>
+    private BigDecimal totalAmount = BigDecimal.ZERO;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;third_party_id&quot;)
+    private ThirdParty thirdParty;
+
+    @Column(length = 500)
+    private String notes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;transaction_id&quot;)
+    private Transaction relatedTransaction;
+
+    @WhenCreated
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime movementDate;
+
+    // Getters y Setters
+    public Long getId() {
+<span class="nc" id="L68">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L72">        this.id = id;</span>
+<span class="nc" id="L73">    }</span>
+
+    public MovementType getType() {
+<span class="nc" id="L76">        return type;</span>
+    }
+
+    public void setType(MovementType type) {
+<span class="nc" id="L80">        this.type = type;</span>
+<span class="nc" id="L81">    }</span>
+
+    public String getDocumentNumber() {
+<span class="nc" id="L84">        return documentNumber;</span>
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+<span class="nc" id="L88">        this.documentNumber = documentNumber;</span>
+<span class="nc" id="L89">    }</span>
+
+    public InventoryItem getItem() {
+<span class="nc" id="L92">        return item;</span>
+    }
+
+    public void setItem(InventoryItem item) {
+<span class="nc" id="L96">        this.item = item;</span>
+<span class="nc" id="L97">    }</span>
+
+    public Warehouse getWarehouse() {
+<span class="nc" id="L100">        return warehouse;</span>
+    }
+
+    public void setWarehouse(Warehouse warehouse) {
+<span class="nc" id="L104">        this.warehouse = warehouse;</span>
+<span class="nc" id="L105">    }</span>
+
+    public BigDecimal getQuantity() {
+<span class="nc" id="L108">        return quantity;</span>
+    }
+
+    public void setQuantity(BigDecimal quantity) {
+<span class="nc" id="L112">        this.quantity = quantity;</span>
+<span class="nc" id="L113">    }</span>
+
+    public BigDecimal getUnitCost() {
+<span class="nc" id="L116">        return unitCost;</span>
+    }
+
+    public void setUnitCost(BigDecimal unitCost) {
+<span class="nc" id="L120">        this.unitCost = unitCost;</span>
+<span class="nc" id="L121">    }</span>
+
+    public BigDecimal getTotalAmount() {
+<span class="nc" id="L124">        return totalAmount;</span>
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+<span class="nc" id="L128">        this.totalAmount = totalAmount;</span>
+<span class="nc" id="L129">    }</span>
+
+    public ThirdParty getThirdParty() {
+<span class="nc" id="L132">        return thirdParty;</span>
+    }
+
+    public void setThirdParty(ThirdParty thirdParty) {
+<span class="nc" id="L136">        this.thirdParty = thirdParty;</span>
+<span class="nc" id="L137">    }</span>
+
+    public String getNotes() {
+<span class="nc" id="L140">        return notes;</span>
+    }
+
+    public void setNotes(String notes) {
+<span class="nc" id="L144">        this.notes = notes;</span>
+<span class="nc" id="L145">    }</span>
+
+    public Transaction getRelatedTransaction() {
+<span class="nc" id="L148">        return relatedTransaction;</span>
+    }
+
+    public void setRelatedTransaction(Transaction relatedTransaction) {
+<span class="nc" id="L152">        this.relatedTransaction = relatedTransaction;</span>
+<span class="nc" id="L153">    }</span>
+
+    public LocalDateTime getMovementDate() {
+<span class="nc" id="L156">        return movementDate;</span>
+    }
+
+    public void setMovementDate(LocalDateTime movementDate) {
+<span class="nc" id="L160">        this.movementDate = movementDate;</span>
+<span class="nc" id="L161">    }</span>
+
+    /**
+     * Calcula automáticamente el monto total si no está establecido.
+     */
+    public void calculateTotalAmount() {
+<span class="nc bnc" id="L167" title="All 4 branches missed.">        if (totalAmount == null || totalAmount.compareTo(BigDecimal.ZERO) == 0) {</span>
+<span class="nc" id="L168">            this.totalAmount = quantity.multiply(unitCost);</span>
+        }
+<span class="nc" id="L170">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L174">        return &quot;InventoryMovement{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, type=&quot; + type +
+                &quot;, documentNumber='&quot; + documentNumber + '\'' +
+<span class="nc bnc" id="L178" title="All 2 branches missed.">                &quot;, item=&quot; + (item != null ? item.getName() : &quot;null&quot;) +</span>
+                &quot;, quantity=&quot; + quantity +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

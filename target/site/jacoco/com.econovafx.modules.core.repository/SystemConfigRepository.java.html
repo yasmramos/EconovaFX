@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SystemConfigRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.repository</a> &gt; <span class="el_source">SystemConfigRepository.java</span></div><h1>SystemConfigRepository.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.repository;
+
+import com.econovafx.modules.core.model.SystemConfiguration;
+import io.avaje.inject.Component;
+import io.ebean.Database;
+import io.ebean.ExpressionList;
+
+import java.util.Optional;
+
+/**
+ * Repositorio para gestión de configuración del sistema.
+ */
+@Component
+public class SystemConfigRepository {
+
+    private final Database database;
+
+<span class="nc" id="L18">    public SystemConfigRepository(Database database) {</span>
+<span class="nc" id="L19">        this.database = database;</span>
+<span class="nc" id="L20">    }</span>
+
+    /**
+     * Obtiene la configuración actual del sistema.
+     * Solo debe existir un registro de configuración.
+     */
+    public Optional&lt;SystemConfiguration&gt; getCurrent() {
+<span class="nc" id="L27">        return database.find(SystemConfiguration.class).findOneOrEmpty();</span>
+    }
+
+    /**
+     * Guarda o actualiza la configuración del sistema.
+     */
+    public SystemConfiguration save(SystemConfiguration config) {
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (config.getId() == null) {</span>
+            // Verificar si ya existe una configuración
+<span class="nc" id="L36">            Optional&lt;SystemConfiguration&gt; existing = getCurrent();</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">            if (existing.isPresent()) {</span>
+                // Actualizar la existente
+<span class="nc" id="L39">                config.setId(existing.get().getId());</span>
+            }
+        }
+<span class="nc" id="L42">        database.save(config);</span>
+<span class="nc" id="L43">        return config;</span>
+    }
+
+    /**
+     * Inicializa la configuración con valores por defecto si no existe.
+     */
+    public SystemConfiguration initializeDefaults() {
+<span class="nc" id="L50">        Optional&lt;SystemConfiguration&gt; existing = getCurrent();</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (existing.isPresent()) {</span>
+<span class="nc" id="L52">            return existing.get();</span>
+        }
+
+<span class="nc" id="L55">        SystemConfiguration defaults = new SystemConfiguration();</span>
+<span class="nc" id="L56">        defaults.setEntityName(&quot;Entidad Demo&quot;);</span>
+<span class="nc" id="L57">        defaults.setBaseCurrency(&quot;CUP&quot;);</span>
+<span class="nc" id="L58">        defaults.setAccountingPlan(&quot;Normalizado&quot;);</span>
+<span class="nc" id="L59">        defaults.setFiscalYearStartMonth(1);</span>
+<span class="nc" id="L60">        defaults.setFiscalYearEndMonth(12);</span>
+<span class="nc" id="L61">        defaults.setRegimeType(&quot;MONO&quot;);</span>
+<span class="nc" id="L62">        defaults.setPasswordMinLength(6);</span>
+<span class="nc" id="L63">        defaults.setPasswordRequireUppercase(false);</span>
+<span class="nc" id="L64">        defaults.setPasswordRequireNumbers(false);</span>
+<span class="nc" id="L65">        defaults.setPasswordExpirationDays(90);</span>
+<span class="nc" id="L66">        defaults.setMaxLoginAttempts(5);</span>
+<span class="nc" id="L67">        defaults.setSessionTimeoutMinutes(30);</span>
+<span class="nc" id="L68">        defaults.setAuditEnabled(true);</span>
+<span class="nc" id="L69">        defaults.setAuditRetentionYears(5);</span>
+<span class="nc" id="L70">        defaults.setAuditLogChanges(true);</span>
+<span class="nc" id="L71">        defaults.setIncludeEntityLogo(true);</span>
+<span class="nc" id="L72">        defaults.setAutoBackupEnabled(false);</span>
+<span class="nc" id="L73">        defaults.setBackupFrequencyDays(7);</span>
+<span class="nc" id="L74">        defaults.setAllowNegativeInventory(false);</span>
+<span class="nc" id="L75">        defaults.setInventoryValuationMethod(&quot;PROMEDIO_PONDERADO&quot;);</span>
+<span class="nc" id="L76">        defaults.setDecimalPrecision(2);</span>
+<span class="nc" id="L77">        defaults.setTimeZone(&quot;America/Havana&quot;);</span>
+<span class="nc" id="L78">        defaults.setLocale(&quot;es_CU&quot;);</span>
+
+<span class="nc" id="L80">        database.save(defaults);</span>
+<span class="nc" id="L81">        return defaults;</span>
+    }
+
+    /**
+     * Verifica si la configuración ha sido inicializada.
+     */
+    public boolean isInitialized() {
+<span class="nc" id="L88">        return getCurrent().isPresent();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

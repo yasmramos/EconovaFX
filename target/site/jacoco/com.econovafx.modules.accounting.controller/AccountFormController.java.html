@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountFormController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.accounting.controller</a> &gt; <span class="el_source">AccountFormController.java</span></div><h1>AccountFormController.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.accounting.controller;
+
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
+import com.econovafx.modules.accounting.service.AccountService;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
+/**
+ * Account form controller
+ */
+public class AccountFormController implements Initializable {
+    
+<span class="nc" id="L25">    private static final Logger logger = LoggerFactory.getLogger(AccountFormController.class);</span>
+    
+    private final AccountService accountService;
+    
+    @FXML
+    private Label titleLabel;
+    
+    @FXML
+    private TextField codeField;
+    
+    @FXML
+    private TextField nameField;
+    
+    @FXML
+    private ComboBox&lt;AccountType&gt; typeComboBox;
+    
+    @FXML
+    private ComboBox&lt;Account&gt; parentAccountComboBox;
+    
+    @FXML
+    private TextField balanceField;
+    
+    @FXML
+    private TextArea descriptionArea;
+    
+    private Account editingAccount;
+<span class="nc" id="L51">    private boolean saved = false;</span>
+    
+<span class="nc" id="L53">    public AccountFormController(AccountService accountService) {</span>
+<span class="nc" id="L54">        this.accountService = accountService;</span>
+<span class="nc" id="L55">    }</span>
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L59">        logger.info(&quot;AccountFormController initialized&quot;);</span>
+<span class="nc" id="L60">        initializeComboBoxes();</span>
+<span class="nc" id="L61">    }</span>
+    
+    private void initializeComboBoxes() {
+<span class="nc" id="L64">        typeComboBox.setItems(FXCollections.observableArrayList(AccountType.values()));</span>
+<span class="nc" id="L65">        typeComboBox.setConverter(new StringConverter&lt;AccountType&gt;() {</span>
+            @Override
+            public String toString(AccountType type) {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                return type != null ? type.getDisplayName() : &quot;&quot;;</span>
+            }
+            
+            @Override
+            public AccountType fromString(String string) {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">                for (AccountType type : AccountType.values()) {</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                    if (type.getDisplayName().equals(string)) {</span>
+<span class="nc" id="L75">                        return type;</span>
+                    }
+                }
+<span class="nc" id="L78">                return null;</span>
+            }
+        });
+        
+<span class="nc" id="L82">        typeComboBox.setValue(AccountType.ASSET);</span>
+        
+<span class="nc" id="L84">        List&lt;Account&gt; accounts = accountService.getAllAccounts();</span>
+<span class="nc" id="L85">        parentAccountComboBox.setItems(FXCollections.observableArrayList(accounts));</span>
+<span class="nc" id="L86">        parentAccountComboBox.setConverter(new StringConverter&lt;Account&gt;() {</span>
+            @Override
+            public String toString(Account account) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                return account != null ? account.getCode() + &quot; - &quot; + account.getName() : &quot;&quot;;</span>
+            }
+            
+            @Override
+            public Account fromString(String string) {
+<span class="nc" id="L94">                return null;</span>
+            }
+        });
+<span class="nc" id="L97">    }</span>
+    
+    public void setEditingAccount(Account account) {
+<span class="nc" id="L100">        this.editingAccount = account;</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        if (account != null) {</span>
+<span class="nc" id="L102">            titleLabel.setText(&quot;Editar Cuenta&quot;);</span>
+<span class="nc" id="L103">            codeField.setText(account.getCode());</span>
+<span class="nc" id="L104">            nameField.setText(account.getName());</span>
+<span class="nc" id="L105">            typeComboBox.setValue(account.getType());</span>
+<span class="nc" id="L106">            parentAccountComboBox.setValue(account.getParentAccount());</span>
+<span class="nc" id="L107">            balanceField.setText(account.getBalance().toPlainString());</span>
+<span class="nc" id="L108">            descriptionArea.setText(account.getDescription());</span>
+        } else {
+<span class="nc" id="L110">            titleLabel.setText(&quot;Nueva Cuenta&quot;);</span>
+        }
+<span class="nc" id="L112">    }</span>
+    
+    public Account getResult() {
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        return saved ? editingAccount : null;</span>
+    }
+    
+    @FXML
+    private void save() {
+        try {
+<span class="nc" id="L121">            String code = codeField.getText().trim();</span>
+<span class="nc" id="L122">            String name = nameField.getText().trim();</span>
+<span class="nc" id="L123">            AccountType type = typeComboBox.getValue();</span>
+<span class="nc" id="L124">            Account parent = parentAccountComboBox.getValue();</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">            BigDecimal balance = balanceField.getText().trim().isEmpty() ? </span>
+<span class="nc" id="L126">                    BigDecimal.ZERO : new BigDecimal(balanceField.getText().trim());</span>
+<span class="nc" id="L127">            String description = descriptionArea.getText().trim();</span>
+            
+<span class="nc bnc" id="L129" title="All 6 branches missed.">            if (code.isEmpty() || name.isEmpty() || type == null) {</span>
+<span class="nc" id="L130">                showAlert(Alert.AlertType.ERROR, &quot;Validación&quot;, </span>
+                        &quot;Por favor complete los campos requeridos&quot;);
+<span class="nc" id="L132">                return;</span>
+            }
+            
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (editingAccount == null) {</span>
+<span class="nc" id="L136">                editingAccount = new Account(code, name, type);</span>
+            }
+            
+<span class="nc" id="L139">            editingAccount.setCode(code);</span>
+<span class="nc" id="L140">            editingAccount.setName(name);</span>
+<span class="nc" id="L141">            editingAccount.setType(type);</span>
+<span class="nc" id="L142">            editingAccount.setParentAccount(parent);</span>
+<span class="nc" id="L143">            editingAccount.setBalance(balance);</span>
+<span class="nc" id="L144">            editingAccount.setDescription(description);</span>
+            
+<span class="nc" id="L146">            saved = true;</span>
+<span class="nc" id="L147">            closeDialog();</span>
+            
+<span class="nc" id="L149">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L150">            showAlert(Alert.AlertType.ERROR, &quot;Error&quot;, </span>
+                    &quot;Formato de saldo inválido. Use números decimales.&quot;);
+<span class="nc" id="L152">        }</span>
+<span class="nc" id="L153">    }</span>
+    
+    @FXML
+    private void cancel() {
+<span class="nc" id="L157">        saved = false;</span>
+<span class="nc" id="L158">        closeDialog();</span>
+<span class="nc" id="L159">    }</span>
+    
+    private void closeDialog() {
+<span class="nc" id="L162">        Stage stage = (Stage) titleLabel.getScene().getWindow();</span>
+<span class="nc" id="L163">        stage.close();</span>
+<span class="nc" id="L164">    }</span>
+    
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+<span class="nc" id="L167">        Alert alert = new Alert(alertType);</span>
+<span class="nc" id="L168">        alert.setTitle(title);</span>
+<span class="nc" id="L169">        alert.setHeaderText(null);</span>
+<span class="nc" id="L170">        alert.setContentText(message);</span>
+<span class="nc" id="L171">        alert.showAndWait();</span>
+<span class="nc" id="L172">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

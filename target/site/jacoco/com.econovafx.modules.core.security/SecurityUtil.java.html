@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.security</a> &gt; <span class="el_source">SecurityUtil.java</span></div><h1>SecurityUtil.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.security;
+
+import com.econovafx.modules.core.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+
+/**
+ * Utility class for verifying user permissions in the system.
+ * Provides methods to validate access to specific operations.
+ * Supports static context for use in interceptors (similar to Apache Shiro).
+ */
+<span class="nc" id="L15">public class SecurityUtil {</span>
+    
+<span class="nc" id="L17">    private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);</span>
+    
+    /**
+     * ThreadLocal holder for the current authenticated user.
+     * This allows static access to the current user in interceptors.
+     */
+<span class="nc" id="L23">    private static final ThreadLocal&lt;User&gt; currentUserHolder = new ThreadLocal&lt;&gt;();</span>
+    
+    /**
+     * Sets the current authenticated user in the thread context.
+     * Call this after successful login.
+     * @param user The authenticated user
+     */
+    public static void setCurrentUser(User user) {
+<span class="nc" id="L31">        currentUserHolder.set(user);</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        logger.debug(&quot;Current user set: {}&quot;, user != null ? user.getUsername() : &quot;null&quot;);</span>
+<span class="nc" id="L33">    }</span>
+    
+    /**
+     * Gets the current authenticated user from the thread context.
+     * @return The current user, or null if not authenticated
+     */
+    public static User getCurrentUser() {
+<span class="nc" id="L40">        return currentUserHolder.get();</span>
+    }
+    
+    /**
+     * Clears the current user from the thread context.
+     * Call this on logout or at the end of a request.
+     */
+    public static void clearCurrentUser() {
+<span class="nc" id="L48">        currentUserHolder.remove();</span>
+<span class="nc" id="L49">        logger.debug(&quot;Current user cleared&quot;);</span>
+<span class="nc" id="L50">    }</span>
+    
+    /**
+     * Checks if a user is currently authenticated.
+     * @return true if a user is set in the current thread context
+     */
+    public static boolean isAuthenticated() {
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        return currentUserHolder.get() != null;</span>
+    }
+    
+    /**
+     * Verifies if a user has a specific permission
+     * @param user User to verify
+     * @param permissionCode Permission code
+     * @return true if the user has the permission, false otherwise
+     */
+    public static boolean hasPermission(User user, String permissionCode) {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L68">            logger.warn(&quot;Attempt to verify permission with null user: {}&quot;, permissionCode);</span>
+<span class="nc" id="L69">            return false;</span>
+        }
+        
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (user.getRole() == null) {</span>
+<span class="nc" id="L73">            logger.warn(&quot;User without defined role: {}&quot;, user.getUsername());</span>
+<span class="nc" id="L74">            return false;</span>
+        }
+        
+<span class="nc" id="L77">        boolean hasPermission = Permissions.hasPermission(user.getRole().name(), permissionCode);</span>
+        
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (!hasPermission) {</span>
+<span class="nc" id="L80">            logger.warn(&quot;User {} does not have permission {}: role={}&quot;, </span>
+<span class="nc" id="L81">                       user.getUsername(), permissionCode, user.getRole());</span>
+        }
+        
+<span class="nc" id="L84">        return hasPermission;</span>
+    }
+    
+    /**
+     * Verifies if the current authenticated user has a specific permission.
+     * Uses the ThreadLocal user context.
+     * @param permissionCode Permission code
+     * @return true if the current user has the permission, false otherwise
+     */
+    public static boolean hasPermission(String permissionCode) {
+<span class="nc" id="L94">        User user = getCurrentUser();</span>
+<span class="nc" id="L95">        return hasPermission(user, permissionCode);</span>
+    }
+    
+    /**
+     * Verifies if a user has all permissions from a list
+     * @param user User to verify
+     * @param permissionCodes Codes of required permissions
+     * @return true if the user has all permissions, false otherwise
+     */
+    public static boolean hasAllPermissions(User user, String... permissionCodes) {
+<span class="nc bnc" id="L105" title="All 4 branches missed.">        if (user == null || permissionCodes == null) {</span>
+<span class="nc" id="L106">            return false;</span>
+        }
+        
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        for (String permissionCode : permissionCodes) {</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">            if (!hasPermission(user, permissionCode)) {</span>
+<span class="nc" id="L111">                return false;</span>
+            }
+        }
+        
+<span class="nc" id="L115">        return true;</span>
+    }
+    
+    /**
+     * Verifies if the current authenticated user has all permissions from a list.
+     * @param permissionCodes Codes of required permissions
+     * @return true if the current user has all permissions, false otherwise
+     */
+    public static boolean hasAllPermissions(String... permissionCodes) {
+<span class="nc" id="L124">        User user = getCurrentUser();</span>
+<span class="nc" id="L125">        return hasAllPermissions(user, permissionCodes);</span>
+    }
+    
+    /**
+     * Verifies if a user has at least one of the permissions from a list
+     * @param user User to verify
+     * @param permissionCodes Codes of permissions
+     * @return true if the user has at least one permission, false otherwise
+     */
+    public static boolean hasAnyPermission(User user, String... permissionCodes) {
+<span class="nc bnc" id="L135" title="All 4 branches missed.">        if (user == null || permissionCodes == null) {</span>
+<span class="nc" id="L136">            return false;</span>
+        }
+        
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        for (String permissionCode : permissionCodes) {</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (hasPermission(user, permissionCode)) {</span>
+<span class="nc" id="L141">                return true;</span>
+            }
+        }
+        
+<span class="nc" id="L145">        return false;</span>
+    }
+    
+    /**
+     * Verifies if the current authenticated user has at least one of the permissions from a list.
+     * @param permissionCodes Codes of permissions
+     * @return true if the current user has at least one permission, false otherwise
+     */
+    public static boolean hasAnyPermission(String... permissionCodes) {
+<span class="nc" id="L154">        User user = getCurrentUser();</span>
+<span class="nc" id="L155">        return hasAnyPermission(user, permissionCodes);</span>
+    }
+    
+    /**
+     * Gets all available permissions for a user based on their role
+     * @param user User
+     * @return Set of available permissions
+     */
+    public static Set&lt;Permission&gt; getUserPermissions(User user) {
+<span class="nc bnc" id="L164" title="All 4 branches missed.">        if (user == null || user.getRole() == null) {</span>
+<span class="nc" id="L165">            return Set.of();</span>
+        }
+        
+<span class="nc" id="L168">        return Permissions.getPermissionsForRole(user.getRole().name());</span>
+    }
+    
+    /**
+     * Gets all available permissions for the current authenticated user.
+     * @return Set of available permissions
+     */
+    public static Set&lt;Permission&gt; getCurrentUserPermissions() {
+<span class="nc" id="L176">        User user = getCurrentUser();</span>
+<span class="nc" id="L177">        return getUserPermissions(user);</span>
+    }
+    
+    /**
+     * Validates that a user has a permission, throwing an exception if not
+     * @param user User to verify
+     * @param permissionCode Required permission code
+     * @throws AuthorizationException if the user does not have the permission
+     */
+    public static void requirePermission(User user, String permissionCode) {
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        if (!hasPermission(user, permissionCode)) {</span>
+<span class="nc" id="L188">            String message = String.format(</span>
+                &quot;Access denied: User %s (role=%s) does not have permission %s&quot;,
+<span class="nc bnc" id="L190" title="All 2 branches missed.">                user != null ? user.getUsername() : &quot;ANONYMOUS&quot;,</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                user != null ? user.getRole() : &quot;NONE&quot;,</span>
+                permissionCode
+            );
+<span class="nc" id="L194">            logger.error(message);</span>
+<span class="nc" id="L195">            throw new AuthorizationException(message);</span>
+        }
+<span class="nc" id="L197">    }</span>
+    
+    /**
+     * Validates that the current authenticated user has a permission, throwing an exception if not.
+     * @param permissionCode Required permission code
+     * @throws AuthorizationException if the current user does not have the permission
+     */
+    public static void requirePermission(String permissionCode) {
+<span class="nc" id="L205">        User user = getCurrentUser();</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L207">            throw new AuthorizationException(&quot;Access denied: No authenticated user&quot;);</span>
+        }
+<span class="nc" id="L209">        requirePermission(user, permissionCode);</span>
+<span class="nc" id="L210">    }</span>
+    
+    /**
+     * Validates that a user has all specified permissions
+     * @param user User to verify
+     * @param permissionCodes Codes of required permissions
+     * @throws AuthorizationException if the user does not have any of the permissions
+     */
+    public static void requireAllPermissions(User user, String... permissionCodes) {
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        for (String permissionCode : permissionCodes) {</span>
+<span class="nc" id="L220">            requirePermission(user, permissionCode);</span>
+        }
+<span class="nc" id="L222">    }</span>
+    
+    /**
+     * Validates that the current authenticated user has all specified permissions.
+     * @param permissionCodes Codes of required permissions
+     * @throws AuthorizationException if the current user does not have any of the permissions
+     */
+    public static void requireAllPermissions(String... permissionCodes) {
+<span class="nc" id="L230">        User user = getCurrentUser();</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L232">            throw new AuthorizationException(&quot;Access denied: No authenticated user&quot;);</span>
+        }
+<span class="nc" id="L234">        requireAllPermissions(user, permissionCodes);</span>
+<span class="nc" id="L235">    }</span>
+    
+    /**
+     * Validates that a user has at least one of the specified permissions
+     * @param user User to verify
+     * @param permissionCodes Codes of permissions
+     * @throws AuthorizationException if the user does not have any of the permissions
+     */
+    public static void requireAnyPermission(User user, String... permissionCodes) {
+<span class="nc bnc" id="L244" title="All 2 branches missed.">        if (!hasAnyPermission(user, permissionCodes)) {</span>
+<span class="nc" id="L245">            String message = String.format(</span>
+                &quot;Access denied: User %s (role=%s) does not have any of permissions %s&quot;,
+<span class="nc bnc" id="L247" title="All 2 branches missed.">                user != null ? user.getUsername() : &quot;ANONYMOUS&quot;,</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">                user != null ? user.getRole() : &quot;NONE&quot;,</span>
+<span class="nc" id="L249">                String.join(&quot;, &quot;, permissionCodes)</span>
+            );
+<span class="nc" id="L251">            logger.error(message);</span>
+<span class="nc" id="L252">            throw new AuthorizationException(message);</span>
+        }
+<span class="nc" id="L254">    }</span>
+    
+    /**
+     * Validates that the current authenticated user has at least one of the specified permissions.
+     * @param permissionCodes Codes of permissions
+     * @throws AuthorizationException if the current user does not have any of the permissions
+     */
+    public static void requireAnyPermission(String... permissionCodes) {
+<span class="nc" id="L262">        User user = getCurrentUser();</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L264">            throw new AuthorizationException(&quot;Access denied: No authenticated user&quot;);</span>
+        }
+<span class="nc" id="L266">        requireAnyPermission(user, permissionCodes);</span>
+<span class="nc" id="L267">    }</span>
+    
+    /**
+     * Verifies if a user is an administrator
+     * @param user User to verify
+     * @return true if the user is ADMIN, false otherwise
+     */
+    public static boolean isAdmin(User user) {
+<span class="nc bnc" id="L275" title="All 4 branches missed.">        return user != null &amp;&amp; User.UserRole.ADMIN.equals(user.getRole());</span>
+    }
+    
+    /**
+     * Verifies if the current authenticated user is an administrator.
+     * @return true if the current user is ADMIN, false otherwise
+     */
+    public static boolean isAdmin() {
+<span class="nc" id="L283">        User user = getCurrentUser();</span>
+<span class="nc" id="L284">        return isAdmin(user);</span>
+    }
+    
+    /**
+     * Verifies if a user is an accountant
+     * @param user User to verify
+     * @return true if the user is ACCOUNTANT, false otherwise
+     */
+    public static boolean isAccountant(User user) {
+<span class="nc bnc" id="L293" title="All 4 branches missed.">        return user != null &amp;&amp; User.UserRole.ACCOUNTANT.equals(user.getRole());</span>
+    }
+    
+    /**
+     * Verifies if the current authenticated user is an accountant.
+     * @return true if the current user is ACCOUNTANT, false otherwise
+     */
+    public static boolean isAccountant() {
+<span class="nc" id="L301">        User user = getCurrentUser();</span>
+<span class="nc" id="L302">        return isAccountant(user);</span>
+    }
+    
+    /**
+     * Verifies if a user has a specific role
+     * @param user User to verify
+     * @param roleName Role name
+     * @return true if the user has the role, false otherwise
+     */
+    public static boolean hasRole(User user, String roleName) {
+<span class="nc bnc" id="L312" title="All 4 branches missed.">        if (user == null || user.getRole() == null) {</span>
+<span class="nc" id="L313">            return false;</span>
+        }
+<span class="nc" id="L315">        return user.getRole().name().equals(roleName);</span>
+    }
+    
+    /**
+     * Verifies if the current authenticated user has a specific role.
+     * @param roleName Role name
+     * @return true if the current user has the role, false otherwise
+     */
+    public static boolean hasRole(String roleName) {
+<span class="nc" id="L324">        User user = getCurrentUser();</span>
+<span class="nc" id="L325">        return hasRole(user, roleName);</span>
+    }
+    
+    /**
+     * Verifies if a user has all specified roles
+     * @param user User to verify
+     * @param roleNames Role names
+     * @return true if the user has all roles, false otherwise
+     */
+    public static boolean hasAllRoles(User user, String... roleNames) {
+<span class="nc bnc" id="L335" title="All 4 branches missed.">        if (user == null || roleNames == null) {</span>
+<span class="nc" id="L336">            return false;</span>
+        }
+        
+<span class="nc bnc" id="L339" title="All 2 branches missed.">        for (String roleName : roleNames) {</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">            if (!hasRole(user, roleName)) {</span>
+<span class="nc" id="L341">                return false;</span>
+            }
+        }
+        
+<span class="nc" id="L345">        return true;</span>
+    }
+    
+    /**
+     * Verifies if the current authenticated user has all specified roles.
+     * @param roleNames Role names
+     * @return true if the current user has all roles, false otherwise
+     */
+    public static boolean hasAllRoles(String... roleNames) {
+<span class="nc" id="L354">        User user = getCurrentUser();</span>
+<span class="nc" id="L355">        return hasAllRoles(user, roleNames);</span>
+    }
+    
+    /**
+     * Verifies if a user has at least one of the specified roles
+     * @param user User to verify
+     * @param roleNames Role names
+     * @return true if the user has at least one role, false otherwise
+     */
+    public static boolean hasAnyRole(User user, String... roleNames) {
+<span class="nc bnc" id="L365" title="All 4 branches missed.">        if (user == null || roleNames == null) {</span>
+<span class="nc" id="L366">            return false;</span>
+        }
+        
+<span class="nc bnc" id="L369" title="All 2 branches missed.">        for (String roleName : roleNames) {</span>
+<span class="nc bnc" id="L370" title="All 2 branches missed.">            if (hasRole(user, roleName)) {</span>
+<span class="nc" id="L371">                return true;</span>
+            }
+        }
+        
+<span class="nc" id="L375">        return false;</span>
+    }
+    
+    /**
+     * Verifies if the current authenticated user has at least one of the specified roles.
+     * @param roleNames Role names
+     * @return true if the current user has at least one role, false otherwise
+     */
+    public static boolean hasAnyRole(String... roleNames) {
+<span class="nc" id="L384">        User user = getCurrentUser();</span>
+<span class="nc" id="L385">        return hasAnyRole(user, roleNames);</span>
+    }
+    
+    /**
+     * Validates that a user has a specific role, throwing an exception if not
+     * @param user User to verify
+     * @param roleName Required role name
+     * @throws AuthorizationException if the user does not have the role
+     */
+    public static void requireRole(User user, String roleName) {
+<span class="nc bnc" id="L395" title="All 2 branches missed.">        if (!hasRole(user, roleName)) {</span>
+<span class="nc" id="L396">            String message = String.format(</span>
+                &quot;Access denied: User %s (role=%s) does not have required role %s&quot;,
+<span class="nc bnc" id="L398" title="All 2 branches missed.">                user != null ? user.getUsername() : &quot;ANONYMOUS&quot;,</span>
+<span class="nc bnc" id="L399" title="All 2 branches missed.">                user != null ? user.getRole() : &quot;NONE&quot;,</span>
+                roleName
+            );
+<span class="nc" id="L402">            logger.error(message);</span>
+<span class="nc" id="L403">            throw new AuthorizationException(message);</span>
+        }
+<span class="nc" id="L405">    }</span>
+    
+    /**
+     * Validates that the current authenticated user has a specific role, throwing an exception if not.
+     * @param roleName Required role name
+     * @throws AuthorizationException if the current user does not have the role
+     */
+    public static void requireRole(String roleName) {
+<span class="nc" id="L413">        User user = getCurrentUser();</span>
+<span class="nc bnc" id="L414" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L415">            throw new AuthorizationException(&quot;Access denied: No authenticated user&quot;);</span>
+        }
+<span class="nc" id="L417">        requireRole(user, roleName);</span>
+<span class="nc" id="L418">    }</span>
+    
+    /**
+     * Validates that the current authenticated user has at least one of the specified roles.
+     * @param roleNames Role names
+     * @throws AuthorizationException if the current user does not have any of the roles
+     */
+    public static void requireAnyRole(String... roleNames) {
+<span class="nc" id="L426">        User user = getCurrentUser();</span>
+<span class="nc bnc" id="L427" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L428">            throw new AuthorizationException(&quot;Access denied: No authenticated user&quot;);</span>
+        }
+<span class="nc bnc" id="L430" title="All 2 branches missed.">        if (!hasAnyRole(user, roleNames)) {</span>
+<span class="nc" id="L431">            String message = String.format(</span>
+                &quot;Access denied: User %s (role=%s) does not have any of required roles %s&quot;,
+<span class="nc" id="L433">                user.getUsername(),</span>
+<span class="nc" id="L434">                user.getRole(),</span>
+<span class="nc" id="L435">                String.join(&quot;, &quot;, roleNames)</span>
+            );
+<span class="nc" id="L437">            logger.error(message);</span>
+<span class="nc" id="L438">            throw new AuthorizationException(message);</span>
+        }
+<span class="nc" id="L440">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

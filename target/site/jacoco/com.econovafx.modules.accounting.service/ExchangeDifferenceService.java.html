@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExchangeDifferenceService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.accounting.service</a> &gt; <span class="el_source">ExchangeDifferenceService.java</span></div><h1>ExchangeDifferenceService.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.accounting.service;
+
+import com.econovafx.modules.accounting.model.*;
+import com.econovafx.modules.accounting.repository.ExchangeDifferenceRepository;
+import com.econovafx.modules.core.repository.ExchangeRateRepository;
+import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.core.model.AuditLog;
+import com.econovafx.modules.core.model.Currency;
+import com.econovafx.modules.core.model.ExchangeRate;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.core.security.RequiresTenant;
+import io.avaje.inject.Component;
+import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+/**
+ * Servicio para cálculo y gestión de diferencias cambiarias.
+ * 
+ * Calcula automáticamente la diferencia entre la tasa de cambio al momento de la factura
+ * vs la tasa de cambio al momento del pago, generando el asiento contable correspondiente.
+ */
+@Component
+@RequiresTenant
+public class ExchangeDifferenceService {
+
+<span class="nc" id="L32">    private static final Logger logger = LoggerFactory.getLogger(ExchangeDifferenceService.class);</span>
+
+    private final ExchangeDifferenceRepository exchangeDifferenceRepository;
+    private final ExchangeRateRepository exchangeRateRepository;
+    private final TransactionService transactionService;
+    private final AccountRepository accountRepository;
+    private final AuditService auditService;
+
+    @Inject
+    public ExchangeDifferenceService(
+            ExchangeDifferenceRepository exchangeDifferenceRepository,
+            ExchangeRateRepository exchangeRateRepository,
+            TransactionService transactionService,
+            AccountRepository accountRepository,
+<span class="nc" id="L46">            AuditService auditService) {</span>
+<span class="nc" id="L47">        this.exchangeDifferenceRepository = exchangeDifferenceRepository;</span>
+<span class="nc" id="L48">        this.exchangeRateRepository = exchangeRateRepository;</span>
+<span class="nc" id="L49">        this.transactionService = transactionService;</span>
+<span class="nc" id="L50">        this.accountRepository = accountRepository;</span>
+<span class="nc" id="L51">        this.auditService = auditService;</span>
+<span class="nc" id="L52">    }</span>
+
+    /**
+     * Calcula y registra la diferencia cambiaria al pagar una factura en moneda extranjera.
+     * 
+     * @param documentType Tipo de documento (SALES_INVOICE, PURCHASE_INVOICE)
+     * @param documentId ID del documento (factura)
+     * @param documentNumber Número del documento
+     * @param thirdParty Cliente o proveedor
+     * @param currency Moneda extranjera
+     * @param foreignAmount Monto en moneda extranjera que se está pagando
+     * @param invoiceDate Fecha de la factura original
+     * @param paymentDate Fecha del pago
+     * @param username Usuario que realiza el pago
+     * @return ExchangeDifference con el cálculo de la diferencia
+     */
+    public ExchangeDifference calculateAndRecordDifference(
+            String documentType,
+            Long documentId,
+            String documentNumber,
+            ThirdParty thirdParty,
+            Currency currency,
+            BigDecimal foreignAmount,
+            LocalDate invoiceDate,
+            LocalDate paymentDate,
+            String username) {
+
+<span class="nc" id="L79">        logger.info(&quot;Calculando diferencia cambiaria para documento: {} - {}&quot;, documentType, documentNumber);</span>
+
+        // 1. Obtener tasa de cambio histórica de la fecha de la factura
+<span class="nc" id="L82">        BigDecimal originalExchangeRate = getHistoricalExchangeRate(currency, invoiceDate);</span>
+        
+        // 2. Obtener tasa de cambio de la fecha del pago
+<span class="nc" id="L85">        BigDecimal paymentExchangeRate = getHistoricalExchangeRate(currency, paymentDate);</span>
+
+<span class="nc" id="L87">        logger.debug(&quot;Tasa original ({}): {}, Tasa pago ({}): {}&quot;, </span>
+            invoiceDate, originalExchangeRate, paymentDate, paymentExchangeRate);
+
+        // 3. Calcular montos en moneda local
+<span class="nc" id="L91">        BigDecimal localCurrencyAmountAtInvoice = foreignAmount.multiply(originalExchangeRate);</span>
+<span class="nc" id="L92">        BigDecimal localCurrencyAmountAtPayment = foreignAmount.multiply(paymentExchangeRate);</span>
+
+        // 4. Calcular diferencia
+<span class="nc" id="L95">        BigDecimal differenceAmount = localCurrencyAmountAtPayment.subtract(localCurrencyAmountAtInvoice);</span>
+        
+        // 5. Determinar tipo de diferencia
+        ExchangeDifference.DifferenceType differenceType;
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (differenceAmount.compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+<span class="nc" id="L100">            differenceType = ExchangeDifference.DifferenceType.GAIN; // Ganancia (pagamos menos en moneda local)</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        } else if (differenceAmount.compareTo(BigDecimal.ZERO) &lt; 0) {</span>
+<span class="nc" id="L102">            differenceType = ExchangeDifference.DifferenceType.LOSS; // Pérdida (pagamos más en moneda local)</span>
+        } else {
+<span class="nc" id="L104">            differenceType = ExchangeDifference.DifferenceType.NONE;</span>
+        }
+
+        // 6. Crear registro de diferencia cambiaria
+<span class="nc" id="L108">        ExchangeDifference exchangeDifference = new ExchangeDifference();</span>
+<span class="nc" id="L109">        exchangeDifference.setDocumentType(documentType);</span>
+<span class="nc" id="L110">        exchangeDifference.setDocumentId(documentId);</span>
+<span class="nc" id="L111">        exchangeDifference.setDocumentNumber(documentNumber);</span>
+<span class="nc" id="L112">        exchangeDifference.setThirdParty(thirdParty);</span>
+<span class="nc" id="L113">        exchangeDifference.setCurrency(currency);</span>
+<span class="nc" id="L114">        exchangeDifference.setOriginalExchangeRate(originalExchangeRate);</span>
+<span class="nc" id="L115">        exchangeDifference.setPaymentExchangeRate(paymentExchangeRate);</span>
+<span class="nc" id="L116">        exchangeDifference.setOriginalAmount(foreignAmount);</span>
+<span class="nc" id="L117">        exchangeDifference.setLocalCurrencyAmountAtInvoice(localCurrencyAmountAtInvoice);</span>
+<span class="nc" id="L118">        exchangeDifference.setLocalCurrencyAmountAtPayment(localCurrencyAmountAtPayment);</span>
+<span class="nc" id="L119">        exchangeDifference.setDifferenceAmount(differenceAmount.abs()); // Guardar valor absoluto</span>
+<span class="nc" id="L120">        exchangeDifference.setDifferenceType(differenceType);</span>
+<span class="nc" id="L121">        exchangeDifference.setInvoiceDate(invoiceDate);</span>
+<span class="nc" id="L122">        exchangeDifference.setPaymentDate(paymentDate);</span>
+<span class="nc" id="L123">        exchangeDifference.setNotes(String.format(</span>
+            &quot;Diferencia calculada: Tasa original=%s, Tasa pago=%s, Monto extranjero=%s&quot;,
+            originalExchangeRate, paymentExchangeRate, foreignAmount));
+
+        // 7. Guardar registro
+<span class="nc" id="L128">        ExchangeDifference savedDifference = exchangeDifferenceRepository.save(exchangeDifference);</span>
+<span class="nc" id="L129">        logger.info(&quot;Diferencia cambiaria registrada: Tipo={}, Monto={}&quot;, differenceType, differenceAmount.abs());</span>
+
+        // 8. Generar asiento contable si hay diferencia significativa
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (differenceType != ExchangeDifference.DifferenceType.NONE &amp;&amp; </span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            differenceAmount.abs().compareTo(BigDecimal.valueOf(0.01)) &gt;= 0) {</span>
+            
+            try {
+<span class="nc" id="L136">                Long journalEntryId = createAccountingEntryForDifference(savedDifference, username).getId();</span>
+<span class="nc" id="L137">                savedDifference.setJournalEntryId(journalEntryId);</span>
+<span class="nc" id="L138">                exchangeDifferenceRepository.update(savedDifference);</span>
+<span class="nc" id="L139">                logger.info(&quot;Asiento contable generado para diferencia cambiaria: {}&quot;, journalEntryId);</span>
+
+                // Auditoría
+<span class="nc" id="L142">                auditService.logWithValues(</span>
+                    username,
+                    AuditLog.OperationType.CREATE,
+                    &quot;ExchangeDifference&quot;,
+<span class="nc" id="L146">                    savedDifference.getId(),</span>
+                    &quot;Diferencia cambiaria registrada: &quot; + documentNumber,
+                    null,
+<span class="nc" id="L149">                    buildDifferenceJson(savedDifference)</span>
+                );
+
+<span class="nc" id="L152">            } catch (Exception e) {</span>
+<span class="nc" id="L153">                logger.error(&quot;Error generando asiento contable para diferencia cambiaria: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L154">                savedDifference.setNotes(savedDifference.getNotes() + &quot; | Error en asiento: &quot; + e.getMessage());</span>
+<span class="nc" id="L155">                exchangeDifferenceRepository.update(savedDifference);</span>
+<span class="nc" id="L156">                throw new RuntimeException(&quot;Error generando asiento contable: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L157">            }</span>
+        }
+
+<span class="nc" id="L160">        return savedDifference;</span>
+    }
+
+    /**
+     * Obtiene la tasa de cambio histórica para una moneda y fecha específicas.
+     * Si no existe tasa para esa fecha exacta, busca la tasa más reciente anterior.
+     */
+    private BigDecimal getHistoricalExchangeRate(Currency currency, LocalDate date) {
+        // Intentar obtener tasa exacta para la fecha
+<span class="nc" id="L169">        return exchangeRateRepository.findByCurrencyAndDate(currency, date)</span>
+<span class="nc" id="L170">            .map(ExchangeRate::getRate)</span>
+<span class="nc" id="L171">            .orElseGet(() -&gt; {</span>
+                // Si no existe, buscar la tasa más reciente anterior
+<span class="nc" id="L173">                List&lt;ExchangeRate&gt; rates = exchangeRateRepository.findByCurrencyBeforeDate(currency, date);</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                if (!rates.isEmpty()) {</span>
+<span class="nc" id="L175">                    return rates.get(0).getRate(); // Retorna la más reciente (ordenadas por fecha descendente)</span>
+                }
+                // Si no hay tasas históricas, usar tasa actual
+<span class="nc" id="L178">                return exchangeRateRepository.findCurrentByCurrency(currency)</span>
+<span class="nc" id="L179">                    .map(ExchangeRate::getRate)</span>
+<span class="nc" id="L180">                    .orElse(BigDecimal.ONE); // Default a 1 si no hay nada</span>
+            });
+    }
+
+    /**
+     * Genera el asiento contable para la diferencia cambiaria.
+     * 
+     * Para GANANCIA cambiaria:
+     *   DEBE: Cuenta de Diferencia Cambiaria (Ingreso)
+     *   HABER: Cuentas por Cobrar/Pagar (ajuste)
+     * 
+     * Para PÉRDIDA cambiaria:
+     *   DEBE: Cuentas por Cobrar/Pagar (ajuste)
+     *   HABER: Cuenta de Diferencia Cambiaria (Gasto)
+     */
+    private Transaction createAccountingEntryForDifference(ExchangeDifference difference, String username) {
+<span class="nc" id="L196">        BigDecimal differenceAmount = difference.getDifferenceAmount();</span>
+<span class="nc" id="L197">        ExchangeDifference.DifferenceType type = difference.getDifferenceType();</span>
+
+        // Obtener cuentas configurables
+<span class="nc" id="L200">        String gainAccountCode = &quot;499-001&quot;; // Ingresos por diferencia cambiaria (configurable)</span>
+<span class="nc" id="L201">        String lossAccountCode = &quot;599-001&quot;; // Gastos por diferencia cambiaria (configurable)</span>
+        
+        Account differenceAccount;
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (type == ExchangeDifference.DifferenceType.GAIN) {</span>
+<span class="nc" id="L205">            differenceAccount = accountRepository.findByCode(gainAccountCode)</span>
+<span class="nc" id="L206">                .orElseThrow(() -&gt; new IllegalArgumentException(</span>
+                    &quot;Cuenta de ingresos por diferencia cambiaria no configurada: &quot; + gainAccountCode));
+        } else {
+<span class="nc" id="L209">            differenceAccount = accountRepository.findByCode(lossAccountCode)</span>
+<span class="nc" id="L210">                .orElseThrow(() -&gt; new IllegalArgumentException(</span>
+                    &quot;Cuenta de gastos por diferencia cambiaria no configurada: &quot; + lossAccountCode));
+        }
+
+        // Crear transacción
+<span class="nc" id="L215">        Transaction transaction = new Transaction();</span>
+<span class="nc" id="L216">        transaction.setDate(difference.getPaymentDate());</span>
+<span class="nc" id="L217">        transaction.setType(&quot;EXCHANGE_DIFFERENCE&quot;);</span>
+<span class="nc" id="L218">        transaction.setDescription(String.format(</span>
+            &quot;%s cambiaria por %s - Factura %s&quot;,
+<span class="nc bnc" id="L220" title="All 2 branches missed.">            type == ExchangeDifference.DifferenceType.GAIN ? &quot;Ganancia&quot; : &quot;Pérdida&quot;,</span>
+<span class="nc" id="L221">            difference.getCurrency().getCode(),</span>
+<span class="nc" id="L222">            difference.getDocumentNumber()));</span>
+<span class="nc" id="L223">        transaction.setReference(&quot;DIFF-&quot; + difference.getDocumentNumber());</span>
+
+        TransactionService.TransactionEntryData entry1, entry2;
+        
+<span class="nc bnc" id="L227" title="All 2 branches missed.">        if (type == ExchangeDifference.DifferenceType.GAIN) {</span>
+            // Ganancia: DEBE diferencia cambiaria, HABER ajuste de cuenta
+<span class="nc" id="L229">            entry1 = new TransactionService.TransactionEntryData(</span>
+<span class="nc" id="L230">                differenceAccount.getId(),</span>
+                differenceAmount,
+                BigDecimal.ZERO,
+<span class="nc" id="L233">                &quot;Ganancia cambiaria &quot; + difference.getDocumentNumber());</span>
+            
+<span class="nc" id="L235">            entry2 = new TransactionService.TransactionEntryData(</span>
+<span class="nc" id="L236">                getCashOrPayableAccount(difference).getId(),</span>
+                BigDecimal.ZERO,
+                differenceAmount,
+                &quot;Ajuste por ganancia cambiaria&quot;);
+        } else {
+            // Pérdida: DEBE ajuste de cuenta, HABER diferencia cambiaria
+<span class="nc" id="L242">            entry1 = new TransactionService.TransactionEntryData(</span>
+<span class="nc" id="L243">                getCashOrPayableAccount(difference).getId(),</span>
+                differenceAmount,
+                BigDecimal.ZERO,
+                &quot;Ajuste por pérdida cambiaria&quot;);
+            
+<span class="nc" id="L248">            entry2 = new TransactionService.TransactionEntryData(</span>
+<span class="nc" id="L249">                differenceAccount.getId(),</span>
+                BigDecimal.ZERO,
+                differenceAmount,
+<span class="nc" id="L252">                &quot;Pérdida cambiaria &quot; + difference.getDocumentNumber());</span>
+        }
+
+<span class="nc" id="L255">        return transactionService.createTransaction(transaction, List.of(entry1, entry2), username);</span>
+    }
+
+    /**
+     * Obtiene la cuenta de efectivo o por pagar según el tipo de documento.
+     */
+    private Account getCashOrPayableAccount(ExchangeDifference difference) {
+        // Esta lógica debe adaptarse según si es factura de venta o compra
+        // Por ahora retorna una cuenta genérica configurable
+<span class="nc bnc" id="L264" title="All 2 branches missed.">        String accountCode = difference.getDocumentType().equals(&quot;SALES_INVOICE&quot;) </span>
+<span class="nc" id="L265">            ? &quot;106-001&quot; // Cuentas por cobrar clientes</span>
+<span class="nc" id="L266">            : &quot;201-001&quot;; // Cuentas por pagar proveedores</span>
+        
+<span class="nc" id="L268">        return accountRepository.findByCode(accountCode)</span>
+<span class="nc" id="L269">            .orElseThrow(() -&gt; new IllegalArgumentException(</span>
+                &quot;Cuenta configurada no encontrada: &quot; + accountCode));
+    }
+
+    /**
+     * Obtiene todas las diferencias cambiarias registradas.
+     */
+    public List&lt;ExchangeDifference&gt; getAllDifferences() {
+<span class="nc" id="L277">        return exchangeDifferenceRepository.findAll();</span>
+    }
+
+    /**
+     * Obtiene diferencias cambiarias por documento.
+     */
+    public List&lt;ExchangeDifference&gt; getDifferencesByDocument(String documentType, Long documentId) {
+<span class="nc" id="L284">        return exchangeDifferenceRepository.findByDocument(documentType, documentId);</span>
+    }
+
+    /**
+     * Obtiene el total de ganancias cambiarias en un período.
+     */
+    public BigDecimal getTotalGainsInPeriod(LocalDate startDate, LocalDate endDate) {
+<span class="nc" id="L291">        return exchangeDifferenceRepository.getTotalGains(startDate, endDate);</span>
+    }
+
+    /**
+     * Obtiene el total de pérdidas cambiarias en un período.
+     */
+    public BigDecimal getTotalLossesInPeriod(LocalDate startDate, LocalDate endDate) {
+<span class="nc" id="L298">        return exchangeDifferenceRepository.getTotalLosses(startDate, endDate);</span>
+    }
+
+    /**
+     * Construye JSON de la diferencia para auditoría.
+     */
+    private String buildDifferenceJson(ExchangeDifference diff) {
+<span class="nc bnc" id="L305" title="All 2 branches missed.">        if (diff == null) {</span>
+<span class="nc" id="L306">            return null;</span>
+        }
+<span class="nc" id="L308">        StringBuilder json = new StringBuilder();</span>
+<span class="nc" id="L309">        json.append(&quot;{&quot;);</span>
+<span class="nc" id="L310">        json.append(&quot;\&quot;id\&quot;:&quot;).append(diff.getId()).append(&quot;,&quot;);</span>
+<span class="nc" id="L311">        json.append(&quot;\&quot;documentType\&quot;:\&quot;&quot;).append(diff.getDocumentType()).append(&quot;\&quot;,&quot;);</span>
+<span class="nc" id="L312">        json.append(&quot;\&quot;documentNumber\&quot;:\&quot;&quot;).append(diff.getDocumentNumber()).append(&quot;\&quot;,&quot;);</span>
+<span class="nc" id="L313">        json.append(&quot;\&quot;differenceType\&quot;:\&quot;&quot;).append(diff.getDifferenceType()).append(&quot;\&quot;,&quot;);</span>
+<span class="nc" id="L314">        json.append(&quot;\&quot;differenceAmount\&quot;:&quot;).append(diff.getDifferenceAmount());</span>
+<span class="nc" id="L315">        json.append(&quot;}&quot;);</span>
+<span class="nc" id="L316">        return json.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

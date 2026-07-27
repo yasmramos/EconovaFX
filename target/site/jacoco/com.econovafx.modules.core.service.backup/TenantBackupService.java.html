@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TenantBackupService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.service.backup</a> &gt; <span class="el_source">TenantBackupService.java</span></div><h1>TenantBackupService.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.service.backup;
+
+import io.ebean.DB;
+import io.ebean.Database;
+import io.ebean.Transaction;
+import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.file.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import javax.sql.DataSource;
+
+/**
+ * Servicio interno para backup y restore de datos por tenant.
+ * NO expone endpoints REST ni CLI, se invoca desde la lógica interna del sistema.
+ */
+@Singleton
+<span class="nc" id="L25">public class TenantBackupService {</span>
+
+<span class="nc" id="L27">    private static final Logger log = LoggerFactory.getLogger(TenantBackupService.class);</span>
+<span class="nc" id="L28">    private static final String BACKUP_DIR = System.getProperty(&quot;user.home&quot;) + &quot;/econova_backups&quot;;</span>
+
+    /**
+     * Realiza un backup completo del tenant actual en contexto.
+     * Genera un archivo SQL con INSERTs para todas las tablas del tenant.
+     * 
+     * @return Ruta absoluta del archivo de backup generado
+     * @throws IOException si falla la escritura del archivo
+     * @throws SQLException si falla la conexión a la BD
+     */
+    public String backupCurrentTenant() throws IOException, SQLException {
+<span class="nc" id="L39">        Long tenantId = getCurrentTenantId();</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (tenantId == null) {</span>
+<span class="nc" id="L41">            throw new IllegalStateException(&quot;No hay tenant activo en el contexto para realizar backup&quot;);</span>
+        }
+
+<span class="nc" id="L44">        Path backupPath = Paths.get(BACKUP_DIR);</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (!Files.exists(backupPath)) {</span>
+<span class="nc" id="L46">            Files.createDirectories(backupPath);</span>
+        }
+
+<span class="nc" id="L49">        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern(&quot;yyyyMMdd_HHmmss&quot;));</span>
+<span class="nc" id="L50">        String fileName = &quot;backup_&quot; + tenantId + &quot;_&quot; + timestamp + &quot;.sql&quot;;</span>
+<span class="nc" id="L51">        Path fullPath = backupPath.resolve(fileName);</span>
+
+<span class="nc" id="L53">        log.info(&quot;Iniciando backup del tenant: {} en {}&quot;, tenantId, fullPath);</span>
+
+<span class="nc" id="L55">        try (BufferedWriter writer = Files.newBufferedWriter(fullPath)) {</span>
+<span class="nc" id="L56">            writeHeader(writer, tenantId.toString());</span>
+            
+<span class="nc" id="L58">            Database db = DB.getDefault();</span>
+<span class="nc" id="L59">            DataSource ds = db.dataSource();</span>
+<span class="nc" id="L60">            try (Connection conn = ds.getConnection()) {</span>
+                // Obtener lista de tablas (ajustar según PostgreSQL/MySQL)
+<span class="nc" id="L62">                List&lt;String&gt; tables = getTenantTables(conn);</span>
+                
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                for (String table : tables) {</span>
+<span class="nc" id="L65">                    log.debug(&quot;Exportando tabla: {}&quot;, table);</span>
+<span class="nc" id="L66">                    exportTableData(conn, writer, table, tenantId);</span>
+<span class="nc" id="L67">                }</span>
+            }
+        }
+
+<span class="nc" id="L71">        log.info(&quot;Backup completado exitosamente: {}&quot;, fullPath);</span>
+<span class="nc" id="L72">        return fullPath.toString();</span>
+    }
+
+    /**
+     * Restaura datos desde un archivo de backup al tenant actual en contexto.
+     * Ejecuta el script SQL dentro de una transacción.
+     * 
+     * @param backupFilePath Ruta del archivo SQL a restaurar
+     * @throws IOException si no se encuentra el archivo
+     * @throws SQLException si falla la ejecución del script
+     */
+    public void restoreCurrentTenant(String backupFilePath) throws IOException, SQLException {
+<span class="nc" id="L84">        Long tenantId = getCurrentTenantId();</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (tenantId == null) {</span>
+<span class="nc" id="L86">            throw new IllegalStateException(&quot;No hay tenant activo en el contexto para realizar restore&quot;);</span>
+        }
+
+<span class="nc" id="L89">        Path filePath = Paths.get(backupFilePath);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (!Files.exists(filePath)) {</span>
+<span class="nc" id="L91">            throw new FileNotFoundException(&quot;Archivo de backup no encontrado: &quot; + backupFilePath);</span>
+        }
+
+<span class="nc" id="L94">        log.warn(&quot;Iniciando RESTAURE del tenant: {} desde {}&quot;, tenantId, backupFilePath);</span>
+<span class="nc" id="L95">        log.warn(&quot;ADVERTENCIA: Esta operación puede sobreescribir datos existentes&quot;);</span>
+
+<span class="nc" id="L97">        Database db = DB.getDefault();</span>
+<span class="nc" id="L98">        DataSource ds = db.dataSource();</span>
+        
+        // Ejecutar en una sola transacción grande
+<span class="nc" id="L101">        try (Transaction transaction = db.beginTransaction()) {</span>
+<span class="nc" id="L102">            try (Connection conn = ds.getConnection()) {</span>
+                // Deshabilitar temporalmente constraints si es necesario
+<span class="nc" id="L104">                disableConstraints(conn);</span>
+                
+<span class="nc" id="L106">                try (BufferedReader reader = Files.newBufferedReader(filePath)) {</span>
+                    String line;
+<span class="nc" id="L108">                    StringBuilder sqlBuffer = new StringBuilder();</span>
+                    
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                    while ((line = reader.readLine()) != null) {</span>
+                        // Ignorar comentarios y líneas vacías
+<span class="nc bnc" id="L112" title="All 4 branches missed.">                        if (line.trim().isEmpty() || line.trim().startsWith(&quot;--&quot;)) {</span>
+<span class="nc" id="L113">                            continue;</span>
+                        }
+                        
+<span class="nc" id="L116">                        sqlBuffer.append(line).append(&quot;\n&quot;);</span>
+                        
+                        // Ejecutar cuando encontramos punto y coma (fin de statement)
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                        if (line.trim().endsWith(&quot;;&quot;)) {</span>
+<span class="nc" id="L120">                            String sql = sqlBuffer.toString().trim();</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">                            if (!sql.isEmpty()) {</span>
+<span class="nc" id="L122">                                try (var stmt = conn.createStatement()) {</span>
+<span class="nc" id="L123">                                    stmt.execute(sql);</span>
+<span class="nc" id="L124">                                } catch (SQLException e) {</span>
+<span class="nc" id="L125">                                    log.error(&quot;Error ejecutando SQL: {}&quot;, sql, e);</span>
+<span class="nc" id="L126">                                    throw e;</span>
+<span class="nc" id="L127">                                }</span>
+                            }
+<span class="nc" id="L129">                            sqlBuffer.setLength(0);</span>
+<span class="nc" id="L130">                        }</span>
+                    }
+                }
+                
+                // Restaurar constraints
+<span class="nc" id="L135">                enableConstraints(conn);</span>
+            }
+<span class="nc" id="L137">            transaction.commit();</span>
+        }
+
+<span class="nc" id="L140">        log.info(&quot;Restore completado exitosamente para tenant: {}&quot;, tenantId);</span>
+<span class="nc" id="L141">    }</span>
+
+    /**
+     * Lista todos los backups disponibles para un tenant específico.
+     * 
+     * @param tenantId ID del tenant
+     * @return Lista de rutas absolutas a archivos de backup
+     */
+    public List&lt;String&gt; listBackupsForTenant(Long tenantId) {
+<span class="nc" id="L150">        List&lt;String&gt; backups = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L151">        Path backupDir = Paths.get(BACKUP_DIR);</span>
+        
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (!Files.exists(backupDir)) {</span>
+<span class="nc" id="L154">            return backups;</span>
+        }
+
+<span class="nc" id="L157">        try (var stream = Files.list(backupDir)) {</span>
+<span class="nc" id="L158">            stream.filter(path -&gt; path.getFileName().toString().startsWith(&quot;backup_&quot; + tenantId + &quot;_&quot;))</span>
+<span class="nc" id="L159">                  .filter(path -&gt; path.getFileName().toString().endsWith(&quot;.sql&quot;))</span>
+<span class="nc" id="L160">                  .forEach(path -&gt; backups.add(path.toString()));</span>
+<span class="nc" id="L161">        } catch (IOException e) {</span>
+<span class="nc" id="L162">            log.error(&quot;Error listando backups para tenant: {}&quot;, tenantId, e);</span>
+<span class="nc" id="L163">        }</span>
+
+<span class="nc" id="L165">        return backups;</span>
+    }
+
+    // Métodos auxiliares privados
+
+    private Long getCurrentTenantId() {
+        // Usar reflexión o acceso directo según tu implementación de TenantContext
+        try {
+<span class="nc" id="L173">            Class&lt;?&gt; tenantContextClass = Class.forName(&quot;com.econovafx.config.TenantContext&quot;);</span>
+<span class="nc" id="L174">            var method = tenantContextClass.getMethod(&quot;getCurrentTenantId&quot;);</span>
+<span class="nc" id="L175">            return (Long) method.invoke(null);</span>
+<span class="nc" id="L176">        } catch (Exception e) {</span>
+<span class="nc" id="L177">            log.error(&quot;Error obteniendo tenantId actual&quot;, e);</span>
+<span class="nc" id="L178">            return null;</span>
+        }
+    }
+
+    private void writeHeader(BufferedWriter writer, String tenantId) throws IOException {
+<span class="nc" id="L183">        writer.write(&quot;-- Backup generado por EconovaFX\n&quot;);</span>
+<span class="nc" id="L184">        writer.write(&quot;-- Tenant: &quot; + tenantId + &quot;\n&quot;);</span>
+<span class="nc" id="L185">        writer.write(&quot;-- Fecha: &quot; + LocalDateTime.now() + &quot;\n&quot;);</span>
+<span class="nc" id="L186">        writer.write(&quot;-- ===========================================\n\n&quot;);</span>
+<span class="nc" id="L187">    }</span>
+
+    private List&lt;String&gt; getTenantTables(Connection conn) throws SQLException {
+<span class="nc" id="L190">        List&lt;String&gt; tables = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L191">        var metadata = conn.getMetaData();</span>
+        
+        // Obtener todas las tablas del catálogo actual
+<span class="nc" id="L194">        try (var rs = metadata.getTables(null, null, &quot;%&quot;, new String[]{&quot;TABLE&quot;})) {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L196">                String tableName = rs.getString(&quot;TABLE_NAME&quot;);</span>
+                // Excluir tablas del sistema o de migración
+<span class="nc bnc" id="L198" title="All 4 branches missed.">                if (!tableName.startsWith(&quot;flyway_&quot;) &amp;&amp; !tableName.equals(&quot;db_migration&quot;)) {</span>
+<span class="nc" id="L199">                    tables.add(tableName);</span>
+                }
+<span class="nc" id="L201">            }</span>
+        }
+        
+<span class="nc" id="L204">        return tables;</span>
+    }
+
+    private void exportTableData(Connection conn, BufferedWriter writer, String tableName, Long tenantId) 
+            throws SQLException, IOException {
+        
+        // Construir query SELECT para obtener todos los datos de la tabla filtrados por tenant_id
+        // Asumimos que todas las tablas multi-tenant tienen columna tenant_id
+<span class="nc" id="L212">        String selectSql = &quot;SELECT * FROM &quot; + tableName + &quot; WHERE tenant_id = ?&quot;;</span>
+        
+<span class="nc" id="L214">        try (var stmt = conn.prepareStatement(selectSql)) {</span>
+<span class="nc" id="L215">            stmt.setLong(1, tenantId);</span>
+            
+<span class="nc" id="L217">            try (var rs = stmt.executeQuery()) {</span>
+<span class="nc" id="L218">                var rsmd = rs.getMetaData();</span>
+<span class="nc" id="L219">                int columnCount = rsmd.getColumnCount();</span>
+                
+                // Escribir comentario con nombre de tabla
+<span class="nc" id="L222">                writer.write(&quot;-- Datos de la tabla: &quot; + tableName + &quot;\n&quot;);</span>
+                
+<span class="nc bnc" id="L224" title="All 2 branches missed.">                while (rs.next()) {</span>
+<span class="nc" id="L225">                    StringBuilder insertSql = new StringBuilder();</span>
+<span class="nc" id="L226">                    insertSql.append(&quot;INSERT INTO &quot;).append(tableName).append(&quot; (&quot;);</span>
+                    
+                    // Nombres de columnas
+<span class="nc bnc" id="L229" title="All 2 branches missed.">                    for (int i = 1; i &lt;= columnCount; i++) {</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">                        if (i &gt; 1) insertSql.append(&quot;, &quot;);</span>
+<span class="nc" id="L231">                        insertSql.append(rsmd.getColumnName(i));</span>
+                    }
+                    
+<span class="nc" id="L234">                    insertSql.append(&quot;) VALUES (&quot;);</span>
+                    
+                    // Valores
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                    for (int i = 1; i &lt;= columnCount; i++) {</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                        if (i &gt; 1) insertSql.append(&quot;, &quot;);</span>
+                        
+<span class="nc" id="L240">                        Object value = rs.getObject(i);</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">                        if (value == null) {</span>
+<span class="nc" id="L242">                            insertSql.append(&quot;NULL&quot;);</span>
+<span class="nc bnc" id="L243" title="All 6 branches missed.">                        } else if (value instanceof String || </span>
+                                   value instanceof java.sql.Date || 
+                                   value instanceof java.sql.Timestamp) {
+                            // Escapar comillas simples en strings
+<span class="nc" id="L247">                            String escaped = value.toString().replace(&quot;'&quot;, &quot;''&quot;);</span>
+<span class="nc" id="L248">                            insertSql.append(&quot;'&quot;).append(escaped).append(&quot;'&quot;);</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">                        } else if (value instanceof Boolean) {</span>
+<span class="nc" id="L250">                            insertSql.append(value.toString());</span>
+                        } else {
+<span class="nc" id="L252">                            insertSql.append(value.toString());</span>
+                        }
+                    }
+                    
+<span class="nc" id="L256">                    insertSql.append(&quot;);\n&quot;);</span>
+<span class="nc" id="L257">                    writer.write(insertSql.toString());</span>
+<span class="nc" id="L258">                }</span>
+                
+<span class="nc" id="L260">                writer.write(&quot;\n&quot;);</span>
+            }
+        }
+<span class="nc" id="L263">    }</span>
+
+    private void disableConstraints(Connection conn) throws SQLException {
+        // Implementación específica para PostgreSQL
+<span class="nc" id="L267">        try (var stmt = conn.createStatement()) {</span>
+<span class="nc" id="L268">            stmt.execute(&quot;SET CONSTRAINTS ALL DEFERRED&quot;);</span>
+<span class="nc" id="L269">        } catch (SQLException e) {</span>
+<span class="nc" id="L270">            log.debug(&quot;No se pudieron deshabilitar constraints (puede ser normal): {}&quot;, e.getMessage());</span>
+<span class="nc" id="L271">        }</span>
+<span class="nc" id="L272">    }</span>
+
+    private void enableConstraints(Connection conn) throws SQLException {
+<span class="nc" id="L275">        try (var stmt = conn.createStatement()) {</span>
+<span class="nc" id="L276">            stmt.execute(&quot;SET CONSTRAINTS ALL IMMEDIATE&quot;);</span>
+<span class="nc" id="L277">        } catch (SQLException e) {</span>
+<span class="nc" id="L278">            log.debug(&quot;No se pudieron habilitar constraints: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L279">        }</span>
+<span class="nc" id="L280">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
