@@ -7,6 +7,7 @@
 [![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg?logo=apache-maven)](https://maven.apache.org/)
 [![Tests](https://img.shields.io/badge/tests-268%20passing-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/yasmramos/econovafx)
 
 Sistema contable moderno y profesional desarrollado con **JavaFX 21** y **Ebean ORM 17**, diseñado para cumplir con la normativa contable cubana (Resolución 340/2004).
 
