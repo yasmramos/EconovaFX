@@ -84,8 +84,22 @@ public class AccountService {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found with ID: " + id));
         
+        // Resolution 340/2004: Prevent deletion of accounts with balances or movements
+        if (account.getBalance().compareTo(java.math.BigDecimal.ZERO) != 0) {
+            throw new IllegalArgumentException(
+                "Cannot delete account with non-zero balance. Account: " + 
+                account.getCode() + " - Balance: " + account.getBalance());
+        }
+        
         if (!account.getChildAccounts().isEmpty()) {
             throw new IllegalArgumentException("Cannot delete account with child accounts");
+        }
+        
+        // Check for transaction entries (movements)
+        if (account.hasMovements()) {
+            throw new IllegalArgumentException(
+                "Cannot delete account with historical movements per Resolution 340/2004. Account: " + 
+                account.getCode());
         }
         
         accountRepository.delete(account);
