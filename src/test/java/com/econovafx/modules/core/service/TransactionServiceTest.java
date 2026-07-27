@@ -11,6 +11,7 @@ import com.econovafx.modules.core.repository.AuditLogRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
 import com.econovafx.modules.core.exception.BusinessException;
 import com.econovafx.modules.core.exception.ValidationException;
@@ -34,6 +35,7 @@ class TransactionServiceTest {
     private StubTransactionRepository transactionRepository;
     private StubAccountRepositoryForTransaction accountRepository;
     private AuditService auditService;
+    private AccountingPeriodService accountingPeriodService;
     private TransactionService transactionService;
 
     @BeforeEach
@@ -41,7 +43,8 @@ class TransactionServiceTest {
         transactionRepository = new StubTransactionRepository();
         accountRepository = new StubAccountRepositoryForTransaction();
         auditService = new AuditService(new StubAuditLogRepositoryForTransaction());
-        transactionService = new TransactionService(transactionRepository, accountRepository, auditService);
+        accountingPeriodService = new StubAccountingPeriodService();
+        transactionService = new TransactionService(transactionRepository, accountRepository, auditService, accountingPeriodService);
     }
 
     @Test
@@ -729,6 +732,23 @@ class TransactionServiceTest {
         @Override
         public long countByUser(String username) {
             return 0;
+        }
+    }
+
+    /**
+     * Stub implementation of AccountingPeriodService for testing
+     */
+    private static class StubAccountingPeriodService extends AccountingPeriodService {
+        
+        @Override
+        public void validatePeriodOpenForPosting(LocalDate date) {
+            // Allow all dates for testing purposes
+            // In real tests, you can override this to simulate closed periods
+        }
+        
+        @Override
+        public boolean isValidTransactionDate(LocalDate date) {
+            return true; // Allow all dates for testing
         }
     }
 }
