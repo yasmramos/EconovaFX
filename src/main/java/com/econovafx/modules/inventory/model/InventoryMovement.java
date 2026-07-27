@@ -7,6 +7,7 @@ import com.econovafx.modules.core.model.User;
 import io.ebean.annotation.WhenCreated;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -18,10 +19,11 @@ import java.time.LocalDateTime;
 public class InventoryMovement extends BaseEntity {
 
     public enum MovementType {
-        ENTRY,        // Entrada por compra, producción o devolución
-        OUTPUT,       // Salida por venta, consumo o merma
-        ADJUSTMENT,   // Ajuste por inventario físico
-        TRANSFER      // Transferencia entre almacenes
+        ENTRY,              // Entrada por compra, producción o devolución
+        OUTPUT,             // Salida por venta, consumo o merma
+        ADJUSTMENT,         // Ajuste por inventario físico
+        TRANSFER,           // Transferencia entre almacenes
+        INITIAL_LOAD        // Carga inicial de saldos (Requerido por Resolución 340/2004)
     }
 
     @Column(nullable = false)
@@ -63,7 +65,37 @@ public class InventoryMovement extends BaseEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime movementDate;
 
-    // Getters y Setters
+    // ==================== CAMPOS PARA CUMPLIMIENTO RESOLUCIÓN 340/2004 CUBA ====================
+
+    /**
+     * Código del centro de costos asociado al movimiento.
+     * Requerido para reportes analíticos según Resolución 340/2004.
+     */
+    @Column(length = 50)
+    private String costCenterCode;
+
+    /**
+     * Diferencia calculada entre el conteo físico y el stock del sistema.
+     * Solo aplica para movimientos de tipo ADJUSTMENT e INITIAL_LOAD.
+     */
+    @Column(precision = 19, scale = 4)
+    private BigDecimal differenceQuantity = BigDecimal.ZERO;
+
+    /**
+     * Indica si el movimiento ha sido transferido al sub-ledger contable.
+     * Requerido para el proceso de posting de inventarios.
+     */
+    @Column(nullable = false)
+    private boolean postedToSubledger = false;
+
+    /**
+     * Fecha del período contable al que pertenece este movimiento.
+     * Usado para validación de períodos cerrados.
+     */
+    @Column(nullable = false)
+    private LocalDate accountingPeriodDate;
+
+    // Getters y Setters adicionales
     public Long getId() {
         return id;
     }
@@ -158,6 +190,62 @@ public class InventoryMovement extends BaseEntity {
 
     public void setMovementDate(LocalDateTime movementDate) {
         this.movementDate = movementDate;
+    }
+
+    /**
+     * Obtiene el código del centro de costos asociado.
+     */
+    public String getCostCenterCode() {
+        return costCenterCode;
+    }
+
+    /**
+     * Establece el código del centro de costos asociado.
+     */
+    public void setCostCenterCode(String costCenterCode) {
+        this.costCenterCode = costCenterCode;
+    }
+
+    /**
+     * Obtiene la cantidad de diferencia entre conteo físico y sistema.
+     */
+    public BigDecimal getDifferenceQuantity() {
+        return differenceQuantity;
+    }
+
+    /**
+     * Establece la cantidad de diferencia, calculando automáticamente si es necesario.
+     */
+    public void setDifferenceQuantity(BigDecimal differenceQuantity) {
+        this.differenceQuantity = differenceQuantity;
+    }
+
+    /**
+     * Verifica si el movimiento ha sido transferido al sub-ledger contable.
+     */
+    public boolean isPostedToSubledger() {
+        return postedToSubledger;
+    }
+
+    /**
+     * Marca el movimiento como transferido al sub-ledger contable.
+     */
+    public void setPostedToSubledger(boolean postedToSubledger) {
+        this.postedToSubledger = postedToSubledger;
+    }
+
+    /**
+     * Obtiene la fecha del período contable asociado.
+     */
+    public LocalDate getAccountingPeriodDate() {
+        return accountingPeriodDate;
+    }
+
+    /**
+     * Establece la fecha del período contable asociado.
+     */
+    public void setAccountingPeriodDate(LocalDate accountingPeriodDate) {
+        this.accountingPeriodDate = accountingPeriodDate;
     }
 
     /**
