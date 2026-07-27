@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Permissions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.security</a> &gt; <span class="el_source">Permissions.java</span></div><h1>Permissions.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.security;
+
+import java.util.*;
+
+/**
+ * Definicion de todos los permisos disponibles en el sistema.
+ * Organizados por modulos para facilitar la gestion.
+ */
+<span class="nc" id="L9">public class Permissions {</span>
+    
+    // Modulo de Compania/Tenant
+<span class="nc" id="L12">    public static final Permission COMPANY_VIEW = new Permission(&quot;COMPANY_VIEW&quot;, &quot;Ver Compania&quot;, &quot;Puede ver informacion de la compania&quot;, &quot;COMPANY&quot;);</span>
+<span class="nc" id="L13">    public static final Permission COMPANY_CREATE = new Permission(&quot;COMPANY_CREATE&quot;, &quot;Crear Compania&quot;, &quot;Puede crear nuevas companias&quot;, &quot;COMPANY&quot;);</span>
+<span class="nc" id="L14">    public static final Permission COMPANY_EDIT = new Permission(&quot;COMPANY_EDIT&quot;, &quot;Editar Compania&quot;, &quot;Puede editar informacion de la compania&quot;, &quot;COMPANY&quot;);</span>
+<span class="nc" id="L15">    public static final Permission COMPANY_DELETE = new Permission(&quot;COMPANY_DELETE&quot;, &quot;Eliminar Compania&quot;, &quot;Puede eliminar companias&quot;, &quot;COMPANY&quot;);</span>
+    
+    // Modulo de Usuarios
+<span class="nc" id="L18">    public static final Permission USER_VIEW = new Permission(&quot;USER_VIEW&quot;, &quot;Ver Usuarios&quot;, &quot;Puede ver usuarios del sistema&quot;, &quot;USER&quot;);</span>
+<span class="nc" id="L19">    public static final Permission USER_CREATE = new Permission(&quot;USER_CREATE&quot;, &quot;Crear Usuario&quot;, &quot;Puede crear nuevos usuarios&quot;, &quot;USER&quot;);</span>
+<span class="nc" id="L20">    public static final Permission USER_EDIT = new Permission(&quot;USER_EDIT&quot;, &quot;Editar Usuario&quot;, &quot;Puede editar usuarios existentes&quot;, &quot;USER&quot;);</span>
+<span class="nc" id="L21">    public static final Permission USER_DELETE = new Permission(&quot;USER_DELETE&quot;, &quot;Eliminar Usuario&quot;, &quot;Puede eliminar usuarios&quot;, &quot;USER&quot;);</span>
+<span class="nc" id="L22">    public static final Permission USER_CHANGE_PASSWORD = new Permission(&quot;USER_CHANGE_PASSWORD&quot;, &quot;Cambiar Contrasena&quot;, &quot;Puede cambiar contrasenas de usuarios&quot;, &quot;USER&quot;);</span>
+<span class="nc" id="L23">    public static final Permission USER_ASSIGN_ROLE = new Permission(&quot;USER_ASSIGN_ROLE&quot;, &quot;Asignar Rol&quot;, &quot;Puede asignar roles a usuarios&quot;, &quot;USER&quot;);</span>
+    
+    // Modulo de Contabilidad - Transacciones
+<span class="nc" id="L26">    public static final Permission TRANSACTION_VIEW = new Permission(&quot;TRANSACTION_VIEW&quot;, &quot;Ver Transacciones&quot;, &quot;Puede ver transacciones contables&quot;, &quot;TRANSACTION&quot;);</span>
+<span class="nc" id="L27">    public static final Permission TRANSACTION_CREATE = new Permission(&quot;TRANSACTION_CREATE&quot;, &quot;Crear Transaccion&quot;, &quot;Puede crear nuevas transacciones&quot;, &quot;TRANSACTION&quot;);</span>
+<span class="nc" id="L28">    public static final Permission TRANSACTION_EDIT = new Permission(&quot;TRANSACTION_EDIT&quot;, &quot;Editar Transaccion&quot;, &quot;Puede editar transacciones no publicadas&quot;, &quot;TRANSACTION&quot;);</span>
+<span class="nc" id="L29">    public static final Permission TRANSACTION_DELETE = new Permission(&quot;TRANSACTION_DELETE&quot;, &quot;Eliminar Transaccion&quot;, &quot;Puede eliminar transacciones no publicadas&quot;, &quot;TRANSACTION&quot;);</span>
+<span class="nc" id="L30">    public static final Permission TRANSACTION_POST = new Permission(&quot;TRANSACTION_POST&quot;, &quot;Publicar Transaccion&quot;, &quot;Puede publicar transacciones (afectar saldos)&quot;, &quot;TRANSACTION&quot;);</span>
+<span class="nc" id="L31">    public static final Permission TRANSACTION_REVERSE = new Permission(&quot;TRANSACTION_REVERSE&quot;, &quot;Reversar Transaccion&quot;, &quot;Puede reversar transacciones publicadas&quot;, &quot;TRANSACTION&quot;);</span>
+<span class="nc" id="L32">    public static final Permission TRANSACTION_EXPORT = new Permission(&quot;TRANSACTION_EXPORT&quot;, &quot;Exportar Transacciones&quot;, &quot;Puede exportar transacciones&quot;, &quot;TRANSACTION&quot;);</span>
+    
+    // Modulo de Contabilidad - Cuentas
+<span class="nc" id="L35">    public static final Permission ACCOUNT_VIEW = new Permission(&quot;ACCOUNT_VIEW&quot;, &quot;Ver Cuentas&quot;, &quot;Puede ver el plan de cuentas&quot;, &quot;ACCOUNT&quot;);</span>
+<span class="nc" id="L36">    public static final Permission ACCOUNT_CREATE = new Permission(&quot;ACCOUNT_CREATE&quot;, &quot;Crear Cuenta&quot;, &quot;Puede crear nuevas cuentas contables&quot;, &quot;ACCOUNT&quot;);</span>
+<span class="nc" id="L37">    public static final Permission ACCOUNT_EDIT = new Permission(&quot;ACCOUNT_EDIT&quot;, &quot;Editar Cuenta&quot;, &quot;Puede editar cuentas contables&quot;, &quot;ACCOUNT&quot;);</span>
+<span class="nc" id="L38">    public static final Permission ACCOUNT_DELETE = new Permission(&quot;ACCOUNT_DELETE&quot;, &quot;Eliminar Cuenta&quot;, &quot;Puede eliminar cuentas contables&quot;, &quot;ACCOUNT&quot;);</span>
+    
+    // Modulo de Periodos Contables
+<span class="nc" id="L41">    public static final Permission PERIOD_VIEW = new Permission(&quot;PERIOD_VIEW&quot;, &quot;Ver Periodos&quot;, &quot;Puede ver periodos contables&quot;, &quot;PERIOD&quot;);</span>
+<span class="nc" id="L42">    public static final Permission PERIOD_OPEN = new Permission(&quot;PERIOD_OPEN&quot;, &quot;Abrir Periodo&quot;, &quot;Puede abrir periodos contables&quot;, &quot;PERIOD&quot;);</span>
+<span class="nc" id="L43">    public static final Permission PERIOD_CLOSE = new Permission(&quot;PERIOD_CLOSE&quot;, &quot;Cerrar Periodo&quot;, &quot;Puede cerrar periodos contables&quot;, &quot;PERIOD&quot;);</span>
+<span class="nc" id="L44">    public static final Permission PERIOD_LOCK = new Permission(&quot;PERIOD_LOCK&quot;, &quot;Bloquear Periodo&quot;, &quot;Puede bloquear periodos contables&quot;, &quot;PERIOD&quot;);</span>
+    
+    // Modulo de Monedas
+<span class="nc" id="L47">    public static final Permission CURRENCY_VIEW = new Permission(&quot;CURRENCY_VIEW&quot;, &quot;Ver Monedas&quot;, &quot;Puede ver monedas y tasas de cambio&quot;, &quot;CURRENCY&quot;);</span>
+<span class="nc" id="L48">    public static final Permission CURRENCY_CREATE = new Permission(&quot;CURRENCY_CREATE&quot;, &quot;Crear Moneda&quot;, &quot;Puede crear nuevas monedas&quot;, &quot;CURRENCY&quot;);</span>
+<span class="nc" id="L49">    public static final Permission CURRENCY_EDIT = new Permission(&quot;CURRENCY_EDIT&quot;, &quot;Editar Moneda&quot;, &quot;Puede editar monedas existentes&quot;, &quot;CURRENCY&quot;);</span>
+<span class="nc" id="L50">    public static final Permission CURRENCY_RATE_UPDATE = new Permission(&quot;CURRENCY_RATE_UPDATE&quot;, &quot;Actualizar Tasa de Cambio&quot;, &quot;Puede actualizar tasas de cambio&quot;, &quot;CURRENCY&quot;);</span>
+    
+    // Modulo de Terceros
+<span class="nc" id="L53">    public static final Permission THIRD_PARTY_VIEW = new Permission(&quot;THIRD_PARTY_VIEW&quot;, &quot;Ver Terceros&quot;, &quot;Puede ver terceros (clientes/proveedores)&quot;, &quot;THIRD_PARTY&quot;);</span>
+<span class="nc" id="L54">    public static final Permission THIRD_PARTY_CREATE = new Permission(&quot;THIRD_PARTY_CREATE&quot;, &quot;Crear Tercero&quot;, &quot;Puede crear nuevos terceros&quot;, &quot;THIRD_PARTY&quot;);</span>
+<span class="nc" id="L55">    public static final Permission THIRD_PARTY_EDIT = new Permission(&quot;THIRD_PARTY_EDIT&quot;, &quot;Editar Tercero&quot;, &quot;Puede editar terceros existentes&quot;, &quot;THIRD_PARTY&quot;);</span>
+<span class="nc" id="L56">    public static final Permission THIRD_PARTY_DELETE = new Permission(&quot;THIRD_PARTY_DELETE&quot;, &quot;Eliminar Tercero&quot;, &quot;Puede eliminar terceros&quot;, &quot;THIRD_PARTY&quot;);</span>
+    
+    // Modulo de Inventarios
+<span class="nc" id="L59">    public static final Permission INVENTORY_VIEW = new Permission(&quot;INVENTORY_VIEW&quot;, &quot;Ver Inventarios&quot;, &quot;Puede ver inventarios&quot;, &quot;INVENTORY&quot;);</span>
+<span class="nc" id="L60">    public static final Permission INVENTORY_CREATE = new Permission(&quot;INVENTORY_CREATE&quot;, &quot;Crear Item de Inventario&quot;, &quot;Puede crear items de inventario&quot;, &quot;INVENTORY&quot;);</span>
+<span class="nc" id="L61">    public static final Permission INVENTORY_EDIT = new Permission(&quot;INVENTORY_EDIT&quot;, &quot;Editar Inventario&quot;, &quot;Puede editar items de inventario&quot;, &quot;INVENTORY&quot;);</span>
+<span class="nc" id="L62">    public static final Permission INVENTORY_DELETE = new Permission(&quot;INVENTORY_DELETE&quot;, &quot;Eliminar Inventario&quot;, &quot;Puede eliminar items de inventario&quot;, &quot;INVENTORY&quot;);</span>
+<span class="nc" id="L63">    public static final Permission INVENTORY_MOVEMENT = new Permission(&quot;INVENTORY_MOVEMENT&quot;, &quot;Movimiento de Inventario&quot;, &quot;Puede realizar movimientos de inventario&quot;, &quot;INVENTORY&quot;);</span>
+    
+    // Modulo de Reportes
+<span class="nc" id="L66">    public static final Permission REPORT_VIEW = new Permission(&quot;REPORT_VIEW&quot;, &quot;Ver Reportes&quot;, &quot;Puede ver reportes del sistema&quot;, &quot;REPORT&quot;);</span>
+<span class="nc" id="L67">    public static final Permission REPORT_EXPORT = new Permission(&quot;REPORT_EXPORT&quot;, &quot;Exportar Reportes&quot;, &quot;Puede exportar reportes&quot;, &quot;REPORT&quot;);</span>
+<span class="nc" id="L68">    public static final Permission REPORT_CONFIGURE = new Permission(&quot;REPORT_CONFIGURE&quot;, &quot;Configurar Reportes&quot;, &quot;Puede configurar reportes personalizados&quot;, &quot;REPORT&quot;);</span>
+    
+    // Modulo de Auditoria
+<span class="nc" id="L71">    public static final Permission AUDIT_VIEW = new Permission(&quot;AUDIT_VIEW&quot;, &quot;Ver Auditoria&quot;, &quot;Puede ver logs de auditoria&quot;, &quot;AUDIT&quot;);</span>
+<span class="nc" id="L72">    public static final Permission AUDIT_EXPORT = new Permission(&quot;AUDIT_EXPORT&quot;, &quot;Exportar Auditoria&quot;, &quot;Puede exportar logs de auditoria&quot;, &quot;AUDIT&quot;);</span>
+    
+    // Modulo de Configuracion del Sistema
+<span class="nc" id="L75">    public static final Permission SYSTEM_CONFIG_VIEW = new Permission(&quot;SYSTEM_CONFIG_VIEW&quot;, &quot;Ver Configuracion&quot;, &quot;Puede ver configuracion del sistema&quot;, &quot;SYSTEM&quot;);</span>
+<span class="nc" id="L76">    public static final Permission SYSTEM_CONFIG_EDIT = new Permission(&quot;SYSTEM_CONFIG_EDIT&quot;, &quot;Editar Configuracion&quot;, &quot;Puede editar configuracion del sistema&quot;, &quot;SYSTEM&quot;);</span>
+    
+    // Roles predefinidos con sus permisos
+<span class="nc" id="L79">    private static final Map&lt;String, Set&lt;Permission&gt;&gt; ROLE_PERMISSIONS = new HashMap&lt;&gt;();</span>
+    
+    static {
+        // Rol ADMIN - Todos los permisos
+<span class="nc" id="L83">        Set&lt;Permission&gt; adminPermissions = getAllPermissions();</span>
+<span class="nc" id="L84">        ROLE_PERMISSIONS.put(&quot;ADMIN&quot;, adminPermissions);</span>
+        
+        // Rol ACCOUNTANT - Permisos contables completos
+<span class="nc" id="L87">        Set&lt;Permission&gt; accountantPermissions = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L88">        accountantPermissions.add(TRANSACTION_VIEW);</span>
+<span class="nc" id="L89">        accountantPermissions.add(TRANSACTION_CREATE);</span>
+<span class="nc" id="L90">        accountantPermissions.add(TRANSACTION_EDIT);</span>
+<span class="nc" id="L91">        accountantPermissions.add(TRANSACTION_POST);</span>
+<span class="nc" id="L92">        accountantPermissions.add(TRANSACTION_REVERSE);</span>
+<span class="nc" id="L93">        accountantPermissions.add(TRANSACTION_EXPORT);</span>
+<span class="nc" id="L94">        accountantPermissions.add(ACCOUNT_VIEW);</span>
+<span class="nc" id="L95">        accountantPermissions.add(ACCOUNT_CREATE);</span>
+<span class="nc" id="L96">        accountantPermissions.add(ACCOUNT_EDIT);</span>
+<span class="nc" id="L97">        accountantPermissions.add(PERIOD_VIEW);</span>
+<span class="nc" id="L98">        accountantPermissions.add(PERIOD_OPEN);</span>
+<span class="nc" id="L99">        accountantPermissions.add(PERIOD_CLOSE);</span>
+<span class="nc" id="L100">        accountantPermissions.add(CURRENCY_VIEW);</span>
+<span class="nc" id="L101">        accountantPermissions.add(CURRENCY_RATE_UPDATE);</span>
+<span class="nc" id="L102">        accountantPermissions.add(THIRD_PARTY_VIEW);</span>
+<span class="nc" id="L103">        accountantPermissions.add(THIRD_PARTY_CREATE);</span>
+<span class="nc" id="L104">        accountantPermissions.add(THIRD_PARTY_EDIT);</span>
+<span class="nc" id="L105">        accountantPermissions.add(INVENTORY_VIEW);</span>
+<span class="nc" id="L106">        accountantPermissions.add(INVENTORY_MOVEMENT);</span>
+<span class="nc" id="L107">        accountantPermissions.add(REPORT_VIEW);</span>
+<span class="nc" id="L108">        accountantPermissions.add(REPORT_EXPORT);</span>
+<span class="nc" id="L109">        accountantPermissions.add(AUDIT_VIEW);</span>
+<span class="nc" id="L110">        ROLE_PERMISSIONS.put(&quot;ACCOUNTANT&quot;, accountantPermissions);</span>
+        
+        // Rol USER - Permisos basicos
+<span class="nc" id="L113">        Set&lt;Permission&gt; userPermissions = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L114">        userPermissions.add(TRANSACTION_VIEW);</span>
+<span class="nc" id="L115">        userPermissions.add(TRANSACTION_CREATE);</span>
+<span class="nc" id="L116">        userPermissions.add(ACCOUNT_VIEW);</span>
+<span class="nc" id="L117">        userPermissions.add(PERIOD_VIEW);</span>
+<span class="nc" id="L118">        userPermissions.add(CURRENCY_VIEW);</span>
+<span class="nc" id="L119">        userPermissions.add(THIRD_PARTY_VIEW);</span>
+<span class="nc" id="L120">        userPermissions.add(INVENTORY_VIEW);</span>
+<span class="nc" id="L121">        userPermissions.add(REPORT_VIEW);</span>
+<span class="nc" id="L122">        ROLE_PERMISSIONS.put(&quot;USER&quot;, userPermissions);</span>
+        
+        // Rol VIEWER - Solo lectura
+<span class="nc" id="L125">        Set&lt;Permission&gt; viewerPermissions = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L126">        viewerPermissions.add(TRANSACTION_VIEW);</span>
+<span class="nc" id="L127">        viewerPermissions.add(ACCOUNT_VIEW);</span>
+<span class="nc" id="L128">        viewerPermissions.add(PERIOD_VIEW);</span>
+<span class="nc" id="L129">        viewerPermissions.add(CURRENCY_VIEW);</span>
+<span class="nc" id="L130">        viewerPermissions.add(THIRD_PARTY_VIEW);</span>
+<span class="nc" id="L131">        viewerPermissions.add(INVENTORY_VIEW);</span>
+<span class="nc" id="L132">        viewerPermissions.add(REPORT_VIEW);</span>
+<span class="nc" id="L133">        ROLE_PERMISSIONS.put(&quot;VIEWER&quot;, viewerPermissions);</span>
+<span class="nc" id="L134">    }</span>
+    
+    /**
+     * Obtiene todos los permisos definidos en el sistema
+     */
+    public static Set&lt;Permission&gt; getAllPermissions() {
+<span class="nc" id="L140">        Set&lt;Permission&gt; allPermissions = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L141">        allPermissions.add(COMPANY_VIEW);</span>
+<span class="nc" id="L142">        allPermissions.add(COMPANY_CREATE);</span>
+<span class="nc" id="L143">        allPermissions.add(COMPANY_EDIT);</span>
+<span class="nc" id="L144">        allPermissions.add(COMPANY_DELETE);</span>
+<span class="nc" id="L145">        allPermissions.add(USER_VIEW);</span>
+<span class="nc" id="L146">        allPermissions.add(USER_CREATE);</span>
+<span class="nc" id="L147">        allPermissions.add(USER_EDIT);</span>
+<span class="nc" id="L148">        allPermissions.add(USER_DELETE);</span>
+<span class="nc" id="L149">        allPermissions.add(USER_CHANGE_PASSWORD);</span>
+<span class="nc" id="L150">        allPermissions.add(USER_ASSIGN_ROLE);</span>
+<span class="nc" id="L151">        allPermissions.add(TRANSACTION_VIEW);</span>
+<span class="nc" id="L152">        allPermissions.add(TRANSACTION_CREATE);</span>
+<span class="nc" id="L153">        allPermissions.add(TRANSACTION_EDIT);</span>
+<span class="nc" id="L154">        allPermissions.add(TRANSACTION_DELETE);</span>
+<span class="nc" id="L155">        allPermissions.add(TRANSACTION_POST);</span>
+<span class="nc" id="L156">        allPermissions.add(TRANSACTION_REVERSE);</span>
+<span class="nc" id="L157">        allPermissions.add(TRANSACTION_EXPORT);</span>
+<span class="nc" id="L158">        allPermissions.add(ACCOUNT_VIEW);</span>
+<span class="nc" id="L159">        allPermissions.add(ACCOUNT_CREATE);</span>
+<span class="nc" id="L160">        allPermissions.add(ACCOUNT_EDIT);</span>
+<span class="nc" id="L161">        allPermissions.add(ACCOUNT_DELETE);</span>
+<span class="nc" id="L162">        allPermissions.add(PERIOD_VIEW);</span>
+<span class="nc" id="L163">        allPermissions.add(PERIOD_OPEN);</span>
+<span class="nc" id="L164">        allPermissions.add(PERIOD_CLOSE);</span>
+<span class="nc" id="L165">        allPermissions.add(PERIOD_LOCK);</span>
+<span class="nc" id="L166">        allPermissions.add(CURRENCY_VIEW);</span>
+<span class="nc" id="L167">        allPermissions.add(CURRENCY_CREATE);</span>
+<span class="nc" id="L168">        allPermissions.add(CURRENCY_EDIT);</span>
+<span class="nc" id="L169">        allPermissions.add(CURRENCY_RATE_UPDATE);</span>
+<span class="nc" id="L170">        allPermissions.add(THIRD_PARTY_VIEW);</span>
+<span class="nc" id="L171">        allPermissions.add(THIRD_PARTY_CREATE);</span>
+<span class="nc" id="L172">        allPermissions.add(THIRD_PARTY_EDIT);</span>
+<span class="nc" id="L173">        allPermissions.add(THIRD_PARTY_DELETE);</span>
+<span class="nc" id="L174">        allPermissions.add(INVENTORY_VIEW);</span>
+<span class="nc" id="L175">        allPermissions.add(INVENTORY_CREATE);</span>
+<span class="nc" id="L176">        allPermissions.add(INVENTORY_EDIT);</span>
+<span class="nc" id="L177">        allPermissions.add(INVENTORY_DELETE);</span>
+<span class="nc" id="L178">        allPermissions.add(INVENTORY_MOVEMENT);</span>
+<span class="nc" id="L179">        allPermissions.add(REPORT_VIEW);</span>
+<span class="nc" id="L180">        allPermissions.add(REPORT_EXPORT);</span>
+<span class="nc" id="L181">        allPermissions.add(REPORT_CONFIGURE);</span>
+<span class="nc" id="L182">        allPermissions.add(AUDIT_VIEW);</span>
+<span class="nc" id="L183">        allPermissions.add(AUDIT_EXPORT);</span>
+<span class="nc" id="L184">        allPermissions.add(SYSTEM_CONFIG_VIEW);</span>
+<span class="nc" id="L185">        allPermissions.add(SYSTEM_CONFIG_EDIT);</span>
+<span class="nc" id="L186">        return allPermissions;</span>
+    }
+    
+    /**
+     * Obtiene los permisos asociados a un rol especifico
+     * @param roleName Nombre del rol (ADMIN, ACCOUNTANT, USER, VIEWER)
+     * @return Conjunto de permisos para el rol
+     */
+    public static Set&lt;Permission&gt; getPermissionsForRole(String roleName) {
+<span class="nc" id="L195">        Set&lt;Permission&gt; permissions = ROLE_PERMISSIONS.get(roleName.toUpperCase());</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (permissions == null) {</span>
+<span class="nc" id="L197">            return ROLE_PERMISSIONS.get(&quot;VIEWER&quot;);</span>
+        }
+<span class="nc" id="L199">        return Collections.unmodifiableSet(permissions);</span>
+    }
+    
+    /**
+     * Verifica si un rol tiene un permiso especifico
+     * @param roleName Nombre del rol
+     * @param permissionCode Codigo del permiso a verificar
+     * @return true si el rol tiene el permiso, false en caso contrario
+     */
+    public static boolean hasPermission(String roleName, String permissionCode) {
+<span class="nc" id="L209">        Set&lt;Permission&gt; permissions = getPermissionsForRole(roleName);</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        for (Permission permission : permissions) {</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">            if (permission.getCode().equals(permissionCode)) {</span>
+<span class="nc" id="L212">                return true;</span>
+            }
+<span class="nc" id="L214">        }</span>
+<span class="nc" id="L215">        return false;</span>
+    }
+    
+    /**
+     * Obtiene todos los permisos de un modulo especifico
+     * @param module Nombre del modulo
+     * @return Lista de permisos del modulo
+     */
+    public static List&lt;Permission&gt; getPermissionsByModule(String module) {
+<span class="nc" id="L224">        List&lt;Permission&gt; modulePermissions = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        for (Permission permission : getAllPermissions()) {</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">            if (permission.getModule().equals(module.toUpperCase())) {</span>
+<span class="nc" id="L227">                modulePermissions.add(permission);</span>
+            }
+<span class="nc" id="L229">        }</span>
+<span class="nc" id="L230">        return modulePermissions;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

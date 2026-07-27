@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CashMovement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.cash.model</a> &gt; <span class="el_source">CashMovement.java</span></div><h1>CashMovement.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.cash.model;</span>
+<span class="nc" id="L2"></span>
+<span class="nc" id="L3">import com.econovafx.modules.core.model.BaseEntity;</span>
+<span class="nc" id="L4">import io.ebean.annotation.DbEnumValue;</span>
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+/**
+ * Entity representing a Cash Movement (Income, Expense, Transfer).
+ */
+@Entity
+@Table(name = &quot;cash_movement&quot;)
+public class CashMovement extends BaseEntity {
+
+<span class="nc" id="L18">    public enum MovementType {</span>
+<span class="nc" id="L19">        INCOME, EXPENSE, TRANSFER</span>
+    }
+
+<span class="nc" id="L22">    public enum Status {</span>
+<span class="nc" id="L23">        PENDING, POSTED, CANCELLED</span>
+    }
+
+    @Column(name = &quot;document_number&quot;, nullable = false, unique = true)
+    private String documentNumber;
+
+    @Column(nullable = false)
+    private LocalDate date;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = &quot;movement_type&quot;, nullable = false)
+    private MovementType movementType;
+
+    @Column(nullable = false, length = 500)
+    private String description;
+
+    @Column(name = &quot;source_account_id&quot;)
+    private Long sourceAccountId;
+
+    @Column(name = &quot;destination_account_id&quot;)
+    private Long destinationAccountId;
+
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal amount;
+
+    @Column(nullable = false, length = 3)
+    private String currency;
+
+    @Column(name = &quot;contra_account&quot;)
+    private String contraAccount;
+
+    @Column(name = &quot;cost_center&quot;)
+    private String costCenter;
+
+<span class="nc" id="L57">    @Enumerated(EnumType.STRING)</span>
+    @Column(nullable = false)
+    private Status status = Status.PENDING;
+
+    @Column(nullable = false)
+<span class="nc" id="L62">    private Boolean reconciled = false;</span>
+
+    @Column(name = &quot;posted_at&quot;)
+    private LocalDateTime postedAt;
+
+    @Column(name = &quot;posted_by&quot;)
+    private String postedBy;
+
+    public CashMovement() {
+<span class="nc" id="L71">        super();</span>
+<span class="nc" id="L72">        this.status = Status.PENDING;</span>
+<span class="nc" id="L73">        this.reconciled = false;</span>
+<span class="nc" id="L74">    }</span>
+
+<span class="nc" id="L76">    public String getDocumentNumber() { return documentNumber; }</span>
+<span class="nc" id="L77">    public void setDocumentNumber(String documentNumber) { this.documentNumber = documentNumber; }</span>
+<span class="nc" id="L78">    public LocalDate getDate() { return date; }</span>
+<span class="nc" id="L79">    public void setDate(LocalDate date) { this.date = date; }</span>
+<span class="nc" id="L80">    public MovementType getMovementType() { return movementType; }</span>
+<span class="nc" id="L81">    public void setMovementType(MovementType movementType) { this.movementType = movementType; }</span>
+<span class="nc" id="L82">    public String getDescription() { return description; }</span>
+<span class="nc" id="L83">    public void setDescription(String description) { this.description = description; }</span>
+<span class="nc" id="L84">    public Long getSourceAccountId() { return sourceAccountId; }</span>
+<span class="nc" id="L85">    public void setSourceAccountId(Long sourceAccountId) { this.sourceAccountId = sourceAccountId; }</span>
+<span class="nc" id="L86">    public Long getDestinationAccountId() { return destinationAccountId; }</span>
+<span class="nc" id="L87">    public void setDestinationAccountId(Long destinationAccountId) { this.destinationAccountId = destinationAccountId; }</span>
+<span class="nc" id="L88">    public BigDecimal getAmount() { return amount; }</span>
+<span class="nc" id="L89">    public void setAmount(BigDecimal amount) { this.amount = amount; }</span>
+<span class="nc" id="L90">    public String getCurrency() { return currency; }</span>
+<span class="nc" id="L91">    public void setCurrency(String currency) { this.currency = currency; }</span>
+<span class="nc" id="L92">    public String getContraAccount() { return contraAccount; }</span>
+<span class="nc" id="L93">    public void setContraAccount(String contraAccount) { this.contraAccount = contraAccount; }</span>
+<span class="nc" id="L94">    public String getCostCenter() { return costCenter; }</span>
+<span class="nc" id="L95">    public void setCostCenter(String costCenter) { this.costCenter = costCenter; }</span>
+<span class="nc" id="L96">    public Status getStatus() { return status; }</span>
+<span class="nc" id="L97">    public void setStatus(Status status) { this.status = status; }</span>
+<span class="nc" id="L98">    public Boolean getReconciled() { return reconciled; }</span>
+<span class="nc" id="L99">    public void setReconciled(Boolean reconciled) { this.reconciled = reconciled; }</span>
+<span class="nc" id="L100">    public LocalDateTime getPostedAt() { return postedAt; }</span>
+<span class="nc" id="L101">    public void setPostedAt(LocalDateTime postedAt) { this.postedAt = postedAt; }</span>
+<span class="nc" id="L102">    public String getPostedBy() { return postedBy; }</span>
+<span class="nc" id="L103">    public void setPostedBy(String postedBy) { this.postedBy = postedBy; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

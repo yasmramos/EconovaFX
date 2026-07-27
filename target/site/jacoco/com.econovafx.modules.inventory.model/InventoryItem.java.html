@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryItem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.inventory.model</a> &gt; <span class="el_source">InventoryItem.java</span></div><h1>InventoryItem.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.inventory.model;</span>
+
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.core.model.BaseEntity;
+import io.ebean.annotation.WhenCreated;
+import io.ebean.annotation.WhenModified;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+/**
+ * Entidad que representa un producto o artículo del inventario.
+ * Cumple con los requisitos de control de inventarios según Resolución 340/2004.
+ */
+@Entity
+@Table(name = &quot;inventory_items&quot;)
+<span class="nc" id="L17">public class InventoryItem extends BaseEntity {</span>
+
+    @Column(nullable = false, unique = true)
+    private String code;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(length = 1000)
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;category_id&quot;, nullable = false)
+    private InventoryCategory category;
+
+<span class="nc" id="L32">    @Column(nullable = false, precision = 19, scale = 4)</span>
+    private BigDecimal unitCost = BigDecimal.ZERO;
+
+<span class="nc" id="L35">    @Column(nullable = false, precision = 19, scale = 4)</span>
+    private BigDecimal salePrice = BigDecimal.ZERO;
+
+<span class="nc" id="L38">    @Column(nullable = false, precision = 19, scale = 4)</span>
+    private BigDecimal currentStock = BigDecimal.ZERO;
+
+<span class="nc" id="L41">    @Column(nullable = false, precision = 19, scale = 4)</span>
+    private BigDecimal minimumStock = BigDecimal.ZERO;
+
+<span class="nc" id="L44">    @Column(nullable = false, precision = 19, scale = 4)</span>
+    private BigDecimal maximumStock = BigDecimal.ZERO;
+
+<span class="nc" id="L47">    @Column(nullable = false)</span>
+    private String unitOfMeasure = &quot;UNIDAD&quot;;
+
+<span class="nc" id="L50">    @Column(nullable = false)</span>
+    private boolean active = true;
+
+    @Column(length = 50)
+    private String barcode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;supplier_id&quot;)
+    private ThirdParty supplier;
+
+<span class="nc" id="L60">    @Column(precision = 5, scale = 2)</span>
+    private BigDecimal taxRate = BigDecimal.ZERO;
+
+    // Getters y Setters
+    public Long getId() {
+<span class="nc" id="L65">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L69">        this.id = id;</span>
+<span class="nc" id="L70">    }</span>
+
+    public String getCode() {
+<span class="nc" id="L73">        return code;</span>
+    }
+
+    public void setCode(String code) {
+<span class="nc" id="L77">        this.code = code;</span>
+<span class="nc" id="L78">    }</span>
+
+    public String getName() {
+<span class="nc" id="L81">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L85">        this.name = name;</span>
+<span class="nc" id="L86">    }</span>
+
+    public String getDescription() {
+<span class="nc" id="L89">        return description;</span>
+    }
+
+    public void setDescription(String description) {
+<span class="nc" id="L93">        this.description = description;</span>
+<span class="nc" id="L94">    }</span>
+
+    public InventoryCategory getCategory() {
+<span class="nc" id="L97">        return category;</span>
+    }
+
+    public void setCategory(InventoryCategory category) {
+<span class="nc" id="L101">        this.category = category;</span>
+<span class="nc" id="L102">    }</span>
+
+    public BigDecimal getUnitCost() {
+<span class="nc" id="L105">        return unitCost;</span>
+    }
+
+    public void setUnitCost(BigDecimal unitCost) {
+<span class="nc" id="L109">        this.unitCost = unitCost;</span>
+<span class="nc" id="L110">    }</span>
+
+    public BigDecimal getSalePrice() {
+<span class="nc" id="L113">        return salePrice;</span>
+    }
+
+    public void setSalePrice(BigDecimal salePrice) {
+<span class="nc" id="L117">        this.salePrice = salePrice;</span>
+<span class="nc" id="L118">    }</span>
+
+    public BigDecimal getCurrentStock() {
+<span class="nc" id="L121">        return currentStock;</span>
+    }
+
+    public void setCurrentStock(BigDecimal currentStock) {
+<span class="nc" id="L125">        this.currentStock = currentStock;</span>
+<span class="nc" id="L126">    }</span>
+
+    public BigDecimal getMinimumStock() {
+<span class="nc" id="L129">        return minimumStock;</span>
+    }
+
+    public void setMinimumStock(BigDecimal minimumStock) {
+<span class="nc" id="L133">        this.minimumStock = minimumStock;</span>
+<span class="nc" id="L134">    }</span>
+
+    public BigDecimal getMaximumStock() {
+<span class="nc" id="L137">        return maximumStock;</span>
+    }
+
+    public void setMaximumStock(BigDecimal maximumStock) {
+<span class="nc" id="L141">        this.maximumStock = maximumStock;</span>
+<span class="nc" id="L142">    }</span>
+
+    public String getUnitOfMeasure() {
+<span class="nc" id="L145">        return unitOfMeasure;</span>
+    }
+
+    public void setUnitOfMeasure(String unitOfMeasure) {
+<span class="nc" id="L149">        this.unitOfMeasure = unitOfMeasure;</span>
+<span class="nc" id="L150">    }</span>
+
+    public boolean isActive() {
+<span class="nc" id="L153">        return active;</span>
+    }
+
+    public void setActive(boolean active) {
+<span class="nc" id="L157">        this.active = active;</span>
+<span class="nc" id="L158">    }</span>
+
+    public String getBarcode() {
+<span class="nc" id="L161">        return barcode;</span>
+    }
+
+    public void setBarcode(String barcode) {
+<span class="nc" id="L165">        this.barcode = barcode;</span>
+<span class="nc" id="L166">    }</span>
+
+    public ThirdParty getSupplier() {
+<span class="nc" id="L169">        return supplier;</span>
+    }
+
+    public void setSupplier(ThirdParty supplier) {
+<span class="nc" id="L173">        this.supplier = supplier;</span>
+<span class="nc" id="L174">    }</span>
+
+    public BigDecimal getTaxRate() {
+<span class="nc" id="L177">        return taxRate;</span>
+    }
+
+    public void setTaxRate(BigDecimal taxRate) {
+<span class="nc" id="L181">        this.taxRate = taxRate;</span>
+<span class="nc" id="L182">    }</span>
+
+    /**
+     * Verifica si el stock actual está por encima del máximo.
+     */
+    public boolean isAboveMaximumStock() {
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        return currentStock.compareTo(maximumStock) &gt; 0;</span>
+    }
+
+    /**
+     * Calcula el valor total del inventario (costo * stock).
+     */
+    public BigDecimal getTotalValue() {
+<span class="nc" id="L195">        return unitCost.multiply(currentStock);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L200">        return &quot;InventoryItem{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, code='&quot; + code + '\'' +
+                &quot;, name='&quot; + name + '\'' +
+                &quot;, currentStock=&quot; + currentStock +
+                &quot;, unitCost=&quot; + unitCost +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

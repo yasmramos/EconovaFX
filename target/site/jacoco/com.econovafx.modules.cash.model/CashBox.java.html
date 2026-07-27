@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CashBox.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.cash.model</a> &gt; <span class="el_source">CashBox.java</span></div><h1>CashBox.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.cash.model;</span>
+<span class="nc" id="L2"></span>
+<span class="nc" id="L3">import com.econovafx.modules.core.model.BaseEntity;</span>
+<span class="nc" id="L4">import jakarta.persistence.*;</span>
+
+import java.math.BigDecimal;
+
+/**
+ * Entity representing a Cash Box according to Resolution 340/2004.
+ */
+@Entity
+@Table(name = &quot;cash_box&quot;)
+public class CashBox extends BaseEntity {
+
+    @Column(nullable = false, unique = true)
+    private String code;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false, length = 3)
+    private String currency;
+
+    @Column(name = &quot;accounting_account&quot;)
+    private String accountingAccount;
+
+<span class="nc" id="L27">    @Column(nullable = false, precision = 19, scale = 4)</span>
+    private BigDecimal balance = BigDecimal.ZERO;
+
+<span class="nc" id="L30">    @Column(nullable = false)</span>
+<span class="nc" id="L31">    private Boolean open = true;</span>
+
+    public CashBox() {
+<span class="nc" id="L34">        super();</span>
+<span class="nc" id="L35">        this.balance = BigDecimal.ZERO;</span>
+<span class="nc" id="L36">        this.open = true;</span>
+<span class="nc" id="L37">    }</span>
+
+<span class="nc" id="L39">    public String getCode() { return code; }</span>
+<span class="nc" id="L40">    public void setCode(String code) { this.code = code; }</span>
+<span class="nc" id="L41">    public String getDescription() { return description; }</span>
+<span class="nc" id="L42">    public void setDescription(String description) { this.description = description; }</span>
+<span class="nc" id="L43">    public String getCurrency() { return currency; }</span>
+<span class="nc" id="L44">    public void setCurrency(String currency) { this.currency = currency; }</span>
+<span class="nc" id="L45">    public String getAccountingAccount() { return accountingAccount; }</span>
+<span class="nc" id="L46">    public void setAccountingAccount(String accountingAccount) { this.accountingAccount = accountingAccount; }</span>
+<span class="nc" id="L47">    public BigDecimal getBalance() { return balance; }</span>
+<span class="nc" id="L48">    public void setBalance(BigDecimal balance) { this.balance = balance; }</span>
+<span class="nc" id="L49">    public Boolean getOpen() { return open; }</span>
+<span class="nc" id="L50">    public void setOpen(Boolean open) { this.open = open; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

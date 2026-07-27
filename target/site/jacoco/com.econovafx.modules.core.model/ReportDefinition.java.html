@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReportDefinition.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.model</a> &gt; <span class="el_source">ReportDefinition.java</span></div><h1>ReportDefinition.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.core.model;</span>
+
+import jakarta.persistence.*;
+
+/**
+ * Report Definition entity for saved report configurations
+ */
+@Entity
+@Table(name = &quot;report_definition&quot;)
+<span class="nc" id="L10">public class ReportDefinition extends BaseEntity {</span>
+
+<span class="nc" id="L12">    public enum ReportType {</span>
+<span class="nc" id="L13">        TRIAL_BALANCE,</span>
+<span class="nc" id="L14">        GENERAL_LEDGER,</span>
+<span class="nc" id="L15">        VOUCHER_HISTORY,</span>
+<span class="nc" id="L16">        FINANCIAL_STATEMENT</span>
+    }
+
+    @Column(nullable = false, unique = true, length = 20)
+    private String code;
+
+    @Column(nullable = false, length = 100)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private ReportType reportType;
+
+    @Column(name = &quot;parameters_json&quot;, length = 2000)
+    private String parametersJson;
+
+    @Column(name = &quot;default_filters_json&quot;, length = 2000)
+    private String defaultFiltersJson;
+
+<span class="nc" id="L35">    @Column(name = &quot;is_public&quot;)</span>
+<span class="nc" id="L36">    private Boolean isPublic = true;</span>
+
+    // Getters and Setters
+<span class="nc" id="L39">    public String getCode() { return code; }</span>
+<span class="nc" id="L40">    public void setCode(String code) { this.code = code; }</span>
+
+<span class="nc" id="L42">    public String getName() { return name; }</span>
+<span class="nc" id="L43">    public void setName(String name) { this.name = name; }</span>
+
+<span class="nc" id="L45">    public ReportType getReportType() { return reportType; }</span>
+<span class="nc" id="L46">    public void setReportType(ReportType reportType) { this.reportType = reportType; }</span>
+
+<span class="nc" id="L48">    public String getParametersJson() { return parametersJson; }</span>
+<span class="nc" id="L49">    public void setParametersJson(String parametersJson) { this.parametersJson = parametersJson; }</span>
+
+<span class="nc" id="L51">    public String getDefaultFiltersJson() { return defaultFiltersJson; }</span>
+<span class="nc" id="L52">    public void setDefaultFiltersJson(String defaultFiltersJson) { this.defaultFiltersJson = defaultFiltersJson; }</span>
+
+<span class="nc" id="L54">    public Boolean getIsPublic() { return isPublic; }</span>
+<span class="nc" id="L55">    public void setIsPublic(Boolean aPublic) { isPublic = aPublic; }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L59">        return &quot;ReportDefinition{&quot; +</span>
+<span class="nc" id="L60">                &quot;id=&quot; + getId() +</span>
+                &quot;, code='&quot; + code + '\'' +
+                &quot;, name='&quot; + name + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

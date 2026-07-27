@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package com.econovafx;
+
+import com.econovafx.modules.core.config.AppContext;
+import com.econovafx.modules.core.config.DatabaseConfig;
+import com.econovafx.modules.core.ui.controller.MainViewController;
+import com.econovafx.modules.core.ui.view.SplashController;
+import com.econovafx.modules.core.ui.view.ViewFactory;
+import java.io.IOException;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Main application class for EconoNova FX Accounting System
+ */
+<span class="nc" id="L20">public class App extends Application {</span>
+
+<span class="nc" id="L22">    private static final Logger logger = LoggerFactory.getLogger(App.class);</span>
+    private static final String VERSION = &quot;1.0.0&quot;;
+
+    private AppContext context;
+    private Stage primaryStage;
+    private Stage splashStage;
+    private SplashController splashController;
+
+    @Override
+    public void init() throws Exception {
+<span class="nc" id="L32">        logger.info(&quot;Initializing EconoNova FX Application v{}&quot;, VERSION);</span>
+<span class="nc" id="L33">        context = AppContext.getInstance();</span>
+<span class="nc" id="L34">        logger.info(&quot;Application context initialized&quot;);</span>
+<span class="nc" id="L35">    }</span>
+
+    @Override
+    public void start(Stage stage) {
+<span class="nc" id="L39">        logger.info(&quot;Starting JavaFX application&quot;);</span>
+<span class="nc" id="L40">        this.primaryStage = stage;</span>
+
+        try {
+            // Show splash screen first
+<span class="nc" id="L44">            showSplashScreen();</span>
+
+<span class="nc" id="L46">        } catch (Exception e) {</span>
+<span class="nc" id="L47">            logger.error(&quot;Failed to start application&quot;, e);</span>
+<span class="nc" id="L48">            throw new RuntimeException(&quot;Failed to start application&quot;, e);</span>
+<span class="nc" id="L49">        }</span>
+<span class="nc" id="L50">    }</span>
+    
+    private void showSplashScreen() {
+        try {
+<span class="nc" id="L54">            splashStage = new Stage();</span>
+            
+<span class="nc" id="L56">            FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/fxml/splash.fxml&quot;));</span>
+<span class="nc" id="L57">            StackPane root = loader.load();</span>
+<span class="nc" id="L58">            splashController = loader.getController();</span>
+            
+<span class="nc" id="L60">            Scene splashScene = new Scene(root);</span>
+<span class="nc" id="L61">            splashStage.setScene(splashScene);</span>
+<span class="nc" id="L62">            splashStage.setTitle(&quot;EconoNova FX - Loading&quot;);</span>
+<span class="nc" id="L63">            splashStage.setResizable(false);</span>
+<span class="nc" id="L64">            splashStage.centerOnScreen();</span>
+<span class="nc" id="L65">            splashStage.show();</span>
+            
+            // Set callback for when initialization is complete
+<span class="nc" id="L68">            splashController.setOnInitializationComplete(this::loadMainApp);</span>
+            
+<span class="nc" id="L70">        } catch (IOException e) {</span>
+<span class="nc" id="L71">            logger.error(&quot;Failed to load splash screen&quot;, e);</span>
+<span class="nc" id="L72">            throw new RuntimeException(&quot;Failed to load splash screen&quot;, e);</span>
+<span class="nc" id="L73">        }</span>
+<span class="nc" id="L74">    }</span>
+
+    private void loadMainApp() {
+        try {
+<span class="nc" id="L78">            ViewFactory viewFactory = context.getViewFactory();</span>
+<span class="nc" id="L79">            MainViewController mainController = new MainViewController(</span>
+<span class="nc" id="L80">                    context.getAccountService(),</span>
+<span class="nc" id="L81">                    context.getTransactionService(),</span>
+<span class="nc" id="L82">                    context.getUserService(),</span>
+                    viewFactory
+            );
+
+<span class="nc" id="L86">            FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/fxml/main-view.fxml&quot;));</span>
+<span class="nc" id="L87">            loader.setControllerFactory(cls -&gt; mainController);</span>
+
+<span class="nc" id="L89">            Scene scene = new Scene(loader.load(), 1200, 800);</span>
+
+            // Add all stylesheets in correct order
+<span class="nc" id="L92">            scene.getStylesheets().add(getClass().getResource(&quot;/css/main-styles.css&quot;).toExternalForm());</span>
+<span class="nc" id="L93">            scene.getStylesheets().add(getClass().getResource(&quot;/styles/sidebar.css&quot;).toExternalForm());</span>
+<span class="nc" id="L94">            scene.getStylesheets().add(getClass().getResource(&quot;/styles/dashboard.css&quot;).toExternalForm());</span>
+
+<span class="nc" id="L96">            primaryStage.setTitle(&quot;EconoNova FX - Accounting System&quot;);</span>
+<span class="nc" id="L97">            primaryStage.setScene(scene);</span>
+<span class="nc" id="L98">            primaryStage.setMinWidth(1024);</span>
+<span class="nc" id="L99">            primaryStage.setMinHeight(768);</span>
+<span class="nc" id="L100">            primaryStage.centerOnScreen();</span>
+            
+            // Close splash screen
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            if (splashStage != null) {</span>
+<span class="nc" id="L104">                splashStage.close();</span>
+            }
+
+<span class="nc" id="L107">            logger.info(&quot;Application started successfully&quot;);</span>
+
+<span class="nc" id="L109">        } catch (IOException e) {</span>
+<span class="nc" id="L110">            logger.error(&quot;Failed to load main view&quot;, e);</span>
+<span class="nc" id="L111">            throw new RuntimeException(&quot;Failed to load main view&quot;, e);</span>
+<span class="nc" id="L112">        }</span>
+<span class="nc" id="L113">    }</span>
+
+    @Override
+    public void stop() throws Exception {
+<span class="nc" id="L117">        logger.info(&quot;Shutting down application...&quot;);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (context != null) {</span>
+<span class="nc" id="L119">            context.close();</span>
+        }
+<span class="nc" id="L121">        DatabaseConfig.shutdown();</span>
+<span class="nc" id="L122">        logger.info(&quot;Application shutdown complete&quot;);</span>
+<span class="nc" id="L123">    }</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L126">        launch(args);</span>
+<span class="nc" id="L127">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

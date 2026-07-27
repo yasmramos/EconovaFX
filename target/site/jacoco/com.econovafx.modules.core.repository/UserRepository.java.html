@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.repository</a> &gt; <span class="el_source">UserRepository.java</span></div><h1>UserRepository.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.repository;
+
+import com.econovafx.modules.core.model.User;
+import io.avaje.inject.Component;
+import io.ebean.Database;
+import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Repository for User entities
+ */
+@Component
+public class UserRepository {
+    
+<span class="nc" id="L19">    private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);</span>
+    
+    private final Database database;
+    
+    @Inject
+<span class="nc" id="L24">    public UserRepository(Database database) {</span>
+<span class="nc" id="L25">        this.database = database;</span>
+<span class="nc" id="L26">    }</span>
+    
+    public Optional&lt;User&gt; findById(Long id) {
+<span class="nc" id="L29">        return Optional.ofNullable(database.find(User.class, id));</span>
+    }
+    
+    public Optional&lt;User&gt; findByUsername(String username) {
+<span class="nc" id="L33">        return Optional.ofNullable(database.find(User.class)</span>
+<span class="nc" id="L34">                .where().eq(&quot;username&quot;, username).findOne());</span>
+    }
+    
+    public Optional&lt;User&gt; findByEmail(String email) {
+<span class="nc" id="L38">        return Optional.ofNullable(database.find(User.class)</span>
+<span class="nc" id="L39">                .where().eq(&quot;email&quot;, email).findOne());</span>
+    }
+    
+    public List&lt;User&gt; findAll() {
+<span class="nc" id="L43">        return database.find(User.class).findList();</span>
+    }
+    
+    public List&lt;User&gt; findActiveUsers() {
+<span class="nc" id="L47">        return database.find(User.class)</span>
+<span class="nc" id="L48">                .where().eq(&quot;isActive&quot;, true).findList();</span>
+    }
+
+    /**
+     * Alias para findAllActive usado en WarehouseConfigController
+     */
+    public List&lt;User&gt; findAllActive() {
+<span class="nc" id="L55">        return findActiveUsers();</span>
+    }
+    
+    public User save(User user) {
+<span class="nc" id="L59">        database.save(user);</span>
+<span class="nc" id="L60">        logger.debug(&quot;User saved: {}&quot;, user.getUsername());</span>
+<span class="nc" id="L61">        return user;</span>
+    }
+    
+    public void update(User user) {
+<span class="nc" id="L65">        database.update(user);</span>
+<span class="nc" id="L66">        logger.debug(&quot;User updated: {}&quot;, user.getUsername());</span>
+<span class="nc" id="L67">    }</span>
+    
+    public void delete(User user) {
+<span class="nc" id="L70">        database.delete(user);</span>
+<span class="nc" id="L71">        logger.debug(&quot;User deleted: {}&quot;, user.getUsername());</span>
+<span class="nc" id="L72">    }</span>
+    
+    public void deleteById(Long id) {
+<span class="nc" id="L75">        database.delete(User.class, id);</span>
+<span class="nc" id="L76">        logger.debug(&quot;User deleted by ID: {}&quot;, id);</span>
+<span class="nc" id="L77">    }</span>
+    
+    public boolean existsByUsername(String username) {
+<span class="nc" id="L80">        return database.find(User.class)</span>
+<span class="nc" id="L81">                .where().eq(&quot;username&quot;, username).exists();</span>
+    }
+    
+    public boolean existsByEmail(String email) {
+<span class="nc" id="L85">        return database.find(User.class)</span>
+<span class="nc" id="L86">                .where().eq(&quot;email&quot;, email).exists();</span>
+    }
+    
+    public boolean existsById(Long id) {
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        return database.find(User.class, id) != null;</span>
+    }
+    
+    public long count() {
+<span class="nc" id="L94">        return database.find(User.class).findCount();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

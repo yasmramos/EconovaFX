@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountingPeriodRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.accounting.repository</a> &gt; <span class="el_source">AccountingPeriodRepository.java</span></div><h1>AccountingPeriodRepository.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.accounting.repository;
+
+import com.econovafx.modules.accounting.model.AccountingPeriod;
+import io.avaje.inject.Component;
+import io.ebean.Database;
+import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Repository for managing AccountingPeriod entities.
+ */
+@Component
+<span class="nc" id="L18">public class AccountingPeriodRepository {</span>
+
+<span class="nc" id="L20">    private static final Logger log = LoggerFactory.getLogger(AccountingPeriodRepository.class);</span>
+
+    @Inject
+    Database database;
+
+    /**
+     * Find all accounting periods ordered by start date descending.
+     */
+    public List&lt;AccountingPeriod&gt; findAll() {
+<span class="nc" id="L29">        return database.find(AccountingPeriod.class)</span>
+<span class="nc" id="L30">                .orderBy(&quot;startDate desc&quot;)</span>
+<span class="nc" id="L31">                .findList();</span>
+    }
+
+    /**
+     * Find an accounting period by ID.
+     */
+    public Optional&lt;AccountingPeriod&gt; findById(Long id) {
+<span class="nc" id="L38">        AccountingPeriod period = database.find(AccountingPeriod.class, id);</span>
+<span class="nc" id="L39">        return Optional.ofNullable(period);</span>
+    }
+
+    /**
+     * Find the current open accounting period.
+     */
+    public Optional&lt;AccountingPeriod&gt; findCurrentOpenPeriod() {
+<span class="nc" id="L46">        List&lt;AccountingPeriod&gt; results = database.find(AccountingPeriod.class)</span>
+<span class="nc" id="L47">                .where().eq(&quot;status&quot;, AccountingPeriod.PeriodStatus.OPEN)</span>
+<span class="nc" id="L48">                .orderBy(&quot;startDate desc&quot;)</span>
+<span class="nc" id="L49">                .setMaxRows(1)</span>
+<span class="nc" id="L50">                .findList();</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));</span>
+    }
+
+    /**
+     * Find a period that contains a specific date.
+     */
+    public Optional&lt;AccountingPeriod&gt; findPeriodByDate(LocalDate date) {
+<span class="nc" id="L58">        List&lt;AccountingPeriod&gt; results = database.find(AccountingPeriod.class)</span>
+<span class="nc" id="L59">                .where()</span>
+<span class="nc" id="L60">                .le(&quot;startDate&quot;, date)</span>
+<span class="nc" id="L61">                .ge(&quot;endDate&quot;, date)</span>
+<span class="nc" id="L62">                .findList();</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));</span>
+    }
+
+    /**
+     * Save or update an accounting period.
+     */
+    public AccountingPeriod save(AccountingPeriod period) {
+<span class="nc" id="L70">        database.save(period);</span>
+<span class="nc" id="L71">        return period;</span>
+    }
+
+    /**
+     * Delete an accounting period.
+     */
+    public void delete(Long id) {
+<span class="nc" id="L78">        Optional&lt;AccountingPeriod&gt; period = findById(id);</span>
+<span class="nc" id="L79">        period.ifPresent(database::delete);</span>
+<span class="nc" id="L80">    }</span>
+
+    /**
+     * Check if there is any open period.
+     */
+    public boolean hasOpenPeriod() {
+<span class="nc" id="L86">        long count = database.find(AccountingPeriod.class)</span>
+<span class="nc" id="L87">                .where().eq(&quot;status&quot;, AccountingPeriod.PeriodStatus.OPEN)</span>
+<span class="nc" id="L88">                .findCount();</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        return count &gt; 0;</span>
+    }
+
+    /**
+     * Find all periods for a specific year and type.
+     */
+    public List&lt;AccountingPeriod&gt; findPeriodsByYearAndType(int year, AccountingPeriod.PeriodType type) {
+<span class="nc" id="L96">        LocalDate startOfYear = LocalDate.of(year, 1, 1);</span>
+<span class="nc" id="L97">        LocalDate endOfYear = LocalDate.of(year, 12, 31);</span>
+        
+<span class="nc" id="L99">        return database.find(AccountingPeriod.class)</span>
+<span class="nc" id="L100">                .where()</span>
+<span class="nc" id="L101">                .eq(&quot;type&quot;, type)</span>
+<span class="nc" id="L102">                .ge(&quot;startDate&quot;, startOfYear)</span>
+<span class="nc" id="L103">                .le(&quot;endDate&quot;, endOfYear)</span>
+<span class="nc" id="L104">                .orderBy(&quot;startDate asc&quot;)</span>
+<span class="nc" id="L105">                .findList();</span>
+    }
+
+    /**
+     * Find all monthly periods for a specific year.
+     */
+    public List&lt;AccountingPeriod&gt; findMonthlyPeriodsByYear(int year) {
+<span class="nc" id="L112">        return findPeriodsByYearAndType(year, AccountingPeriod.PeriodType.MONTHLY);</span>
+    }
+
+    /**
+     * Find the annual period for a specific year.
+     */
+    public Optional&lt;AccountingPeriod&gt; findAnnualPeriodByYear(int year) {
+<span class="nc" id="L119">        LocalDate startOfYear = LocalDate.of(year, 1, 1);</span>
+<span class="nc" id="L120">        LocalDate endOfYear = LocalDate.of(year, 12, 31);</span>
+        
+<span class="nc" id="L122">        List&lt;AccountingPeriod&gt; results = database.find(AccountingPeriod.class)</span>
+<span class="nc" id="L123">                .where()</span>
+<span class="nc" id="L124">                .eq(&quot;type&quot;, AccountingPeriod.PeriodType.ANNUAL)</span>
+<span class="nc" id="L125">                .ge(&quot;startDate&quot;, startOfYear)</span>
+<span class="nc" id="L126">                .le(&quot;endDate&quot;, endOfYear)</span>
+<span class="nc" id="L127">                .findList();</span>
+        
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.inventory.service</a> &gt; <span class="el_source">InventoryService.java</span></div><h1>InventoryService.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.inventory.service;
+
+import com.econovafx.modules.inventory.model.*;
+import com.econovafx.modules.inventory.repository.*;
+import com.econovafx.modules.accounting.repository.AccountingPeriodRepository;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.core.model.AuditLog;
+import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.accounting.model.AccountingPeriod;
+import io.avaje.inject.Component;
+import com.econovafx.modules.core.security.RequiresTenant;
+import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Servicio para gestión de inventarios.
+ * Implementa reglas de negocio y validaciones según Resolución 340/2004.
+ */
+@Component
+@RequiresTenant
+<span class="nc" id="L30">public class InventoryService {</span>
+
+<span class="nc" id="L32">    private static final Logger log = LoggerFactory.getLogger(InventoryService.class);</span>
+
+    @Inject
+    public InventoryItemRepository itemRepository;
+
+    @Inject
+    public InventoryCategoryRepository categoryRepository;
+
+    @Inject
+    public InventoryMovementRepository movementRepository;
+
+    @Inject
+    public WarehouseRepository warehouseRepository;
+
+    @Inject
+    public TransactionService transactionService;
+
+    @Inject
+    public AuditService auditService;
+
+    /**
+     * Calcula el costo de salida según el método de valoración del almacén.
+     * Soporta FIFO (PEPS) y Promedio Ponderado.
+     */
+    public BigDecimal calculateOutputCost(InventoryItem item, Warehouse warehouse, BigDecimal quantity) {
+<span class="nc" id="L57">        ValuationMethod method = warehouse.getValuationMethod();</span>
+        
+<span class="nc bnc" id="L59" title="All 3 branches missed.">        switch (method) {</span>
+            case FIFO:
+<span class="nc" id="L61">                return calculateFifoCost(item, warehouse, quantity);</span>
+            case WEIGHTED_AVERAGE:
+<span class="nc" id="L63">                return item.getUnitCost().multiply(quantity);</span>
+            default:
+<span class="nc" id="L65">                throw new IllegalArgumentException(&quot;Método de valoración no soportado: &quot; + method);</span>
+        }
+    }
+
+    /**
+     * Calcula el costo de salida usando el método FIFO (PEPS).
+     * Las primeras unidades en entrar son las primeras en salir.
+     */
+    private BigDecimal calculateFifoCost(InventoryItem item, Warehouse warehouse, BigDecimal quantity) {
+        // Obtener movimientos de entrada ordenados por fecha (más antiguos primero)
+<span class="nc" id="L75">        List&lt;InventoryMovement&gt; entries = movementRepository.findEntriesByItemAndWarehouse(item.getId(), warehouse.getId());</span>
+        
+<span class="nc" id="L77">        BigDecimal remainingQuantity = quantity;</span>
+<span class="nc" id="L78">        BigDecimal totalCost = BigDecimal.ZERO;</span>
+        
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        for (InventoryMovement entry : entries) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">            if (remainingQuantity.compareTo(BigDecimal.ZERO) &lt;= 0) {</span>
+<span class="nc" id="L82">                break;</span>
+            }
+            
+<span class="nc" id="L85">            BigDecimal availableQuantity = entry.getQuantity();</span>
+<span class="nc" id="L86">            BigDecimal quantityToUse = remainingQuantity.min(availableQuantity);</span>
+            
+<span class="nc" id="L88">            totalCost = totalCost.add(entry.getUnitCost().multiply(quantityToUse));</span>
+<span class="nc" id="L89">            remainingQuantity = remainingQuantity.subtract(quantityToUse);</span>
+<span class="nc" id="L90">        }</span>
+        
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (remainingQuantity.compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+<span class="nc" id="L93">            throw new IllegalStateException(&quot;Stock insuficiente para aplicar FIFO. Cantidad faltante: &quot; + remainingQuantity);</span>
+        }
+        
+<span class="nc" id="L96">        return totalCost;</span>
+    }
+
+
+    // ==================== CATEGORÍAS ====================
+
+    /**
+     * Guarda una nueva categoría de inventario.
+     */
+    public InventoryCategory saveCategory(InventoryCategory category) {
+<span class="nc" id="L106">        validateCategory(category);</span>
+        
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (categoryRepository.existsByCodeExclude(category.getCode(), null)) {</span>
+<span class="nc" id="L109">            throw new IllegalArgumentException(&quot;Ya existe una categoría con el código: &quot; + category.getCode());</span>
+        }
+        
+<span class="nc" id="L112">        categoryRepository.save(category);</span>
+<span class="nc" id="L113">        log.info(&quot;Categoría de inventario creada: {} - {}&quot;, category.getCode(), category.getName());</span>
+        
+<span class="nc" id="L115">        return category;</span>
+    }
+
+    /**
+     * Actualiza una categoría existente.
+     */
+    public InventoryCategory updateCategory(InventoryCategory category) {
+<span class="nc" id="L122">        validateCategory(category);</span>
+        
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (category.getId() == null) {</span>
+<span class="nc" id="L125">            throw new IllegalArgumentException(&quot;La categoría debe tener un ID válido&quot;);</span>
+        }
+        
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if (categoryRepository.existsByCodeExclude(category.getCode(), category.getId())) {</span>
+<span class="nc" id="L129">            throw new IllegalArgumentException(&quot;Ya existe otra categoría con el código: &quot; + category.getCode());</span>
+        }
+        
+<span class="nc" id="L132">        categoryRepository.update(category);</span>
+<span class="nc" id="L133">        log.info(&quot;Categoría de inventario actualizada: {}&quot;, category.getId());</span>
+        
+<span class="nc" id="L135">        return category;</span>
+    }
+
+    /**
+     * Elimina una categoría (solo si no tiene productos asociados).
+     */
+    public void deleteCategory(Long categoryId) {
+<span class="nc" id="L142">        var category = categoryRepository.findById(categoryId)</span>
+<span class="nc" id="L143">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Categoría no encontrada&quot;));</span>
+        
+        // Verificar si tiene productos asociados
+<span class="nc" id="L146">        var items = itemRepository.findByCategory(category);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (!items.isEmpty()) {</span>
+<span class="nc" id="L148">            throw new IllegalStateException(&quot;No se puede eliminar la categoría porque tiene productos asociados&quot;);</span>
+        }
+        
+<span class="nc" id="L151">        categoryRepository.deleteById(categoryId);</span>
+<span class="nc" id="L152">        log.info(&quot;Categoría de inventario eliminada: {}&quot;, categoryId);</span>
+<span class="nc" id="L153">    }</span>
+
+    /**
+     * Obtiene todas las categorías activas.
+     */
+    public List&lt;InventoryCategory&gt; getAllCategories() {
+<span class="nc" id="L159">        return categoryRepository.findAllActive();</span>
+    }
+
+    /**
+     * Obtiene categorías raíz (sin padre).
+     */
+    public List&lt;InventoryCategory&gt; getRootCategories() {
+<span class="nc" id="L166">        return categoryRepository.findRootCategories();</span>
+    }
+
+    // ==================== PRODUCTOS ====================
+
+    /**
+     * Guarda un nuevo producto.
+     */
+    public InventoryItem saveItem(InventoryItem item, User currentUser) {
+<span class="nc" id="L175">        validateItem(item);</span>
+        
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        if (itemRepository.existsByCodeExclude(item.getCode(), null)) {</span>
+<span class="nc" id="L178">            throw new IllegalArgumentException(&quot;Ya existe un producto con el código: &quot; + item.getCode());</span>
+        }
+        
+<span class="nc" id="L181">        itemRepository.save(item);</span>
+        
+        // Registrar auditoría
+<span class="nc" id="L184">        auditService.logWithValues(</span>
+            &quot;Producto creado&quot;,
+            AuditLog.OperationType.CREATE,
+            &quot;InventoryItem&quot;,
+<span class="nc" id="L188">            item.getId(),</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">            currentUser != null ? currentUser.getUsername() : &quot;unknown&quot;,</span>
+            null,
+<span class="nc" id="L191">            item.toString()</span>
+        );
+        
+<span class="nc" id="L194">        log.info(&quot;Producto creado: {} - {}&quot;, item.getCode(), item.getName());</span>
+        
+        
+<span class="nc" id="L197">        return item;</span>
+    }
+
+    /**
+     * Actualiza un producto existente.
+     */
+    public InventoryItem updateItem(InventoryItem item, User currentUser) {
+<span class="nc" id="L204">        validateItem(item);</span>
+        
+<span class="nc bnc" id="L206" title="All 2 branches missed.">        if (item.getId() == null) {</span>
+<span class="nc" id="L207">            throw new IllegalArgumentException(&quot;El producto debe tener un ID válido&quot;);</span>
+        }
+        
+<span class="nc" id="L210">        var existingItem = itemRepository.findById(item.getId())</span>
+<span class="nc" id="L211">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Producto no encontrado&quot;));</span>
+        
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        if (itemRepository.existsByCodeExclude(item.getCode(), item.getId())) {</span>
+<span class="nc" id="L214">            throw new IllegalArgumentException(&quot;Ya existe otro producto con el código: &quot; + item.getCode());</span>
+        }
+        
+<span class="nc" id="L217">        String oldValue = existingItem.toString();</span>
+<span class="nc" id="L218">        itemRepository.update(item);</span>
+        
+        // Registrar auditoría
+<span class="nc" id="L221">        auditService.logWithValues(</span>
+            &quot;Producto actualizado&quot;,
+            AuditLog.OperationType.UPDATE,
+            &quot;InventoryItem&quot;,
+<span class="nc" id="L225">            item.getId(),</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">            currentUser != null ? currentUser.getUsername() : &quot;unknown&quot;,</span>
+            oldValue,
+<span class="nc" id="L228">            item.toString()</span>
+        );
+        
+<span class="nc" id="L231">        log.info(&quot;Producto actualizado: {}&quot;, item.getId());</span>
+        
+<span class="nc" id="L233">        return item;</span>
+    }
+
+    /**
+     * Elimina un producto (lógicamente, desactivándolo).
+     */
+    public void deleteItem(Long itemId, User currentUser) {
+<span class="nc" id="L240">        var item = itemRepository.findById(itemId)</span>
+<span class="nc" id="L241">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Producto no encontrado&quot;));</span>
+        
+<span class="nc" id="L243">        item.setActive(false);</span>
+<span class="nc" id="L244">        itemRepository.update(item);</span>
+        
+<span class="nc" id="L246">        log.info(&quot;Producto desactivado: {}&quot;, itemId);</span>
+        
+<span class="nc" id="L248">    }</span>
+
+    /**
+     * Obtiene todos los productos activos.
+     */
+    public List&lt;InventoryItem&gt; getAllItems() {
+<span class="nc" id="L254">        return itemRepository.findAllActive();</span>
+    }
+
+    /**
+     * Busca productos por término de búsqueda.
+     */
+    public List&lt;InventoryItem&gt; searchItems(String query) {
+<span class="nc" id="L261">        return itemRepository.search(query);</span>
+    }
+
+    /**
+     * Obtiene productos con stock bajo.
+     */
+    public List&lt;InventoryItem&gt; getLowStockItems() {
+<span class="nc" id="L268">        return itemRepository.findBelowMinimumStock();</span>
+    }
+
+    /**
+     * Obtiene el valor total del inventario.
+     */
+    public BigDecimal getTotalInventoryValue() {
+<span class="nc" id="L275">        return itemRepository.getTotalInventoryValue();</span>
+    }
+
+    // ==================== MOVIMIENTOS ====================
+
+    /**
+     * Registra una entrada de inventario.
+     */
+    public InventoryMovement registerEntry(
+            InventoryItem item,
+            Warehouse warehouse,
+            BigDecimal quantity,
+            BigDecimal unitCost,
+            String documentNumber,
+            String notes,
+            ThirdParty supplier,
+            User currentUser) {
+        
+<span class="nc" id="L293">        validateMovement(item, warehouse, quantity, documentNumber);</span>
+        
+<span class="nc" id="L295">        InventoryMovement movement = new InventoryMovement();</span>
+<span class="nc" id="L296">        movement.setType(InventoryMovement.MovementType.ENTRY);</span>
+<span class="nc" id="L297">        movement.setItem(item);</span>
+<span class="nc" id="L298">        movement.setWarehouse(warehouse);</span>
+<span class="nc" id="L299">        movement.setQuantity(quantity);</span>
+<span class="nc" id="L300">        movement.setUnitCost(unitCost);</span>
+<span class="nc" id="L301">        movement.setDocumentNumber(documentNumber);</span>
+<span class="nc" id="L302">        movement.setNotes(notes);</span>
+<span class="nc" id="L303">        movement.setThirdParty(supplier);</span>
+<span class="nc" id="L304">        movement.setCreatedBy(currentUser.getId());</span>
+<span class="nc" id="L305">        movement.calculateTotalAmount();</span>
+        
+<span class="nc" id="L307">        movementRepository.save(movement);</span>
+        
+        // Actualizar stock
+<span class="nc" id="L310">        itemRepository.updateStock(item.getId(), quantity);</span>
+        
+        // Actualizar costo unitario si es necesario (promedio ponderado)
+<span class="nc" id="L313">        updateAverageCost(item, unitCost, quantity);</span>
+        
+        // Registrar auditoría
+<span class="nc" id="L316">        auditService.logWithValues(</span>
+            &quot;Entrada de inventario registrada&quot;,
+            AuditLog.OperationType.CREATE,
+            &quot;InventoryMovement&quot;,
+<span class="nc" id="L320">            movement.getId(),</span>
+<span class="nc bnc" id="L321" title="All 2 branches missed.">            currentUser != null ? currentUser.getUsername() : &quot;unknown&quot;,</span>
+            null,
+<span class="nc" id="L323">            movement.toString()</span>
+        );
+        
+<span class="nc" id="L326">        log.info(&quot;Entrada de inventario registrada: {} - Cantidad: {}&quot;, documentNumber, quantity);</span>
+        
+<span class="nc" id="L328">        return movement;</span>
+    }
+
+    /**
+     * Registra una salida de inventario.
+     */
+    public InventoryMovement registerOutput(
+            InventoryItem item,
+            Warehouse warehouse,
+            BigDecimal quantity,
+            String documentNumber,
+            String notes,
+            User currentUser) {
+        
+<span class="nc" id="L342">        validateMovement(item, warehouse, quantity, documentNumber);</span>
+        
+        // Verificar stock suficiente
+<span class="nc" id="L345">        var currentItem = itemRepository.findById(item.getId())</span>
+<span class="nc" id="L346">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Producto no encontrado&quot;));</span>
+        
+<span class="nc bnc" id="L348" title="All 2 branches missed.">        if (currentItem.getCurrentStock().compareTo(quantity) &lt; 0) {</span>
+<span class="nc" id="L349">            throw new IllegalStateException(&quot;Stock insuficiente para realizar la salida&quot;);</span>
+        }
+        
+        // Calcular costo de salida según método de valoración
+<span class="nc" id="L353">        BigDecimal outputCost = calculateOutputCost(item, warehouse, quantity);</span>
+<span class="nc" id="L354">        BigDecimal unitCost = outputCost.divide(quantity, 4, java.math.RoundingMode.HALF_UP);</span>
+        
+<span class="nc" id="L356">        InventoryMovement movement = new InventoryMovement();</span>
+<span class="nc" id="L357">        movement.setType(InventoryMovement.MovementType.OUTPUT);</span>
+<span class="nc" id="L358">        movement.setItem(item);</span>
+<span class="nc" id="L359">        movement.setWarehouse(warehouse);</span>
+<span class="nc" id="L360">        movement.setQuantity(quantity);</span>
+<span class="nc" id="L361">        movement.setUnitCost(unitCost);</span>
+<span class="nc" id="L362">        movement.setDocumentNumber(documentNumber);</span>
+<span class="nc" id="L363">        movement.setNotes(notes);</span>
+<span class="nc" id="L364">        movement.setCreatedBy(currentUser.getId());</span>
+<span class="nc" id="L365">        movement.calculateTotalAmount();</span>
+        
+<span class="nc" id="L367">        movementRepository.save(movement);</span>
+        
+        // Actualizar stock (negativo para salida)
+<span class="nc" id="L370">        itemRepository.updateStock(item.getId(), quantity.negate());</span>
+        
+        // Registrar auditoría
+<span class="nc" id="L373">        auditService.logWithValues(</span>
+            &quot;Salida de inventario registrada&quot;,
+            AuditLog.OperationType.CREATE,
+            &quot;InventoryMovement&quot;,
+<span class="nc" id="L377">            movement.getId(),</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">            currentUser != null ? currentUser.getUsername() : &quot;unknown&quot;,</span>
+            null,
+<span class="nc" id="L380">            movement.toString()</span>
+        );
+        
+<span class="nc" id="L383">        log.info(&quot;Salida de inventario registrada: {} - Cantidad: {} (Método: {})&quot;, </span>
+<span class="nc" id="L384">                 documentNumber, quantity, warehouse.getValuationMethod());</span>
+        
+        
+<span class="nc" id="L387">        return movement;</span>
+    }
+
+    /**
+     * Registra un ajuste de inventario.
+     */
+    public InventoryMovement registerAdjustment(
+            InventoryItem item,
+            Warehouse warehouse,
+            BigDecimal quantityChange,
+            String documentNumber,
+            String reason,
+            User currentUser) {
+        
+<span class="nc" id="L401">        validateMovement(item, warehouse, quantityChange, documentNumber);</span>
+        
+<span class="nc" id="L403">        InventoryMovement.MovementType type = InventoryMovement.MovementType.ADJUSTMENT;</span>
+        
+<span class="nc" id="L405">        InventoryMovement movement = new InventoryMovement();</span>
+<span class="nc" id="L406">        movement.setType(type);</span>
+<span class="nc" id="L407">        movement.setItem(item);</span>
+<span class="nc" id="L408">        movement.setWarehouse(warehouse);</span>
+<span class="nc" id="L409">        movement.setQuantity(quantityChange.abs());</span>
+<span class="nc" id="L410">        movement.setUnitCost(item.getUnitCost());</span>
+<span class="nc" id="L411">        movement.setDocumentNumber(documentNumber);</span>
+<span class="nc" id="L412">        movement.setNotes(reason);</span>
+<span class="nc" id="L413">        movement.setCreatedBy(currentUser.getId());</span>
+<span class="nc" id="L414">        movement.calculateTotalAmount();</span>
+        
+<span class="nc" id="L416">        movementRepository.save(movement);</span>
+        
+        // Actualizar stock
+<span class="nc" id="L419">        itemRepository.updateStock(item.getId(), quantityChange);</span>
+        
+<span class="nc" id="L421">        log.info(&quot;Ajuste de inventario registrado: {} - Cantidad: {}&quot;, documentNumber, quantityChange);</span>
+        
+        
+<span class="nc" id="L424">        return movement;</span>
+    }
+
+    /**
+     * Obtiene todos los movimientos.
+     */
+    public List&lt;InventoryMovement&gt; getAllMovements() {
+<span class="nc" id="L431">        return movementRepository.findAll();</span>
+    }
+
+    /**
+     * Obtiene movimientos de un producto.
+     */
+    public List&lt;InventoryMovement&gt; getMovementsByItem(Long itemId) {
+<span class="nc" id="L438">        var item = itemRepository.findById(itemId)</span>
+<span class="nc" id="L439">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Producto no encontrado&quot;));</span>
+<span class="nc" id="L440">        return movementRepository.findByItem(item);</span>
+    }
+
+    /**
+     * Obtiene movimientos en un rango de fechas.
+     */
+    public List&lt;InventoryMovement&gt; getMovementsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+<span class="nc" id="L447">        return movementRepository.findByDateRange(startDate, endDate);</span>
+    }
+
+    // ==================== ALMACENES ====================
+
+    /**
+     * Guarda un nuevo almacén.
+     */
+    public Warehouse saveWarehouse(Warehouse warehouse) {
+<span class="nc" id="L456">        validateWarehouse(warehouse);</span>
+        
+<span class="nc bnc" id="L458" title="All 2 branches missed.">        if (warehouseRepository.existsByCodeExclude(warehouse.getCode(), null)) {</span>
+<span class="nc" id="L459">            throw new IllegalArgumentException(&quot;Ya existe un almacén con el código: &quot; + warehouse.getCode());</span>
+        }
+        
+<span class="nc" id="L462">        warehouseRepository.save(warehouse);</span>
+<span class="nc" id="L463">        log.info(&quot;Almacén creado: {} - {}&quot;, warehouse.getCode(), warehouse.getName());</span>
+        
+<span class="nc" id="L465">        return warehouse;</span>
+    }
+
+    /**
+     * Actualiza un almacén existente.
+     */
+    public Warehouse updateWarehouse(Warehouse warehouse) {
+<span class="nc" id="L472">        validateWarehouse(warehouse);</span>
+        
+<span class="nc bnc" id="L474" title="All 2 branches missed.">        if (warehouse.getId() == null) {</span>
+<span class="nc" id="L475">            throw new IllegalArgumentException(&quot;El almacén debe tener un ID válido&quot;);</span>
+        }
+        
+<span class="nc bnc" id="L478" title="All 2 branches missed.">        if (warehouseRepository.existsByCodeExclude(warehouse.getCode(), warehouse.getId())) {</span>
+<span class="nc" id="L479">            throw new IllegalArgumentException(&quot;Ya existe otro almacén con el código: &quot; + warehouse.getCode());</span>
+        }
+        
+<span class="nc" id="L482">        warehouseRepository.update(warehouse);</span>
+<span class="nc" id="L483">        log.info(&quot;Almacén actualizado: {}&quot;, warehouse.getId());</span>
+        
+<span class="nc" id="L485">        return warehouse;</span>
+    }
+
+    /**
+     * Obtiene todos los almacenes activos.
+     */
+    public List&lt;Warehouse&gt; getAllWarehouses() {
+<span class="nc" id="L492">        return warehouseRepository.findAllActive();</span>
+    }
+
+    // ==================== VALIDACIONES ====================
+
+    private void validateCategory(InventoryCategory category) {
+<span class="nc bnc" id="L498" title="All 6 branches missed.">        if (category == null || category.getCode() == null || category.getCode().isBlank()) {</span>
+<span class="nc" id="L499">            throw new IllegalArgumentException(&quot;El código de categoría es obligatorio&quot;);</span>
+        }
+<span class="nc bnc" id="L501" title="All 4 branches missed.">        if (category.getName() == null || category.getName().isBlank()) {</span>
+<span class="nc" id="L502">            throw new IllegalArgumentException(&quot;El nombre de la categoría es obligatorio&quot;);</span>
+        }
+<span class="nc" id="L504">    }</span>
+
+    private void validateItem(InventoryItem item) {
+<span class="nc bnc" id="L507" title="All 6 branches missed.">        if (item == null || item.getCode() == null || item.getCode().isBlank()) {</span>
+<span class="nc" id="L508">            throw new IllegalArgumentException(&quot;El código del producto es obligatorio&quot;);</span>
+        }
+<span class="nc bnc" id="L510" title="All 4 branches missed.">        if (item.getName() == null || item.getName().isBlank()) {</span>
+<span class="nc" id="L511">            throw new IllegalArgumentException(&quot;El nombre del producto es obligatorio&quot;);</span>
+        }
+<span class="nc bnc" id="L513" title="All 2 branches missed.">        if (item.getCategory() == null) {</span>
+<span class="nc" id="L514">            throw new IllegalArgumentException(&quot;La categoría del producto es obligatoria&quot;);</span>
+        }
+<span class="nc bnc" id="L516" title="All 4 branches missed.">        if (item.getUnitCost() == null || item.getUnitCost().compareTo(BigDecimal.ZERO) &lt; 0) {</span>
+<span class="nc" id="L517">            throw new IllegalArgumentException(&quot;El costo unitario debe ser mayor o igual a cero&quot;);</span>
+        }
+<span class="nc bnc" id="L519" title="All 4 branches missed.">        if (item.getSalePrice() == null || item.getSalePrice().compareTo(BigDecimal.ZERO) &lt; 0) {</span>
+<span class="nc" id="L520">            throw new IllegalArgumentException(&quot;El precio de venta debe ser mayor o igual a cero&quot;);</span>
+        }
+<span class="nc" id="L522">    }</span>
+
+    private void validateMovement(InventoryItem item, Warehouse warehouse, BigDecimal quantity, String documentNumber) {
+<span class="nc bnc" id="L525" title="All 4 branches missed.">        if (item == null || item.getId() == null) {</span>
+<span class="nc" id="L526">            throw new IllegalArgumentException(&quot;El producto es obligatorio&quot;);</span>
+        }
+<span class="nc bnc" id="L528" title="All 4 branches missed.">        if (warehouse == null || warehouse.getId() == null) {</span>
+<span class="nc" id="L529">            throw new IllegalArgumentException(&quot;El almacén es obligatorio&quot;);</span>
+        }
+<span class="nc bnc" id="L531" title="All 4 branches missed.">        if (quantity == null || quantity.compareTo(BigDecimal.ZERO) &lt;= 0) {</span>
+<span class="nc" id="L532">            throw new IllegalArgumentException(&quot;La cantidad debe ser mayor a cero&quot;);</span>
+        }
+<span class="nc bnc" id="L534" title="All 4 branches missed.">        if (documentNumber == null || documentNumber.isBlank()) {</span>
+<span class="nc" id="L535">            throw new IllegalArgumentException(&quot;El número de documento es obligatorio&quot;);</span>
+        }
+<span class="nc" id="L537">    }</span>
+
+    private void validateWarehouse(Warehouse warehouse) {
+<span class="nc bnc" id="L540" title="All 6 branches missed.">        if (warehouse == null || warehouse.getCode() == null || warehouse.getCode().isBlank()) {</span>
+<span class="nc" id="L541">            throw new IllegalArgumentException(&quot;El código del almacén es obligatorio&quot;);</span>
+        }
+<span class="nc bnc" id="L543" title="All 4 branches missed.">        if (warehouse.getName() == null || warehouse.getName().isBlank()) {</span>
+<span class="nc" id="L544">            throw new IllegalArgumentException(&quot;El nombre del almacén es obligatorio&quot;);</span>
+        }
+<span class="nc" id="L546">    }</span>
+
+    // ==================== UTILIDADES ====================
+
+    /**
+     * Actualiza el costo promedio ponderado de un producto.
+     */
+    private void updateAverageCost(InventoryItem item, BigDecimal newUnitCost, BigDecimal newQuantity) {
+<span class="nc" id="L554">        var currentItem = itemRepository.findById(item.getId())</span>
+<span class="nc" id="L555">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Producto no encontrado&quot;));</span>
+        
+<span class="nc" id="L557">        BigDecimal currentStock = currentItem.getCurrentStock().subtract(newQuantity);</span>
+<span class="nc" id="L558">        BigDecimal currentCost = currentItem.getUnitCost();</span>
+        
+<span class="nc bnc" id="L560" title="All 2 branches missed.">        if (currentStock.compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+            // Calcular nuevo costo promedio
+<span class="nc" id="L562">            BigDecimal totalValue = currentCost.multiply(currentStock).add(newUnitCost.multiply(newQuantity));</span>
+<span class="nc" id="L563">            BigDecimal newStock = currentStock.add(newQuantity);</span>
+<span class="nc" id="L564">            BigDecimal averageCost = totalValue.divide(newStock, 4, java.math.RoundingMode.HALF_UP);</span>
+            
+<span class="nc" id="L566">            currentItem.setUnitCost(averageCost);</span>
+<span class="nc" id="L567">            itemRepository.update(currentItem);</span>
+<span class="nc" id="L568">        } else {</span>
+            // Si no había stock, usar el nuevo costo
+<span class="nc" id="L570">            currentItem.setUnitCost(newUnitCost);</span>
+<span class="nc" id="L571">            itemRepository.update(currentItem);</span>
+        }
+<span class="nc" id="L573">    }</span>
+
+    /**
+     * Verifica si el módulo de inventarios está cerrado para un período contable.
+     * Cumplimiento Resolución 340/2004: Validación de cierre de módulos.
+     */
+    public boolean isModuleClosedForPeriod(AccountingPeriod period) {
+        // Verificar si hay movimientos sin contabilizar
+        // Por ahora retorna false (módulo abierto)
+<span class="nc" id="L582">        log.info(&quot;Verificación de cierre de inventarios para el período: {}&quot;, period.getName());</span>
+<span class="nc" id="L583">        return false;</span>
+    }
+
+    /**
+     * Obtiene los movimientos de inventario para un período contable.
+     */
+    public List&lt;InventoryMovement&gt; getMovementsForPeriod(AccountingPeriod period) {
+<span class="nc bnc" id="L590" title="All 4 branches missed.">        if (period.getStartDate() == null || period.getEndDate() == null) {</span>
+<span class="nc" id="L591">            return List.of();</span>
+        }
+<span class="nc" id="L593">        LocalDateTime startDateTime = period.getStartDate().atStartOfDay();</span>
+<span class="nc" id="L594">        LocalDateTime endDateTime = period.getEndDate().atTime(23, 59, 59);</span>
+<span class="nc" id="L595">        return movementRepository.findByDateRange(startDateTime, endDateTime);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

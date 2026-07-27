@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountingPeriodsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.accounting.controller</a> &gt; <span class="el_source">AccountingPeriodsController.java</span></div><h1>AccountingPeriodsController.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.accounting.controller;
+
+import com.econovafx.modules.accounting.model.AccountingPeriod;
+import com.econovafx.modules.accounting.service.AccountingPeriodService;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Controller for managing accounting periods and closing operations.
+ */
+public class AccountingPeriodsController {
+
+<span class="nc" id="L23">    private static final Logger log = LoggerFactory.getLogger(AccountingPeriodsController.class);</span>
+<span class="nc" id="L24">    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+
+    @FXML private Label totalPeriodsLabel;
+    @FXML private Label openPeriodsLabel;
+    @FXML private Label closedPeriodsLabel;
+    @FXML private Label lockedPeriodsLabel;
+    @FXML private Label currentPeriodInfo;
+    
+    @FXML private TableView&lt;AccountingPeriod&gt; periodsTable;
+    @FXML private TableColumn&lt;AccountingPeriod, String&gt; colName;
+    @FXML private TableColumn&lt;AccountingPeriod, String&gt; colStartDate;
+    @FXML private TableColumn&lt;AccountingPeriod, String&gt; colEndDate;
+    @FXML private TableColumn&lt;AccountingPeriod, String&gt; colStatus;
+    @FXML private TableColumn&lt;AccountingPeriod, String&gt; colClosedBy;
+    @FXML private TableColumn&lt;AccountingPeriod, String&gt; colClosedDate;
+    @FXML private TableColumn&lt;AccountingPeriod, Void&gt; colActions;
+    
+    @FXML private Button newPeriodButton;
+    @FXML private Button closePeriodButton;
+    @FXML private Button reopenPeriodButton;
+    @FXML private Button lockPeriodButton;
+
+    private final AccountingPeriodService periodService;
+
+<span class="nc" id="L48">    public AccountingPeriodsController(AccountingPeriodService periodService) {</span>
+<span class="nc" id="L49">        this.periodService = periodService;</span>
+<span class="nc" id="L50">    }</span>
+
+    @FXML
+    public void initialize() {
+<span class="nc" id="L54">        setupTableColumns();</span>
+<span class="nc" id="L55">        loadPeriods();</span>
+<span class="nc" id="L56">        updateStatistics();</span>
+<span class="nc" id="L57">    }</span>
+
+    private void setupTableColumns() {
+<span class="nc" id="L60">        colName.setCellValueFactory(cellData -&gt; new javafx.beans.property.SimpleStringProperty(cellData.getValue().getName()));</span>
+<span class="nc" id="L61">        colStartDate.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L62">            new javafx.beans.property.SimpleStringProperty(cellData.getValue().getStartDate().format(DATE_FORMATTER)));</span>
+<span class="nc" id="L63">        colEndDate.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L64">            new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEndDate().format(DATE_FORMATTER)));</span>
+<span class="nc" id="L65">        colStatus.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L66">            new javafx.beans.property.SimpleStringProperty(cellData.getValue().getStatus().toString()));</span>
+<span class="nc" id="L67">        colClosedBy.setCellValueFactory(cellData -&gt; </span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            new javafx.beans.property.SimpleStringProperty(cellData.getValue().getClosedBy() != null ? cellData.getValue().getClosedBy() : &quot;&quot;));</span>
+<span class="nc" id="L69">        colClosedDate.setCellValueFactory(cellData -&gt; </span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            new javafx.beans.property.SimpleStringProperty(cellData.getValue().getClosedDate() != null ? cellData.getValue().getClosedDate().format(DATE_FORMATTER) : &quot;&quot;));</span>
+
+        // Setup action buttons column
+<span class="nc" id="L73">        setupActionColumn();</span>
+<span class="nc" id="L74">    }</span>
+
+    private void setupActionColumn() {
+<span class="nc" id="L77">        colActions.setCellFactory(param -&gt; new TableCell&lt;&gt;() {</span>
+<span class="nc" id="L78">            private final HBox hbox = new HBox(5);</span>
+<span class="nc" id="L79">            private final Button btnClose = createActionButton(&quot;Close&quot;, &quot;bg-orange-500&quot;);</span>
+<span class="nc" id="L80">            private final Button btnReopen = createActionButton(&quot;Reopen&quot;, &quot;bg-blue-500&quot;);</span>
+<span class="nc" id="L81">            private final Button btnLock = createActionButton(&quot;Lock&quot;, &quot;bg-red-500&quot;);</span>
+
+            {
+<span class="nc" id="L84">                hbox.getChildren().addAll(btnClose, btnReopen, btnLock);</span>
+                
+<span class="nc" id="L86">                btnClose.setOnAction(event -&gt; {</span>
+<span class="nc" id="L87">                    AccountingPeriod period = getTableView().getItems().get(getIndex());</span>
+<span class="nc" id="L88">                    handlePeriodAction(period, &quot;close&quot;);</span>
+<span class="nc" id="L89">                });</span>
+                
+<span class="nc" id="L91">                btnReopen.setOnAction(event -&gt; {</span>
+<span class="nc" id="L92">                    AccountingPeriod period = getTableView().getItems().get(getIndex());</span>
+<span class="nc" id="L93">                    handlePeriodAction(period, &quot;reopen&quot;);</span>
+<span class="nc" id="L94">                });</span>
+                
+<span class="nc" id="L96">                btnLock.setOnAction(event -&gt; {</span>
+<span class="nc" id="L97">                    AccountingPeriod period = getTableView().getItems().get(getIndex());</span>
+<span class="nc" id="L98">                    handlePeriodAction(period, &quot;lock&quot;);</span>
+<span class="nc" id="L99">                });</span>
+<span class="nc" id="L100">            }</span>
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+<span class="nc" id="L104">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                if (empty) {</span>
+<span class="nc" id="L106">                    setGraphic(null);</span>
+                } else {
+<span class="nc" id="L108">                    AccountingPeriod period = getTableView().getItems().get(getIndex());</span>
+<span class="nc" id="L109">                    updateButtonsState(period);</span>
+<span class="nc" id="L110">                    setGraphic(hbox);</span>
+                }
+<span class="nc" id="L112">            }</span>
+
+            private void updateButtonsState(AccountingPeriod period) {
+<span class="nc bnc" id="L115" title="All 2 branches missed.">                btnClose.setDisable(!period.isOpen());</span>
+<span class="nc bnc" id="L116" title="All 4 branches missed.">                btnReopen.setDisable(!period.isClosed() || period.getStatus() == AccountingPeriod.PeriodStatus.LOCKED);</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                btnLock.setDisable(!period.isClosed());</span>
+<span class="nc" id="L118">            }</span>
+        });
+<span class="nc" id="L120">    }</span>
+
+    private Button createActionButton(String text, String colorClass) {
+<span class="nc" id="L123">        Button button = new Button(text);</span>
+<span class="nc" id="L124">        button.getStyleClass().addAll(colorClass, &quot;text-white&quot;, &quot;px-2&quot;, &quot;py-1&quot;, &quot;rounded-md&quot;, &quot;cursor-hand&quot;);</span>
+<span class="nc" id="L125">        return button;</span>
+    }
+
+    private void handlePeriodAction(AccountingPeriod period, String action) {
+        try {
+<span class="nc" id="L130">            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);</span>
+<span class="nc" id="L131">            alert.setTitle(&quot;Confirm Action&quot;);</span>
+            
+<span class="nc bnc" id="L133" title="All 4 branches missed.">            switch (action) {</span>
+                case &quot;close&quot;:
+<span class="nc" id="L135">                    alert.setHeaderText(&quot;Close Accounting Period&quot;);</span>
+<span class="nc" id="L136">                    alert.setContentText(&quot;Are you sure you want to close the period '&quot; + period.getName() + </span>
+                                       &quot;'? No new transactions will be allowed.&quot;);
+<span class="nc" id="L138">                    alert.showAndWait().ifPresent(response -&gt; {</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                        if (response == ButtonType.OK) {</span>
+<span class="nc" id="L140">                            periodService.closePeriod(period.getId(), &quot;Current User&quot;);</span>
+<span class="nc" id="L141">                            showAlert(&quot;Success&quot;, &quot;Period closed successfully.&quot;, Alert.AlertType.INFORMATION);</span>
+<span class="nc" id="L142">                            loadPeriods();</span>
+<span class="nc" id="L143">                            updateStatistics();</span>
+                        }
+<span class="nc" id="L145">                    });</span>
+<span class="nc" id="L146">                    break;</span>
+                    
+                case &quot;reopen&quot;:
+<span class="nc" id="L149">                    alert.setHeaderText(&quot;Reopen Accounting Period&quot;);</span>
+<span class="nc" id="L150">                    alert.setContentText(&quot;Are you sure you want to reopen the period '&quot; + period.getName() + </span>
+                                       &quot;'? This will allow new transactions.&quot;);
+<span class="nc" id="L152">                    alert.showAndWait().ifPresent(response -&gt; {</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">                        if (response == ButtonType.OK) {</span>
+<span class="nc" id="L154">                            periodService.reopenPeriod(period.getId());</span>
+<span class="nc" id="L155">                            showAlert(&quot;Success&quot;, &quot;Period reopened successfully.&quot;, Alert.AlertType.INFORMATION);</span>
+<span class="nc" id="L156">                            loadPeriods();</span>
+<span class="nc" id="L157">                            updateStatistics();</span>
+                        }
+<span class="nc" id="L159">                    });</span>
+<span class="nc" id="L160">                    break;</span>
+                    
+                case &quot;lock&quot;:
+<span class="nc" id="L163">                    alert.setHeaderText(&quot;Lock Accounting Period&quot;);</span>
+<span class="nc" id="L164">                    alert.setContentText(&quot;WARNING: Locking the period '&quot; + period.getName() + </span>
+                                       &quot;' is permanent and cannot be undone!&quot;);
+<span class="nc" id="L166">                    alert.showAndWait().ifPresent(response -&gt; {</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">                        if (response == ButtonType.OK) {</span>
+<span class="nc" id="L168">                            periodService.lockPeriod(period.getId());</span>
+<span class="nc" id="L169">                            showAlert(&quot;Success&quot;, &quot;Period locked successfully.&quot;, Alert.AlertType.INFORMATION);</span>
+<span class="nc" id="L170">                            loadPeriods();</span>
+<span class="nc" id="L171">                            updateStatistics();</span>
+                        }
+<span class="nc" id="L173">                    });</span>
+                    break;
+            }
+<span class="nc" id="L176">        } catch (Exception e) {</span>
+<span class="nc" id="L177">            log.error(&quot;Error performing action on period: {}&quot;, period.getName(), e);</span>
+<span class="nc" id="L178">            showAlert(&quot;Error&quot;, &quot;Failed to perform action: &quot; + e.getMessage(), Alert.AlertType.ERROR);</span>
+<span class="nc" id="L179">        }</span>
+<span class="nc" id="L180">    }</span>
+
+    @FXML
+    private void newPeriod() {
+        try {
+<span class="nc" id="L185">            Dialog&lt;AccountingPeriod&gt; dialog = new Dialog&lt;&gt;();</span>
+<span class="nc" id="L186">            dialog.setTitle(&quot;New Accounting Period&quot;);</span>
+<span class="nc" id="L187">            dialog.setHeaderText(&quot;Create a new accounting period&quot;);</span>
+
+<span class="nc" id="L189">            ButtonType createButtonType = new ButtonType(&quot;Create&quot;, ButtonBar.ButtonData.OK_DONE);</span>
+<span class="nc" id="L190">            dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);</span>
+
+<span class="nc" id="L192">            GridPane grid = new GridPane();</span>
+<span class="nc" id="L193">            grid.setHgap(10);</span>
+<span class="nc" id="L194">            grid.setVgap(10);</span>
+<span class="nc" id="L195">            grid.setPadding(new Insets(20, 150, 10, 10));</span>
+
+<span class="nc" id="L197">            TextField nameField = new TextField();</span>
+<span class="nc" id="L198">            nameField.setPromptText(&quot;e.g., Fiscal Year 2024&quot;);</span>
+<span class="nc" id="L199">            DatePicker startDatePicker = new DatePicker(LocalDate.now().withDayOfMonth(1));</span>
+<span class="nc" id="L200">            DatePicker endDatePicker = new DatePicker(LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1));</span>
+
+<span class="nc" id="L202">            grid.add(new Label(&quot;Period Name:&quot;), 0, 0);</span>
+<span class="nc" id="L203">            grid.add(nameField, 1, 0);</span>
+<span class="nc" id="L204">            grid.add(new Label(&quot;Start Date:&quot;), 0, 1);</span>
+<span class="nc" id="L205">            grid.add(startDatePicker, 1, 1);</span>
+<span class="nc" id="L206">            grid.add(new Label(&quot;End Date:&quot;), 0, 2);</span>
+<span class="nc" id="L207">            grid.add(endDatePicker, 1, 2);</span>
+
+<span class="nc" id="L209">            dialog.getDialogPane().setContent(grid);</span>
+
+<span class="nc" id="L211">            dialog.setResultConverter(dialogButton -&gt; {</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">                if (dialogButton == createButtonType) {</span>
+<span class="nc" id="L213">                    return new AccountingPeriod(</span>
+<span class="nc" id="L214">                        nameField.getText(),</span>
+<span class="nc" id="L215">                        startDatePicker.getValue(),</span>
+<span class="nc" id="L216">                        endDatePicker.getValue()</span>
+                    );
+                }
+<span class="nc" id="L219">                return null;</span>
+            });
+
+<span class="nc" id="L222">            Optional&lt;AccountingPeriod&gt; result = dialog.showAndWait();</span>
+<span class="nc" id="L223">            result.ifPresent(period -&gt; {</span>
+                try {
+<span class="nc" id="L225">                    periodService.createPeriod(period.getName(), period.getStartDate(), period.getEndDate());</span>
+<span class="nc" id="L226">                    showAlert(&quot;Success&quot;, &quot;Accounting period created successfully.&quot;, Alert.AlertType.INFORMATION);</span>
+<span class="nc" id="L227">                    loadPeriods();</span>
+<span class="nc" id="L228">                    updateStatistics();</span>
+<span class="nc" id="L229">                } catch (Exception e) {</span>
+<span class="nc" id="L230">                    showAlert(&quot;Error&quot;, &quot;Failed to create period: &quot; + e.getMessage(), Alert.AlertType.ERROR);</span>
+<span class="nc" id="L231">                }</span>
+<span class="nc" id="L232">            });</span>
+
+<span class="nc" id="L234">        } catch (Exception e) {</span>
+<span class="nc" id="L235">            log.error(&quot;Error creating new period&quot;, e);</span>
+<span class="nc" id="L236">            showAlert(&quot;Error&quot;, &quot;Failed to create period: &quot; + e.getMessage(), Alert.AlertType.ERROR);</span>
+<span class="nc" id="L237">        }</span>
+<span class="nc" id="L238">    }</span>
+
+    @FXML
+    private void closePeriod() {
+<span class="nc" id="L242">        AccountingPeriod selected = periodsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L244">            showAlert(&quot;Warning&quot;, &quot;Please select a period to close.&quot;, Alert.AlertType.WARNING);</span>
+<span class="nc" id="L245">            return;</span>
+        }
+<span class="nc" id="L247">        handlePeriodAction(selected, &quot;close&quot;);</span>
+<span class="nc" id="L248">    }</span>
+
+    @FXML
+    private void reopenPeriod() {
+<span class="nc" id="L252">        AccountingPeriod selected = periodsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L254">            showAlert(&quot;Warning&quot;, &quot;Please select a period to reopen.&quot;, Alert.AlertType.WARNING);</span>
+<span class="nc" id="L255">            return;</span>
+        }
+<span class="nc" id="L257">        handlePeriodAction(selected, &quot;reopen&quot;);</span>
+<span class="nc" id="L258">    }</span>
+
+    @FXML
+    private void lockPeriod() {
+<span class="nc" id="L262">        AccountingPeriod selected = periodsTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (selected == null) {</span>
+<span class="nc" id="L264">            showAlert(&quot;Warning&quot;, &quot;Please select a period to lock.&quot;, Alert.AlertType.WARNING);</span>
+<span class="nc" id="L265">            return;</span>
+        }
+<span class="nc" id="L267">        handlePeriodAction(selected, &quot;lock&quot;);</span>
+<span class="nc" id="L268">    }</span>
+
+    private void loadPeriods() {
+        try {
+<span class="nc" id="L272">            List&lt;AccountingPeriod&gt; periods = periodService.getAllPeriods();</span>
+<span class="nc" id="L273">            periodsTable.getItems().setAll(periods);</span>
+<span class="nc" id="L274">            updateCurrentPeriodInfo();</span>
+<span class="nc" id="L275">        } catch (Exception e) {</span>
+<span class="nc" id="L276">            log.error(&quot;Error loading periods&quot;, e);</span>
+<span class="nc" id="L277">            showAlert(&quot;Error&quot;, &quot;Failed to load periods: &quot; + e.getMessage(), Alert.AlertType.ERROR);</span>
+<span class="nc" id="L278">        }</span>
+<span class="nc" id="L279">    }</span>
+
+    private void updateStatistics() {
+        try {
+<span class="nc" id="L283">            List&lt;AccountingPeriod&gt; periods = periodService.getAllPeriods();</span>
+            
+<span class="nc" id="L285">            long total = periods.size();</span>
+<span class="nc" id="L286">            long open = periods.stream().filter(AccountingPeriod::isOpen).count();</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">            long closed = periods.stream().filter(p -&gt; p.getStatus() == AccountingPeriod.PeriodStatus.CLOSED).count();</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">            long locked = periods.stream().filter(p -&gt; p.getStatus() == AccountingPeriod.PeriodStatus.LOCKED).count();</span>
+
+<span class="nc" id="L290">            totalPeriodsLabel.setText(String.valueOf(total));</span>
+<span class="nc" id="L291">            openPeriodsLabel.setText(String.valueOf(open));</span>
+<span class="nc" id="L292">            closedPeriodsLabel.setText(String.valueOf(closed));</span>
+<span class="nc" id="L293">            lockedPeriodsLabel.setText(String.valueOf(locked));</span>
+<span class="nc" id="L294">        } catch (Exception e) {</span>
+<span class="nc" id="L295">            log.error(&quot;Error updating statistics&quot;, e);</span>
+<span class="nc" id="L296">        }</span>
+<span class="nc" id="L297">    }</span>
+
+    private void updateCurrentPeriodInfo() {
+<span class="nc" id="L300">        Optional&lt;AccountingPeriod&gt; currentPeriod = periodService.getCurrentOpenPeriod();</span>
+<span class="nc bnc" id="L301" title="All 2 branches missed.">        if (currentPeriod.isPresent()) {</span>
+<span class="nc" id="L302">            AccountingPeriod period = currentPeriod.get();</span>
+<span class="nc" id="L303">            currentPeriodInfo.setText(&quot;Current open period: &quot; + period.getName() + </span>
+<span class="nc" id="L304">                                    &quot; (&quot; + period.getStartDate() + &quot; to &quot; + period.getEndDate() + &quot;)&quot;);</span>
+<span class="nc" id="L305">            currentPeriodInfo.getStyleClass().removeAll(&quot;text-yellow-800&quot;);</span>
+<span class="nc" id="L306">            currentPeriodInfo.getStyleClass().add(&quot;text-green-800&quot;);</span>
+<span class="nc" id="L307">        } else {</span>
+<span class="nc" id="L308">            currentPeriodInfo.setText(&quot;No open period available. Please create or reopen a period.&quot;);</span>
+<span class="nc" id="L309">            currentPeriodInfo.getStyleClass().removeAll(&quot;text-green-800&quot;);</span>
+<span class="nc" id="L310">            currentPeriodInfo.getStyleClass().add(&quot;text-yellow-800&quot;);</span>
+        }
+<span class="nc" id="L312">    }</span>
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+<span class="nc" id="L315">        Alert alert = new Alert(type);</span>
+<span class="nc" id="L316">        alert.setTitle(title);</span>
+<span class="nc" id="L317">        alert.setHeaderText(null);</span>
+<span class="nc" id="L318">        alert.setContentText(message);</span>
+<span class="nc" id="L319">        alert.showAndWait();</span>
+<span class="nc" id="L320">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

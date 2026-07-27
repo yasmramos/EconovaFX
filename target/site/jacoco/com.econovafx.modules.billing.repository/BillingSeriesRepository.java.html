@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BillingSeriesRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.billing.repository</a> &gt; <span class="el_source">BillingSeriesRepository.java</span></div><h1>BillingSeriesRepository.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.billing.repository;
+
+import com.econovafx.modules.billing.model.BillingSeries;
+import com.econovafx.modules.billing.model.BillingSeries.DocumentType;
+import io.avaje.inject.Component;
+import io.ebean.Database;
+import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Repository for BillingSeries entities.
+ * Maneja operaciones de acceso a datos para series de facturación.
+ */
+@Component
+public class BillingSeriesRepository {
+
+<span class="nc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(BillingSeriesRepository.class);</span>
+
+    private final Database database;
+
+    @Inject
+<span class="nc" id="L26">    public BillingSeriesRepository(Database database) {</span>
+<span class="nc" id="L27">        this.database = database;</span>
+<span class="nc" id="L28">    }</span>
+
+    public Optional&lt;BillingSeries&gt; findById(Long id) {
+<span class="nc" id="L31">        return Optional.ofNullable(database.find(BillingSeries.class, id));</span>
+    }
+
+    public List&lt;BillingSeries&gt; findAll() {
+<span class="nc" id="L35">        return database.find(BillingSeries.class)</span>
+<span class="nc" id="L36">                .orderBy().asc(&quot;seriesCode&quot;).findList();</span>
+    }
+
+    public List&lt;BillingSeries&gt; findByDocumentType(DocumentType documentType) {
+<span class="nc" id="L40">        return database.find(BillingSeries.class)</span>
+<span class="nc" id="L41">                .where().eq(&quot;documentType&quot;, documentType)</span>
+<span class="nc" id="L42">                .orderBy().asc(&quot;seriesCode&quot;).findList();</span>
+    }
+
+    public List&lt;BillingSeries&gt; findActiveSeries() {
+<span class="nc" id="L46">        return database.find(BillingSeries.class)</span>
+<span class="nc" id="L47">                .where().eq(&quot;active&quot;, true)</span>
+<span class="nc" id="L48">                .orderBy().asc(&quot;seriesCode&quot;).findList();</span>
+    }
+
+    public Optional&lt;BillingSeries&gt; findBySeriesCodeAndDocumentType(String seriesCode, DocumentType documentType) {
+<span class="nc" id="L52">        return Optional.ofNullable(database.find(BillingSeries.class)</span>
+<span class="nc" id="L53">                .where()</span>
+<span class="nc" id="L54">                .eq(&quot;seriesCode&quot;, seriesCode)</span>
+<span class="nc" id="L55">                .eq(&quot;documentType&quot;, documentType)</span>
+<span class="nc" id="L56">                .findOne());</span>
+    }
+
+    public BillingSeries save(BillingSeries series) {
+<span class="nc" id="L60">        database.save(series);</span>
+<span class="nc" id="L61">        logger.debug(&quot;BillingSeries saved: {} - {}&quot;, series.getSeriesCode(), series.getDocumentType());</span>
+<span class="nc" id="L62">        return series;</span>
+    }
+
+    public void update(BillingSeries series) {
+<span class="nc" id="L66">        database.update(series);</span>
+<span class="nc" id="L67">        logger.debug(&quot;BillingSeries updated: {}&quot;, series.getId());</span>
+<span class="nc" id="L68">    }</span>
+
+    public void delete(BillingSeries series) {
+<span class="nc" id="L71">        database.delete(series);</span>
+<span class="nc" id="L72">        logger.debug(&quot;BillingSeries deleted: {}&quot;, series.getSeriesCode());</span>
+<span class="nc" id="L73">    }</span>
+
+    public void deleteById(Long id) {
+<span class="nc" id="L76">        database.delete(BillingSeries.class, id);</span>
+<span class="nc" id="L77">        logger.debug(&quot;BillingSeries deleted by ID: {}&quot;, id);</span>
+<span class="nc" id="L78">    }</span>
+
+    public boolean existsBySeriesCodeAndDocumentType(String seriesCode, DocumentType documentType) {
+<span class="nc" id="L81">        return database.find(BillingSeries.class)</span>
+<span class="nc" id="L82">                .where()</span>
+<span class="nc" id="L83">                .eq(&quot;seriesCode&quot;, seriesCode)</span>
+<span class="nc" id="L84">                .eq(&quot;documentType&quot;, documentType)</span>
+<span class="nc" id="L85">                .exists();</span>
+    }
+
+    public boolean existsBySeriesCodeAndDocumentTypeExclude(String seriesCode, DocumentType documentType, Long excludeId) {
+<span class="nc" id="L89">        var query = database.find(BillingSeries.class)</span>
+<span class="nc" id="L90">                .where()</span>
+<span class="nc" id="L91">                .eq(&quot;seriesCode&quot;, seriesCode)</span>
+<span class="nc" id="L92">                .eq(&quot;documentType&quot;, documentType);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (excludeId != null) {</span>
+<span class="nc" id="L94">            query.ne(&quot;id&quot;, excludeId);</span>
+        }
+<span class="nc" id="L96">        return query.exists();</span>
+    }
+
+    public boolean existsById(Long id) {
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        return database.find(BillingSeries.class, id) != null;</span>
+    }
+
+    public long count() {
+<span class="nc" id="L104">        return database.find(BillingSeries.class).findCount();</span>
+    }
+
+    public long countByDocumentType(DocumentType documentType) {
+<span class="nc" id="L108">        return database.find(BillingSeries.class)</span>
+<span class="nc" id="L109">                .where().eq(&quot;documentType&quot;, documentType).findCount();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

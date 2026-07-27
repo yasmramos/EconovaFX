@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SystemSettingsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.ui.controller</a> &gt; <span class="el_source">SystemSettingsController.java</span></div><h1>SystemSettingsController.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.ui.controller;
+
+import com.econovafx.modules.core.model.SystemConfiguration;
+import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.core.service.NotificationService;
+import com.econovafx.modules.core.service.SystemConfigService;
+import jakarta.inject.Inject;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import java.io.File;
+import java.util.ResourceBundle;
+
+/**
+ * Controlador para la Configuración General del Sistema.
+ * Diseño inspirado en preferencesFx con navegación lateral.
+ */
+<span class="nc" id="L22">public class SystemSettingsController {</span>
+
+    @Inject
+    private SystemConfigService systemConfigService;
+
+    @Inject
+    private NotificationService notificationService;
+
+    @Inject
+    private AuditService auditService;
+
+    @FXML
+    private VBox sidebarContainer;
+
+    @FXML
+    private StackPane contentArea;
+
+    @FXML
+    private TextField companyNameField;
+
+    @FXML
+    private TextField taxIdField;
+
+    @FXML
+    private TextArea addressField;
+
+    @FXML
+    private TextField phoneField;
+
+    @FXML
+    private TextField emailField;
+
+    @FXML
+    private ImageView logoPreview;
+
+    @FXML
+    private ComboBox&lt;String&gt; fiscalYearStartCombo;
+
+    @FXML
+    private ComboBox&lt;String&gt; currencyCombo;
+
+    @FXML
+    private ComboBox&lt;String&gt; inventoryMethodCombo;
+
+    @FXML
+    private CheckBox autoBackupCheck;
+
+    @FXML
+    private TextField backupPathField;
+
+    @FXML
+    private Spinner&lt;Integer&gt; stockAlertSpinner;
+
+    @FXML
+    private ComboBox&lt;String&gt; themeCombo;
+
+    @FXML
+    private ComboBox&lt;String&gt; languageCombo;
+
+
+    private ResourceBundle resources;
+
+    @FXML
+    public void initialize() {
+<span class="nc" id="L86">        setupSidebar();</span>
+<span class="nc" id="L87">        loadCurrentSettings();</span>
+<span class="nc" id="L88">        setupListeners();</span>
+<span class="nc" id="L89">    }</span>
+
+    private void setupSidebar() {
+<span class="nc" id="L92">        sidebarContainer.getChildren().clear();</span>
+        
+<span class="nc" id="L94">        String[] categories = {</span>
+            &quot;Empresa&quot;,
+            &quot;Contabilidad&quot;,
+            &quot;Inventario&quot;,
+            &quot;Seguridad&quot;,
+            &quot;Copias de Seguridad&quot;,
+            &quot;Interfaz&quot;
+        };
+
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (String category : categories) {</span>
+<span class="nc" id="L104">            Button btn = new Button(category);</span>
+<span class="nc" id="L105">            btn.getStyleClass().add(&quot;sidebar-button&quot;);</span>
+<span class="nc" id="L106">            btn.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L107">            btn.setOnAction(e -&gt; switchContent(category));</span>
+<span class="nc" id="L108">            sidebarContainer.getChildren().add(btn);</span>
+        }
+        
+        // Seleccionar primero por defecto
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (!sidebarContainer.getChildren().isEmpty()) {</span>
+<span class="nc" id="L113">            switchContent(&quot;Empresa&quot;);</span>
+        }
+<span class="nc" id="L115">    }</span>
+
+    private void switchContent(String category) {
+<span class="nc" id="L118">        contentArea.getChildren().clear();</span>
+<span class="nc" id="L119">        VBox panel = new VBox(15);</span>
+<span class="nc" id="L120">        panel.getStyleClass().add(&quot;settings-panel&quot;);</span>
+<span class="nc" id="L121">        panel.setPadding(new javafx.geometry.Insets(20));</span>
+
+<span class="nc" id="L123">        Label title = new Label(&quot;Configuración de &quot; + category);</span>
+<span class="nc" id="L124">        title.getStyleClass().add(&quot;settings-title&quot;);</span>
+
+<span class="nc bnc" id="L126" title="All 7 branches missed.">        switch (category) {</span>
+            case &quot;Empresa&quot;:
+<span class="nc" id="L128">                panel.getChildren().addAll(</span>
+<span class="nc" id="L129">                    createFormLabel(&quot;Nombre de la Empresa&quot;), companyNameField,</span>
+<span class="nc" id="L130">                    createFormLabel(&quot;NIF / CIF&quot;), taxIdField,</span>
+<span class="nc" id="L131">                    createFormLabel(&quot;Dirección&quot;), addressField,</span>
+<span class="nc" id="L132">                    createFormLabel(&quot;Teléfono&quot;), phoneField,</span>
+<span class="nc" id="L133">                    createFormLabel(&quot;Email&quot;), emailField,</span>
+<span class="nc" id="L134">                    createButton(&quot;Cambiar Logo&quot;, this::changeLogo),</span>
+                    logoPreview
+                );
+<span class="nc" id="L137">                break;</span>
+            case &quot;Contabilidad&quot;:
+<span class="nc" id="L139">                panel.getChildren().addAll(</span>
+<span class="nc" id="L140">                    createFormLabel(&quot;Inicio del Ejercicio Fiscal&quot;), fiscalYearStartCombo,</span>
+<span class="nc" id="L141">                    createFormLabel(&quot;Moneda Base&quot;), currencyCombo</span>
+                );
+<span class="nc" id="L143">                break;</span>
+            case &quot;Inventario&quot;:
+<span class="nc" id="L145">                panel.getChildren().addAll(</span>
+<span class="nc" id="L146">                    createFormLabel(&quot;Método de Valoración por Defecto&quot;), inventoryMethodCombo,</span>
+<span class="nc" id="L147">                    createFormLabel(&quot;Alerta de Stock Mínimo&quot;), stockAlertSpinner</span>
+                );
+<span class="nc" id="L149">                break;</span>
+            case &quot;Seguridad&quot;:
+<span class="nc" id="L151">                panel.getChildren().addAll(</span>
+<span class="nc" id="L152">                    createFormLabel(&quot;Política de Contraseñas&quot;), new Label(&quot;Complejidad media requerida&quot;),</span>
+<span class="nc" id="L153">                    createFormLabel(&quot;Tiempo de Sesión&quot;), new Label(&quot;30 minutos&quot;)</span>
+                );
+<span class="nc" id="L155">                break;</span>
+            case &quot;Copias de Seguridad&quot;:
+<span class="nc" id="L157">                panel.getChildren().addAll(</span>
+                    autoBackupCheck,
+<span class="nc" id="L159">                    createFormLabel(&quot;Ruta de Copias&quot;), backupPathField,</span>
+<span class="nc" id="L160">                    createButton(&quot;Seleccionar Carpeta&quot;, this::selectBackupPath)</span>
+                );
+<span class="nc" id="L162">                break;</span>
+            case &quot;Interfaz&quot;:
+<span class="nc" id="L164">                panel.getChildren().addAll(</span>
+<span class="nc" id="L165">                    createFormLabel(&quot;Tema&quot;), themeCombo,</span>
+<span class="nc" id="L166">                    createFormLabel(&quot;Idioma&quot;), languageCombo</span>
+                );
+                break;
+        }
+
+<span class="nc" id="L171">        Button saveBtn = new Button(&quot;Guardar Cambios&quot;);</span>
+<span class="nc" id="L172">        saveBtn.getStyleClass().add(&quot;primary-button&quot;);</span>
+<span class="nc" id="L173">        saveBtn.setOnAction(e -&gt; saveSettings(category));</span>
+        
+<span class="nc" id="L175">        panel.getChildren().add(saveBtn);</span>
+<span class="nc" id="L176">        contentArea.getChildren().add(panel);</span>
+<span class="nc" id="L177">    }</span>
+
+    private Label createFormLabel(String text) {
+<span class="nc" id="L180">        Label label = new Label(text);</span>
+<span class="nc" id="L181">        label.getStyleClass().add(&quot;form-label&quot;);</span>
+<span class="nc" id="L182">        return label;</span>
+    }
+
+    private Button createButton(String text, javafx.event.EventHandler&lt;javafx.scene.input.MouseEvent&gt; action) {
+<span class="nc" id="L186">        Button btn = new Button(text);</span>
+<span class="nc" id="L187">        btn.getStyleClass().add(&quot;secondary-button&quot;);</span>
+<span class="nc" id="L188">        btn.setOnMouseClicked(action);</span>
+<span class="nc" id="L189">        return btn;</span>
+    }
+
+    private void loadCurrentSettings() {
+        // Cargar valores simulados (en producción vendrían de un servicio de configuración)
+<span class="nc" id="L194">        companyNameField.setText(&quot;EconoNova Demo S.A.&quot;);</span>
+<span class="nc" id="L195">        taxIdField.setText(&quot;B05123456&quot;);</span>
+<span class="nc" id="L196">        addressField.setText(&quot;Calle Principal #123, La Habana&quot;);</span>
+<span class="nc" id="L197">        phoneField.setText(&quot;+53 7 1234567&quot;);</span>
+<span class="nc" id="L198">        emailField.setText(&quot;info@econovafx.cu&quot;);</span>
+        
+<span class="nc" id="L200">        fiscalYearStartCombo.getItems().addAll(&quot;1 de Enero&quot;, &quot;1 de Abril&quot;, &quot;1 de Julio&quot;);</span>
+<span class="nc" id="L201">        fiscalYearStartCombo.setValue(&quot;1 de Enero&quot;);</span>
+        
+<span class="nc" id="L203">        currencyCombo.getItems().addAll(&quot;CUP&quot;, &quot;USD&quot;, &quot;EUR&quot;);</span>
+<span class="nc" id="L204">        currencyCombo.setValue(&quot;CUP&quot;);</span>
+        
+<span class="nc" id="L206">        inventoryMethodCombo.getItems().addAll(&quot;PEPS (FIFO)&quot;, &quot;Promedio Ponderado&quot;, &quot;Identificación Específica&quot;);</span>
+<span class="nc" id="L207">        inventoryMethodCombo.setValue(&quot;Promedio Ponderado&quot;);</span>
+        
+<span class="nc" id="L209">        stockAlertSpinner.getValueFactory().setValue(10);</span>
+        
+<span class="nc" id="L211">        autoBackupCheck.setSelected(true);</span>
+<span class="nc" id="L212">        backupPathField.setText(&quot;./backups&quot;);</span>
+        
+<span class="nc" id="L214">        themeCombo.getItems().addAll(&quot;Claro&quot;, &quot;Oscuro&quot;, &quot;Sistema&quot;);</span>
+<span class="nc" id="L215">        themeCombo.setValue(&quot;Sistema&quot;);</span>
+        
+<span class="nc" id="L217">        languageCombo.getItems().addAll(&quot;Español&quot;, &quot;English&quot;);</span>
+<span class="nc" id="L218">        languageCombo.setValue(&quot;Español&quot;);</span>
+<span class="nc" id="L219">    }</span>
+
+    private void setupListeners() {
+        // Listeners adicionales si son necesarios
+<span class="nc" id="L223">    }</span>
+
+    private void changeLogo(javafx.scene.input.MouseEvent event) {
+<span class="nc" id="L226">        FileChooser fileChooser = new FileChooser();</span>
+<span class="nc" id="L227">        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(&quot;Imágenes&quot;, &quot;*.png&quot;, &quot;*.jpg&quot;, &quot;*.jpeg&quot;));</span>
+<span class="nc" id="L228">        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();</span>
+<span class="nc" id="L229">        File file = fileChooser.showOpenDialog(stage);</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (file != null) {</span>
+            // Aquí se cargaría la imagen real
+<span class="nc" id="L232">            notificationService.showSuccess(&quot;Logo actualizado correctamente&quot;);</span>
+        }
+<span class="nc" id="L234">    }</span>
+
+    private void selectBackupPath(javafx.scene.input.MouseEvent event) {
+<span class="nc" id="L237">        DirectoryChooser dirChooser = new DirectoryChooser();</span>
+<span class="nc" id="L238">        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();</span>
+<span class="nc" id="L239">        File dir = dirChooser.showDialog(stage);</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        if (dir != null) {</span>
+<span class="nc" id="L241">            backupPathField.setText(dir.getAbsolutePath());</span>
+        }
+<span class="nc" id="L243">    }</span>
+
+    private void saveSettings(String category) {
+        // Validaciones y guardado
+        // En una implementación real, esto llamaría a un SettingsService
+<span class="nc" id="L248">        notificationService.showSuccess(&quot;Configuración de &quot; + category + &quot; guardada exitosamente&quot;);</span>
+        
+        // Simular recarga de contexto si es necesario
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (category.equals(&quot;Interfaz&quot;)) {</span>
+<span class="nc" id="L252">            notificationService.showInfo(&quot;Reinicie la aplicación para aplicar los cambios de tema/idioma&quot;);</span>
+        }
+<span class="nc" id="L254">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

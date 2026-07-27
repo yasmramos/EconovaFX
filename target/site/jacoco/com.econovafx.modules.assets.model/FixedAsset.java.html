@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FixedAsset.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.assets.model</a> &gt; <span class="el_source">FixedAsset.java</span></div><h1>FixedAsset.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.assets.model;</span>
+<span class="nc" id="L2"></span>
+<span class="nc" id="L3">import com.econovafx.modules.core.model.BaseEntity;</span>
+<span class="nc" id="L4">import jakarta.persistence.*;</span>
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = &quot;fixed_assets&quot;)
+<span class="nc" id="L10">public class FixedAsset extends BaseEntity {</span>
+
+<span class="nc" id="L12">    public enum DepreciationMethod {</span>
+<span class="nc" id="L13">        STRAIGHT_LINE, DECLINING_BALANCE, UNITS_OF_PRODUCTION</span>
+    }
+
+    @Column(nullable = false)
+    private String assetCode;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DepreciationMethod depreciationMethod;
+
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal acquisitionCost;
+
+    @Column(nullable = false)
+    private LocalDate acquisitionDate;
+
+    @Column(nullable = false)
+    private Integer usefulLifeMonths;
+
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal accumulatedDepreciation;
+
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal netBookValue;
+
+    @Column(nullable = false)
+    private boolean isActive;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;account_id&quot;)
+    private com.econovafx.modules.accounting.model.Account assetAccount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;depreciation_account_id&quot;)
+    private com.econovafx.modules.accounting.model.Account depreciationAccount;
+
+    // Getters y Setters
+<span class="nc" id="L53">    public String getAssetCode() { return assetCode; }</span>
+<span class="nc" id="L54">    public void setAssetCode(String assetCode) { this.assetCode = assetCode; }</span>
+    
+<span class="nc" id="L56">    public String getDescription() { return description; }</span>
+<span class="nc" id="L57">    public void setDescription(String description) { this.description = description; }</span>
+    
+<span class="nc" id="L59">    public DepreciationMethod getDepreciationMethod() { return depreciationMethod; }</span>
+<span class="nc" id="L60">    public void setDepreciationMethod(DepreciationMethod depreciationMethod) { this.depreciationMethod = depreciationMethod; }</span>
+    
+<span class="nc" id="L62">    public BigDecimal getAcquisitionCost() { return acquisitionCost; }</span>
+<span class="nc" id="L63">    public void setAcquisitionCost(BigDecimal acquisitionCost) { this.acquisitionCost = acquisitionCost; }</span>
+    
+<span class="nc" id="L65">    public LocalDate getAcquisitionDate() { return acquisitionDate; }</span>
+<span class="nc" id="L66">    public void setAcquisitionDate(LocalDate acquisitionDate) { this.acquisitionDate = acquisitionDate; }</span>
+    
+<span class="nc" id="L68">    public Integer getUsefulLifeMonths() { return usefulLifeMonths; }</span>
+<span class="nc" id="L69">    public void setUsefulLifeMonths(Integer usefulLifeMonths) { this.usefulLifeMonths = usefulLifeMonths; }</span>
+    
+<span class="nc" id="L71">    public BigDecimal getAccumulatedDepreciation() { return accumulatedDepreciation; }</span>
+<span class="nc" id="L72">    public void setAccumulatedDepreciation(BigDecimal accumulatedDepreciation) { this.accumulatedDepreciation = accumulatedDepreciation; }</span>
+    
+<span class="nc" id="L74">    public BigDecimal getNetBookValue() { return netBookValue; }</span>
+<span class="nc" id="L75">    public void setNetBookValue(BigDecimal netBookValue) { this.netBookValue = netBookValue; }</span>
+    
+<span class="nc" id="L77">    public boolean isActive() { return isActive; }</span>
+<span class="nc" id="L78">    public void setActive(boolean active) { isActive = active; }</span>
+    
+<span class="nc" id="L80">    public com.econovafx.modules.accounting.model.Account getAssetAccount() { return assetAccount; }</span>
+<span class="nc" id="L81">    public void setAssetAccount(com.econovafx.modules.accounting.model.Account assetAccount) { this.assetAccount = assetAccount; }</span>
+    
+<span class="nc" id="L83">    public com.econovafx.modules.accounting.model.Account getDepreciationAccount() { return depreciationAccount; }</span>
+<span class="nc" id="L84">    public void setDepreciationAccount(com.econovafx.modules.accounting.model.Account depreciationAccount) { this.depreciationAccount = depreciationAccount; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

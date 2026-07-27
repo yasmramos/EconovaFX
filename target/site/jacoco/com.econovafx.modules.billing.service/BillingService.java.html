@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BillingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.billing.service</a> &gt; <span class="el_source">BillingService.java</span></div><h1>BillingService.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.billing.service;
+
+import com.econovafx.modules.billing.model.*;
+import com.econovafx.modules.billing.repository.*;
+import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.accounting.repository.TransactionRepository;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.inventory.service.InventoryService;
+import com.econovafx.modules.inventory.model.Warehouse;
+import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.core.model.AuditLog;
+import com.econovafx.modules.core.model.User;
+import io.avaje.inject.Component;
+import com.econovafx.modules.core.security.RequiresTenant;
+import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+/**
+ * Servicio para gestión de facturación de ventas.
+ * Integra emisión de facturas con generación de asientos contables y salidas de almacén.
+ * Cumple con los requisitos de la Resolución 340/2004.
+ */
+@Component
+@RequiresTenant
+public class BillingService {
+
+<span class="nc" id="L34">    private static final Logger logger = LoggerFactory.getLogger(BillingService.class);</span>
+
+    private final SalesInvoiceRepository salesInvoiceRepository;
+    private final BillingSeriesRepository billingSeriesRepository;
+    private final SequentialNumberService sequentialNumberService;
+    private final TransactionService transactionService;
+    private final InventoryService inventoryService;
+    private final AccountRepository accountRepository;
+    private final TaxRateRepository taxRateRepository;
+    private final AuditService auditService;
+
+    @Inject
+    public BillingService(
+            SalesInvoiceRepository salesInvoiceRepository,
+            BillingSeriesRepository billingSeriesRepository,
+            SequentialNumberService sequentialNumberService,
+            TransactionService transactionService,
+            InventoryService inventoryService,
+            AccountRepository accountRepository,
+            TaxRateRepository taxRateRepository,
+<span class="nc" id="L54">            AuditService auditService) {</span>
+<span class="nc" id="L55">        this.salesInvoiceRepository = salesInvoiceRepository;</span>
+<span class="nc" id="L56">        this.billingSeriesRepository = billingSeriesRepository;</span>
+<span class="nc" id="L57">        this.sequentialNumberService = sequentialNumberService;</span>
+<span class="nc" id="L58">        this.transactionService = transactionService;</span>
+<span class="nc" id="L59">        this.inventoryService = inventoryService;</span>
+<span class="nc" id="L60">        this.accountRepository = accountRepository;</span>
+<span class="nc" id="L61">        this.taxRateRepository = taxRateRepository;</span>
+<span class="nc" id="L62">        this.auditService = auditService;</span>
+<span class="nc" id="L63">    }</span>
+
+    /**
+     * Emite una factura de venta.
+     * Proceso transaccional que:
+     * 1. Asigna número consecutivo
+     * 2. Genera asiento contable
+     * 3. Registra salida de inventario
+     * 
+     * @param invoice Factura en estado borrador
+     * @param username Usuario que emite la factura
+     * @return Factura emitida con número asignado
+     */
+    public SalesInvoice issueInvoice(SalesInvoice invoice, String username) {
+<span class="nc" id="L77">        logger.info(&quot;Iniciando emisión de factura para cliente: {}&quot;, invoice.getThirdParty().getName());</span>
+
+        // Validaciones previas
+<span class="nc" id="L80">        validateInvoice(invoice);</span>
+
+        // 1. Asignar número consecutivo (dentro de transacción)
+<span class="nc" id="L83">        String invoiceNumber = assignInvoiceNumber(invoice);</span>
+<span class="nc" id="L84">        invoice.setInvoiceNumber(invoiceNumber);</span>
+<span class="nc" id="L85">        invoice.setStatus(SalesInvoice.InvoiceStatus.ISSUED);</span>
+<span class="nc" id="L86">        invoice.setIssueDate(LocalDate.now());</span>
+
+        // Guardar factura con número asignado
+<span class="nc" id="L89">        SalesInvoice savedInvoice = salesInvoiceRepository.save(invoice);</span>
+<span class="nc" id="L90">        logger.info(&quot;Factura emitida: {} - Número: {}&quot;, invoice.getId(), invoiceNumber);</span>
+
+        try {
+            // 2. Generar asiento contable
+<span class="nc" id="L94">            Long journalEntryId = createAccountingEntry(savedInvoice, username).getId();</span>
+<span class="nc" id="L95">            savedInvoice.setJournalEntryId(journalEntryId);</span>
+<span class="nc" id="L96">            logger.info(&quot;Asiento contable generado: {}&quot;, journalEntryId);</span>
+
+            // 3. Registrar salidas de inventario
+<span class="nc" id="L99">            registerInventoryOutputs(savedInvoice, username);</span>
+<span class="nc" id="L100">            logger.info(&quot;Salidas de inventario registradas para factura: {}&quot;, invoiceNumber);</span>
+
+<span class="nc" id="L102">            salesInvoiceRepository.update(savedInvoice);</span>
+
+            // Auditoría
+<span class="nc" id="L105">            auditService.logWithValues(</span>
+                username,
+                AuditLog.OperationType.CREATE,
+                &quot;SalesInvoice&quot;,
+<span class="nc" id="L109">                savedInvoice.getId(),</span>
+                &quot;Factura emitida: &quot; + invoiceNumber,
+                null,
+<span class="nc" id="L112">                buildInvoiceJson(savedInvoice)</span>
+            );
+
+<span class="nc" id="L115">        } catch (Exception e) {</span>
+<span class="nc" id="L116">            logger.error(&quot;Error procesando factura {}: {}&quot;, invoiceNumber, e.getMessage());</span>
+            // Marcar como emitida pero con errores en procesos posteriores
+<span class="nc" id="L118">            savedInvoice.setStatus(SalesInvoice.InvoiceStatus.ISSUED);</span>
+<span class="nc" id="L119">            savedInvoice.setNotes(&quot;Error en procesamiento posterior: &quot; + e.getMessage());</span>
+<span class="nc" id="L120">            salesInvoiceRepository.update(savedInvoice);</span>
+<span class="nc" id="L121">            throw new RuntimeException(&quot;Error procesando factura: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L122">        }</span>
+
+<span class="nc" id="L124">        return savedInvoice;</span>
+    }
+
+    /**
+     * Valida que la factura tenga todos los datos requeridos.
+     */
+    private void validateInvoice(SalesInvoice invoice) {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (invoice.getThirdParty() == null) {</span>
+<span class="nc" id="L132">            throw new IllegalArgumentException(&quot;La factura debe tener un cliente asignado&quot;);</span>
+        }
+
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (invoice.getBillingSeries() == null) {</span>
+<span class="nc" id="L136">            throw new IllegalArgumentException(&quot;La factura debe tener una serie de facturación asignada&quot;);</span>
+        }
+
+<span class="nc bnc" id="L139" title="All 4 branches missed.">        if (invoice.getLines() == null || invoice.getLines().isEmpty()) {</span>
+<span class="nc" id="L140">            throw new IllegalArgumentException(&quot;La factura debe tener al menos una línea&quot;);</span>
+        }
+
+        // Validar que cada línea tenga producto y cantidad
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        for (SalesInvoiceLine line : invoice.getLines()) {</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            if (line.getProductCode() == null) {</span>
+<span class="nc" id="L146">                throw new IllegalArgumentException(&quot;Todas las líneas deben tener un producto&quot;);</span>
+            }
+<span class="nc bnc" id="L148" title="All 4 branches missed.">            if (line.getQuantity() == null || line.getQuantity().compareTo(BigDecimal.ZERO) &lt;= 0) {</span>
+<span class="nc" id="L149">                throw new IllegalArgumentException(&quot;Cantidad inválida en línea de factura&quot;);</span>
+            }
+<span class="nc bnc" id="L151" title="All 4 branches missed.">            if (line.getUnitPrice() == null || line.getUnitPrice().compareTo(BigDecimal.ZERO) &lt;= 0) {</span>
+<span class="nc" id="L152">                throw new IllegalArgumentException(&quot;Precio unitario inválido en línea de factura&quot;);</span>
+            }
+<span class="nc" id="L154">        }</span>
+
+        // Calcular totales si no están establecidos
+<span class="nc" id="L157">        calculateInvoiceTotals(invoice);</span>
+<span class="nc" id="L158">    }</span>
+
+    /**
+     * Calcula los totales de la factura (subtotal, impuestos, total).
+     */
+    private void calculateInvoiceTotals(SalesInvoice invoice) {
+<span class="nc" id="L164">        BigDecimal subtotal = BigDecimal.ZERO;</span>
+<span class="nc" id="L165">        BigDecimal taxAmount = BigDecimal.ZERO;</span>
+
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        for (SalesInvoiceLine line : invoice.getLines()) {</span>
+<span class="nc" id="L168">            BigDecimal lineTotal = line.getUnitPrice().multiply(line.getQuantity());</span>
+            
+            // Aplicar descuento si existe
+<span class="nc bnc" id="L171" title="All 4 branches missed.">            if (line.getDiscount() != null &amp;&amp; line.getDiscount().compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+<span class="nc" id="L172">                lineTotal = lineTotal.subtract(line.getDiscount());</span>
+            }
+
+<span class="nc" id="L175">            subtotal = subtotal.add(lineTotal);</span>
+
+            // Calcular impuesto si la línea tiene tasa configurada
+<span class="nc bnc" id="L178" title="All 2 branches missed.">            if (line.getTaxRate() != null) {</span>
+<span class="nc" id="L179">                BigDecimal lineTax = lineTotal.multiply(line.getTaxRate().getPercentage().divide(BigDecimal.valueOf(100)));</span>
+<span class="nc" id="L180">                taxAmount = taxAmount.add(lineTax);</span>
+            }
+<span class="nc" id="L182">        }</span>
+
+<span class="nc" id="L184">        invoice.setSubtotal(subtotal);</span>
+<span class="nc" id="L185">        invoice.setTaxAmount(taxAmount);</span>
+<span class="nc" id="L186">        invoice.setTotal(subtotal.add(taxAmount));</span>
+<span class="nc" id="L187">    }</span>
+
+    /**
+     * Asigna número consecutivo a la factura usando la serie configurada.
+     */
+    private String assignInvoiceNumber(SalesInvoice invoice) {
+<span class="nc" id="L193">        Long seriesId = invoice.getBillingSeries().getId();</span>
+<span class="nc" id="L194">        return sequentialNumberService.generateDocumentNumber(seriesId);</span>
+    }
+
+    /**
+     * Genera el asiento contable para la factura.
+     * Cuentas involucradas:
+     * - Cuentas por Cobrar (Debe)
+     * - Ingresos por Ventas (Haber)
+     * - Impuestos por Pagar (Haber)
+     */
+    private Transaction createAccountingEntry(SalesInvoice invoice, String username) {
+<span class="nc" id="L205">        ThirdParty customer = invoice.getThirdParty();</span>
+<span class="nc" id="L206">        BigDecimal total = invoice.getTotal();</span>
+<span class="nc" id="L207">        BigDecimal subtotal = invoice.getSubtotal();</span>
+<span class="nc" id="L208">        BigDecimal taxAmount = invoice.getTaxAmount();</span>
+
+        // Obtener cuentas del cliente (cuenta por cobrar)
+<span class="nc" id="L211">        String receivableAccountCode = customer.getTaxId();</span>
+<span class="nc bnc" id="L212" title="All 4 branches missed.">        if (receivableAccountCode == null || receivableAccountCode.trim().isEmpty()) {</span>
+<span class="nc" id="L213">            throw new IllegalArgumentException(</span>
+<span class="nc" id="L214">                &quot;El cliente debe tener configurado su RUC/Tax ID: &quot; + customer.getName());</span>
+        }
+
+<span class="nc" id="L217">        Account receivableAccount = accountRepository.findByCode(receivableAccountCode)</span>
+<span class="nc" id="L218">                .orElseThrow(() -&gt; new IllegalArgumentException(</span>
+                    &quot;Cuenta por cobrar no encontrada: &quot; + receivableAccountCode));
+
+        // Cuenta de ingresos por ventas (configurable por defecto o por serie)
+<span class="nc" id="L222">        String revenueAccountCode = &quot;401-001&quot;; // Configurable</span>
+<span class="nc" id="L223">        Account revenueAccount = accountRepository.findByCode(revenueAccountCode)</span>
+<span class="nc" id="L224">                .orElseThrow(() -&gt; new IllegalArgumentException(</span>
+                    &quot;Cuenta de ingresos no configurada: &quot; + revenueAccountCode));
+
+        // Crear transacción
+<span class="nc" id="L228">        Transaction transaction = new Transaction();</span>
+<span class="nc" id="L229">        transaction.setDate(invoice.getIssueDate());</span>
+<span class="nc" id="L230">        transaction.setType(&quot;SALES_INVOICE&quot;);</span>
+<span class="nc" id="L231">        transaction.setDescription(&quot;Venta según factura &quot; + invoice.getInvoiceNumber());</span>
+<span class="nc" id="L232">        transaction.setReference(invoice.getInvoiceNumber());</span>
+
+        // Entrada por cobrar (Debe)
+<span class="nc" id="L235">        TransactionService.TransactionEntryData debitEntry = new TransactionService.TransactionEntryData(</span>
+<span class="nc" id="L236">            receivableAccount.getId(),</span>
+            total,
+            BigDecimal.ZERO,
+<span class="nc" id="L239">            &quot;Por cobrar factura &quot; + invoice.getInvoiceNumber()</span>
+        );
+
+        // Entrada por ingresos (Haber)
+<span class="nc" id="L243">        TransactionService.TransactionEntryData revenueEntry = new TransactionService.TransactionEntryData(</span>
+<span class="nc" id="L244">            revenueAccount.getId(),</span>
+            BigDecimal.ZERO,
+            subtotal,
+<span class="nc" id="L247">            &quot;Ingreso por venta factura &quot; + invoice.getInvoiceNumber()</span>
+        );
+
+<span class="nc" id="L250">        List&lt;TransactionService.TransactionEntryData&gt; entries = List.of(debitEntry, revenueEntry);</span>
+
+        // Agregar entrada por impuestos si aplica
+<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (taxAmount.compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+<span class="nc" id="L254">            String taxAccountCode = &quot;203-001&quot;; // IVA por pagar (configurable)</span>
+<span class="nc" id="L255">            Account taxAccount = accountRepository.findByCode(taxAccountCode)</span>
+<span class="nc" id="L256">                    .orElseThrow(() -&gt; new IllegalArgumentException(</span>
+                        &quot;Cuenta de impuestos no configurada: &quot; + taxAccountCode));
+
+<span class="nc" id="L259">            TransactionService.TransactionEntryData taxEntry = new TransactionService.TransactionEntryData(</span>
+<span class="nc" id="L260">                taxAccount.getId(),</span>
+                BigDecimal.ZERO,
+                taxAmount,
+<span class="nc" id="L263">                &quot;IVA factura &quot; + invoice.getInvoiceNumber()</span>
+            );
+<span class="nc" id="L265">            entries = List.of(debitEntry, revenueEntry, taxEntry);</span>
+        }
+
+<span class="nc" id="L268">        return transactionService.createTransaction(transaction, entries, username);</span>
+    }
+
+    /**
+     * Registra las salidas de inventario para cada línea de la factura.
+     */
+    private void registerInventoryOutputs(SalesInvoice invoice, String username) {
+<span class="nc" id="L275">        Long warehouseId = invoice.getWarehouseId();</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">        if (warehouseId == null) {</span>
+<span class="nc" id="L277">            logger.warn(&quot;Factura {} no tiene almacén configurado. No se registrarán salidas.&quot;, </span>
+<span class="nc" id="L278">                invoice.getInvoiceNumber());</span>
+<span class="nc" id="L279">            return;</span>
+        }
+
+<span class="nc" id="L282">        Warehouse warehouse = new Warehouse();</span>
+<span class="nc" id="L283">        warehouse.setId(warehouseId);</span>
+
+<span class="nc" id="L285">        User user = new User();</span>
+        // El usuario se obtendría del contexto de seguridad en producción
+
+<span class="nc bnc" id="L288" title="All 2 branches missed.">        for (SalesInvoiceLine line : invoice.getLines()) {</span>
+<span class="nc bnc" id="L289" title="All 4 branches missed.">            if (line.getProductCode() != null &amp;&amp; line.getQuantity().compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+                try {
+                    // Nota: La lógica de inventario requiere un producto completo, no solo el código
+                    // Esto debería ser refactorizado para buscar el producto por productCode
+<span class="nc" id="L293">                    logger.debug(&quot;Salida pendiente: Producto={}, Cantidad={}&quot;, </span>
+<span class="nc" id="L294">                        line.getProductCode(), line.getQuantity());</span>
+<span class="nc" id="L295">                } catch (Exception e) {</span>
+<span class="nc" id="L296">                    logger.error(&quot;Error registrando salida de inventario para producto {}: {}&quot;, </span>
+<span class="nc" id="L297">                        line.getProductCode(), e.getMessage());</span>
+<span class="nc" id="L298">                    throw new RuntimeException(</span>
+<span class="nc" id="L299">                        &quot;Error registrando salida de inventario: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L300">                }</span>
+            }
+<span class="nc" id="L302">        }</span>
+<span class="nc" id="L303">    }</span>
+
+    /**
+     * Obtiene una factura por su ID.
+     */
+    public SalesInvoice getInvoiceById(Long id) {
+<span class="nc" id="L309">        return salesInvoiceRepository.findById(id)</span>
+<span class="nc" id="L310">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Factura no encontrada: &quot; + id));</span>
+    }
+
+    /**
+     * Obtiene una factura por su número.
+     */
+    public SalesInvoice getInvoiceByNumber(String invoiceNumber) {
+<span class="nc" id="L317">        return salesInvoiceRepository.findByInvoiceNumber(invoiceNumber)</span>
+<span class="nc" id="L318">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Factura no encontrada: &quot; + invoiceNumber));</span>
+    }
+
+    /**
+     * Lista todas las facturas.
+     */
+    public List&lt;SalesInvoice&gt; getAllInvoices() {
+<span class="nc" id="L325">        return salesInvoiceRepository.findAll();</span>
+    }
+
+    /**
+     * Obtiene facturas por estado.
+     */
+    public List&lt;SalesInvoice&gt; getInvoicesByStatus(SalesInvoice.InvoiceStatus status) {
+<span class="nc" id="L332">        return salesInvoiceRepository.findByStatus(status);</span>
+    }
+
+    /**
+     * Construye JSON de la factura para auditoría.
+     */
+    private String buildInvoiceJson(SalesInvoice invoice) {
+<span class="nc bnc" id="L339" title="All 2 branches missed.">        if (invoice == null) {</span>
+<span class="nc" id="L340">            return null;</span>
+        }
+<span class="nc" id="L342">        StringBuilder json = new StringBuilder();</span>
+<span class="nc" id="L343">        json.append(&quot;{&quot;);</span>
+<span class="nc" id="L344">        json.append(&quot;\&quot;id\&quot;:&quot;).append(invoice.getId()).append(&quot;,&quot;);</span>
+<span class="nc" id="L345">        json.append(&quot;\&quot;invoiceNumber\&quot;:\&quot;&quot;).append(invoice.getInvoiceNumber()).append(&quot;\&quot;,&quot;);</span>
+<span class="nc" id="L346">        json.append(&quot;\&quot;total\&quot;:&quot;).append(invoice.getTotal()).append(&quot;,&quot;);</span>
+<span class="nc" id="L347">        json.append(&quot;\&quot;status\&quot;:\&quot;&quot;).append(invoice.getStatus()).append(&quot;\&quot;&quot;);</span>
+<span class="nc" id="L348">        json.append(&quot;}&quot;);</span>
+<span class="nc" id="L349">        return json.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

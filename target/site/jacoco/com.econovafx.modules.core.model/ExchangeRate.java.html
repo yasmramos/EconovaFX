@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExchangeRate.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.model</a> &gt; <span class="el_source">ExchangeRate.java</span></div><h1>ExchangeRate.java</h1><pre class="source lang-java linenums"><span class="nc" id="L1">package com.econovafx.modules.core.model;</span>
+
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+
+/**
+ * Entity representing an Exchange Rate according to Resolution 340/2004.
+ * Records historical exchange rates between currencies.
+ */
+@Entity
+@Table(name = &quot;exchange_rates&quot;)
+public class ExchangeRate extends BaseEntity {
+
+    /**
+     * Source currency (the one being converted)
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;from_currency_id&quot;, nullable = false)
+    private Currency fromCurrency;
+
+    /**
+     * Target currency (the one being converted to)
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;to_currency_id&quot;, nullable = false)
+    private Currency toCurrency;
+
+    /**
+     * Exchange rate: how many units of toCurrency equal 1 unit of fromCurrency
+     */
+    @Column(nullable = false, precision = 18, scale = 6)
+    private java.math.BigDecimal rate;
+
+    /**
+     * Date when the rate becomes effective
+     */
+    @Column(name = &quot;effective_date&quot;, nullable = false)
+    private LocalDateTime effectiveDate;
+
+    /**
+     * End date of validity (optional, for temporary rates)
+     */
+    @Column(name = &quot;end_date&quot;)
+    private LocalDateTime endDate;
+
+    /**
+     * Rate type: OFICIAL, MERCADO, ESPECIAL, CONTABLE
+     */
+<span class="nc" id="L50">    @Enumerated(EnumType.STRING)</span>
+    @Column(length = 20)
+    private RateType rateType = RateType.OFICIAL;
+
+    /**
+     * User who registered the rate
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;created_by_user&quot;)
+    private User createdByUser;
+
+    /**
+     * Observations about the rate
+     */
+    @Column(length = 500)
+    private String observations;
+
+    /**
+     * Status: ACTIVE, INACTIVE, HISTORICAL
+     */
+<span class="nc" id="L70">    @Column(length = 20)</span>
+    private String status = &quot;ACTIVE&quot;;
+
+<span class="nc" id="L73">    public enum RateType {</span>
+<span class="nc" id="L74">        OFICIAL,      // Official rate from Central Bank</span>
+<span class="nc" id="L75">        MERCADO,      // Market rate</span>
+<span class="nc" id="L76">        ESPECIAL,     // Special rate for specific operations</span>
+<span class="nc" id="L77">        CONTABLE      // Accounting rate for closing</span>
+    }
+
+    // Constructors
+<span class="nc" id="L81">    public ExchangeRate() {</span>
+<span class="nc" id="L82">    }</span>
+
+    public ExchangeRate(Currency fromCurrency, Currency toCurrency, 
+<span class="nc" id="L85">                       java.math.BigDecimal rate, LocalDateTime effectiveDate) {</span>
+<span class="nc" id="L86">        this.fromCurrency = fromCurrency;</span>
+<span class="nc" id="L87">        this.toCurrency = toCurrency;</span>
+<span class="nc" id="L88">        this.rate = rate;</span>
+<span class="nc" id="L89">        this.effectiveDate = effectiveDate;</span>
+<span class="nc" id="L90">        this.rateType = RateType.OFICIAL;</span>
+<span class="nc" id="L91">        this.status = &quot;ACTIVE&quot;;</span>
+<span class="nc" id="L92">    }</span>
+
+    // Getters and Setters
+    public Currency getFromCurrency() {
+<span class="nc" id="L96">        return fromCurrency;</span>
+    }
+
+    public void setFromCurrency(Currency fromCurrency) {
+<span class="nc" id="L100">        this.fromCurrency = fromCurrency;</span>
+<span class="nc" id="L101">    }</span>
+
+    public Currency getToCurrency() {
+<span class="nc" id="L104">        return toCurrency;</span>
+    }
+
+    public void setToCurrency(Currency toCurrency) {
+<span class="nc" id="L108">        this.toCurrency = toCurrency;</span>
+<span class="nc" id="L109">    }</span>
+
+    public java.math.BigDecimal getRate() {
+<span class="nc" id="L112">        return rate;</span>
+    }
+
+    public void setRate(java.math.BigDecimal rate) {
+<span class="nc" id="L116">        this.rate = rate;</span>
+<span class="nc" id="L117">    }</span>
+
+    public LocalDateTime getEffectiveDate() {
+<span class="nc" id="L120">        return effectiveDate;</span>
+    }
+
+    public void setEffectiveDate(LocalDateTime effectiveDate) {
+<span class="nc" id="L124">        this.effectiveDate = effectiveDate;</span>
+<span class="nc" id="L125">    }</span>
+
+    public LocalDateTime getEndDate() {
+<span class="nc" id="L128">        return endDate;</span>
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+<span class="nc" id="L132">        this.endDate = endDate;</span>
+<span class="nc" id="L133">    }</span>
+
+    public RateType getRateType() {
+<span class="nc" id="L136">        return rateType;</span>
+    }
+
+    public void setRateType(RateType rateType) {
+<span class="nc" id="L140">        this.rateType = rateType;</span>
+<span class="nc" id="L141">    }</span>
+
+    public User getCreatedByUser() {
+<span class="nc" id="L144">        return createdByUser;</span>
+    }
+
+    public void setCreatedByUser(User createdByUser) {
+<span class="nc" id="L148">        this.createdByUser = createdByUser;</span>
+<span class="nc" id="L149">    }</span>
+
+    public String getObservations() {
+<span class="nc" id="L152">        return observations;</span>
+    }
+
+    public void setObservations(String observations) {
+<span class="nc" id="L156">        this.observations = observations;</span>
+<span class="nc" id="L157">    }</span>
+
+    public String getStatus() {
+<span class="nc" id="L160">        return status;</span>
+    }
+
+    public void setStatus(String status) {
+<span class="nc" id="L164">        this.status = status;</span>
+<span class="nc" id="L165">    }</span>
+
+    public Long getVersion() {
+<span class="nc" id="L168">        return version;</span>
+    }
+
+    public void setVersion(Long version) {
+<span class="nc" id="L172">        this.version = version;</span>
+<span class="nc" id="L173">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L177">        return &quot;ExchangeRate{&quot; +</span>
+                &quot;id=&quot; + id +
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                &quot;, fromCurrency=&quot; + (fromCurrency != null ? fromCurrency.getCode() : null) +</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">                &quot;, toCurrency=&quot; + (toCurrency != null ? toCurrency.getCode() : null) +</span>
+                &quot;, rate=&quot; + rate +
+                &quot;, effectiveDate=&quot; + effectiveDate +
+                &quot;, rateType=&quot; + rateType +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CashModuleController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.cash.controller</a> &gt; <span class="el_source">CashModuleController.java</span></div><h1>CashModuleController.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.cash.controller;
+
+import com.econovafx.modules.cash.model.CashBox;
+import com.econovafx.modules.cash.model.CashMovement;
+import com.econovafx.modules.bank.model.BankAccount;
+import com.econovafx.modules.bank.model.BankReconciliation;
+import com.econovafx.modules.bank.repository.BankAccountRepository;
+import com.econovafx.modules.bank.repository.BankReconciliationRepository;
+import com.econovafx.modules.cash.repository.CashBoxRepository;
+import com.econovafx.modules.cash.repository.CashMovementRepository;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+/**
+ * Controller for Cash Module - Bank &amp; Cash Management.
+ * Provides comprehensive management of bank accounts, cash boxes, movements and reconciliation.
+ */
+<span class="nc" id="L27">public class CashModuleController {</span>
+
+<span class="nc" id="L29">    private static final Logger logger = LoggerFactory.getLogger(CashModuleController.class);</span>
+
+    // Header
+    @FXML
+    private Button btnRefresh;
+
+    // Tab Pane
+    @FXML
+    private TabPane tabPane;
+
+    // Bank Accounts Tab
+    @FXML
+    private Button btnNewBankAccount;
+    @FXML
+    private Button btnEditBankAccount;
+    @FXML
+    private Button btnDeleteBankAccount;
+    @FXML
+    private CheckBox chkShowInactiveBanks;
+    @FXML
+    private TableView&lt;BankAccount&gt; bankAccountsTable;
+    @FXML
+    private TableColumn&lt;BankAccount, String&gt; colBankCode;
+    @FXML
+    private TableColumn&lt;BankAccount, String&gt; colBankDescription;
+    @FXML
+    private TableColumn&lt;BankAccount, String&gt; colBankNumber;
+    @FXML
+    private TableColumn&lt;BankAccount, String&gt; colBankEntity;
+    @FXML
+    private TableColumn&lt;BankAccount, String&gt; colBankCurrency;
+    @FXML
+    private TableColumn&lt;BankAccount, String&gt; colBankAccounting;
+    @FXML
+    private TableColumn&lt;BankAccount, BigDecimal&gt; colBankBalance;
+    @FXML
+    private TableColumn&lt;BankAccount, Boolean&gt; colBankActive;
+
+    // Cash Boxes Tab
+    @FXML
+    private Button btnNewCashBox;
+    @FXML
+    private Button btnEditCashBox;
+    @FXML
+    private Button btnDeleteCashBox;
+    @FXML
+    private CheckBox chkShowClosedBoxes;
+    @FXML
+    private TableView&lt;CashBox&gt; cashBoxesTable;
+    @FXML
+    private TableColumn&lt;CashBox, String&gt; colBoxCode;
+    @FXML
+    private TableColumn&lt;CashBox, String&gt; colBoxDescription;
+    @FXML
+    private TableColumn&lt;CashBox, String&gt; colBoxCurrency;
+    @FXML
+    private TableColumn&lt;CashBox, String&gt; colBoxAccounting;
+    @FXML
+    private TableColumn&lt;CashBox, BigDecimal&gt; colBoxBalance;
+    @FXML
+    private TableColumn&lt;CashBox, Boolean&gt; colBoxOpen;
+
+    // Cash Movements Tab
+    @FXML
+    private Button btnNewMovement;
+    @FXML
+    private Button btnPostMovement;
+    @FXML
+    private Button btnCancelMovement;
+    @FXML
+    private ComboBox&lt;String&gt; cbMovementFilter;
+    @FXML
+    private TableView&lt;CashMovement&gt; movementsTable;
+    @FXML
+    private TableColumn&lt;CashMovement, LocalDate&gt; colMoveDate;
+    @FXML
+    private TableColumn&lt;CashMovement, String&gt; colMoveDocument;
+    @FXML
+    private TableColumn&lt;CashMovement, String&gt; colMoveType;
+    @FXML
+    private TableColumn&lt;CashMovement, String&gt; colMoveDescription;
+    @FXML
+    private TableColumn&lt;CashMovement, String&gt; colMoveSource;
+    @FXML
+    private TableColumn&lt;CashMovement, String&gt; colMoveDestination;
+    @FXML
+    private TableColumn&lt;CashMovement, BigDecimal&gt; colMoveAmount;
+    @FXML
+    private TableColumn&lt;CashMovement, String&gt; colMoveStatus;
+    @FXML
+    private TableColumn&lt;CashMovement, Boolean&gt; colMoveReconciled;
+
+    // Bank Reconciliation Tab
+    @FXML
+    private Button btnNewReconciliation;
+    @FXML
+    private Button btnCompleteReconciliation;
+    @FXML
+    private Button btnPrintReconciliation;
+    @FXML
+    private ComboBox&lt;BankAccount&gt; cbReconciliationBank;
+    @FXML
+    private TableView&lt;?&gt; systemItemsTable;
+    @FXML
+    private TableColumn&lt;?, ?&gt; colSysItemDate;
+    @FXML
+    private TableColumn&lt;?, ?&gt; colSysItemDesc;
+    @FXML
+    private TableColumn&lt;?, ?&gt; colSysItemAmount;
+    @FXML
+    private TableColumn&lt;?, ?&gt; colSysItemReconciled;
+    @FXML
+    private TableView&lt;?&gt; bankItemsTable;
+    @FXML
+    private TableColumn&lt;?, ?&gt; colBankItemDate;
+    @FXML
+    private TableColumn&lt;?, ?&gt; colBankItemRef;
+    @FXML
+    private TableColumn&lt;?, ?&gt; colBankItemDesc;
+    @FXML
+    private TableColumn&lt;?, ?&gt; colBankItemAmount;
+    @FXML
+    private TableColumn&lt;?, ?&gt; colBankItemReconciled;
+    @FXML
+    private TextField txtBankBalance;
+    @FXML
+    private TextField txtSystemBalance;
+    @FXML
+    private TextField txtDifference;
+
+    private BankAccountRepository bankAccountRepository;
+    private CashBoxRepository cashBoxRepository;
+    private CashMovementRepository cashMovementRepository;
+    private BankReconciliationRepository bankReconciliationRepository;
+    private Stage stage;
+
+    /**
+     * Initializes the controller.
+     */
+    @FXML
+    public void initialize() {
+<span class="nc" id="L170">        this.bankAccountRepository = new BankAccountRepository();</span>
+<span class="nc" id="L171">        this.cashBoxRepository = new CashBoxRepository();</span>
+<span class="nc" id="L172">        this.cashMovementRepository = new CashMovementRepository();</span>
+<span class="nc" id="L173">        this.bankReconciliationRepository = new BankReconciliationRepository();</span>
+
+<span class="nc" id="L175">        setupBankAccountsTable();</span>
+<span class="nc" id="L176">        setupCashBoxesTable();</span>
+<span class="nc" id="L177">        setupMovementsTable();</span>
+<span class="nc" id="L178">        setupReconciliationTables();</span>
+<span class="nc" id="L179">        loadAllData();</span>
+<span class="nc" id="L180">    }</span>
+
+    /**
+     * Sets the stage for this controller.
+     */
+    public void setStage(Stage stage) {
+<span class="nc" id="L186">        this.stage = stage;</span>
+<span class="nc" id="L187">    }</span>
+
+    private void setupBankAccountsTable() {
+<span class="nc" id="L190">        colBankCode.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L191">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L192">                cellData.getValue().getCode()));</span>
+<span class="nc" id="L193">        colBankDescription.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L194">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L195">                cellData.getValue().getDescription()));</span>
+<span class="nc" id="L196">        colBankNumber.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L197">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L198">                cellData.getValue().getAccountNumber()));</span>
+<span class="nc" id="L199">        colBankEntity.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L200">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L201">                cellData.getValue().getBankEntity()));</span>
+<span class="nc" id="L202">        colBankCurrency.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L203">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L204">                cellData.getValue().getCurrency()));</span>
+<span class="nc" id="L205">        colBankAccounting.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L206">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L207">                cellData.getValue().getAccountingAccount()));</span>
+<span class="nc" id="L208">        colBankBalance.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L209">            new javafx.beans.property.SimpleObjectProperty&lt;&gt;(cellData.getValue().getBalance()));</span>
+<span class="nc" id="L210">        colBankActive.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L211">            new javafx.beans.property.SimpleBooleanProperty(cellData.getValue().getActive()));</span>
+<span class="nc" id="L212">    }</span>
+
+    private void setupCashBoxesTable() {
+<span class="nc" id="L215">        colBoxCode.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L216">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L217">                cellData.getValue().getCode()));</span>
+<span class="nc" id="L218">        colBoxDescription.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L219">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L220">                cellData.getValue().getDescription()));</span>
+<span class="nc" id="L221">        colBoxCurrency.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L222">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L223">                cellData.getValue().getCurrency()));</span>
+<span class="nc" id="L224">        colBoxAccounting.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L225">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L226">                cellData.getValue().getAccountingAccount()));</span>
+<span class="nc" id="L227">        colBoxBalance.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L228">            new javafx.beans.property.SimpleObjectProperty&lt;&gt;(cellData.getValue().getBalance()));</span>
+<span class="nc" id="L229">        colBoxOpen.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L230">            new javafx.beans.property.SimpleBooleanProperty(cellData.getValue().getOpen()));</span>
+<span class="nc" id="L231">    }</span>
+
+    private void setupMovementsTable() {
+<span class="nc" id="L234">        colMoveDate.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L235">            new javafx.beans.property.SimpleObjectProperty&lt;&gt;(cellData.getValue().getDate()));</span>
+<span class="nc" id="L236">        colMoveDocument.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L237">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L238">                cellData.getValue().getDocumentNumber()));</span>
+<span class="nc" id="L239">        colMoveType.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L240">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L241">                cellData.getValue().getMovementType().toString()));</span>
+<span class="nc" id="L242">        colMoveDescription.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L243">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L244">                cellData.getValue().getDescription()));</span>
+<span class="nc" id="L245">        colMoveAmount.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L246">            new javafx.beans.property.SimpleObjectProperty&lt;&gt;(cellData.getValue().getAmount()));</span>
+<span class="nc" id="L247">        colMoveStatus.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L248">            javafx.beans.binding.Bindings.createObjectBinding(() -&gt; </span>
+<span class="nc" id="L249">                cellData.getValue().getStatus().toString()));</span>
+<span class="nc" id="L250">        colMoveReconciled.setCellValueFactory(cellData -&gt; </span>
+<span class="nc" id="L251">            new javafx.beans.property.SimpleBooleanProperty(cellData.getValue().getReconciled()));</span>
+<span class="nc" id="L252">    }</span>
+
+    private void setupReconciliationTables() {
+<span class="nc" id="L255">        cbReconciliationBank.setItems(FXCollections.observableArrayList());</span>
+<span class="nc" id="L256">        cbMovementFilter.setItems(FXCollections.observableArrayList(&quot;ALL&quot;, &quot;PENDING&quot;, &quot;POSTED&quot;, &quot;CANCELLED&quot;));</span>
+<span class="nc" id="L257">    }</span>
+
+    private void loadAllData() {
+<span class="nc" id="L260">        loadBankAccounts();</span>
+<span class="nc" id="L261">        loadCashBoxes();</span>
+<span class="nc" id="L262">        loadMovements();</span>
+<span class="nc" id="L263">        loadReconciliationBanks();</span>
+<span class="nc" id="L264">    }</span>
+
+    private void loadBankAccounts() {
+        try {
+<span class="nc" id="L268">            List&lt;BankAccount&gt; accounts = bankAccountRepository.findAll();</span>
+<span class="nc" id="L269">            ObservableList&lt;BankAccount&gt; observableList = FXCollections.observableArrayList(accounts);</span>
+<span class="nc" id="L270">            bankAccountsTable.setItems(observableList);</span>
+<span class="nc" id="L271">        } catch (Exception e) {</span>
+<span class="nc" id="L272">            logger.error(&quot;Error loading bank accounts&quot;, e);</span>
+<span class="nc" id="L273">            showAlert(&quot;Error&quot;, &quot;Failed to load bank accounts: &quot; + e.getMessage());</span>
+<span class="nc" id="L274">        }</span>
+<span class="nc" id="L275">    }</span>
+
+    private void loadCashBoxes() {
+        try {
+<span class="nc" id="L279">            List&lt;CashBox&gt; boxes = cashBoxRepository.findAll();</span>
+<span class="nc" id="L280">            ObservableList&lt;CashBox&gt; observableList = FXCollections.observableArrayList(boxes);</span>
+<span class="nc" id="L281">            cashBoxesTable.setItems(observableList);</span>
+<span class="nc" id="L282">        } catch (Exception e) {</span>
+<span class="nc" id="L283">            logger.error(&quot;Error loading cash boxes&quot;, e);</span>
+<span class="nc" id="L284">            showAlert(&quot;Error&quot;, &quot;Failed to load cash boxes: &quot; + e.getMessage());</span>
+<span class="nc" id="L285">        }</span>
+<span class="nc" id="L286">    }</span>
+
+    private void loadMovements() {
+        try {
+<span class="nc" id="L290">            List&lt;CashMovement&gt; movements = cashMovementRepository.findAll();</span>
+<span class="nc" id="L291">            ObservableList&lt;CashMovement&gt; observableList = FXCollections.observableArrayList(movements);</span>
+<span class="nc" id="L292">            movementsTable.setItems(observableList);</span>
+<span class="nc" id="L293">        } catch (Exception e) {</span>
+<span class="nc" id="L294">            logger.error(&quot;Error loading movements&quot;, e);</span>
+<span class="nc" id="L295">            showAlert(&quot;Error&quot;, &quot;Failed to load movements: &quot; + e.getMessage());</span>
+<span class="nc" id="L296">        }</span>
+<span class="nc" id="L297">    }</span>
+
+    private void loadReconciliationBanks() {
+        try {
+<span class="nc" id="L301">            List&lt;BankAccount&gt; accounts = bankAccountRepository.findActiveAccounts();</span>
+<span class="nc" id="L302">            ObservableList&lt;BankAccount&gt; observableList = FXCollections.observableArrayList(accounts);</span>
+<span class="nc" id="L303">            cbReconciliationBank.setItems(observableList);</span>
+<span class="nc" id="L304">        } catch (Exception e) {</span>
+<span class="nc" id="L305">            logger.error(&quot;Error loading banks for reconciliation&quot;, e);</span>
+<span class="nc" id="L306">        }</span>
+<span class="nc" id="L307">    }</span>
+
+    @FXML
+    private void handleRefresh() {
+<span class="nc" id="L311">        logger.info(&quot;Refreshing all data&quot;);</span>
+<span class="nc" id="L312">        loadAllData();</span>
+<span class="nc" id="L313">    }</span>
+
+    @FXML
+    private void handleNewBankAccount() {
+<span class="nc" id="L317">        logger.info(&quot;Creating new bank account&quot;);</span>
+<span class="nc" id="L318">        showAlert(&quot;Info&quot;, &quot;New Bank Account dialog would open here.&quot;);</span>
+<span class="nc" id="L319">    }</span>
+
+    @FXML
+    private void handleEditBankAccount() {
+<span class="nc" id="L323">        logger.info(&quot;Editing bank account&quot;);</span>
+<span class="nc" id="L324">        showAlert(&quot;Info&quot;, &quot;Edit Bank Account dialog would open here.&quot;);</span>
+<span class="nc" id="L325">    }</span>
+
+    @FXML
+    private void handleDeleteBankAccount() {
+<span class="nc" id="L329">        logger.info(&quot;Deleting bank account&quot;);</span>
+<span class="nc" id="L330">        showAlert(&quot;Info&quot;, &quot;Delete Bank Account confirmation would appear here.&quot;);</span>
+<span class="nc" id="L331">    }</span>
+
+    @FXML
+    private void handleNewCashBox() {
+<span class="nc" id="L335">        logger.info(&quot;Creating new cash box&quot;);</span>
+<span class="nc" id="L336">        showAlert(&quot;Info&quot;, &quot;New Cash Box dialog would open here.&quot;);</span>
+<span class="nc" id="L337">    }</span>
+
+    @FXML
+    private void handleEditCashBox() {
+<span class="nc" id="L341">        logger.info(&quot;Editing cash box&quot;);</span>
+<span class="nc" id="L342">        showAlert(&quot;Info&quot;, &quot;Edit Cash Box dialog would open here.&quot;);</span>
+<span class="nc" id="L343">    }</span>
+
+    @FXML
+    private void handleDeleteCashBox() {
+<span class="nc" id="L347">        logger.info(&quot;Deleting cash box&quot;);</span>
+<span class="nc" id="L348">        showAlert(&quot;Info&quot;, &quot;Delete Cash Box confirmation would appear here.&quot;);</span>
+<span class="nc" id="L349">    }</span>
+
+    @FXML
+    private void handleNewMovement() {
+<span class="nc" id="L353">        logger.info(&quot;Creating new cash movement&quot;);</span>
+<span class="nc" id="L354">        showAlert(&quot;Info&quot;, &quot;New Movement dialog would open here.&quot;);</span>
+<span class="nc" id="L355">    }</span>
+
+    @FXML
+    private void handlePostMovement() {
+<span class="nc" id="L359">        logger.info(&quot;Posting cash movement&quot;);</span>
+<span class="nc" id="L360">        showAlert(&quot;Info&quot;, &quot;Movement posted successfully.&quot;);</span>
+<span class="nc" id="L361">    }</span>
+
+    @FXML
+    private void handleCancelMovement() {
+<span class="nc" id="L365">        logger.info(&quot;Cancelling cash movement&quot;);</span>
+<span class="nc" id="L366">        showAlert(&quot;Info&quot;, &quot;Movement cancelled successfully.&quot;);</span>
+<span class="nc" id="L367">    }</span>
+
+    @FXML
+    private void handleNewReconciliation() {
+<span class="nc" id="L371">        logger.info(&quot;Creating new bank reconciliation&quot;);</span>
+<span class="nc" id="L372">        showAlert(&quot;Info&quot;, &quot;New Reconciliation process started.&quot;);</span>
+<span class="nc" id="L373">    }</span>
+
+    @FXML
+    private void handleCompleteReconciliation() {
+<span class="nc" id="L377">        logger.info(&quot;Completing bank reconciliation&quot;);</span>
+<span class="nc" id="L378">        showAlert(&quot;Info&quot;, &quot;Reconciliation completed successfully.&quot;);</span>
+<span class="nc" id="L379">    }</span>
+
+    @FXML
+    private void handlePrintReconciliation() {
+<span class="nc" id="L383">        logger.info(&quot;Printing reconciliation report&quot;);</span>
+<span class="nc" id="L384">        showAlert(&quot;Info&quot;, &quot;Reconciliation report would be printed here.&quot;);</span>
+<span class="nc" id="L385">    }</span>
+
+    /**
+     * Shows an alert dialog with the specified title and message.
+     * @param title the title of the alert
+     * @param message the message content
+     */
+    private void showAlert(String title, String message) {
+<span class="nc" id="L393">        Alert alert = new Alert(Alert.AlertType.INFORMATION);</span>
+<span class="nc" id="L394">        alert.setTitle(title);</span>
+<span class="nc" id="L395">        alert.setHeaderText(null);</span>
+<span class="nc" id="L396">        alert.setContentText(message);</span>
+<span class="nc bnc" id="L397" title="All 4 branches missed.">        if (btnRefresh != null &amp;&amp; btnRefresh.getScene() != null) {</span>
+<span class="nc" id="L398">            alert.initOwner(btnRefresh.getScene().getWindow());</span>
+        }
+<span class="nc" id="L400">        alert.showAndWait();</span>
+<span class="nc" id="L401">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

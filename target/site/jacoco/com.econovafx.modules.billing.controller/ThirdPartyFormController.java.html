@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ThirdPartyFormController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.billing.controller</a> &gt; <span class="el_source">ThirdPartyFormController.java</span></div><h1>ThirdPartyFormController.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.billing.controller;
+
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.billing.service.ThirdPartyService;
+import com.econovafx.modules.core.exception.GlobalExceptionHandler;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * Third Party form controller for creating and editing customers/suppliers
+ */
+public class ThirdPartyFormController implements Initializable {
+    
+<span class="nc" id="L27">    private static final Logger logger = LoggerFactory.getLogger(ThirdPartyFormController.class);</span>
+<span class="nc" id="L28">    private static final ExecutorService backgroundExecutor = Executors.newCachedThreadPool();</span>
+    
+    private final ThirdPartyService thirdPartyService;
+    
+    @FXML
+    private Label titleLabel;
+    
+    @FXML
+    private TextField nameField;
+    
+    @FXML
+    private TextField identificationField;
+    
+    @FXML
+    private ComboBox&lt;ThirdParty.ThirdPartyType&gt; typeComboBox;
+    
+    @FXML
+    private TextField emailField;
+    
+    @FXML
+    private TextField phoneField;
+    
+    @FXML
+    private TextField addressField;
+    
+    @FXML
+    private TextField cityField;
+    
+    @FXML
+    private TextField countryField;
+    
+    @FXML
+    private TextField taxIdField;
+    
+    @FXML
+    private TextField creditLimitField;
+    
+    @FXML
+    private TextField paymentDaysField;
+    
+    @FXML
+    private CheckBox activeCheckBox;
+    
+    @FXML
+    private TextArea notesArea;
+    
+    private ThirdParty editingThirdParty;
+<span class="nc" id="L75">    private boolean saved = false;</span>
+    
+<span class="nc" id="L77">    public ThirdPartyFormController(ThirdPartyService thirdPartyService) {</span>
+<span class="nc" id="L78">        this.thirdPartyService = thirdPartyService;</span>
+<span class="nc" id="L79">    }</span>
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L83">        logger.info(&quot;ThirdPartyFormController initialized&quot;);</span>
+<span class="nc" id="L84">        initializeComboBoxes();</span>
+<span class="nc" id="L85">    }</span>
+    
+    private void initializeComboBoxes() {
+<span class="nc" id="L88">        typeComboBox.setItems(FXCollections.observableArrayList(ThirdParty.ThirdPartyType.values()));</span>
+<span class="nc" id="L89">        typeComboBox.setConverter(new StringConverter&lt;ThirdParty.ThirdPartyType&gt;() {</span>
+            @Override
+            public String toString(ThirdParty.ThirdPartyType type) {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                return type != null ? getTypeDisplayName(type) : &quot;&quot;;</span>
+            }
+            
+            @Override
+            public ThirdParty.ThirdPartyType fromString(String string) {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                for (ThirdParty.ThirdPartyType type : ThirdParty.ThirdPartyType.values()) {</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                    if (getTypeDisplayName(type).equals(string)) {</span>
+<span class="nc" id="L99">                        return type;</span>
+                    }
+                }
+<span class="nc" id="L102">                return null;</span>
+            }
+        });
+        
+        // Load parent third parties for reference (if needed in future)
+        // For now, we just set the default value
+<span class="nc" id="L108">        typeComboBox.setValue(ThirdParty.ThirdPartyType.CUSTOMER);</span>
+<span class="nc" id="L109">    }</span>
+    
+    private String getTypeDisplayName(ThirdParty.ThirdPartyType type) {
+<span class="nc bnc" id="L112" title="All 3 branches missed.">        return switch (type) {</span>
+<span class="nc" id="L113">            case CUSTOMER -&gt; &quot;Customer&quot;;</span>
+<span class="nc" id="L114">            case SUPPLIER -&gt; &quot;Supplier&quot;;</span>
+<span class="nc" id="L115">            case BOTH -&gt; &quot;Both&quot;;</span>
+        };
+    }
+    
+    public void setEditingThirdParty(ThirdParty thirdParty) {
+<span class="nc" id="L120">        this.editingThirdParty = thirdParty;</span>
+        
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (thirdParty != null) {</span>
+<span class="nc" id="L123">            titleLabel.setText(&quot;Edit Third Party&quot;);</span>
+<span class="nc" id="L124">            populateForm(thirdParty);</span>
+        } else {
+<span class="nc" id="L126">            titleLabel.setText(&quot;New Third Party&quot;);</span>
+<span class="nc" id="L127">            clearForm();</span>
+        }
+<span class="nc" id="L129">    }</span>
+    
+    private void populateForm(ThirdParty thirdParty) {
+<span class="nc" id="L132">        nameField.setText(thirdParty.getName());</span>
+<span class="nc" id="L133">        identificationField.setText(thirdParty.getIdentificationNumber());</span>
+<span class="nc" id="L134">        typeComboBox.setValue(thirdParty.getType());</span>
+<span class="nc" id="L135">        emailField.setText(thirdParty.getEmail());</span>
+<span class="nc" id="L136">        phoneField.setText(thirdParty.getPhone());</span>
+<span class="nc" id="L137">        addressField.setText(thirdParty.getAddress());</span>
+<span class="nc" id="L138">        cityField.setText(thirdParty.getCity());</span>
+<span class="nc" id="L139">        countryField.setText(thirdParty.getCountry());</span>
+<span class="nc" id="L140">        taxIdField.setText(thirdParty.getTaxId());</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        creditLimitField.setText(thirdParty.getCreditLimit() != null ? thirdParty.getCreditLimit().toString() : &quot;0&quot;);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        paymentDaysField.setText(thirdParty.getPaymentDays() != null ? thirdParty.getPaymentDays().toString() : &quot;30&quot;);</span>
+<span class="nc bnc" id="L143" title="All 4 branches missed.">        activeCheckBox.setSelected(thirdParty.getIsActive() != null &amp;&amp; thirdParty.getIsActive());</span>
+<span class="nc" id="L144">        notesArea.setText(thirdParty.getNotes());</span>
+<span class="nc" id="L145">    }</span>
+    
+    private void clearForm() {
+<span class="nc" id="L148">        nameField.clear();</span>
+<span class="nc" id="L149">        identificationField.clear();</span>
+<span class="nc" id="L150">        typeComboBox.setValue(ThirdParty.ThirdPartyType.CUSTOMER);</span>
+<span class="nc" id="L151">        emailField.clear();</span>
+<span class="nc" id="L152">        phoneField.clear();</span>
+<span class="nc" id="L153">        addressField.clear();</span>
+<span class="nc" id="L154">        cityField.clear();</span>
+<span class="nc" id="L155">        countryField.setText(&quot;Peru&quot;);</span>
+<span class="nc" id="L156">        taxIdField.clear();</span>
+<span class="nc" id="L157">        creditLimitField.setText(&quot;0&quot;);</span>
+<span class="nc" id="L158">        paymentDaysField.setText(&quot;30&quot;);</span>
+<span class="nc" id="L159">        activeCheckBox.setSelected(true);</span>
+<span class="nc" id="L160">        notesArea.clear();</span>
+<span class="nc" id="L161">    }</span>
+    
+    @FXML
+    private void save() {
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (!validateForm()) {</span>
+<span class="nc" id="L166">            return;</span>
+        }
+        
+        // Disable UI during save operation
+<span class="nc" id="L170">        setUIEnabled(false);</span>
+        
+<span class="nc" id="L172">        CompletableFuture.runAsync(() -&gt; {</span>
+            try {
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                if (editingThirdParty == null) {</span>
+<span class="nc" id="L175">                    editingThirdParty = new ThirdParty();</span>
+                }
+                
+                // Update entity with form data
+<span class="nc" id="L179">                editingThirdParty.setName(nameField.getText().trim());</span>
+<span class="nc" id="L180">                editingThirdParty.setIdentificationNumber(identificationField.getText().trim());</span>
+<span class="nc" id="L181">                editingThirdParty.setType(typeComboBox.getValue());</span>
+<span class="nc" id="L182">                editingThirdParty.setEmail(emailField.getText().trim());</span>
+<span class="nc" id="L183">                editingThirdParty.setPhone(phoneField.getText().trim());</span>
+<span class="nc" id="L184">                editingThirdParty.setAddress(addressField.getText().trim());</span>
+<span class="nc" id="L185">                editingThirdParty.setCity(cityField.getText().trim());</span>
+<span class="nc" id="L186">                editingThirdParty.setCountry(countryField.getText().trim());</span>
+<span class="nc" id="L187">                editingThirdParty.setTaxId(taxIdField.getText().trim());</span>
+                
+                try {
+<span class="nc" id="L190">                    editingThirdParty.setCreditLimit(Double.parseDouble(creditLimitField.getText().trim()));</span>
+<span class="nc" id="L191">                } catch (NumberFormatException e) {</span>
+<span class="nc" id="L192">                    editingThirdParty.setCreditLimit(0.0);</span>
+<span class="nc" id="L193">                }</span>
+                
+                try {
+<span class="nc" id="L196">                    editingThirdParty.setPaymentDays(Integer.parseInt(paymentDaysField.getText().trim()));</span>
+<span class="nc" id="L197">                } catch (NumberFormatException e) {</span>
+<span class="nc" id="L198">                    editingThirdParty.setPaymentDays(30);</span>
+<span class="nc" id="L199">                }</span>
+                
+<span class="nc" id="L201">                editingThirdParty.setIsActive(activeCheckBox.isSelected());</span>
+<span class="nc" id="L202">                editingThirdParty.setNotes(notesArea.getText().trim());</span>
+                
+                // Save to database in background thread
+<span class="nc" id="L205">                thirdPartyService.createThirdParty(editingThirdParty);</span>
+                
+                // Update UI on JavaFX thread
+<span class="nc" id="L208">                javafx.application.Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L209">                    saved = true;</span>
+<span class="nc" id="L210">                    closeDialog();</span>
+<span class="nc" id="L211">                    logger.info(&quot;Third party saved successfully: {}&quot;, editingThirdParty.getName());</span>
+<span class="nc" id="L212">                });</span>
+                
+<span class="nc" id="L214">            } catch (Exception ex) {</span>
+<span class="nc" id="L215">                javafx.application.Platform.runLater(() -&gt; {</span>
+<span class="nc" id="L216">                    showError(&quot;Save Error&quot;, GlobalExceptionHandler.handleException(ex));</span>
+<span class="nc" id="L217">                    logger.error(&quot;Error saving third party&quot;, ex);</span>
+<span class="nc" id="L218">                    setUIEnabled(true);</span>
+<span class="nc" id="L219">                });</span>
+<span class="nc" id="L220">            }</span>
+<span class="nc" id="L221">        }, backgroundExecutor);</span>
+<span class="nc" id="L222">    }</span>
+    
+    private void setUIEnabled(boolean enabled) {
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        nameField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        identificationField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L227" title="All 2 branches missed.">        typeComboBox.setDisable(!enabled);</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        emailField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        phoneField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        addressField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        cityField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        countryField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        taxIdField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">        creditLimitField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        paymentDaysField.setDisable(!enabled);</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">        activeCheckBox.setDisable(!enabled);</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        notesArea.setDisable(!enabled);</span>
+<span class="nc" id="L238">    }</span>
+    
+    @FXML
+    private void cancel() {
+<span class="nc" id="L242">        saved = false;</span>
+<span class="nc" id="L243">        editingThirdParty = null;</span>
+<span class="nc" id="L244">        closeDialog();</span>
+<span class="nc" id="L245">        logger.info(&quot;Third party form cancelled&quot;);</span>
+<span class="nc" id="L246">    }</span>
+    
+    private boolean validateForm() {
+<span class="nc bnc" id="L249" title="All 2 branches missed.">        if (nameField.getText().trim().isEmpty()) {</span>
+<span class="nc" id="L250">            showError(&quot;Validation Error&quot;, &quot;Name is required&quot;);</span>
+<span class="nc" id="L251">            return false;</span>
+        }
+        
+<span class="nc bnc" id="L254" title="All 2 branches missed.">        if (identificationField.getText().trim().isEmpty()) {</span>
+<span class="nc" id="L255">            showError(&quot;Validation Error&quot;, &quot;Identification number is required&quot;);</span>
+<span class="nc" id="L256">            return false;</span>
+        }
+        
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (emailField.getText().trim().isEmpty()) {</span>
+<span class="nc" id="L260">            showError(&quot;Validation Error&quot;, &quot;Email is required&quot;);</span>
+<span class="nc" id="L261">            return false;</span>
+        }
+        
+        // Validate email format
+<span class="nc bnc" id="L265" title="All 2 branches missed.">        if (!emailField.getText().trim().matches(&quot;^[A-Za-z0-9+_.-]+@(.+)$&quot;)) {</span>
+<span class="nc" id="L266">            showError(&quot;Validation Error&quot;, &quot;Invalid email format&quot;);</span>
+<span class="nc" id="L267">            return false;</span>
+        }
+        
+<span class="nc" id="L270">        return true;</span>
+    }
+    
+    private void showError(String title, String message) {
+<span class="nc" id="L274">        Alert alert = new Alert(Alert.AlertType.ERROR);</span>
+<span class="nc" id="L275">        alert.setTitle(title);</span>
+<span class="nc" id="L276">        alert.setHeaderText(null);</span>
+<span class="nc" id="L277">        alert.setContentText(message);</span>
+<span class="nc" id="L278">        alert.showAndWait();</span>
+<span class="nc" id="L279">    }</span>
+    
+    private void closeDialog() {
+<span class="nc" id="L282">        Stage stage = (Stage) nameField.getScene().getWindow();</span>
+<span class="nc" id="L283">        stage.close();</span>
+<span class="nc" id="L284">    }</span>
+    
+    public ThirdParty getResult() {
+<span class="nc bnc" id="L287" title="All 2 branches missed.">        return saved ? editingThirdParty : null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

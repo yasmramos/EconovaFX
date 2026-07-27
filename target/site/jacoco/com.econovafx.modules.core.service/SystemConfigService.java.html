@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SystemConfigService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.service</a> &gt; <span class="el_source">SystemConfigService.java</span></div><h1>SystemConfigService.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.service;
+
+import com.econovafx.modules.core.model.SystemConfiguration;
+import com.econovafx.modules.core.repository.SystemConfigRepository;
+import io.avaje.inject.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+
+/**
+ * Servicio para gestión de configuración del sistema.
+ * Integra Avaje Config con valores persistentes en base de datos.
+ */
+@Component
+public class SystemConfigService {
+
+<span class="nc" id="L18">    private static final Logger logger = LoggerFactory.getLogger(SystemConfigService.class);</span>
+
+    private final SystemConfigRepository repository;
+
+<span class="nc" id="L22">    public SystemConfigService(SystemConfigRepository repository) {</span>
+<span class="nc" id="L23">        this.repository = repository;</span>
+<span class="nc" id="L24">    }</span>
+
+    /**
+     * Obtiene la configuración actual del sistema.
+     * Si no existe, inicializa con valores por defecto.
+     */
+    public SystemConfiguration getCurrentConfig() {
+<span class="nc" id="L31">        Optional&lt;SystemConfiguration&gt; config = repository.getCurrent();</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (config.isEmpty()) {</span>
+<span class="nc" id="L33">            logger.info(&quot;Inicializando configuración del sistema con valores por defecto&quot;);</span>
+<span class="nc" id="L34">            return repository.initializeDefaults();</span>
+        }
+<span class="nc" id="L36">        return config.get();</span>
+    }
+
+    /**
+     * Guarda la configuración del sistema.
+     * @param config La configuración a guardar
+     * @return La configuración guardada
+     */
+    public SystemConfiguration saveConfig(SystemConfiguration config) {
+<span class="nc" id="L45">        logger.info(&quot;Guardando configuración del sistema&quot;);</span>
+<span class="nc" id="L46">        validateConfig(config);</span>
+<span class="nc" id="L47">        return repository.save(config);</span>
+    }
+
+    /**
+     * Valida la configuración antes de guardarla.
+     * @param config Configuración a validar
+     * @throws IllegalArgumentException si la configuración es inválida
+     */
+    private void validateConfig(SystemConfiguration config) {
+<span class="nc bnc" id="L56" title="All 4 branches missed.">        if (config.getEntityName() == null || config.getEntityName().trim().isEmpty()) {</span>
+<span class="nc" id="L57">            throw new IllegalArgumentException(&quot;El nombre de la entidad es obligatorio&quot;);</span>
+        }
+
+<span class="nc bnc" id="L60" title="All 4 branches missed.">        if (config.getBaseCurrency() == null || config.getBaseCurrency().trim().isEmpty()) {</span>
+<span class="nc" id="L61">            throw new IllegalArgumentException(&quot;La moneda base es obligatoria&quot;);</span>
+        }
+
+<span class="nc bnc" id="L64" title="All 4 branches missed.">        if (config.getFiscalYearStartMonth() &lt; 1 || config.getFiscalYearStartMonth() &gt; 12) {</span>
+<span class="nc" id="L65">            throw new IllegalArgumentException(&quot;El mes de inicio del ejercicio fiscal debe estar entre 1 y 12&quot;);</span>
+        }
+
+<span class="nc bnc" id="L68" title="All 4 branches missed.">        if (config.getFiscalYearEndMonth() &lt; 1 || config.getFiscalYearEndMonth() &gt; 12) {</span>
+<span class="nc" id="L69">            throw new IllegalArgumentException(&quot;El mes de fin del ejercicio fiscal debe estar entre 1 y 12&quot;);</span>
+        }
+
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (config.getFiscalYearStartMonth() &gt;= config.getFiscalYearEndMonth()) {</span>
+<span class="nc" id="L73">            logger.warn(&quot;El mes de inicio ({}) es mayor o igual al mes de fin ({})&quot;, </span>
+<span class="nc" id="L74">                config.getFiscalYearStartMonth(), config.getFiscalYearEndMonth());</span>
+        }
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (config.getPasswordMinLength() &lt; 4) {</span>
+<span class="nc" id="L78">            throw new IllegalArgumentException(&quot;La longitud mínima de contraseña debe ser al menos 4&quot;);</span>
+        }
+
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (config.getMaxLoginAttempts() &lt; 1) {</span>
+<span class="nc" id="L82">            throw new IllegalArgumentException(&quot;Los intentos máximos de login deben ser al menos 1&quot;);</span>
+        }
+
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (config.getSessionTimeoutMinutes() &lt; 5) {</span>
+<span class="nc" id="L86">            throw new IllegalArgumentException(&quot;El timeout de sesión debe ser al menos 5 minutos&quot;);</span>
+        }
+
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (config.getAuditRetentionYears() &lt; 1) {</span>
+<span class="nc" id="L90">            throw new IllegalArgumentException(&quot;Los años de retención de auditoría deben ser al menos 1&quot;);</span>
+        }
+
+<span class="nc bnc" id="L93" title="All 4 branches missed.">        if (config.getDecimalPrecision() &lt; 0 || config.getDecimalPrecision() &gt; 10) {</span>
+<span class="nc" id="L94">            throw new IllegalArgumentException(&quot;La precisión decimal debe estar entre 0 y 10&quot;);</span>
+        }
+
+        // Validar método de valoración de inventario
+<span class="nc" id="L98">        String valuationMethod = config.getInventoryValuationMethod();</span>
+<span class="nc bnc" id="L99" title="All 4 branches missed.">        if (!&quot;PEPS&quot;.equals(valuationMethod) &amp;&amp; !&quot;PROMEDIO_PONDERADO&quot;.equals(valuationMethod)) {</span>
+<span class="nc" id="L100">            throw new IllegalArgumentException(&quot;El método de valoración debe ser PEPS o PROMEDIO_PONDERADO&quot;);</span>
+        }
+
+        // Validar tipo de régimen
+<span class="nc" id="L104">        String regimeType = config.getRegimeType();</span>
+<span class="nc bnc" id="L105" title="All 4 branches missed.">        if (!&quot;MONO&quot;.equals(regimeType) &amp;&amp; !&quot;MULTI&quot;.equals(regimeType)) {</span>
+<span class="nc" id="L106">            throw new IllegalArgumentException(&quot;El tipo de régimen debe ser MONO o MULTI&quot;);</span>
+        }
+<span class="nc" id="L108">    }</span>
+
+    /**
+     * Verifica si la configuración ha sido inicializada.
+     */
+    public boolean isInitialized() {
+<span class="nc" id="L114">        return repository.isInitialized();</span>
+    }
+
+    /**
+     * Obtiene un valor específico de configuración.
+     * @param key Clave del valor (usando reflexión para obtener el campo)
+     * @return El valor configurado o null si no existe
+     */
+    public Object getConfigValue(String key) {
+<span class="nc" id="L123">        SystemConfiguration config = getCurrentConfig();</span>
+        
+        // Mapeo manual de claves comunes
+<span class="nc bnc" id="L126" title="All 14 branches missed.">        return switch (key) {</span>
+<span class="nc" id="L127">            case &quot;entityName&quot; -&gt; config.getEntityName();</span>
+<span class="nc" id="L128">            case &quot;entityNIF&quot; -&gt; config.getEntityNIF();</span>
+<span class="nc" id="L129">            case &quot;baseCurrency&quot; -&gt; config.getBaseCurrency();</span>
+<span class="nc" id="L130">            case &quot;accountingPlan&quot; -&gt; config.getAccountingPlan();</span>
+<span class="nc" id="L131">            case &quot;fiscalYearStartMonth&quot; -&gt; config.getFiscalYearStartMonth();</span>
+<span class="nc" id="L132">            case &quot;fiscalYearEndMonth&quot; -&gt; config.getFiscalYearEndMonth();</span>
+<span class="nc" id="L133">            case &quot;regimeType&quot; -&gt; config.getRegimeType();</span>
+<span class="nc" id="L134">            case &quot;passwordMinLength&quot; -&gt; config.getPasswordMinLength();</span>
+<span class="nc" id="L135">            case &quot;auditEnabled&quot; -&gt; config.getAuditEnabled();</span>
+<span class="nc" id="L136">            case &quot;inventoryValuationMethod&quot; -&gt; config.getInventoryValuationMethod();</span>
+<span class="nc" id="L137">            case &quot;decimalPrecision&quot; -&gt; config.getDecimalPrecision();</span>
+<span class="nc" id="L138">            case &quot;timeZone&quot; -&gt; config.getTimeZone();</span>
+<span class="nc" id="L139">            case &quot;locale&quot; -&gt; config.getLocale();</span>
+<span class="nc" id="L140">            default -&gt; null;</span>
+        };
+    }
+
+    /**
+     * Reinicia la configuración a valores por defecto.
+     * @return La configuración reinicializada
+     */
+    public SystemConfiguration resetToDefaults() {
+<span class="nc" id="L149">        logger.warn(&quot;Reiniciando configuración del sistema a valores por defecto&quot;);</span>
+<span class="nc" id="L150">        Optional&lt;SystemConfiguration&gt; existing = repository.getCurrent();</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (existing.isPresent()) {</span>
+            // Eliminar la existente (soft delete o hard delete según implementación)
+            // Por ahora, simplemente creamos una nueva si no hay mecanismo de delete
+<span class="nc" id="L154">            logger.info(&quot;Configuración existente será reemplazada&quot;);</span>
+        }
+<span class="nc" id="L156">        return repository.initializeDefaults();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

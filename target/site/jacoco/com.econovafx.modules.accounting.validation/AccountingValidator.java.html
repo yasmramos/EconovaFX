@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountingValidator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.accounting.validation</a> &gt; <span class="el_source">AccountingValidator.java</span></div><h1>AccountingValidator.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.accounting.validation;
+
+import com.econovafx.modules.accounting.model.*;
+import com.econovafx.modules.core.model.AuditLog;
+import com.econovafx.modules.billing.model.ThirdParty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * Validador de reglas contables según la Resolución 340/2004 del Ministerio de Finanzas y Precios de Cuba.
+ * Implementa validaciones específicas para el sistema contable cubano.
+ */
+<span class="nc" id="L20">public class AccountingValidator {</span>
+    
+<span class="nc" id="L22">    private static final Logger logger = LoggerFactory.getLogger(AccountingValidator.class);</span>
+    
+    /**
+     * Valida que un asiento contable esté cuadrado por moneda.
+     * Según las Normas Contables Cubanas, los asientos deben cuadrar en cada moneda.
+     * 
+     * @param transaction Transacción a validar
+     * @return Lista de errores de validación (vacía si es válido)
+     */
+    public static List&lt;String&gt; validateTransactionBalancedByCurrency(Transaction transaction) {
+<span class="nc" id="L32">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
+        
+<span class="nc bnc" id="L34" title="All 6 branches missed.">        if (transaction == null || transaction.getEntries() == null || transaction.getEntries().isEmpty()) {</span>
+<span class="nc" id="L35">            errors.add(&quot;La transacción no tiene entradas&quot;);</span>
+<span class="nc" id="L36">            return errors;</span>
+        }
+        
+        // Agrupar entradas por cuenta (y por ende por moneda de la cuenta)
+<span class="nc" id="L40">        Map&lt;Account, List&lt;TransactionEntry&gt;&gt; entriesByAccount = transaction.getEntries().stream()</span>
+<span class="nc" id="L41">                .collect(Collectors.groupingBy(TransactionEntry::getAccount));</span>
+        
+<span class="nc" id="L43">        BigDecimal totalDebit = BigDecimal.ZERO;</span>
+<span class="nc" id="L44">        BigDecimal totalCredit = BigDecimal.ZERO;</span>
+        
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        for (TransactionEntry entry : transaction.getEntries()) {</span>
+<span class="nc" id="L47">            totalDebit = totalDebit.add(entry.getDebitAmount());</span>
+<span class="nc" id="L48">            totalCredit = totalCredit.add(entry.getCreditAmount());</span>
+<span class="nc" id="L49">        }</span>
+        
+        // Validar que el asiento cuadre
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (totalDebit.compareTo(totalCredit) != 0) {</span>
+<span class="nc" id="L53">            String errorMsg = String.format(</span>
+                &quot;El asiento no está cuadrado. Total Débito: %s, Total Crédito: %s, Diferencia: %s&quot;,
+<span class="nc" id="L55">                totalDebit, totalCredit, totalDebit.subtract(totalCredit)</span>
+            );
+<span class="nc" id="L57">            errors.add(errorMsg);</span>
+<span class="nc" id="L58">            logger.error(&quot;Validación fallida - Asiento no cuadrado: {}&quot;, errorMsg);</span>
+        }
+        
+        // Validar que haya al menos un débito y un crédito
+<span class="nc" id="L62">        boolean hasDebit = transaction.getEntries().stream()</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                .anyMatch(e -&gt; e.getDebitAmount().compareTo(BigDecimal.ZERO) &gt; 0);</span>
+<span class="nc" id="L64">        boolean hasCredit = transaction.getEntries().stream()</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                .anyMatch(e -&gt; e.getCreditAmount().compareTo(BigDecimal.ZERO) &gt; 0);</span>
+        
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (!hasDebit) {</span>
+<span class="nc" id="L68">            errors.add(&quot;El asiento debe tener al menos un cargo (débito)&quot;);</span>
+        }
+        
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (!hasCredit) {</span>
+<span class="nc" id="L72">            errors.add(&quot;El asiento debe tener al menos un abono (crédito)&quot;);</span>
+        }
+        
+<span class="nc" id="L75">        return errors;</span>
+    }
+    
+    /**
+     * Valida que la fecha de la transacción esté dentro de un período contable abierto.
+     * Según la Resolución 340/2004, solo se pueden registrar operaciones en períodos abiertos.
+     * 
+     * @param transactionDate Fecha de la transacción
+     * @param accountingPeriods Lista de períodos contables disponibles
+     * @return Lista de errores de validación
+     */
+    public static List&lt;String&gt; validateTransactionInOpenPeriod(LocalDate transactionDate, 
+                                                               List&lt;AccountingPeriod&gt; accountingPeriods) {
+<span class="nc" id="L88">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
+        
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (transactionDate == null) {</span>
+<span class="nc" id="L91">            errors.add(&quot;La fecha de la transacción es requerida&quot;);</span>
+<span class="nc" id="L92">            return errors;</span>
+        }
+        
+<span class="nc bnc" id="L95" title="All 4 branches missed.">        if (accountingPeriods == null || accountingPeriods.isEmpty()) {</span>
+<span class="nc" id="L96">            errors.add(&quot;No hay períodos contables definidos en el sistema&quot;);</span>
+<span class="nc" id="L97">            return errors;</span>
+        }
+        
+<span class="nc" id="L100">        boolean foundInOpenPeriod = false;</span>
+<span class="nc" id="L101">        AccountingPeriod matchingPeriod = null;</span>
+        
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (AccountingPeriod period : accountingPeriods) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            if (!transactionDate.isBefore(period.getStartDate()) &amp;&amp; </span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                !transactionDate.isAfter(period.getEndDate())) {</span>
+<span class="nc" id="L106">                matchingPeriod = period;</span>
+                
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                if (period.isOpen()) {</span>
+<span class="nc" id="L109">                    foundInOpenPeriod = true;</span>
+<span class="nc" id="L110">                    break;</span>
+                } else {
+<span class="nc" id="L112">                    errors.add(String.format(</span>
+                        &quot;La fecha %s cae en el período '%s' que está %s (desde %s hasta %s)&quot;,
+<span class="nc" id="L114">                        transactionDate, period.getName(), </span>
+<span class="nc" id="L115">                        period.getStatus().toString().toLowerCase(),</span>
+<span class="nc" id="L116">                        period.getStartDate(), period.getEndDate()</span>
+                    ));
+                }
+            }
+<span class="nc" id="L120">        }</span>
+        
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (matchingPeriod == null) {</span>
+<span class="nc" id="L123">            errors.add(String.format(</span>
+                &quot;La fecha %s no corresponde a ningún período contable definido&quot;,
+                transactionDate
+            ));
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        } else if (!foundInOpenPeriod) {</span>
+<span class="nc" id="L128">            errors.add(&quot;No se pueden registrar transacciones en períodos cerrados o bloqueados&quot;);</span>
+        }
+        
+<span class="nc" id="L131">        return errors;</span>
+    }
+    
+    /**
+     * Valida que las cuentas utilizadas en la transacción sean del tipo correcto.
+     * Verifica coherencia entre el tipo de cuenta y el movimiento (débito/crédito).
+     * 
+     * @param transaction Transacción a validar
+     * @return Lista de errores de validación
+     */
+    public static List&lt;String&gt; validateAccountTypes(Transaction transaction) {
+<span class="nc" id="L142">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
+        
+<span class="nc bnc" id="L144" title="All 4 branches missed.">        if (transaction == null || transaction.getEntries() == null) {</span>
+<span class="nc" id="L145">            return errors;</span>
+        }
+        
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        for (TransactionEntry entry : transaction.getEntries()) {</span>
+<span class="nc" id="L149">            Account account = entry.getAccount();</span>
+            
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            if (account == null) {</span>
+<span class="nc" id="L152">                errors.add(&quot;Entrada con cuenta nula&quot;);</span>
+<span class="nc" id="L153">                continue;</span>
+            }
+            
+            // Validar que la cuenta esté activa
+<span class="nc bnc" id="L157" title="All 4 branches missed.">            if (account.getIsActive() != null &amp;&amp; !account.getIsActive()) {</span>
+<span class="nc" id="L158">                errors.add(String.format(</span>
+                    &quot;La cuenta %s - %s está inactiva y no puede utilizarse&quot;,
+<span class="nc" id="L160">                    account.getCode(), account.getName()</span>
+                ));
+            }
+            
+            // Validar que los montos sean positivos
+<span class="nc bnc" id="L165" title="All 2 branches missed.">            if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) &lt; 0) {</span>
+<span class="nc" id="L166">                errors.add(String.format(</span>
+                    &quot;El monto del débito en la cuenta %s no puede ser negativo&quot;,
+<span class="nc" id="L168">                    account.getCode()</span>
+                ));
+            }
+            
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) &lt; 0) {</span>
+<span class="nc" id="L173">                errors.add(String.format(</span>
+                    &quot;El monto del crédito en la cuenta %s no puede ser negativo&quot;,
+<span class="nc" id="L175">                    account.getCode()</span>
+                ));
+            }
+            
+            // Validar que no se usen débito y crédito simultáneamente en la misma entrada
+<span class="nc bnc" id="L180" title="All 2 branches missed.">            if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) &gt; 0 &amp;&amp; </span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">                entry.getCreditAmount().compareTo(BigDecimal.ZERO) &gt; 0) {</span>
+<span class="nc" id="L182">                errors.add(String.format(</span>
+                    &quot;La cuenta %s no puede tener débito y crédito simultáneamente en la misma entrada&quot;,
+<span class="nc" id="L184">                    account.getCode()</span>
+                ));
+            }
+<span class="nc" id="L187">        }</span>
+        
+<span class="nc" id="L189">        return errors;</span>
+    }
+    
+    /**
+     * Valida datos completos de una transacción según normativas cubanas.
+     * Combina todas las validaciones anteriores.
+     * 
+     * @param transaction Transacción a validar
+     * @param accountingPeriods Períodos contables disponibles
+     * @param currentUser Usuario que realiza la operación
+     * @return Resultado de la validación
+     */
+    public static ValidationResult validateTransactionComplete(Transaction transaction,
+                                                               List&lt;AccountingPeriod&gt; accountingPeriods,
+                                                               String currentUser) {
+<span class="nc" id="L204">        List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L205">        List&lt;String&gt; warnings = new ArrayList&lt;&gt;();</span>
+        
+        // Validación básica de campos requeridos
+<span class="nc bnc" id="L208" title="All 2 branches missed.">        if (transaction.getDate() == null) {</span>
+<span class="nc" id="L209">            errors.add(&quot;La fecha de la transacción es requerida&quot;);</span>
+        }
+        
+<span class="nc bnc" id="L212" title="All 4 branches missed.">        if (transaction.getType() == null || transaction.getType().trim().isEmpty()) {</span>
+<span class="nc" id="L213">            errors.add(&quot;El tipo de transacción es requerido&quot;);</span>
+        }
+        
+<span class="nc bnc" id="L216" title="All 4 branches missed.">        if (transaction.getDescription() == null || transaction.getDescription().trim().isEmpty()) {</span>
+<span class="nc" id="L217">            warnings.add(&quot;Se recomienda incluir una descripción para la transacción&quot;);</span>
+        }
+        
+<span class="nc bnc" id="L220" title="All 4 branches missed.">        if (transaction.getEntries() == null || transaction.getEntries().size() &lt; 2) {</span>
+<span class="nc" id="L221">            errors.add(&quot;La transacción debe tener al menos 2 entradas (principio de partida doble)&quot;);</span>
+        } else {
+            // Validaciones específicas
+<span class="nc" id="L224">            errors.addAll(validateTransactionBalancedByCurrency(transaction));</span>
+<span class="nc" id="L225">            errors.addAll(validateAccountTypes(transaction));</span>
+        }
+        
+        // Validar período contable
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (transaction.getDate() != null) {</span>
+<span class="nc" id="L230">            errors.addAll(validateTransactionInOpenPeriod(transaction.getDate(), accountingPeriods));</span>
+        }
+        
+        // Validar referencia a tercero si aplica
+<span class="nc bnc" id="L234" title="All 2 branches missed.">        if (transaction.getThirdParty() != null) {</span>
+<span class="nc" id="L235">            ThirdParty thirdParty = transaction.getThirdParty();</span>
+<span class="nc bnc" id="L236" title="All 4 branches missed.">            if (thirdParty.getIsActive() != null &amp;&amp; !thirdParty.getIsActive()) {</span>
+<span class="nc" id="L237">                warnings.add(String.format(</span>
+                    &quot;El tercero %s (%s) está inactivo&quot;,
+<span class="nc" id="L239">                    thirdParty.getName(), thirdParty.getId()</span>
+                ));
+            }
+        }
+        
+<span class="nc" id="L244">        ValidationResult result = new ValidationResult(errors.isEmpty(), errors, warnings);</span>
+        
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (!result.isValid()) {</span>
+<span class="nc" id="L247">            logger.warn(&quot;Validación de transacción fallida para usuario {}: {} errores, {} advertencias&quot;,</span>
+<span class="nc" id="L248">                       currentUser, errors.size(), warnings.size());</span>
+        }
+        
+<span class="nc" id="L251">        return result;</span>
+    }
+    
+    /**
+     * Clase interna para representar el resultado de una validación
+     */
+    public static class ValidationResult {
+        private final boolean valid;
+        private final List&lt;String&gt; errors;
+        private final List&lt;String&gt; warnings;
+        
+<span class="nc" id="L262">        public ValidationResult(boolean valid, List&lt;String&gt; errors, List&lt;String&gt; warnings) {</span>
+<span class="nc" id="L263">            this.valid = valid;</span>
+<span class="nc" id="L264">            this.errors = errors;</span>
+<span class="nc" id="L265">            this.warnings = warnings;</span>
+<span class="nc" id="L266">        }</span>
+        
+        public boolean isValid() {
+<span class="nc" id="L269">            return valid;</span>
+        }
+        
+        public List&lt;String&gt; getErrors() {
+<span class="nc" id="L273">            return errors;</span>
+        }
+        
+        public List&lt;String&gt; getWarnings() {
+<span class="nc" id="L277">            return warnings;</span>
+        }
+        
+        public String getErrorMessage() {
+<span class="nc bnc" id="L281" title="All 2 branches missed.">            if (errors.isEmpty()) {</span>
+<span class="nc" id="L282">                return &quot;&quot;;</span>
+            }
+<span class="nc" id="L284">            return String.join(&quot;; &quot;, errors);</span>
+        }
+        
+        @Override
+        public String toString() {
+<span class="nc" id="L289">            return &quot;ValidationResult{&quot; +</span>
+                    &quot;valid=&quot; + valid +
+<span class="nc" id="L291">                    &quot;, errors=&quot; + errors.size() +</span>
+<span class="nc" id="L292">                    &quot;, warnings=&quot; + warnings.size() +</span>
+                    '}';
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

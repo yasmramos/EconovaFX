@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExchangeRateScheduler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.service</a> &gt; <span class="el_source">ExchangeRateScheduler.java</span></div><h1>ExchangeRateScheduler.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.core.service;
+
+import io.avaje.inject.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+import java.time.Instant;
+
+/**
+ * Scheduler para actualizar automáticamente las tasas de cambio desde el Banco Central de Cuba.
+ * Se ejecuta diariamente a las 6:00 AM según configuración.
+ */
+@Component
+public class ExchangeRateScheduler {
+
+<span class="nc" id="L17">    private static final Logger log = LoggerFactory.getLogger(ExchangeRateScheduler.class);</span>
+
+    private final ExchangeRateService exchangeRateService;
+    private final BCCExchangeRateClient bccClient;
+    
+    // Cache simple en memoria con TTL
+    private Instant lastFetchTime;
+    private final Duration cacheTTL;
+    private final boolean schedulerEnabled;
+
+    public ExchangeRateScheduler(ExchangeRateService exchangeRateService, 
+<span class="nc" id="L28">                                  BCCExchangeRateClient bccClient) {</span>
+<span class="nc" id="L29">        this.exchangeRateService = exchangeRateService;</span>
+<span class="nc" id="L30">        this.bccClient = bccClient;</span>
+        
+        // Configuración desde propiedades
+<span class="nc" id="L33">        int ttlMinutes = Integer.getInteger(&quot;exchange.rate.cache.ttl.minutes&quot;, 60);</span>
+<span class="nc" id="L34">        this.cacheTTL = Duration.ofMinutes(ttlMinutes);</span>
+<span class="nc" id="L35">        this.schedulerEnabled = Boolean.getBoolean(&quot;exchange.rate.scheduler.enabled&quot;);</span>
+        
+<span class="nc" id="L37">        log.info(&quot;ExchangeRateScheduler inicializado - Cache TTL: {} min, Scheduler: {}&quot;, </span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">                ttlMinutes, schedulerEnabled ? &quot;activado&quot; : &quot;desactivado&quot;);</span>
+<span class="nc" id="L39">    }</span>
+
+    /**
+     * Método programado para actualizar tasas diariamente.
+     * Se invoca mediante @Scheduled en la configuración de Avaje Inject.
+     * Cron: 0 0 6 * * ? (diario a las 6:00 AM)
+     */
+    public void scheduledFetchRates() {
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (!schedulerEnabled) {</span>
+<span class="nc" id="L48">            log.debug(&quot;Scheduler desactivado, omitiendo ejecución programada&quot;);</span>
+<span class="nc" id="L49">            return;</span>
+        }
+        
+<span class="nc" id="L52">        log.info(&quot;Iniciando actualización programada de tasas de cambio...&quot;);</span>
+<span class="nc" id="L53">        fetchAndCacheRates();</span>
+<span class="nc" id="L54">    }</span>
+
+    /**
+     * Obtiene tasas de cambio con caché.
+     * Si el caché es válido, devuelve los datos cacheados.
+     * Si no, obtiene desde la API y actualiza el caché.
+     */
+    public java.util.List&lt;BCCExchangeRateClient.BCCRateDTO&gt; getRatesWithCache() {
+        // Verificar si el caché es válido
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (isCacheValid()) {</span>
+<span class="nc" id="L64">            log.debug(&quot;Usando tasas de cambio del caché (válido por {} minutos)&quot;, </span>
+<span class="nc" id="L65">                    cacheTTL.toMinutes());</span>
+            // En una implementación real, aquí devolveríamos los datos cacheados
+            // Por ahora, siempre obtenemos frescos para simplificar
+        }
+        
+<span class="nc" id="L70">        return fetchAndCacheRates();</span>
+    }
+
+    /**
+     * Obtiene tasas desde la API y las guarda en la base de datos local
+     */
+    public java.util.List&lt;BCCExchangeRateClient.BCCRateDTO&gt; fetchAndCacheRates() {
+        try {
+<span class="nc" id="L78">            log.info(&quot;Obteniendo tasas de cambio desde la API del Banco Central de Cuba...&quot;);</span>
+            
+            // Obtener tasas activas desde la API
+<span class="nc" id="L81">            java.util.List&lt;BCCExchangeRateClient.BCCRateDTO&gt; rates = bccClient.fetchActiveRates();</span>
+            
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (rates.isEmpty()) {</span>
+<span class="nc" id="L84">                log.warn(&quot;La API del BC no devolvió tasas de cambio&quot;);</span>
+<span class="nc" id="L85">                return rates;</span>
+            }
+            
+            // Persistir en la base de datos local
+<span class="nc" id="L89">            persistRatesToDatabase(rates);</span>
+            
+            // Actualizar timestamp del caché
+<span class="nc" id="L92">            lastFetchTime = Instant.now();</span>
+            
+<span class="nc" id="L94">            log.info(&quot;Actualización completada: {} tasas guardadas en la base de datos&quot;, rates.size());</span>
+<span class="nc" id="L95">            return rates;</span>
+            
+<span class="nc" id="L97">        } catch (Exception e) {</span>
+<span class="nc" id="L98">            log.error(&quot;Error durante la actualización de tasas: {}&quot;, e.getMessage(), e);</span>
+<span class="nc" id="L99">            throw new RuntimeException(&quot;Error actualizando tasas de cambio: &quot; + e.getMessage(), e);</span>
+        }
+    }
+
+    /**
+     * Persiste las tasas obtenidas en la base de datos local
+     */
+    private void persistRatesToDatabase(java.util.List&lt;BCCExchangeRateClient.BCCRateDTO&gt; rates) {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        for (BCCExchangeRateClient.BCCRateDTO rateDTO : rates) {</span>
+            try {
+<span class="nc" id="L109">                exchangeRateService.registerExchangeRate(</span>
+<span class="nc" id="L110">                        rateDTO.getCodigoMoneda(),</span>
+                        &quot;CUP&quot;,  // Moneda base
+<span class="nc" id="L112">                        rateDTO.getTasa(),</span>
+<span class="nc" id="L113">                        rateDTO.getFecha().atStartOfDay(),</span>
+                        com.econovafx.modules.core.model.ExchangeRate.RateType.OFICIAL,
+<span class="nc" id="L115">                        &quot;Tasa oficial del Banco Central de Cuba - &quot; + rateDTO.getFuente()</span>
+                );
+<span class="nc" id="L117">                log.debug(&quot;Tasa persistida: 1 {} = {} CUP&quot;, rateDTO.getCodigoMoneda(), rateDTO.getTasa());</span>
+<span class="nc" id="L118">            } catch (Exception e) {</span>
+<span class="nc" id="L119">                log.error(&quot;Error persistiendo tasa para {}: {}&quot;, rateDTO.getCodigoMoneda(), e.getMessage());</span>
+<span class="nc" id="L120">            }</span>
+<span class="nc" id="L121">        }</span>
+<span class="nc" id="L122">    }</span>
+
+    /**
+     * Verifica si el caché actual es válido (no ha expirado)
+     */
+    public boolean isCacheValid() {
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if (lastFetchTime == null) {</span>
+<span class="nc" id="L129">            return false;</span>
+        }
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        return Duration.between(lastFetchTime, Instant.now()).compareTo(cacheTTL) &lt; 0;</span>
+    }
+
+    /**
+     * Fuerza la actualización del caché ignorando su estado actual
+     */
+    public void forceRefresh() {
+<span class="nc" id="L138">        log.info(&quot;Forzando actualización de tasas de cambio...&quot;);</span>
+<span class="nc" id="L139">        lastFetchTime = null;  // Invalidar caché</span>
+<span class="nc" id="L140">        fetchAndCacheRates();</span>
+<span class="nc" id="L141">    }</span>
+
+    /**
+     * Obtiene información sobre el estado del caché
+     */
+    public String getCacheStatus() {
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (lastFetchTime == null) {</span>
+<span class="nc" id="L148">            return &quot;Caché vacío&quot;;</span>
+        }
+        
+<span class="nc" id="L151">        Duration age = Duration.between(lastFetchTime, Instant.now());</span>
+<span class="nc" id="L152">        Duration remaining = cacheTTL.minus(age);</span>
+        
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (remaining.isNegative()) {</span>
+<span class="nc" id="L155">            return &quot;Caché expirado (hace &quot; + age.toMinutes() + &quot; minutos)&quot;;</span>
+        } else {
+<span class="nc" id="L157">            return &quot;Caché válido por &quot; + remaining.toMinutes() + &quot; minutos más&quot;;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

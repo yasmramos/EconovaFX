@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.core.model</a> &gt; <span class="el_source">BaseEntity.java</span></div><h1>BaseEntity.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">package com.econovafx.modules.core.model;</span>
+<span class="nc" id="L2"></span>
+<span class="nc" id="L3">import io.ebean.annotation.TenantId;</span>
+<span class="nc" id="L4">import io.ebean.annotation.WhenCreated;</span>
+import io.ebean.annotation.WhenModified;
+import jakarta.persistence.*;
+
+import java.time.Instant;
+
+/**
+ * Base entity class with common fields including native Ebean multi-tenant support.
+ * Uses @TenantId for native multi-tenancy support in Ebean 17+.
+ * Includes audit fields for tracking user actions.
+ */
+@MappedSuperclass
+<span class="fc" id="L16">public abstract class BaseEntity {</span>
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Long id;
+
+    /**
+     * Tenant ID for data isolation using native Ebean support.
+     * All transactional entities must have this field.
+     * Ebean automatically filters by this value in all queries.
+     */
+    @TenantId
+    @Column(name = &quot;tenant_id&quot;, nullable = false, updatable = false, columnDefinition = &quot;BIGINT&quot;)
+    private Long tenantId;
+
+    @Version
+    protected Long version;
+
+    @WhenCreated
+    @Column(name = &quot;created_at&quot;, updatable = false)
+    private Instant createdAt;
+
+    @WhenModified
+    @Column(name = &quot;updated_at&quot;)
+    private Instant updatedAt;
+
+<span class="fc" id="L42">    @Column(name = &quot;is_active&quot;)</span>
+<span class="fc" id="L43">    private Boolean isActive = true;</span>
+
+    /**
+     * User ID who created this record (for audit purposes).
+     * Should be set automatically by the application before persisting.
+     */
+    @Column(name = &quot;created_by&quot;, updatable = false)
+    private Long createdBy;
+
+    /**
+     * User ID who last modified this record (for audit purposes).
+     * Should be set automatically by the application before updating.
+     */
+    @Column(name = &quot;updated_by&quot;)
+    private Long updatedBy;
+
+    public Long getId() {
+<span class="fc" id="L60">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L64">        this.id = id;</span>
+<span class="fc" id="L65">    }</span>
+
+    public Long getTenantId() {
+<span class="nc" id="L68">        return tenantId;</span>
+    }
+
+    public void setTenantId(Long tenantId) {
+<span class="nc" id="L72">        this.tenantId = tenantId;</span>
+<span class="nc" id="L73">    }</span>
+
+    public Instant getCreatedAt() {
+<span class="nc" id="L76">        return createdAt;</span>
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+<span class="nc" id="L80">        this.createdAt = createdAt;</span>
+<span class="nc" id="L81">    }</span>
+
+    public Instant getUpdatedAt() {
+<span class="nc" id="L84">        return updatedAt;</span>
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+<span class="nc" id="L88">        this.updatedAt = updatedAt;</span>
+<span class="nc" id="L89">    }</span>
+
+    public Boolean getIsActive() {
+<span class="nc" id="L92">        return isActive;</span>
+    }
+
+    public void setIsActive(Boolean isActive) {
+<span class="nc" id="L96">        this.isActive = isActive;</span>
+<span class="nc" id="L97">    }</span>
+
+    public Long getVersion() {
+<span class="nc" id="L100">        return version;</span>
+    }
+
+    public void setVersion(Long version) {
+<span class="nc" id="L104">        this.version = version;</span>
+<span class="nc" id="L105">    }</span>
+
+    public Long getCreatedBy() {
+<span class="nc" id="L108">        return createdBy;</span>
+    }
+
+    public void setCreatedBy(Long createdBy) {
+<span class="nc" id="L112">        this.createdBy = createdBy;</span>
+<span class="nc" id="L113">    }</span>
+
+    public Long getUpdatedBy() {
+<span class="nc" id="L116">        return updatedBy;</span>
+    }
+
+    public void setUpdatedBy(Long updatedBy) {
+<span class="nc" id="L120">        this.updatedBy = updatedBy;</span>
+<span class="nc" id="L121">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

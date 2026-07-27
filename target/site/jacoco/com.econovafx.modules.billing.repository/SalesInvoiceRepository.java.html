@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SalesInvoiceRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EconoNova FX - Accounting System</a> &gt; <a href="index.source.html" class="el_package">com.econovafx.modules.billing.repository</a> &gt; <span class="el_source">SalesInvoiceRepository.java</span></div><h1>SalesInvoiceRepository.java</h1><pre class="source lang-java linenums">package com.econovafx.modules.billing.repository;
+
+import com.econovafx.modules.billing.model.SalesInvoice;
+import com.econovafx.modules.billing.model.SalesInvoice.InvoiceStatus;
+import io.avaje.inject.Component;
+import io.ebean.Database;
+import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Repository for SalesInvoice entities.
+ * Maneja operaciones de acceso a datos para facturas de venta.
+ */
+@Component
+public class SalesInvoiceRepository {
+
+<span class="nc" id="L22">    private static final Logger logger = LoggerFactory.getLogger(SalesInvoiceRepository.class);</span>
+
+    private final Database database;
+
+    @Inject
+<span class="nc" id="L27">    public SalesInvoiceRepository(Database database) {</span>
+<span class="nc" id="L28">        this.database = database;</span>
+<span class="nc" id="L29">    }</span>
+
+    public Optional&lt;SalesInvoice&gt; findById(Long id) {
+<span class="nc" id="L32">        return Optional.ofNullable(database.find(SalesInvoice.class, id));</span>
+    }
+
+    public Optional&lt;SalesInvoice&gt; findByInvoiceNumber(String invoiceNumber) {
+<span class="nc" id="L36">        return Optional.ofNullable(database.find(SalesInvoice.class)</span>
+<span class="nc" id="L37">                .where().eq(&quot;invoiceNumber&quot;, invoiceNumber).findOne());</span>
+    }
+
+    public List&lt;SalesInvoice&gt; findAll() {
+<span class="nc" id="L41">        return database.find(SalesInvoice.class)</span>
+<span class="nc" id="L42">                .orderBy().desc(&quot;createdAt&quot;).findList();</span>
+    }
+
+    public List&lt;SalesInvoice&gt; findByStatus(InvoiceStatus status) {
+<span class="nc" id="L46">        return database.find(SalesInvoice.class)</span>
+<span class="nc" id="L47">                .where().eq(&quot;status&quot;, status)</span>
+<span class="nc" id="L48">                .orderBy().desc(&quot;createdAt&quot;).findList();</span>
+    }
+
+    public List&lt;SalesInvoice&gt; findByDateRange(LocalDate startDate, LocalDate endDate) {
+<span class="nc" id="L52">        return database.find(SalesInvoice.class)</span>
+<span class="nc" id="L53">                .where()</span>
+<span class="nc" id="L54">                .ge(&quot;issueDate&quot;, startDate)</span>
+<span class="nc" id="L55">                .le(&quot;issueDate&quot;, endDate)</span>
+<span class="nc" id="L56">                .orderBy().desc(&quot;issueDate&quot;)</span>
+<span class="nc" id="L57">                .findList();</span>
+    }
+
+    public List&lt;SalesInvoice&gt; findByThirdPartyId(Long thirdPartyId) {
+<span class="nc" id="L61">        return database.find(SalesInvoice.class)</span>
+<span class="nc" id="L62">                .where().eq(&quot;thirdParty.id&quot;, thirdPartyId)</span>
+<span class="nc" id="L63">                .orderBy().desc(&quot;createdAt&quot;).findList();</span>
+    }
+
+    public List&lt;SalesInvoice&gt; findByBillingSeriesId(Long billingSeriesId) {
+<span class="nc" id="L67">        return database.find(SalesInvoice.class)</span>
+<span class="nc" id="L68">                .where().eq(&quot;billingSeries.id&quot;, billingSeriesId)</span>
+<span class="nc" id="L69">                .orderBy().desc(&quot;createdAt&quot;).findList();</span>
+    }
+
+    public SalesInvoice save(SalesInvoice invoice) {
+<span class="nc" id="L73">        database.save(invoice);</span>
+<span class="nc" id="L74">        logger.debug(&quot;SalesInvoice saved: {}&quot;, invoice.getInvoiceNumber());</span>
+<span class="nc" id="L75">        return invoice;</span>
+    }
+
+    public void update(SalesInvoice invoice) {
+<span class="nc" id="L79">        database.update(invoice);</span>
+<span class="nc" id="L80">        logger.debug(&quot;SalesInvoice updated: {}&quot;, invoice.getInvoiceNumber());</span>
+<span class="nc" id="L81">    }</span>
+
+    public void delete(SalesInvoice invoice) {
+<span class="nc" id="L84">        database.delete(invoice);</span>
+<span class="nc" id="L85">        logger.debug(&quot;SalesInvoice deleted: {}&quot;, invoice.getInvoiceNumber());</span>
+<span class="nc" id="L86">    }</span>
+
+    public void deleteById(Long id) {
+<span class="nc" id="L89">        database.delete(SalesInvoice.class, id);</span>
+<span class="nc" id="L90">        logger.debug(&quot;SalesInvoice deleted by ID: {}&quot;, id);</span>
+<span class="nc" id="L91">    }</span>
+
+    public boolean existsByInvoiceNumber(String invoiceNumber) {
+<span class="nc" id="L94">        return database.find(SalesInvoice.class)</span>
+<span class="nc" id="L95">                .where().eq(&quot;invoiceNumber&quot;, invoiceNumber).exists();</span>
+    }
+
+    public boolean existsById(Long id) {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        return database.find(SalesInvoice.class, id) != null;</span>
+    }
+
+    public long count() {
+<span class="nc" id="L103">        return database.find(SalesInvoice.class).findCount();</span>
+    }
+
+    public long countByStatus(InvoiceStatus status) {
+<span class="nc" id="L107">        return database.find(SalesInvoice.class)</span>
+<span class="nc" id="L108">                .where().eq(&quot;status&quot;, status).findCount();</span>
+    }
+
+    public List&lt;SalesInvoice&gt; findUnpostedInvoices() {
+<span class="nc" id="L112">        return database.find(SalesInvoice.class)</span>
+<span class="nc" id="L113">                .where().eq(&quot;journalEntryId&quot;, null)</span>
+<span class="nc" id="L114">                .eq(&quot;status&quot;, InvoiceStatus.ISSUED)</span>
+<span class="nc" id="L115">                .orderBy().asc(&quot;issueDate&quot;)</span>
+<span class="nc" id="L116">                .findList();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
