@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Third Party entity for managing Customers and Suppliers
+ * Compliant with Dominican Republic DGII Resolution 340-2004
  */
 @Entity
 @Table(name = "third_parties")
@@ -19,12 +20,16 @@ public class ThirdParty extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(unique = true)
-    private String identificationNumber; // RUC, DNI, NIT, etc.
+    @Column(unique = true, nullable = false, length = 20)
+    private String identificationNumber; // RNC, Cédula, NITE, or Passport
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ThirdPartyType type = ThirdPartyType.CUSTOMER;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tax_classification", nullable = false)
+    private TaxClassification taxClassification = TaxClassification.CONTRIBUTOR;
 
     @Column(nullable = false)
     private String email;
@@ -35,10 +40,16 @@ public class ThirdParty extends BaseEntity {
 
     private String city;
 
-    private String country = "Perú";
+    private String country = "República Dominicana";
 
     @Column(name = "tax_id")
-    private String taxId; // RUC or tax identification number
+    private String taxId; // RNC or tax identification number
+
+    @Column(name = "withholding_isr", precision = 19, scale = 4)
+    private Double withholdingIsr = 0.0; // Income Tax Withholding
+
+    @Column(name = "withholding_itbis", precision = 19, scale = 4)
+    private Double withholdingItbis = 0.0; // ITBIS Withholding
 
     @Column(name = "credit_limit", precision = 19, scale = 4)
     private Double creditLimit = 0.0;
@@ -60,15 +71,23 @@ public class ThirdParty extends BaseEntity {
     @OneToMany(mappedBy = "thirdParty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
 
-    
+    /**
+     * Tax Classification types according to DGII Resolution 340-2004
+     */
+    public enum TaxClassification {
+        CONTRIBUTOR,              // Contribuyente Ordinario
+        SIMPLIFIED,               // Régimen Simplificado
+        NON_TAXPAYER,             // No Responsable
+        GOVERNMENT,               // Gobierno
+        FOREIGN,                  // Extranjero
+        SPECIAL                   // Regímenes Especiales
+    }
 
     public enum ThirdPartyType {
         CUSTOMER,      // Cliente
         SUPPLIER,      // Proveedor
         BOTH           // Both (Cliente y Proveedor)
     }
-
-    
 
     // Getters and Setters
     public String getName() {
@@ -189,6 +208,30 @@ public class ThirdParty extends BaseEntity {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public TaxClassification getTaxClassification() {
+        return taxClassification;
+    }
+
+    public void setTaxClassification(TaxClassification taxClassification) {
+        this.taxClassification = taxClassification;
+    }
+
+    public Double getWithholdingIsr() {
+        return withholdingIsr;
+    }
+
+    public void setWithholdingIsr(Double withholdingIsr) {
+        this.withholdingIsr = withholdingIsr;
+    }
+
+    public Double getWithholdingItbis() {
+        return withholdingItbis;
+    }
+
+    public void setWithholdingItbis(Double withholdingItbis) {
+        this.withholdingItbis = withholdingItbis;
     }
 
     // `createdAt`, `updatedAt` and `isActive` are inherited from BaseEntity
