@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -325,6 +326,133 @@ public class TransactionService {
         json.append("\"isPosted\":").append(transaction.getIsPosted());
         json.append("}");
         return json.toString();
+    }
+    
+    /**
+     * Generate preview of transaction before posting.
+     * Resolution 340/2004: Allows review before final posting.
+     * 
+     * @param transactionId ID of the transaction to preview
+     * @return TransactionPreview object with simulated posting effects
+     */
+    public TransactionPreview generateTransactionPreview(Long transactionId) {
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> EntityNotFoundException.notFound("Transaction", transactionId));
+        
+        // Only DRAFT transactions can be previewed for posting
+        if (!transaction.getStatus().canPost()) {
+            throw ValidationException.transactionAlreadyPosted();
+        }
+        
+        if (!transaction.isBalanced()) {
+            throw ValidationException.unbalancedTransaction(transaction.getTotalDebit(), transaction.getTotalCredit());
+        }
+        
+        // Validate period is open (without actually posting)
+        accountingPeriodService.validatePeriodOpenForPosting(transaction.getDate());
+        
+        // Simulate balance changes without persisting them
+        List<AccountBalanceChange> simulatedChanges = new ArrayList<>();
+        
+        for (TransactionEntry entry : transaction.getEntries()) {
+            Account account = entry.getAccount();
+            BigDecimal currentBalance = account.getBalance();
+            BigDecimal balanceChange = BigDecimal.ZERO;
+            AccountType type = account.getType();
+            
+            if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) > 0) {
+                if (type == AccountType.ASSET || type == AccountType.EXPENSE) {
+                    balanceChange = entry.getDebitAmount();
+                } else {
+                    balanceChange = entry.getDebitAmount().negate();
+                }
+            }
+            
+            if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+                if (type == AccountType.LIABILITY || type == AccountType.EQUITY || 
+                    type == AccountType.REVENUE) {
+                    balanceChange = entry.getCreditAmount();
+                } else {
+                    balanceChange = entry.getCreditAmount().negate();
+                }
+            }
+            
+            BigDecimal newBalance = currentBalance.add(balanceChange);
+            simulatedChanges.add(new AccountBalanceChange(
+                account.getId(),
+                account.getCode(),
+                account.getName(),
+                currentBalance,
+                balanceChange,
+                newBalance
+            ));
+        }
+        
+        logger.info("Transaction preview generated: {} - Status: {}", 
+                   transaction.getNumber(), transaction.getStatus());
+        
+        return new TransactionPreview(transaction, simulatedChanges);
+    }
+    
+    /**
+     * Inner class representing balance change simulation for preview
+     */
+    public static class AccountBalanceChange {
+        private final Long accountId;
+        private final String accountCode;
+        private final String accountName;
+        private final BigDecimal currentBalance;
+        private final BigDecimal change;
+        private final BigDecimal newBalance;
+        
+        public AccountBalanceChange(Long accountId, String accountCode, String accountName,
+                                   BigDecimal currentBalance, BigDecimal change, BigDecimal newBalance) {
+            this.accountId = accountId;
+            this.accountCode = accountCode;
+            this.accountName = accountName;
+            this.currentBalance = currentBalance;
+            this.change = change;
+            this.newBalance = newBalance;
+        }
+        
+        public Long getAccountId() { return accountId; }
+        public String getAccountCode() { return accountCode; }
+        public String getAccountName() { return accountName; }
+        public BigDecimal getCurrentBalance() { return currentBalance; }
+        public BigDecimal getChange() { return change; }
+        public BigDecimal getNewBalance() { return newBalance; }
+    }
+    
+    /**
+     * Inner class representing complete transaction preview
+     */
+    public static class TransactionPreview {
+        private final Transaction transaction;
+        private final List<AccountBalanceChange> balanceChanges;
+        private final boolean periodValid;
+        private final boolean balanced;
+        private final String validationMessage;
+        
+        public TransactionPreview(Transaction transaction, List<AccountBalanceChange> balanceChanges) {
+            this.transaction = transaction;
+            this.balanceChanges = balanceChanges;
+            this.periodValid = true;
+            this.balanced = transaction.isBalanced();
+            this.validationMessage = balanced ? "Transaction ready for posting" : "Transaction is not balanced";
+        }
+        
+        public Transaction getTransaction() { return transaction; }
+        public List<AccountBalanceChange> getBalanceChanges() { return balanceChanges; }
+        public boolean isPeriodValid() { return periodValid; }
+        public boolean isBalanced() { return balanced; }
+        public String getValidationMessage() { return validationMessage; }
+        
+        /**
+         * Check if transaction is safe to post based on preview
+         */
+        public boolean isSafeToPost() {
+            return periodValid && balanced && transaction.getStatus().canPost();
+        }
     }
     
     public long getTransactionsCount() {
