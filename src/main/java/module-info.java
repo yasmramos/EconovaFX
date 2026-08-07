@@ -84,6 +84,7 @@ module econonovafx {
     provides io.avaje.inject.spi.InjectExtension with com.econovafx.EconovafxModule;
     
     // Open packages for reflection-based testing
+    opens com.econovafx to org.junit.platform.commons, org.junit.jupiter.api;
     opens com.econovafx.modules.accounting.repository to org.junit.platform.commons, org.junit.jupiter.api;
     opens com.econovafx.modules.accounting.service to org.junit.platform.commons, org.junit.jupiter.api;
     opens com.econovafx.modules.accounting.validation to org.junit.platform.commons, org.junit.jupiter.api;
