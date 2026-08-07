@@ -275,6 +275,124 @@ public class InventoryService {
         return itemRepository.getTotalInventoryValue();
     }
 
+    // ==================== CARGA INICIAL Y PROCESO DE POSTING ====================
+
+    /**
+     * Inicia el proceso de carga inicial de inventarios según Resolución 340/2004.
+     * Este proceso permite registrar saldos existentes antes de comenzar operaciones regulares.
+     */
+    public void startInitialLoad(InventoryItem item, BigDecimal physicalCount, User currentUser) {
+        if (item.isInitialLoadInProgress()) {
+            throw new IllegalStateException("El producto ya está en proceso de carga inicial");
+        }
+        
+        item.setInitialLoadInProgress(true);
+        item.setInitialPhysicalCount(physicalCount);
+        itemRepository.update(item);
+        
+        auditService.logWithValues(
+            "Carga inicial iniciada",
+            AuditLog.OperationType.UPDATE,
+            "InventoryItem",
+            item.getId(),
+            currentUser != null ? currentUser.getUsername() : "unknown",
+            null,
+            "Physical Count: " + physicalCount
+        );
+        
+        log.info("Carga inicial iniciada para producto: {} - Cantidad física: {}", item.getCode(), physicalCount);
+    }
+
+    /**
+     * Completa el proceso de carga inicial calculando diferencias y generando ajustes.
+     * Solo se permite completar cuando no hay diferencias o cuando se han registrado los ajustes correspondientes.
+     */
+    public void completeInitialLoad(InventoryItem item, Warehouse warehouse, User currentUser) {
+        if (!item.isInitialLoadInProgress()) {
+            throw new IllegalStateException("El producto no está en proceso de carga inicial");
+        }
+        
+        BigDecimal difference = item.calculateInitialDifference();
+        
+        if (difference.compareTo(BigDecimal.ZERO) != 0) {
+            // Registrar movimiento de ajuste por diferencia
+            InventoryMovement adjustment = new InventoryMovement();
+            adjustment.setType(InventoryMovement.MovementType.INITIAL_LOAD);
+            adjustment.setItem(item);
+            adjustment.setWarehouse(warehouse);
+            adjustment.setQuantity(difference.abs());
+            adjustment.setUnitCost(item.getUnitCost());
+            adjustment.setDocumentNumber("INIT-LOAD-" + item.getId());
+            adjustment.setNotes("Ajuste por diferencia en carga inicial. Diferencia: " + difference);
+            adjustment.setDifferenceQuantity(difference);
+            adjustment.setAccountingPeriodDate(java.time.LocalDate.now());
+            adjustment.setCreatedBy(currentUser.getId());
+            adjustment.calculateTotalAmount();
+            
+            movementRepository.save(adjustment);
+            
+            // Actualizar stock con la diferencia
+            itemRepository.updateStock(item.getId(), difference);
+            
+            log.info("Ajuste de carga inicial registrado para producto: {} - Diferencia: {}", item.getCode(), difference);
+        }
+        
+        // Marcar como completada la carga inicial
+        item.setInitialLoadInProgress(false);
+        item.setCurrentStock(item.getInitialPhysicalCount());
+        itemRepository.update(item);
+        
+        auditService.logWithValues(
+            "Carga inicial completada",
+            AuditLog.OperationType.UPDATE,
+            "InventoryItem",
+            item.getId(),
+            currentUser != null ? currentUser.getUsername() : "unknown",
+            null,
+            "Stock final: " + item.getCurrentStock()
+        );
+        
+        log.info("Carga inicial completada para producto: {} - Stock final: {}", item.getCode(), item.getCurrentStock());
+    }
+
+    /**
+     * Transfiere un movimiento de inventario al sub-ledger contable (posting).
+     * Según Resolución 340/2004, solo se pueden transferir movimientos sin diferencias pendientes.
+     */
+    public void postMovementToSubledger(Long movementId, User currentUser) {
+        InventoryMovement movement = movementRepository.findById(movementId)
+                .orElseThrow(() -> new IllegalArgumentException("Movimiento no encontrado"));
+        
+        if (movement.isPostedToSubledger()) {
+            throw new IllegalStateException("El movimiento ya fue transferido al sub-ledger");
+        }
+        
+        // Validar que no haya diferencias pendientes (excepto en INITIAL_LOAD que ya se ajustó)
+        if (movement.getDifferenceQuantity().compareTo(BigDecimal.ZERO) != 0 
+            && movement.getType() != InventoryMovement.MovementType.INITIAL_LOAD) {
+            throw new IllegalStateException("No se puede transferir el movimiento: existen diferencias pendientes");
+        }
+        
+        // TODO: Generar asiento contable automático usando la cuenta contrapartida del producto
+        // Transaction transaction = createAccountingEntry(movement);
+        // movement.setRelatedTransaction(transaction);
+        
+        movement.setPostedToSubledger(true);
+        movementRepository.save(movement);
+        
+        auditService.logWithValues(
+            "Movimiento transferido a contabilidad",
+            AuditLog.OperationType.UPDATE,
+            "InventoryMovement",
+            movement.getId(),
+            currentUser != null ? currentUser.getUsername() : "unknown",
+            null,
+            "Posted: true"
+        );
+        
+        log.info("Movimiento transferido al sub-ledger: {}", movement.getDocumentNumber());
+    }
+
     // ==================== MOVIMIENTOS ====================
 
     /**
@@ -289,6 +407,11 @@ public class InventoryService {
             String notes,
             ThirdParty supplier,
             User currentUser) {
+        
+        // Validar que no esté en carga inicial
+        if (item.isInitialLoadInProgress()) {
+            throw new IllegalStateException("No se permiten movimientos regulares durante la carga inicial");
+        }
         
         validateMovement(item, warehouse, quantity, documentNumber);
         

@@ -60,7 +60,36 @@ public class InventoryItem extends BaseEntity {
     @Column(precision = 5, scale = 2)
     private BigDecimal taxRate = BigDecimal.ZERO;
 
-    // Getters y Setters
+    // ==================== CAMPOS PARA CUMPLIMIENTO RESOLUCIÓN 340/2004 CUBA ====================
+
+    /**
+     * Indica si el producto está en proceso de carga inicial de inventarios.
+     * Durante la carga inicial, no se permiten movimientos regulares hasta que se complete el cuadre.
+     */
+    @Column(nullable = false)
+    private boolean initialLoadInProgress = false;
+
+    /**
+     * Cantidad reportada durante el conteo físico inicial.
+     * Se usa para comparar con el stock del sistema y calcular diferencias.
+     */
+    @Column(precision = 19, scale = 4)
+    private BigDecimal initialPhysicalCount = BigDecimal.ZERO;
+
+    /**
+     * Cuenta contable contrapartida para movimientos de inventario.
+     * Requerido por la Resolución 340/2004 para automatización de asientos.
+     */
+    @Column(length = 50)
+    private String contraAccountCode;
+
+    /**
+     * Centro de costos asociado al producto para reportes analíticos.
+     */
+    @Column(length = 50)
+    private String costCenterCode;
+
+    // Getters y Setters adicionales para campos de cumplimiento
     public Long getId() {
         return id;
     }
@@ -179,6 +208,73 @@ public class InventoryItem extends BaseEntity {
 
     public void setTaxRate(BigDecimal taxRate) {
         this.taxRate = taxRate;
+    }
+
+    /**
+     * Verifica si el producto está en proceso de carga inicial.
+     */
+    public boolean isInitialLoadInProgress() {
+        return initialLoadInProgress;
+    }
+
+    /**
+     * Establece el estado de carga inicial del producto.
+     */
+    public void setInitialLoadInProgress(boolean initialLoadInProgress) {
+        this.initialLoadInProgress = initialLoadInProgress;
+    }
+
+    /**
+     * Obtiene la cantidad reportada en el conteo físico inicial.
+     */
+    public BigDecimal getInitialPhysicalCount() {
+        return initialPhysicalCount;
+    }
+
+    /**
+     * Establece la cantidad reportada en el conteo físico inicial.
+     */
+    public void setInitialPhysicalCount(BigDecimal initialPhysicalCount) {
+        this.initialPhysicalCount = initialPhysicalCount;
+    }
+
+    /**
+     * Obtiene el código de la cuenta contable contrapartida.
+     */
+    public String getContraAccountCode() {
+        return contraAccountCode;
+    }
+
+    /**
+     * Establece el código de la cuenta contable contrapartida.
+     */
+    public void setContraAccountCode(String contraAccountCode) {
+        this.contraAccountCode = contraAccountCode;
+    }
+
+    /**
+     * Obtiene el código del centro de costos asociado.
+     */
+    public String getCostCenterCode() {
+        return costCenterCode;
+    }
+
+    /**
+     * Establece el código del centro de costos asociado.
+     */
+    public void setCostCenterCode(String costCenterCode) {
+        this.costCenterCode = costCenterCode;
+    }
+
+    /**
+     * Calcula la diferencia entre el stock del sistema y el conteo físico inicial.
+     * @return Diferencia positiva si hay exceso, negativa si hay faltante
+     */
+    public BigDecimal calculateInitialDifference() {
+        if (initialPhysicalCount == null) {
+            return BigDecimal.ZERO;
+        }
+        return initialPhysicalCount.subtract(currentStock);
     }
 
     /**
