@@ -126,11 +126,24 @@ public class ComprobantesController implements Initializable {
 
     // Constructor for dependency injection
     public ComprobantesController(TransactionService transactionService, AccountService accountService, 
-                                   ExportService exportService, ViewFactory viewFactory) {
+                                   ExportService exportService) {
         this.transactionService = transactionService;
         this.accountService = accountService;
         this.exportService = exportService;
+    }
+
+    /**
+     * Initialize ViewFactory reference (two-phase initialization pattern)
+     */
+    public void initializeViewFactory(ViewFactory viewFactory) {
         this.viewFactory = viewFactory;
+    }
+
+    /**
+     * Complete initialization after ViewFactory is fully constructed
+     */
+    public void completeInitialization(ViewFactory viewFactory) {
+        // Additional initialization if needed
     }
 
     /**

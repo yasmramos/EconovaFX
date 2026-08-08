@@ -1,4 +1,4 @@
-```gitignore
+```
 # Compiled and build artifacts
 *.class
 *.o
@@ -8,28 +8,19 @@ build/
 target/
 
 # Dependencies
-lib_managed/
-project/target/
-**/node_modules/
-**/.venv/
-**/venv/
-**/__pycache__/
-**/.mypy_cache/
-**/.pytest_cache/
-**/.gradle/
-**/vendor/bundle/
-**/vendor/ruby/
+.gradle/
+lib/
+deps/
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
-*.swo
 
 # Environment
 .env
 .env.local
-.env.*
+*.env.*
 
 # Editors
 .vscode/
@@ -37,36 +28,8 @@ project/target/
 *.swp
 *.swo
 
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# Java-specific
+*.jar
+*.war
+*.ear
 ```

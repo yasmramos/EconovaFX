@@ -41,8 +41,8 @@ class TransactionRepositoryTest {
     @BeforeAll
     void setUpAll() {
         // Initialize test database with DDL disabled to avoid H2 syntax errors
-        DatabaseConfig.initializeForTest();
-        db = DatabaseConfig.getServer();
+        // Database is auto-configured by ebean-test using application-test.yaml
+        db = io.ebean.DB.getDefault();
         
         companyRepository = new CompanyRepository();
         userRepository = new UserRepository(db);
