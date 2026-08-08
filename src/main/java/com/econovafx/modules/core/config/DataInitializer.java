@@ -10,7 +10,7 @@ import com.econovafx.modules.inventory.model.Warehouse;
 import com.econovafx.modules.fixedassets.model.FixedAssetCategory;
 import com.econovafx.modules.core.model.ExchangeRate;
 import com.econovafx.modules.core.security.PasswordService;
-import io.ebean.DB;
+import io.ebean.Database;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +33,19 @@ public class DataInitializer {
     private void initialize() {
         log.info("Inicializando datos del sistema...");
 
+        // Get database instance
+        Database db;
+        try {
+            db = DatabaseConfig.getMasterDatabase();
+        } catch (Exception e) {
+            log.warn("Skipping DataInitializer - no database available: {}", e.getMessage());
+            return;
+        }
+
         PasswordService passwordService = new PasswordService();
 
         // Crear empresa demo si no existe
-        Company demoCompany = DB.find(Company.class)
+        Company demoCompany = db.find(Company.class)
             .where().eq("name", "Empresa Demo")
             .findOne();
 
@@ -50,14 +59,14 @@ public class DataInitializer {
             demoCompany.setEmail("demo@econovafx.com");
             demoCompany.setStatus("ACTIVE");
             
-            DB.save(demoCompany);
+            db.save(demoCompany);
             log.info("Empresa demo creada: {}", demoCompany.getName());
         } else {
             log.info("Empresa demo ya existe: {}", demoCompany.getName());
         }
 
         // Crear usuario admin si no existe
-        User adminUser = DB.find(User.class)
+        User adminUser = db.find(User.class)
             .where().eq("email", "admin@econovafx.com")
             .findOne();
 
@@ -71,20 +80,20 @@ public class DataInitializer {
             adminUser.setCompany(demoCompany);
             adminUser.setStatus("ACTIVE");
             
-            DB.save(adminUser);
+            db.save(adminUser);
             log.info("Usuario admin creado: {}", adminUser.getUsername());
         } else {
             log.info("Usuario admin ya existe: {}", adminUser.getUsername());
         }
 
         // Crear tasas impositivas demo
-        initializeTaxRates();
+        initializeTaxRates(db);
 
         // Crear series de facturación demo
-        initializeBillingSeries();
+        initializeBillingSeries(db);
 
         // Crear categorías de activos fijos demo
-        initializeFixedAssetCategories();
+        initializeFixedAssetCategories(db);
 
         log.info("Inicialización completada.");
     }
@@ -92,9 +101,9 @@ public class DataInitializer {
     /**
      * Inicializa tasas impositivas de demostración.
      */
-    private void initializeTaxRates() {
+    private void initializeTaxRates(Database db) {
         // Verificar si ya existen tasas impositivas
-        long taxRateCount = DB.find(TaxRate.class).findCount();
+        long taxRateCount = db.find(TaxRate.class).findCount();
         if (taxRateCount > 0) {
             log.info("Tasas impositivas ya existen: {}", taxRateCount);
             return;
@@ -108,7 +117,7 @@ public class DataInitializer {
         iva18.setDescription("Impuesto al Valor Agregado - Tasa General");
         iva18.setAccountCode("203-001"); // IVA por pagar
         iva18.setActive(true);
-        DB.save(iva18);
+        db.save(iva18);
         log.info("Tasa impositiva creada: IVA 18%");
 
         // IVA 0% (Exento)
@@ -119,7 +128,7 @@ public class DataInitializer {
         iva0.setDescription("Operaciones exentas de IVA");
         iva0.setAccountCode(null);
         iva0.setActive(true);
-        DB.save(iva0);
+        db.save(iva0);
         log.info("Tasa impositiva creada: IVA 0%");
 
         // ISC 5% (Impuesto Selectivo al Consumo)
@@ -130,16 +139,16 @@ public class DataInitializer {
         isc5.setDescription("Impuesto Selectivo al Consumo");
         isc5.setAccountCode("203-002"); // ISC por pagar
         isc5.setActive(true);
-        DB.save(isc5);
+        db.save(isc5);
         log.info("Tasa impositiva creada: ISC 5%");
     }
 
     /**
      * Inicializa series de facturación de demostración.
      */
-    private void initializeBillingSeries() {
+    private void initializeBillingSeries(Database db) {
         // Verificar si ya existen series
-        long seriesCount = DB.find(BillingSeries.class).findCount();
+        long seriesCount = db.find(BillingSeries.class).findCount();
         if (seriesCount > 0) {
             log.info("Series de facturación ya existen: {}", seriesCount);
             return;
@@ -154,7 +163,7 @@ public class DataInitializer {
         serieA.setCurrentNumber(1);
         serieA.setEndNumber(1000);
         serieA.setActive(true);
-        DB.save(serieA);
+        db.save(serieA);
         log.info("Serie de facturación creada: A (Facturas)");
 
         // Serie B - Facturas de Consumidor Final
@@ -166,7 +175,7 @@ public class DataInitializer {
         serieB.setCurrentNumber(1);
         serieB.setEndNumber(2000);
         serieB.setActive(true);
-        DB.save(serieB);
+        db.save(serieB);
         log.info("Serie de facturación creada: B (Consumidor Final)");
 
         // Serie NC - Notas de Crédito
@@ -178,7 +187,7 @@ public class DataInitializer {
         serieNC.setCurrentNumber(1);
         serieNC.setEndNumber(500);
         serieNC.setActive(true);
-        DB.save(serieNC);
+        db.save(serieNC);
         log.info("Serie de facturación creada: NC (Notas de Crédito)");
 
         // Serie ND - Notas de Débito
@@ -190,7 +199,7 @@ public class DataInitializer {
         serieND.setCurrentNumber(1);
         serieND.setEndNumber(500);
         serieND.setActive(true);
-        DB.save(serieND);
+        db.save(serieND);
         log.info("Serie de facturación creada: ND (Notas de Débito)");
 
         // Serie R - Recibos
@@ -202,16 +211,16 @@ public class DataInitializer {
         serieR.setCurrentNumber(1);
         serieR.setEndNumber(3000);
         serieR.setActive(true);
-        DB.save(serieR);
+        db.save(serieR);
         log.info("Serie de facturación creada: R (Recibos)");
     }
 
     /**
      * Inicializa categorías de activos fijos de demostración.
      */
-    private void initializeFixedAssetCategories() {
+    private void initializeFixedAssetCategories(Database db) {
         // Verificar si ya existen categorías
-        long categoryCount = DB.find(FixedAssetCategory.class).findCount();
+        long categoryCount = db.find(FixedAssetCategory.class).findCount();
         if (categoryCount > 0) {
             log.info("Categorías de activos fijos ya existen: {}", categoryCount);
             return;
@@ -228,7 +237,7 @@ public class DataInitializer {
         vehiculos.setAccumulatedDepreciationAccount("105-099");
         vehiculos.setDepreciationExpenseAccount("502-001");
         vehiculos.setActive(true);
-        DB.save(vehiculos);
+        db.save(vehiculos);
         log.info("Categoría de activo fijo creada: Vehículos");
 
         // Equipos de Oficina
@@ -242,7 +251,7 @@ public class DataInitializer {
         equiposOficina.setAccumulatedDepreciationAccount("106-099");
         equiposOficina.setDepreciationExpenseAccount("502-002");
         equiposOficina.setActive(true);
-        DB.save(equiposOficina);
+        db.save(equiposOficina);
         log.info("Categoría de activo fijo creada: Equipos de Oficina");
 
         // Maquinaria
@@ -256,7 +265,7 @@ public class DataInitializer {
         maquinaria.setAccumulatedDepreciationAccount("104-099");
         maquinaria.setDepreciationExpenseAccount("501-001");
         maquinaria.setActive(true);
-        DB.save(maquinaria);
+        db.save(maquinaria);
         log.info("Categoría de activo fijo creada: Maquinaria Industrial");
 
         // Edificios
@@ -270,7 +279,7 @@ public class DataInitializer {
         edificios.setAccumulatedDepreciationAccount("103-099");
         edificios.setDepreciationExpenseAccount("502-003");
         edificios.setActive(true);
-        DB.save(edificios);
+        db.save(edificios);
         log.info("Categoría de activo fijo creada: Edificios y Construcciones");
     }
 }

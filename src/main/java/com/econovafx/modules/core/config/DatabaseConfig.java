@@ -60,6 +60,7 @@ public class DatabaseConfig {
      * Inicializa la configuración para tests aislados.
      * Usa una base de datos en memoria separada para evitar conflictos.
      * Deshabilita DDL automático para evitar errores de sintaxis en H2.
+     * Registra los paquetes de entidades correctamente.
      */
     public static void initializeForTest() {
         // Solo inicializar master si no está ya inicializado
@@ -75,11 +76,19 @@ public class DatabaseConfig {
             builder.name("econova-test-master")
                 .dataSource(dataSource)
                 .setDefaultServer(true)
-                .ddlGenerate(false)  // Deshabilitar generación DDL
-                .ddlRun(false);      // Deshabilitar ejecución DDL
+                .addPackage("com.econovafx.modules.core.model")
+                .addPackage("com.econovafx.modules.accounting.model")
+                .addPackage("com.econovafx.modules.billing.model")
+                .addPackage("com.econovafx.modules.bank.model")
+                .addPackage("com.econovafx.modules.cash.model")
+                .addPackage("com.econovafx.modules.inventory.model")
+                .addPackage("com.econovafx.modules.fixedassets.model")
+                .ddlGenerate(true)  // Habilitar generación DDL para tests
+                .ddlRun(true)       // Habilitar ejecución DDL para tests
+                .databasePlatform(new H2Platform());
             
             masterDatabase = builder.build();
-            logger.info("Master database initialized for test (DDL disabled)");
+            logger.info("Master database initialized for test (with entity packages)");
         }
     }
 
