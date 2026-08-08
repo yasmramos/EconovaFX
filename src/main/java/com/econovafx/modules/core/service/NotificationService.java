@@ -1,5 +1,6 @@
 package com.econovafx.modules.core.service;
 
+import jakarta.inject.Singleton;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -15,6 +16,7 @@ import javafx.util.Duration;
  * Supports INFO, SUCCESS, WARNING, and ERROR types.
  * The notification container must be provided when showing notifications.
  */
+@Singleton
 public class NotificationService {
 
     public NotificationService() {
