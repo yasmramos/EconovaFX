@@ -41,6 +41,9 @@ public final class AppContext {
 
     private final BeanScope beanScope;
 
+    // Configuration
+    private final AppConfig appConfig;
+
     // Database
     private final Database database;
 
@@ -76,6 +79,10 @@ public final class AppContext {
 
         // Build dependency injection container
         beanScope = BeanScope.builder().build();
+
+        // Get AppConfig bean first (it's auto-injected as a Singleton)
+        appConfig = beanScope.get(AppConfig.class);
+        logger.info("AppConfig bean retrieved from context: {}", appConfig.appName);
 
         // Get beans from DI container
         database = beanScope.get(Database.class);
@@ -213,6 +220,10 @@ public final class AppContext {
     // Getters
     public BeanScope getBeanScope() {
         return beanScope;
+    }
+
+    public AppConfig getAppConfig() {
+        return appConfig;
     }
 
     public Database getDatabase() {
