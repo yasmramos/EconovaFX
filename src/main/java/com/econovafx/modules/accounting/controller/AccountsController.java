@@ -29,7 +29,7 @@ public class AccountsController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(AccountsController.class);
     
     private final AccountService accountService;
-    private final ViewFactory viewFactory;
+    private ViewFactory viewFactory;
     
     @FXML
     private TextField searchField;
@@ -58,9 +58,22 @@ public class AccountsController implements Initializable {
     @FXML
     private TableColumn<Account, String> colDescription;
     
-    public AccountsController(AccountService accountService, ViewFactory viewFactory) {
+    public AccountsController(AccountService accountService) {
         this.accountService = accountService;
+    }
+
+    /**
+     * Initialize ViewFactory reference (two-phase initialization pattern)
+     */
+    public void initializeViewFactory(ViewFactory viewFactory) {
         this.viewFactory = viewFactory;
+    }
+
+    /**
+     * Complete initialization after ViewFactory is fully constructed
+     */
+    public void completeInitialization(ViewFactory viewFactory) {
+        // Additional initialization if needed
     }
     
     @Override

@@ -31,7 +31,7 @@ public class TransactionsController implements Initializable {
     
     private final TransactionService transactionService;
     private final AccountService accountService;
-    private final ViewFactory viewFactory;
+    private ViewFactory viewFactory;
     
     @FXML
     private DatePicker fromDatePicker;
@@ -66,13 +66,24 @@ public class TransactionsController implements Initializable {
     @FXML
     private TableColumn<Transaction, Boolean> colStatus;
     
-    @Inject
     public TransactionsController(TransactionService transactionService,
-                                  AccountService accountService,
-                                  ViewFactory viewFactory) {
+                                  AccountService accountService) {
         this.transactionService = transactionService;
         this.accountService = accountService;
+    }
+
+    /**
+     * Initialize ViewFactory reference (two-phase initialization pattern)
+     */
+    public void initializeViewFactory(ViewFactory viewFactory) {
         this.viewFactory = viewFactory;
+    }
+
+    /**
+     * Complete initialization after ViewFactory is fully constructed
+     */
+    public void completeInitialization(ViewFactory viewFactory) {
+        // Additional initialization if needed
     }
     
     @Override

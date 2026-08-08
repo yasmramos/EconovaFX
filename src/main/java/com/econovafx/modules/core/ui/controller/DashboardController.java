@@ -41,7 +41,7 @@ public class DashboardController implements Initializable {
 
     private final AccountService accountService;
     private final TransactionService transactionService;
-    private final ViewFactory viewFactory;
+    private ViewFactory viewFactory;
 
     // Summary Labels
     @FXML
@@ -147,11 +147,23 @@ public class DashboardController implements Initializable {
     private ObservableList<Transaction> transactionObservableList;
 
     public DashboardController(AccountService accountService,
-                               TransactionService transactionService,
-                               ViewFactory viewFactory) {
+                               TransactionService transactionService) {
         this.accountService = accountService;
         this.transactionService = transactionService;
+    }
+
+    /**
+     * Initialize ViewFactory reference (two-phase initialization pattern)
+     */
+    public void initializeViewFactory(ViewFactory viewFactory) {
         this.viewFactory = viewFactory;
+    }
+
+    /**
+     * Complete initialization after ViewFactory is fully constructed
+     */
+    public void completeInitialization(ViewFactory viewFactory) {
+        // Additional initialization if needed
     }
 
     @Override

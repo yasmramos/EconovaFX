@@ -34,7 +34,7 @@ public class MainViewController implements Initializable {
     private final AccountService accountService;
     private final TransactionService transactionService;
     private final UserService userService;
-    private final ViewFactory viewFactory;
+    private ViewFactory viewFactory;
 
     @FXML
     private Label currentUserLabel;
@@ -127,12 +127,10 @@ public class MainViewController implements Initializable {
 
     public MainViewController(AccountService accountService,
                              TransactionService transactionService,
-                             UserService userService,
-                             ViewFactory viewFactory) {
+                             UserService userService) {
         this.accountService = accountService;
         this.transactionService = transactionService;
         this.userService = userService;
-        this.viewFactory = viewFactory;
     }
 
     @Override
