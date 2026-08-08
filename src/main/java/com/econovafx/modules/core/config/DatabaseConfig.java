@@ -350,7 +350,7 @@ public class DatabaseConfig {
     private static Properties loadProperties() throws IOException {
         Properties props = new Properties();
         try (InputStream input = DatabaseConfig.class.getClassLoader()
-                .getResourceAsStream("ebean.properties")) {
+                .getResourceAsStream("application.properties")) {
             if (input != null) {
                 props.load(input);
             }
