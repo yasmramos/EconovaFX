@@ -3,6 +3,7 @@ package com.econovafx.modules.core.config;
 import com.econovafx.modules.core.model.Company;
 import io.ebean.Database;
 import io.ebean.DatabaseBuilder;
+import io.ebean.config.ClassLoadConfig;
 import io.ebean.config.CurrentTenantProvider;
 import io.ebean.config.TenantDataSourceProvider;
 import io.ebean.config.TenantMode;
@@ -75,14 +76,8 @@ public class DatabaseConfig {
             DatabaseBuilder builder = Database.builder();
             builder.name("econova-test-master")
                     .dataSource(dataSource)
-                    .setDefaultServer(true)
-                    .addPackage("com.econovafx.modules.core.model")
-                    .addPackage("com.econovafx.modules.accounting.model")
-                    .addPackage("com.econovafx.modules.billing.model")
-                    .addPackage("com.econovafx.modules.bank.model")
-                    .addPackage("com.econovafx.modules.cash.model")
-                    .addPackage("com.econovafx.modules.inventory.model")
-                    .addPackage("com.econovafx.modules.fixedassets.model")
+                    .defaultDatabase(true)
+                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                     .ddlGenerate(true) // Habilitar generación DDL para tests
                     .ddlRun(true) // Habilitar ejecución DDL para tests
                     .databasePlatform(new H2Platform());
@@ -109,13 +104,7 @@ public class DatabaseConfig {
             DatabaseBuilder builder = Database.builder();
             builder.name("econova-master")
                     .dataSource(dataSource)
-                    .addPackage("com.econovafx.modules.core.model")
-                    .addPackage("com.econovafx.modules.accounting.model")
-                    .addPackage("com.econovafx.modules.billing.model")
-                    .addPackage("com.econovafx.modules.bank.model")
-                    .addPackage("com.econovafx.modules.cash.model")
-                    .addPackage("com.econovafx.modules.inventory.model")
-                    .addPackage("com.econovafx.modules.fixedassets.model")
+                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                     .ddlGenerate(true)
                     .ddlRun(true)
                     .databasePlatform(new H2Platform());
@@ -162,13 +151,7 @@ public class DatabaseConfig {
                     .setCurrentTenantProvider(tenantProvider)
                     .setTenantDataSourceProvider(dataSourceProvider)
                     .setDatabasePlatform(new H2Platform())
-                    .addPackage("com.econovafx.modules.core.model")
-                    .addPackage("com.econovafx.modules.accounting.model")
-                    .addPackage("com.econovafx.modules.billing.model")
-                    .addPackage("com.econovafx.modules.bank.model")
-                    .addPackage("com.econovafx.modules.cash.model")
-                    .addPackage("com.econovafx.modules.inventory.model")
-                    .addPackage("com.econovafx.modules.fixedassets.model")
+                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                     .ddlGenerate(true)
                     .ddlRun(true);
 
@@ -245,13 +228,7 @@ public class DatabaseConfig {
             DatabaseBuilder builder = Database.builder();
             builder.name(dbName + "-ddl")
                     .dataSource(dataSource)
-                    .addPackage("com.econovafx.modules.core.model")
-                    .addPackage("com.econovafx.modules.accounting.model")
-                    .addPackage("com.econovafx.modules.billing.model")
-                    .addPackage("com.econovafx.modules.bank.model")
-                    .addPackage("com.econovafx.modules.cash.model")
-                    .addPackage("com.econovafx.modules.inventory.model")
-                    .addPackage("com.econovafx.modules.fixedassets.model")
+                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                     .databasePlatform(new H2Platform())
                     .ddlGenerate(true)
                     .ddlRun(true)
