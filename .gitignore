@@ -3,36 +3,33 @@
 *.class
 *.o
 *.obj
-*.exe
-*.dll
-*.so
-*.a
 *.out
+build/
+target/
 
 # Dependencies
-**/target/
 .gradle/
-**/.gradle/
+lib/
+deps/
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
 
-# Editors
-.vscode/
-.idea/
-
 # Environment
 .env
 .env.local
 *.env.*
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Package manager
-node_modules/
+# Java-specific
+*.jar
+*.war
+*.ear
 ```
