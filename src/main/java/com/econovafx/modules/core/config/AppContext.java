@@ -184,6 +184,23 @@ public final class AppContext {
     }
 
     /**
+     * Check if the application context is initialized
+     */
+    public static boolean isInitialized() {
+        return instance != null;
+    }
+
+    /**
+     * Reset the application context (for testing purposes)
+     */
+    public static void reset() {
+        if (instance != null) {
+            instance.close();
+            instance = null;
+        }
+    }
+
+    /**
      * Close the BeanScope and release all resources
      */
     public void close() {
