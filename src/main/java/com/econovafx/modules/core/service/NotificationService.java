@@ -1,5 +1,7 @@
 package com.econovafx.modules.core.service;
 
+import io.avaje.inject.Bean;
+import io.avaje.inject.Singleton;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -14,9 +16,17 @@ import javafx.util.Duration;
  * Service for displaying temporary notifications to the user.
  * Supports INFO, SUCCESS, WARNING, and ERROR types.
  */
+@Singleton
 public class NotificationService {
 
     private final VBox notificationContainer;
+
+    @Bean
+    public static NotificationService createNotificationService() {
+        // For testing/CLI contexts, create a dummy VBox
+        // For JavaFX UI context, this will be overridden with actual container
+        return new NotificationService(new VBox());
+    }
 
     public NotificationService(VBox container) {
         this.notificationContainer = container;
