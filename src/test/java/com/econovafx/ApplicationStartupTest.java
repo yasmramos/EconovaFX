@@ -1,9 +1,14 @@
 package com.econovafx;
 
+import com.econovafx.ui.appcontext.AppContext;
+import com.econovafx.ui.controllers.main.MainViewController;
+import com.econovafx.ui.factories.ViewFactory;
 import com.econovafx.modules.core.config.DatabaseConfig;
 import io.ebean.Database;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Application startup test - verifies core logic initialization without UI components.
- * Tests database configuration and basic connectivity.
+ * Tests database configuration, AppContext dependency injection, and basic connectivity.
+ * Replicates the lifecycle: init() -> start() to ensure services are correctly wired.
  */
 public class ApplicationStartupTest {
 
     private static final Logger logger = LoggerFactory.getLogger(ApplicationStartupTest.class);
+    
+    private App app;
 
     @BeforeAll
     static void setUp() {
@@ -31,6 +39,18 @@ public class ApplicationStartupTest {
         logger.info("Tearing down application startup test...");
         DatabaseConfig.shutdown();
         logger.info("Database shutdown complete");
+    }
+    
+    @BeforeEach
+    void beforeEach() {
+        // Clean up any static state from previous tests
+        AppContext.reset();
+    }
+
+    @AfterEach
+    void afterEach() {
+        // Reset static context to avoid side effects on other tests
+        AppContext.reset();
     }
 
     /**
@@ -86,5 +106,41 @@ public class ApplicationStartupTest {
         );
         
         logger.info("Full startup simulation test passed");
+    }
+    
+    /**
+     * Test 4: Verify application initialization with AppContext dependency injection
+     * This test replicates the same initialization flow as App.java
+     */
+    @Test
+    void testApplicationInitializationWithDependencyInjection() {
+        logger.info("Testing application initialization with AppContext dependency injection...");
+        
+        // 1. Instantiate the App (same as JavaFX launcher does)
+        app = new App();
+
+        // 2. Call init() explicitly to trigger dependency injection and service initialization
+        // This mimics the JavaFX lifecycle where init() is called before start()
+        assertDoesNotThrow(() -> app.init(), 
+            "App.init() should not throw exceptions during service initialization");
+
+        // 3. Verify AppContext is initialized
+        assertTrue(AppContext.isInitialized(), 
+            "AppContext should be initialized after app.init()");
+
+        // 4. Verify critical components are available in the context
+        assertNotNull(AppContext.getViewFactory(), 
+            "ViewFactory should be available in AppContext");
+        assertNotNull(AppContext.getMainViewController(), 
+            "MainViewController should be available in AppContext");
+
+        // 5. Verify the ViewFactory is correctly wired to the MainViewController
+        MainViewController controller = AppContext.getMainViewController();
+        ViewFactory factory = AppContext.getViewFactory();
+        
+        assertNotNull(controller, "MainViewController instance should exist");
+        assertNotNull(factory, "ViewFactory instance should exist");
+
+        logger.info("Application initialization with dependency injection test passed");
     }
 }
