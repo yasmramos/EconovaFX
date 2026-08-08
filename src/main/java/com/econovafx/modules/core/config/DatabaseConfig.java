@@ -9,14 +9,12 @@ import io.ebean.config.TenantDataSourceProvider;
 import io.ebean.config.TenantMode;
 import io.ebean.datasource.DataSourceConfig;
 import io.ebean.datasource.DataSourceFactory;
+import io.ebean.datasource.DataSourcePool;
 import io.ebean.platform.h2.H2Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -88,37 +86,27 @@ public class DatabaseConfig {
     }
 
     public static void initializeMaster() {
-        try {
-            Properties props = loadProperties();
+        DataSourcePool pool = DataSourcePool.builder()
+                .name("econova-master")
+                .driver(AppConfig.MASTER_DB_DRIVER)
+                .url(AppConfig.MASTER_DB_URL)
+                .username(AppConfig.MASTER_DB_USERNAME)
+                .password(AppConfig.MASTER_DB_PASSWORD)
+                .minConnections(1)
+                .maxConnections(10)
+                .build();
 
-            DataSourceConfig dsConfig = new DataSourceConfig();
-            dsConfig.setDriver(props.getProperty("ebean.datasource.master.driver", AppConfig.MASTER_DB_DRIVER));
-            dsConfig.setUrl(props.getProperty("ebean.datasource.master.url", AppConfig.MASTER_DB_URL));
-            dsConfig.setUsername(props.getProperty("ebean.datasource.master.username", AppConfig.MASTER_DB_USERNAME));
-            dsConfig.setPassword(props.getProperty("ebean.datasource.master.password", AppConfig.MASTER_DB_PASSWORD));
-            dsConfig.setMinConnections(1);
-            dsConfig.setMaxConnections(10);
-
-            DataSource dataSource = DataSourceFactory.create("econova-master", dsConfig);
-
-            DatabaseBuilder builder = Database.builder();
-            builder.name("econova-master")
-                    .dataSource(dataSource)
-                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
-                    .ddlGenerate(true)
-                    .ddlRun(true)
-                    .databasePlatform(new H2Platform());
-
-            Database masterDb = builder.build();
-
-            masterDatabase = masterDb;
-
-            logger.info("Master database initialized successfully");
-
-        } catch (IOException e) {
-            logger.error("Failed to initialize master database", e);
-            throw new RuntimeException("Master database initialization failed", e);
-        }
+        DatabaseBuilder builder = Database.builder();
+        builder.name("econova-master")
+                .dataSource(pool)
+                .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
+                .ddlGenerate(true)
+                .ddlRun(true)
+                .databasePlatform(new H2Platform());
+        
+        Database masterDb = builder.build();
+        masterDatabase = masterDb;
+        logger.info("Master database initialized successfully");
     }
 
     /**
@@ -145,12 +133,12 @@ public class DatabaseConfig {
 
             DatabaseBuilder builder = Database.builder();
             builder.name("econova-multi-tenant")
-                    .setRegister(true)
-                    .setDefaultServer(true)
-                    .setTenantMode(TenantMode.DB)
-                    .setCurrentTenantProvider(tenantProvider)
-                    .setTenantDataSourceProvider(dataSourceProvider)
-                    .setDatabasePlatform(new H2Platform())
+                    .register(true)
+                    .defaultDatabase(true)
+                    .tenantMode(TenantMode.DB)
+                    .currentTenantProvider(tenantProvider)
+                    .tenantDataSourceProvider(dataSourceProvider)
+                    .databasePlatform(new H2Platform())
                     .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                     .ddlGenerate(true)
                     .ddlRun(true);
@@ -232,7 +220,7 @@ public class DatabaseConfig {
                     .databasePlatform(new H2Platform())
                     .ddlGenerate(true)
                     .ddlRun(true)
-                    .setRegister(false);  // No registrar como servidor global
+                    .register(false);  // No registrar como servidor global
 
             Database tempDb = builder.build();
             logger.info("DDL executed successfully for tenant: {}", dbName);
@@ -322,30 +310,6 @@ public class DatabaseConfig {
             initializeMaster();
         }
         return masterDatabase;
-    }
-
-    private static Properties loadProperties() throws IOException {
-        Properties props = new Properties();
-        try (InputStream input = DatabaseConfig.class.getClassLoader()
-                .getResourceAsStream("application.properties")) {
-            if (input != null) {
-                props.load(input);
-            }
-        }
-        // Fallback to Avaje Config for any missing properties
-        if (props.getProperty("ebean.datasource.master.driver") == null) {
-            props.setProperty("ebean.datasource.master.driver", AppConfig.MASTER_DB_DRIVER);
-        }
-        if (props.getProperty("ebean.datasource.master.url") == null) {
-            props.setProperty("ebean.datasource.master.url", AppConfig.MASTER_DB_URL);
-        }
-        if (props.getProperty("ebean.datasource.master.username") == null) {
-            props.setProperty("ebean.datasource.master.username", AppConfig.MASTER_DB_USERNAME);
-        }
-        if (props.getProperty("ebean.datasource.master.password") == null) {
-            props.setProperty("ebean.datasource.master.password", AppConfig.MASTER_DB_PASSWORD);
-        }
-        return props;
     }
 
     /**
