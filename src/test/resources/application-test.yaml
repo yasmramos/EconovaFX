@@ -1,13 +1,27 @@
 # =============================================================================
 # Test Configuration for EconovaFX
 # This configuration is used when running tests to ensure proper Ebean initialization
+# Replicates application.properties structure to reproduce and fix the "DataSource user if not set" error
 # =============================================================================
 
-# Ebean test configuration
+# Application Configuration
+app:
+  name: EconoNova FX (Test)
+  version: 1.0.0-TEST
+  database:
+    path: ./db/test
+
+# Database Configuration - Explicit DataSource settings to avoid "user if not set" warning
+database:
+  driver: org.h2.Driver
+  url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+  username: sa
+  password: ""
+
+# Master Database Configuration - Explicit settings
 ebean:
   test:
     platform: h2
-  # Server configuration to avoid "user if not set" warning
   server:
     name: test-server
     defaultServer: true
@@ -18,11 +32,20 @@ ebean:
   migration:
     auto: false
     run: false
-    
-# DataSource configuration
-datasource:
-  default:
-    driver: org.h2.Driver
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-    username: sa
-    password: ""
+  # DataSource configuration with explicit username to avoid "user if not set" warning
+  # Note: AUTO_SERVER=TRUE is removed for in-memory databases as it's not supported by H2
+  datasource:
+    master:
+      minConnections: 1
+      maxConnections: 10
+      username: sa
+      password: ""
+      driver: org.h2.Driver
+      url: jdbc:h2:mem:test_master;DB_CLOSE_DELAY=-1
+    default:
+      minConnections: 1
+      maxConnections: 10
+      username: sa
+      password: ""
+      driver: org.h2.Driver
+      url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
