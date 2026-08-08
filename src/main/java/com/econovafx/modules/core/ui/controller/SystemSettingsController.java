@@ -4,6 +4,7 @@ import com.econovafx.modules.core.model.SystemConfiguration;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.core.service.SystemConfigService;
+import com.econovafx.modules.core.ui.view.ViewFactory;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -20,6 +21,8 @@ import java.util.ResourceBundle;
  * Diseño inspirado en preferencesFx con navegación lateral.
  */
 public class SystemSettingsController {
+    
+    private ViewFactory viewFactory;
 
     @Inject
     private SystemConfigService systemConfigService;
@@ -251,5 +254,19 @@ public class SystemSettingsController {
         if (category.equals("Interfaz")) {
             notificationService.showInfo("Reinicie la aplicación para aplicar los cambios de tema/idioma");
         }
+    }
+    
+    /**
+     * Initialize ViewFactory reference (two-phase initialization pattern)
+     */
+    public void initializeViewFactory(ViewFactory viewFactory) {
+        this.viewFactory = viewFactory;
+    }
+
+    /**
+     * Complete initialization after ViewFactory is fully constructed
+     */
+    public void completeInitialization(ViewFactory viewFactory) {
+        // Additional initialization if needed
     }
 }

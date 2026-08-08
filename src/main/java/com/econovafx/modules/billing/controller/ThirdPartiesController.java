@@ -36,7 +36,7 @@ public class ThirdPartiesController implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(ThirdPartiesController.class);
     
     private final ThirdPartyService thirdPartyService;
-    private final ViewFactory viewFactory;
+    private ViewFactory viewFactory;
     private final ExportService exportService;
     private final NotificationService notificationService;
     
@@ -94,11 +94,24 @@ public class ThirdPartiesController implements Initializable {
     @FXML
     private Label resultsCountLabel;
     
-    public ThirdPartiesController(ThirdPartyService thirdPartyService, ViewFactory viewFactory, ExportService exportService, NotificationService notificationService) {
+    public ThirdPartiesController(ThirdPartyService thirdPartyService, ExportService exportService, NotificationService notificationService) {
         this.thirdPartyService = thirdPartyService;
-        this.viewFactory = viewFactory;
         this.exportService = exportService;
         this.notificationService = notificationService;
+    }
+
+    /**
+     * Initialize ViewFactory reference (two-phase initialization pattern)
+     */
+    public void initializeViewFactory(ViewFactory viewFactory) {
+        this.viewFactory = viewFactory;
+    }
+
+    /**
+     * Complete initialization after ViewFactory is fully constructed
+     */
+    public void completeInitialization(ViewFactory viewFactory) {
+        // Additional initialization if needed
     }
     
     @Override

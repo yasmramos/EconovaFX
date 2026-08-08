@@ -79,8 +79,7 @@ public class App extends Application {
             MainViewController mainController = new MainViewController(
                     context.getAccountService(),
                     context.getTransactionService(),
-                    context.getUserService(),
-                    viewFactory
+                    context.getUserService()
             );
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-view.fxml"));
