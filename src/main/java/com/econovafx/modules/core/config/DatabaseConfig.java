@@ -55,36 +55,6 @@ public class DatabaseConfig {
         initializeMaster();
     }
 
-    /**
-     * Inicializa la configuración para tests aislados. Usa una base de datos en
-     * memoria separada para evitar conflictos. Deshabilita DDL automático para
-     * evitar errores de sintaxis en H2. Registra los paquetes de entidades
-     * correctamente.
-     */
-    public static void initializeForTest() {
-        // Solo inicializar master si no está ya inicializado
-        if (masterDatabase == null) {
-            DataSourcePool dataSource = DataSourcePool.builder()
-                    .name("econova-test-master")
-                    .url("jdbc:h2:mem:econova-test-master;DB_CLOSE_DELAY=-1;MODE=PostgreSQL")
-                    .username("sa")
-                    .password("")
-                    .build();
-
-            DatabaseBuilder builder = Database.builder();
-            builder.name("econova-test-master")
-                    .dataSource(dataSource)
-                    .defaultDatabase(true)
-                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
-                    .ddlGenerate(true) // Habilitar generación DDL para tests
-                    .ddlRun(true) // Habilitar ejecución DDL para tests
-                    .databasePlatform(new H2Platform());
-
-            masterDatabase = builder.build();
-            logger.info("Master database initialized for test (with entity packages)");
-        }
-    }
-
     public static void initializeMaster() {
         DataSourcePool pool = DataSourcePool.builder()
                 .name("econova-master")
