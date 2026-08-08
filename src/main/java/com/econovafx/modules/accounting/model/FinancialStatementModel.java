@@ -21,6 +21,13 @@ public class FinancialStatementModel extends BaseEntity {
         public String toValue() {
             return name();
         }
+        
+        /**
+         * Convert string value to enum (for database reading)
+         */
+        public static ModelType fromValue(String value) {
+            return valueOf(value);
+        }
     }
 
     @Column(nullable = false, unique = true, length = 20)

@@ -35,13 +35,12 @@ public class DashboardControllerTest extends ApplicationTest {
         // Crear mocks
         mockAccountService = mock(AccountService.class);
         mockTransactionService = mock(TransactionService.class);
-        mockViewFactory = mock(ViewFactory.class);
 
         // Configurar datos mock
         setupMockData();
 
-        // Crear controlador con dependencias inyectadas
-        controller = new DashboardController(mockAccountService, mockTransactionService, mockViewFactory);
+        // Crear controlador con dependencias inyectadas (sin ViewFactory)
+        controller = new DashboardController(mockAccountService, mockTransactionService);
         
         // Mostrar ventana vacía - el controller se inicializará cuando llamemos initialize()
         javafx.scene.layout.StackPane root = new javafx.scene.layout.StackPane();
@@ -151,9 +150,9 @@ public class DashboardControllerTest extends ApplicationTest {
         // Configurar lista vacía
         when(mockAccountService.getAllAccounts()).thenReturn(new ArrayList<>());
         
-        // Recrear el controller con nuevos mocks
+        // Recrear el controller con nuevos mocks (sin ViewFactory)
         DashboardController controllerWithEmptyData = 
-            new DashboardController(mockAccountService, mockTransactionService, mockViewFactory);
+            new DashboardController(mockAccountService, mockTransactionService);
         
         assertNotNull(controllerWithEmptyData);
         assertTrue(true, "Maneja correctamente lista vacía de cuentas");
@@ -164,9 +163,9 @@ public class DashboardControllerTest extends ApplicationTest {
         // Configurar lista nula
         when(mockTransactionService.getAllTransactions()).thenReturn(null);
         
-        // Recrear el controller
+        // Recrear el controller (sin ViewFactory)
         DashboardController controllerWithNullData = 
-            new DashboardController(mockAccountService, mockTransactionService, mockViewFactory);
+            new DashboardController(mockAccountService, mockTransactionService);
         
         assertNotNull(controllerWithNullData);
         assertTrue(true, "Maneja correctamente lista nula de transacciones");

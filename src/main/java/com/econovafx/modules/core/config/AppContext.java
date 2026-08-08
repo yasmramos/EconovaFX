@@ -28,6 +28,8 @@ import io.ebean.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.Supplier;
+
 /**
  * Application context - wrapper around Avaje Inject BeanScope Manages all
  * dependencies automatically via dependency injection
@@ -38,6 +40,9 @@ public final class AppContext {
     private static AppContext instance;
 
     private final BeanScope beanScope;
+
+    // Configuration
+    private final AppConfig appConfig;
 
     // Database
     private final Database database;
@@ -75,6 +80,10 @@ public final class AppContext {
         // Build dependency injection container
         beanScope = BeanScope.builder().build();
 
+        // Get AppConfig bean first (it's auto-injected as a Singleton)
+        appConfig = beanScope.get(AppConfig.class);
+        logger.info("AppConfig bean retrieved from context: {}", appConfig.appName);
+
         // Get beans from DI container
         database = beanScope.get(Database.class);
         accountRepository = beanScope.get(AccountRepository.class);
@@ -87,26 +96,61 @@ public final class AppContext {
         ExportService exportService = beanScope.get(ExportService.class);
         AccountingPeriodService accountingPeriodService = beanScope.get(AccountingPeriodService.class);
 
-        // Create controllers with DI-injected services
-        // ViewFactory is null initially, will be recreated below
+        // Create controllers without ViewFactory initially
+        // Controllers that don't need ViewFactory
         accountFormController = new AccountFormController(accountService);
         thirdPartyFormController = new ThirdPartyFormController(thirdPartyService);
         transactionEntryController = new TransactionEntryController(accountService, transactionService);
-        comprobantesController = new ComprobantesController(transactionService, accountService, exportService, null);
-        dashboardController = new DashboardController(accountService, transactionService, null);
-        accountsController = new AccountsController(accountService, null);
-        transactionsController = new TransactionsController(transactionService, accountService, null);
-        thirdPartiesController = new ThirdPartiesController(thirdPartyService, null, exportService, null);
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
-
-        // Create view factory with controllers
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
         exchangeRatesController = new ExchangeRatesController();
-        
+
         // Get notification service instance from bean scope
         NotificationService notificationService = beanScope.get(NotificationService.class);
         ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
-        
+
+        // Create ViewFactory with controllers that don't need it back
+        viewFactory = new ViewFactory(
+                null, // dashboardController - will be set later
+                null, // accountsController - will be set later
+                null, // transactionsController - will be set later
+                null, // thirdPartiesController - will be set later
+                accountingPeriodsController,
+                accountingClosuresController,
+                exchangeRatesController,
+                accountFormController,
+                thirdPartyFormController,
+                transactionEntryController,
+                null, // comprobantesController - will be set later
+                null, // systemSettingsController - will be set later
+                accountService,
+                thirdPartyService,
+                transactionService,
+                exportService,
+                accountingPeriodService,
+                notificationService
+        );
+
+        // Now create controllers that need ViewFactory and initialize them
+        dashboardController = new DashboardController(accountService, transactionService);
+        dashboardController.initializeViewFactory(viewFactory);
+
+        accountsController = new AccountsController(accountService);
+        accountsController.initializeViewFactory(viewFactory);
+
+        transactionsController = new TransactionsController(transactionService, accountService);
+        transactionsController.initializeViewFactory(viewFactory);
+
+        thirdPartiesController = new ThirdPartiesController(thirdPartyService, exportService, null);
+        thirdPartiesController.initializeViewFactory(viewFactory);
+
+        comprobantesController = new ComprobantesController(transactionService, accountService, exportService);
+        comprobantesController.initializeViewFactory(viewFactory);
+
+        systemSettingsController = new SystemSettingsController();
+        systemSettingsController.initializeViewFactory(viewFactory);
+
+        // Re-create ViewFactory with all controllers properly initialized
         viewFactory = new ViewFactory(
                 dashboardController,
                 accountsController,
@@ -128,38 +172,13 @@ public final class AppContext {
                 notificationService
         );
 
-        // Re-create controllers that need viewFactory
-        dashboardController = new DashboardController(accountService, transactionService, viewFactory);
-        accountsController = new AccountsController(accountService, viewFactory);
-        transactionsController = new TransactionsController(transactionService, accountService, viewFactory);
-        thirdPartiesController = new ThirdPartiesController(thirdPartyService, viewFactory, exportService, null);
-        comprobantesController = new ComprobantesController(transactionService, accountService, exportService, viewFactory);
-        accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
-        accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
-        exchangeRatesController = new ExchangeRatesController();
-
-        // Re-create view factory with updated controllers
-        NotificationService notificationService2 = beanScope.get(NotificationService.class);
-        viewFactory = new ViewFactory(
-                dashboardController,
-                accountsController,
-                transactionsController,
-                thirdPartiesController,
-                accountingPeriodsController,
-                accountingClosuresController,
-                exchangeRatesController,
-                accountFormController,
-                thirdPartyFormController,
-                transactionEntryController,
-                comprobantesController,
-                systemSettingsController,
-                accountService,
-                thirdPartyService,
-                transactionService,
-                exportService,
-                accountingPeriodService,
-                notificationService2
-        );
+        // Final initialization pass for controllers that need the complete ViewFactory
+        dashboardController.completeInitialization(viewFactory);
+        accountsController.completeInitialization(viewFactory);
+        transactionsController.completeInitialization(viewFactory);
+        thirdPartiesController.completeInitialization(viewFactory);
+        comprobantesController.completeInitialization(viewFactory);
+        systemSettingsController.completeInitialization(viewFactory);
 
         logger.info("Application context initialized successfully with Avaje Inject");
     }
@@ -169,6 +188,23 @@ public final class AppContext {
             instance = new AppContext();
         }
         return instance;
+    }
+
+    /**
+     * Check if the application context is initialized
+     */
+    public static boolean isInitialized() {
+        return instance != null;
+    }
+
+    /**
+     * Reset the application context (for testing purposes)
+     */
+    public static void reset() {
+        if (instance != null) {
+            instance.close();
+            instance = null;
+        }
     }
 
     /**
@@ -184,6 +220,10 @@ public final class AppContext {
     // Getters
     public BeanScope getBeanScope() {
         return beanScope;
+    }
+
+    public AppConfig getAppConfig() {
+        return appConfig;
     }
 
     public Database getDatabase() {

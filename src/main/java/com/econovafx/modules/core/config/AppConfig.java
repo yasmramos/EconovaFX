@@ -1,6 +1,7 @@
 package com.econovafx.modules.core.config;
 
 import io.avaje.config.Config;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,51 +11,82 @@ import java.time.Duration;
  * Centralized configuration management using Avaje Config.
  * Provides type-safe access to all application configuration properties.
  */
+@Singleton
 public class AppConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(AppConfig.class);
-
-    // Application Configuration
-    public static final String APP_NAME;
-    public static final String APP_VERSION;
+    
+    // Instance fields for bean injection
+    public final String appName;
+    public final String appVersion;
     
     // Database Configuration
+    public final String dbDriver;
+    public final String dbUrl;
+    public final String dbUsername;
+    public final String dbPassword;
+    public final String dbPath;
+    
+    // Master Database Configuration
+    public final String masterDbDriver;
+    public final String masterDbUrl;
+    public final String masterDbUsername;
+    public final String masterDbPassword;
+    
+    // Ebean Configuration
+    public final boolean ebeanDdlGenerate;
+    public final boolean ebeanDdlRun;
+    public final boolean ebeanMigrationAuto;
+    public final boolean ebeanMigrationRun;
+    public final String ebeanMigrationPath;
+    
+    // UI Configuration
+    public final String uiTheme;
+    public final int uiWidth;
+    public final int uiHeight;
+    
+    // Exchange Rate Configuration
+    public final int exchangeRateCacheTtlMinutes;
+    public final boolean exchangeRateSchedulerEnabled;
+    public final String exchangeRateSchedulerCron;
+    
+    // BCC API Configuration
+    public final String bccApiBaseUrl;
+    public final int bccApiTimeoutSeconds;
+    public final int bccApiRetryMaxAttempts;
+    public final long bccApiRetryDelayMs;
+    
+    // Security Configuration
+    public final String sessionTimeout;
+    public final int maxLoginAttempts;
+    
+    // Static fields for backward compatibility
+    public static final String APP_NAME;
+    public static final String APP_VERSION;
     public static final String DB_DRIVER;
     public static final String DB_URL;
     public static final String DB_USERNAME;
     public static final String DB_PASSWORD;
     public static final String DB_PATH;
-    
-    // Master Database Configuration
     public static final String MASTER_DB_DRIVER;
     public static final String MASTER_DB_URL;
     public static final String MASTER_DB_USERNAME;
     public static final String MASTER_DB_PASSWORD;
-    
-    // Ebean Configuration
     public static final boolean EBEAN_DDL_GENERATE;
     public static final boolean EBEAN_DDL_RUN;
     public static final boolean EBEAN_MIGRATION_AUTO;
     public static final boolean EBEAN_MIGRATION_RUN;
     public static final String EBEAN_MIGRATION_PATH;
-    
-    // UI Configuration
     public static final String UI_THEME;
     public static final int UI_WIDTH;
     public static final int UI_HEIGHT;
-    
-    // Exchange Rate Configuration
     public static final int EXCHANGE_RATE_CACHE_TTL_MINUTES;
     public static final boolean EXCHANGE_RATE_SCHEDULER_ENABLED;
     public static final String EXCHANGE_RATE_SCHEDULER_CRON;
-    
-    // BCC API Configuration
     public static final String BCC_API_BASE_URL;
     public static final int BCC_API_TIMEOUT_SECONDS;
     public static final int BCC_API_RETRY_MAX_ATTEMPTS;
     public static final long BCC_API_RETRY_DELAY_MS;
-    
-    // Security Configuration
     public static final String SESSION_TIMEOUT;
     public static final int MAX_LOGIN_ATTEMPTS;
     
@@ -110,11 +142,41 @@ public class AppConfig {
         logger.debug("Database: {}", DB_URL);
         logger.debug("UI: {} ({}x{})", UI_THEME, UI_WIDTH, UI_HEIGHT);
     }
-
+    
     /**
-     * Private constructor to prevent instantiation.
+     * Constructor for bean injection - loads configuration into instance fields
      */
-    private AppConfig() {
+    public AppConfig() {
+        this.appName = APP_NAME;
+        this.appVersion = APP_VERSION;
+        this.dbDriver = DB_DRIVER;
+        this.dbUrl = DB_URL;
+        this.dbUsername = DB_USERNAME;
+        this.dbPassword = DB_PASSWORD;
+        this.dbPath = DB_PATH;
+        this.masterDbDriver = MASTER_DB_DRIVER;
+        this.masterDbUrl = MASTER_DB_URL;
+        this.masterDbUsername = MASTER_DB_USERNAME;
+        this.masterDbPassword = MASTER_DB_PASSWORD;
+        this.ebeanDdlGenerate = EBEAN_DDL_GENERATE;
+        this.ebeanDdlRun = EBEAN_DDL_RUN;
+        this.ebeanMigrationAuto = EBEAN_MIGRATION_AUTO;
+        this.ebeanMigrationRun = EBEAN_MIGRATION_RUN;
+        this.ebeanMigrationPath = EBEAN_MIGRATION_PATH;
+        this.uiTheme = UI_THEME;
+        this.uiWidth = UI_WIDTH;
+        this.uiHeight = UI_HEIGHT;
+        this.exchangeRateCacheTtlMinutes = EXCHANGE_RATE_CACHE_TTL_MINUTES;
+        this.exchangeRateSchedulerEnabled = EXCHANGE_RATE_SCHEDULER_ENABLED;
+        this.exchangeRateSchedulerCron = EXCHANGE_RATE_SCHEDULER_CRON;
+        this.bccApiBaseUrl = BCC_API_BASE_URL;
+        this.bccApiTimeoutSeconds = BCC_API_TIMEOUT_SECONDS;
+        this.bccApiRetryMaxAttempts = BCC_API_RETRY_MAX_ATTEMPTS;
+        this.bccApiRetryDelayMs = BCC_API_RETRY_DELAY_MS;
+        this.sessionTimeout = SESSION_TIMEOUT;
+        this.maxLoginAttempts = MAX_LOGIN_ATTEMPTS;
+        
+        logger.info("AppConfig bean initialized");
     }
 
     /**

@@ -30,7 +30,8 @@ public class MainViewVisualTest extends ApplicationTest {
         // Create minimal ViewFactory with null services for visual-only test
         ViewFactory viewFactory = new ViewFactory(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         
-        MainViewController controller = new MainViewController(null, null, null, viewFactory);
+        MainViewController controller = new MainViewController(null, null, null);
+        controller.initializeViewFactory(viewFactory);
         
         // Load FXML - controller is already specified in FXML file via fx:controller
         URL fxmlUrl = getClass().getResource("/fxml/main-view.fxml");
