@@ -124,8 +124,7 @@ public class DatabaseConfig {
     }
 
     /**
-     * Obtiene o crea un DataSource para un tenant específico. Ejecuta el DDL
-     * automáticamente la primera vez que se crea el DataSource.
+     * Obtiene o crea un DataSource para un tenant específico.
      *
      * @param companyId ID de la empresa
      * @return DataSource configurado para el tenant
@@ -159,9 +158,6 @@ public class DatabaseConfig {
                 DataSource dataSource = DataSourceFactory.create(dbName, dsConfig);
                 logger.info("DataSource created successfully for: {}", company.getCode());
 
-                // Ejecutar DDL para este tenant la primera vez que se crea el DataSource
-                executeDDLForTenant(dataSource, dbName);
-
                 return dataSource;
 
             } catch (Exception e) {
@@ -169,40 +165,6 @@ public class DatabaseConfig {
                 throw new RuntimeException("DataSource creation failed", e);
             }
         });
-    }
-
-    /**
-     * Ejecuta el DDL para un tenant específico usando su DataSource. Crea un
-     * servidor Ebean temporal, ejecuta el DDL y lo cierra.
-     *
-     * @param dataSource El DataSource del tenant
-     * @param dbName Nombre de la base de datos
-     */
-    private static void executeDDLForTenant(DataSource dataSource, String dbName) {
-        logger.info("Executing DDL for tenant database: {}", dbName);
-
-        try {
-            // Crear un servidor Ebean temporal solo para ejecutar el DDL
-            DatabaseBuilder builder = Database.builder();
-            builder.name(dbName + "-ddl")
-                    .dataSource(dataSource)
-                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
-                    .databasePlatform(new H2Platform())
-                    .ddlGenerate(true)
-                    .ddlRun(true)
-                    .register(false);  // No registrar como servidor global
-
-            Database tempDb = builder.build();
-            logger.info("DDL executed successfully for tenant: {}", dbName);
-
-            // Cerrar el servidor temporal inmediatamente después de ejecutar el DDL
-            tempDb.shutdown();
-            logger.info("Temporary DDL server shutdown for: {}", dbName);
-
-        } catch (Exception e) {
-            logger.error("Failed to execute DDL for tenant: {}", dbName, e);
-            throw new RuntimeException("DDL execution failed for tenant: " + dbName, e);
-        }
     }
 
     /**
