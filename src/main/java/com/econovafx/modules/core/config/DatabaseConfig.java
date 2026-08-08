@@ -57,7 +57,7 @@ public class DatabaseConfig {
 
     public static void initializeMaster() {
         DataSourcePool pool = DataSourcePool.builder()
-                .name("econova-master")
+                .name("master")
                 .driver(AppConfig.MASTER_DB_DRIVER)
                 .url(AppConfig.MASTER_DB_URL)
                 .username(AppConfig.MASTER_DB_USERNAME)
@@ -67,7 +67,7 @@ public class DatabaseConfig {
                 .build();
 
         DatabaseBuilder builder = Database.builder();
-        builder.name("econova-master")
+        builder.name("master")
                 .dataSource(pool)
                 .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                 .ddlGenerate(true)
