@@ -105,10 +105,8 @@ public final class AppContext {
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
         exchangeRatesController = new ExchangeRatesController();
 
-        // Create NotificationService manually (requires VBox container, not a DI bean)
-        // For testing purposes, we create a dummy VBox; in production it will be replaced with actual UI container
-        javafx.scene.layout.VBox dummyNotificationContainer = new javafx.scene.layout.VBox();
-        NotificationService notificationService = new NotificationService(dummyNotificationContainer);
+        // Create NotificationService manually (no constructor parameters needed)
+        NotificationService notificationService = new NotificationService();
         
         ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
 
