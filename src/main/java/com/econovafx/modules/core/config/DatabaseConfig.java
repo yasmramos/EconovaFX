@@ -146,7 +146,6 @@ public class DatabaseConfig {
 
             DatabaseBuilder builder = Database.builder();
             builder.name("econova-multi-tenant")
-                .loadFromProperties()
                 .setRegister(true)
                 .setDefaultServer(true)
                 .setTenantMode(TenantMode.DB)
