@@ -3,14 +3,19 @@
 *.class
 *.o
 *.obj
+*.exe
+*.dll
+*.so
+*.a
 *.out
 build/
 target/
 
 # Dependencies
-.gradle/
 lib/
-deps/
+libs/
+dependency/
+dependencies/
 
 # Logs and temp files
 *.log
@@ -28,8 +33,29 @@ deps/
 *.swp
 *.swo
 
-# Java-specific
-*.jar
-*.war
-*.ear
+# Database
+*.mv.db
+db/*.mv.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Gradle
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Maven
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+# Pytest
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+
+# Distribution
+dist/
 ```

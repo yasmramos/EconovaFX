@@ -105,6 +105,9 @@ public class AuditLogsController {
     @FXML
     private Label lastUpdateLabel;
 
+    @FXML
+    private VBox rootContainer; // Main container for notifications
+
     private ObservableList<AuditLog> auditLogsData = FXCollections.observableArrayList();
     private List<AuditLog> allAuditLogs;
 
@@ -242,7 +245,7 @@ public class AuditLogsController {
             
         } catch (Exception e) {
             logger.error("Error loading audit logs", e);
-            notificationService.showError("Error al cargar auditoría: " + e.getMessage());
+            notificationService.showError(rootContainer, "Error al cargar auditoría: " + e.getMessage());
             statusLabel.setText("Error al cargar datos");
         }
     }
@@ -255,13 +258,13 @@ public class AuditLogsController {
         LocalDate endDate = endDatePicker.getValue();
         
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            notificationService.showWarning("Fechas inválidas. " 
+            notificationService.showWarning(rootContainer, "Fechas inválidas. " 
                  + "La fecha de inicio no puede ser posterior a la fecha de fin");
             return;
         }
         
         loadAuditLogs(selectedUser, selectedOperation, startDate, endDate);
-        notificationService.showSuccess("Filtros aplicados. Se han aplicado los filtros seleccionados.");
+        notificationService.showSuccess(rootContainer, "Filtros aplicados. Se han aplicado los filtros seleccionados.");
     }
 
     @FXML
@@ -272,7 +275,7 @@ public class AuditLogsController {
         endDatePicker.setValue(LocalDate.now());
         
         loadAuditLogs();
-        notificationService.showInfo("Filtros limpiados: " + 
+        notificationService.showInfo(rootContainer, "Filtros limpiados: " + 
             "Se han restablecido los filtros predeterminados");
     }
 
@@ -281,7 +284,7 @@ public class AuditLogsController {
         try {
             List<AuditLog> logsToExport = auditLogsData;
             if (logsToExport.isEmpty()) {
-                notificationService.showWarning("Sin datos. No hay registros para exportar.");
+                notificationService.showWarning(rootContainer, "Sin datos. No hay registros para exportar.");
                 return;
             }
             
@@ -291,12 +294,12 @@ public class AuditLogsController {
             // For now, we'll just show a success message
             logger.info("CSV Export generated with {} rows", logsToExport.size());
             
-            notificationService.showSuccess("Exportación exitosa. " 
+            notificationService.showSuccess(rootContainer, "Exportación exitosa. " 
                  + String.format("Se exportaron %d registros de auditoría", logsToExport.size()));
             
         } catch (Exception e) {
             logger.error("Error exporting audit logs", e);
-            notificationService.showError("Error al exportar: " + e.getMessage());
+            notificationService.showError(rootContainer, "Error al exportar: " + e.getMessage());
         }
     }
 
