@@ -1,8 +1,8 @@
 package com.econovafx;
 
-import com.econovafx.ui.appcontext.AppContext;
-import com.econovafx.ui.controllers.main.MainViewController;
-import com.econovafx.ui.factories.ViewFactory;
+import com.econovafx.modules.core.config.AppContext;
+import com.econovafx.modules.core.ui.controller.DashboardController;
+import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.core.config.DatabaseConfig;
 import io.ebean.Database;
 import org.junit.jupiter.api.AfterAll;
@@ -129,16 +129,17 @@ public class ApplicationStartupTest {
             "AppContext should be initialized after app.init()");
 
         // 4. Verify critical components are available in the context
-        assertNotNull(AppContext.getViewFactory(), 
+        AppContext context = AppContext.getInstance();
+        assertNotNull(context.getViewFactory(), 
             "ViewFactory should be available in AppContext");
-        assertNotNull(AppContext.getMainViewController(), 
-            "MainViewController should be available in AppContext");
+        assertNotNull(context.getDashboardController(), 
+            "DashboardController should be available in AppContext");
 
-        // 5. Verify the ViewFactory is correctly wired to the MainViewController
-        MainViewController controller = AppContext.getMainViewController();
-        ViewFactory factory = AppContext.getViewFactory();
+        // 5. Verify the ViewFactory is correctly wired to the DashboardController
+        DashboardController controller = context.getDashboardController();
+        ViewFactory factory = context.getViewFactory();
         
-        assertNotNull(controller, "MainViewController instance should exist");
+        assertNotNull(controller, "DashboardController instance should exist");
         assertNotNull(factory, "ViewFactory instance should exist");
 
         logger.info("Application initialization with dependency injection test passed");
