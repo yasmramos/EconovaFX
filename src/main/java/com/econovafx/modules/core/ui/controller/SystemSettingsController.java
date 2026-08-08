@@ -40,6 +40,9 @@ public class SystemSettingsController {
     private StackPane contentArea;
 
     @FXML
+    private VBox rootContainer; // Main container for notifications
+
+    @FXML
     private TextField companyNameField;
 
     @FXML
@@ -232,7 +235,7 @@ public class SystemSettingsController {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             // Aquí se cargaría la imagen real
-            notificationService.showSuccess("Logo actualizado correctamente");
+            notificationService.showSuccess(rootContainer, "Logo actualizado correctamente");
         }
     }
 
@@ -248,11 +251,11 @@ public class SystemSettingsController {
     private void saveSettings(String category) {
         // Validaciones y guardado
         // En una implementación real, esto llamaría a un SettingsService
-        notificationService.showSuccess("Configuración de " + category + " guardada exitosamente");
+        notificationService.showSuccess(rootContainer, "Configuración de " + category + " guardada exitosamente");
         
         // Simular recarga de contexto si es necesario
         if (category.equals("Interfaz")) {
-            notificationService.showInfo("Reinicie la aplicación para aplicar los cambios de tema/idioma");
+            notificationService.showInfo(rootContainer, "Reinicie la aplicación para aplicar los cambios de tema/idioma");
         }
     }
     

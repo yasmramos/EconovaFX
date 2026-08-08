@@ -13,33 +13,36 @@ import javafx.util.Duration;
 /**
  * Service for displaying temporary notifications to the user.
  * Supports INFO, SUCCESS, WARNING, and ERROR types.
+ * The notification container must be provided when showing notifications.
  */
 public class NotificationService {
 
-    private final VBox notificationContainer;
-
-    public NotificationService(VBox container) {
-        this.notificationContainer = container;
+    public NotificationService() {
+        // No container needed - it will be provided when showing notifications
     }
 
-    public void showInfo(String message) {
-        showNotification(message, Color.BLUE, "INFO");
+    public void showInfo(VBox container, String message) {
+        showNotification(container, message, Color.BLUE, "INFO");
     }
 
-    public void showSuccess(String message) {
-        showNotification(message, Color.GREEN, "SUCCESS");
+    public void showSuccess(VBox container, String message) {
+        showNotification(container, message, Color.GREEN, "SUCCESS");
     }
 
-    public void showWarning(String message) {
-        showNotification(message, Color.ORANGE, "WARNING");
+    public void showWarning(VBox container, String message) {
+        showNotification(container, message, Color.ORANGE, "WARNING");
     }
 
-    public void showError(String message) {
-        showNotification(message, Color.RED, "ERROR");
+    public void showError(VBox container, String message) {
+        showNotification(container, message, Color.RED, "ERROR");
     }
 
-    private void showNotification(String message, Color color, String type) {
+    private void showNotification(VBox container, String message, Color color, String type) {
         Platform.runLater(() -> {
+            if (container == null) {
+                return; // Skip if no container provided
+            }
+            
             Label notification = new Label(type + ": " + message);
             notification.setTextFill(Color.WHITE);
             notification.setPadding(new javafx.geometry.Insets(10, 15, 10, 15));
@@ -49,7 +52,7 @@ public class NotificationService {
             BackgroundFill bgFill = new BackgroundFill(color, CornerRadii.EMPTY, null);
             notification.setBackground(new Background(bgFill));
 
-            notificationContainer.getChildren().add(notification);
+            container.getChildren().add(notification);
 
             // Fade in
             FadeTransition fadeIn = new FadeTransition(Duration.millis(500), notification);
@@ -63,7 +66,7 @@ public class NotificationService {
                     FadeTransition fadeOut = new FadeTransition(Duration.millis(500), notification);
                     fadeOut.setFromValue(1.0);
                     fadeOut.setToValue(0.0);
-                    fadeOut.setOnFinished(ev -> notificationContainer.getChildren().remove(notification));
+                    fadeOut.setOnFinished(ev -> container.getChildren().remove(notification));
                     fadeOut.play();
                 })
             );

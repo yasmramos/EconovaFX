@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -99,6 +100,9 @@ public class ThirdPartiesController implements Initializable {
         this.exportService = exportService;
         this.notificationService = notificationService;
     }
+
+    @FXML
+    private VBox rootContainer; // Main container for notifications
 
     /**
      * Initialize ViewFactory reference (two-phase initialization pattern)
@@ -227,10 +231,10 @@ public class ThirdPartiesController implements Initializable {
             // Reload data after dialog closes (assuming form saves directly)
             loadThirdParties();
             updateStatistics(thirdPartyService.getAllThirdParties());
-            notificationService.showSuccess("Third party created successfully");
+            notificationService.showSuccess(rootContainer, "Third party created successfully");
         } catch (Exception e) {
             logger.error("Error opening new third party form", e);
-            notificationService.showError("Failed to open form: " + e.getMessage());
+            notificationService.showError(rootContainer, "Failed to open form: " + e.getMessage());
         }
     }
     
@@ -238,7 +242,7 @@ public class ThirdPartiesController implements Initializable {
     private void editThirdParty() {
         ThirdParty selected = thirdPartiesTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            notificationService.showWarning("Please select a third party to edit");
+            notificationService.showWarning(rootContainer, "Please select a third party to edit");
             return;
         }
         
@@ -257,10 +261,10 @@ public class ThirdPartiesController implements Initializable {
             // Reload data after dialog closes
             loadThirdParties();
             updateStatistics(thirdPartyService.getAllThirdParties());
-            notificationService.showSuccess("Third party updated successfully");
+            notificationService.showSuccess(rootContainer, "Third party updated successfully");
         } catch (Exception e) {
             logger.error("Error editing third party", e);
-            notificationService.showError("Failed to edit: " + e.getMessage());
+            notificationService.showError(rootContainer, "Failed to edit: " + e.getMessage());
         }
     }
     
@@ -268,7 +272,7 @@ public class ThirdPartiesController implements Initializable {
     private void deleteThirdParty() {
         ThirdParty selected = thirdPartiesTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            notificationService.showWarning("Please select a third party to delete");
+            notificationService.showWarning(rootContainer, "Please select a third party to delete");
             return;
         }
         
@@ -284,9 +288,9 @@ public class ThirdPartiesController implements Initializable {
                 thirdPartyService.deleteThirdParty(selected.getId());
                 loadThirdParties();
                 updateStatistics(thirdPartyService.getAllThirdParties());
-                notificationService.showSuccess("Third party deleted successfully");
+                notificationService.showSuccess(rootContainer, "Third party deleted successfully");
             } catch (IllegalArgumentException e) {
-                notificationService.showError(e.getMessage());
+                notificationService.showError(rootContainer, e.getMessage());
             }
         }
     }

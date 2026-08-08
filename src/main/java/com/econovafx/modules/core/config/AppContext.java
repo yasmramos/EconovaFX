@@ -105,8 +105,9 @@ public final class AppContext {
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
         exchangeRatesController = new ExchangeRatesController();
 
-        // Get notification service instance from bean scope
-        NotificationService notificationService = beanScope.get(NotificationService.class);
+        // Create NotificationService manually (no constructor parameters needed)
+        NotificationService notificationService = new NotificationService();
+        
         ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
 
         // Create ViewFactory with controllers that don't need it back

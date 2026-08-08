@@ -8,7 +8,7 @@ import com.econovafx.modules.core.repository.UserRepository;
 import com.econovafx.modules.inventory.repository.WarehouseRepository;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
-import com.econovafx.modules.core.ui.util.NotificationService;
+import com.econovafx.modules.core.service.NotificationService;
 import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,9 @@ public class WarehouseConfigController {
     @Inject
     private NotificationService notificationService;
 
+    @FXML
+    private VBox rootContainer; // Main container for notifications
+    
     @FXML
     private TableView<Warehouse> warehouseTable;
 
@@ -134,7 +138,7 @@ public class WarehouseConfigController {
             log.info("Cargados {} almacenes", warehouses.size());
         } catch (Exception e) {
             log.error("Error cargando almacenes", e);
-            notificationService.showError(getCurrentStage(), "Error al cargar almacenes: " + e.getMessage());
+            notificationService.showError(rootContainer, "Error al cargar almacenes: " + e.getMessage());
         }
     }
 
@@ -187,11 +191,11 @@ public class WarehouseConfigController {
                     null,
                     warehouse.toString()
                 );
-                notificationService.showSuccess(getCurrentStage(), "Almacén '" + warehouse.getName() + "' creado exitosamente");
+                notificationService.showSuccess(rootContainer, "Almacén '" + warehouse.getName() + "' creado exitosamente");
                 loadWarehouses();
             } catch (Exception e) {
                 log.error("Error creando almacén", e);
-                notificationService.showError(getCurrentStage(), "Error al crear almacén: " + e.getMessage());
+                notificationService.showError(rootContainer, "Error al crear almacén: " + e.getMessage());
             }
         });
     }
@@ -200,7 +204,7 @@ public class WarehouseConfigController {
     private void onEditWarehouse() {
         Warehouse selected = warehouseTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            notificationService.showWarning(getCurrentStage(), "Seleccione un almacén para editar");
+            notificationService.showWarning(rootContainer, "Seleccione un almacén para editar");
             return;
         }
 
@@ -220,11 +224,11 @@ public class WarehouseConfigController {
                     originalData,
                     updatedWarehouse.toString()
                 );
-                notificationService.showSuccess(getCurrentStage(), "Almacén actualizado exitosamente");
+                notificationService.showSuccess(rootContainer, "Almacén actualizado exitosamente");
                 loadWarehouses();
             } catch (Exception e) {
                 log.error("Error actualizando almacén", e);
-                notificationService.showError(getCurrentStage(), "Error al actualizar almacén: " + e.getMessage());
+                notificationService.showError(rootContainer, "Error al actualizar almacén: " + e.getMessage());
             }
         });
     }
@@ -233,7 +237,7 @@ public class WarehouseConfigController {
     private void onToggleActive() {
         Warehouse selected = warehouseTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            notificationService.showWarning(getCurrentStage(), "Seleccione un almacén");
+            notificationService.showWarning(rootContainer, "Seleccione un almacén");
             return;
         }
 
@@ -262,11 +266,11 @@ public class WarehouseConfigController {
                     "Active: " + newStatus
                 );
                 
-                notificationService.showSuccess(getCurrentStage(), "Almacén " + (newStatus ? "activado" : "desactivado") + " exitosamente");
+                notificationService.showSuccess(rootContainer, "Almacén " + (newStatus ? "activado" : "desactivado") + " exitosamente");
                 loadWarehouses();
             } catch (Exception e) {
                 log.error("Error cambiando estado del almacén", e);
-                notificationService.showError(getCurrentStage(), "Error al cambiar estado: " + e.getMessage());
+                notificationService.showError(rootContainer, "Error al cambiar estado: " + e.getMessage());
             }
         }
     }
@@ -275,7 +279,7 @@ public class WarehouseConfigController {
     private void onDeleteWarehouse() {
         Warehouse selected = warehouseTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            notificationService.showWarning(getCurrentStage(), "Seleccione un almacén para eliminar");
+            notificationService.showWarning(rootContainer, "Seleccione un almacén para eliminar");
             return;
         }
 
@@ -303,11 +307,11 @@ public class WarehouseConfigController {
                     null
                 );
                 
-                notificationService.showSuccess(getCurrentStage(), "Almacén eliminado exitosamente");
+                notificationService.showSuccess(rootContainer, "Almacén eliminado exitosamente");
                 loadWarehouses();
             } catch (Exception e) {
                 log.error("Error eliminando almacén", e);
-                notificationService.showError(getCurrentStage(), "Error al eliminar almacén: " + e.getMessage());
+                notificationService.showError(rootContainer, "Error al eliminar almacén: " + e.getMessage());
             }
         }
     }
@@ -367,11 +371,11 @@ public class WarehouseConfigController {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
                 if (codeField.getText().trim().isEmpty()) {
-                    notificationService.showError(getCurrentStage(), "El código es obligatorio");
+                    notificationService.showError(rootContainer, "El código es obligatorio");
                     return null;
                 }
                 if (nameField.getText().trim().isEmpty()) {
-                    notificationService.showError(getCurrentStage(), "El nombre es obligatorio");
+                    notificationService.showError(rootContainer, "El nombre es obligatorio");
                     return null;
                 }
                 
