@@ -190,7 +190,12 @@ public class DatabaseConfig {
                     .databasePlatform(new H2Platform())
                     .ddlGenerate(true)
                     .ddlRun(true)
-                    .register(false);  // No registrar como servidor global
+                    .setRegister(false)  // No registrar como servidor global
+                    // Registrar todos los paquetes de entidades para que Ebean sepa qué tablas crear
+                    .addPackage("com.econovafx.modules.core.model")
+                    .addPackage("com.econovafx.modules.accounting.model")
+                    .addPackage("com.econovafx.modules.cashbank.model")
+                    .addPackage("com.econovafx.modules.security.model");
 
             Database tempDb = builder.build();
             logger.info("DDL executed successfully for tenant: {}", dbName);
