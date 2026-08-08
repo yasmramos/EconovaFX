@@ -17,7 +17,17 @@ public class DatabaseFactory {
     @Bean
     public Database database() {
         logger.info("Initializing database for dependency injection...");
-        DatabaseConfig.initialize();
+
+        // Initialize master database first (always needed)
+        DatabaseConfig.initializeMaster();
+
+        // Initialize multi-tenant if possible (may fail if no tenant data)
+        try {
+            DatabaseConfig.initializeMultiTenant();
+        } catch (Exception e) {
+            logger.warn("Multi-tenant initialization failed, falling back to master database: {}", e.getMessage());
+        }
+
         Database database = DatabaseConfig.getServer();
         logger.info("Database initialized successfully");
         return database;
