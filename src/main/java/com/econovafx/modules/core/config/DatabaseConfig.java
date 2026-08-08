@@ -64,12 +64,12 @@ public class DatabaseConfig {
     public static void initializeForTest() {
         // Solo inicializar master si no está ya inicializado
         if (masterDatabase == null) {
-            DataSourceConfig config = new DataSourceConfig();
-            config.setUsername("sa");
-            config.setPassword("");
-            config.setUrl("jdbc:h2:mem:econova-test-master;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
-
-            DataSource dataSource = DataSourceFactory.create("econova-test-master", config);
+            DataSourcePool dataSource = DataSourcePool.builder()
+                    .name("econova-test-master")
+                    .url("jdbc:h2:mem:econova-test-master;DB_CLOSE_DELAY=-1;MODE=PostgreSQL")
+                    .username("sa")
+                    .password("")
+                    .build();
 
             DatabaseBuilder builder = Database.builder();
             builder.name("econova-test-master")
