@@ -3,7 +3,6 @@ package com.econovafx;
 import com.econovafx.modules.core.config.AppContext;
 import com.econovafx.modules.core.ui.controller.DashboardController;
 import com.econovafx.modules.core.ui.view.ViewFactory;
-import com.econovafx.modules.core.config.DatabaseConfig;
 import io.ebean.Database;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -29,15 +28,14 @@ public class ApplicationStartupTest {
     @BeforeAll
     static void setUp() {
         logger.info("Setting up application startup test...");
-        // Initialize database for testing (master only, no multi-tenant)
-        DatabaseConfig.initializeForTest();
-        logger.info("Database initialized for test");
+        // Database is auto-configured by ebean-test using application-test.yaml
+        logger.info("Database initialized by ebean-test");
     }
 
     @AfterAll
     static void tearDown() {
         logger.info("Tearing down application startup test...");
-        DatabaseConfig.shutdown();
+        // Database is automatically shut down by ebean-test
         logger.info("Database shutdown complete");
     }
     
@@ -59,7 +57,7 @@ public class ApplicationStartupTest {
     @Test
     void testDatabaseInitialization() {
         logger.info("Testing database initialization...");
-        Database db = DatabaseConfig.getMasterDatabase();
+        Database db = io.ebean.DB.getDefault();
         
         assertNotNull(db, "Database should be initialized");
         // Note: Ebean Database API doesn't expose getName() or isOnline() directly
@@ -75,7 +73,7 @@ public class ApplicationStartupTest {
     void testDatabaseConnection() {
         logger.info("Testing database connection...");
         
-        Database db = DatabaseConfig.getMasterDatabase();
+        Database db = io.ebean.DB.getDefault();
         
         // Execute a simple query to verify connection
         assertDoesNotThrow(() -> {
@@ -95,12 +93,12 @@ public class ApplicationStartupTest {
         // Simulate complete application startup sequence (database layer only)
         assertAll("Full startup simulation",
             () -> {
-                Database db = DatabaseConfig.getMasterDatabase();
+                Database db = io.ebean.DB.getDefault();
                 assertNotNull(db, "Database should be initialized");
             },
             () -> {
                 // Verify database is accessible
-                Database db = DatabaseConfig.getMasterDatabase();
+                Database db = io.ebean.DB.getDefault();
                 assertNotNull(db, "Database should be available");
             }
         );
