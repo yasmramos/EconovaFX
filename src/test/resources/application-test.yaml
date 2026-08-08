@@ -1,7 +1,25 @@
+# =============================================================================
+# Test Configuration for EconovaFX
+# This configuration is used when running tests to ensure proper Ebean initialization
+# =============================================================================
+
+# Ebean test configuration
 ebean:
   test:
     platform: h2
+  # Server configuration to avoid "user if not set" warning
+  server:
+    name: test-server
+    defaultServer: true
+  # Disable DDL generation and migrations for tests (using in-memory DB)
+  ddl:
+    generate: false
+    run: false
+  migration:
+    auto: false
+    run: false
     
+# DataSource configuration
 datasource:
   default:
     driver: org.h2.Driver
