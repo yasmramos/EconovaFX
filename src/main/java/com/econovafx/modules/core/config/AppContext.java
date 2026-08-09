@@ -84,7 +84,7 @@ public final class AppContext {
         appConfig = beanScope.get(AppConfig.class);
         logger.info("AppConfig bean retrieved from context: {}", appConfig.appName);
 
-        // Get beans from DI container
+        // Get beans from DI container (NotificationService is now auto-injected as @Singleton)
         database = beanScope.get(Database.class);
         accountRepository = beanScope.get(AccountRepository.class);
         transactionRepository = beanScope.get(TransactionRepository.class);
@@ -95,6 +95,9 @@ public final class AppContext {
         ThirdPartyService thirdPartyService = beanScope.get(ThirdPartyService.class);
         ExportService exportService = beanScope.get(ExportService.class);
         AccountingPeriodService accountingPeriodService = beanScope.get(AccountingPeriodService.class);
+        NotificationService notificationService = beanScope.get(NotificationService.class);
+        
+        ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
 
         // Create controllers without ViewFactory initially
         // Controllers that don't need ViewFactory
@@ -104,11 +107,6 @@ public final class AppContext {
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
         exchangeRatesController = new ExchangeRatesController();
-
-        // Create NotificationService manually (no constructor parameters needed)
-        NotificationService notificationService = new NotificationService();
-        
-        ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
 
         // Create ViewFactory with controllers that don't need it back
         viewFactory = new ViewFactory(
