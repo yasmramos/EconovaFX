@@ -70,9 +70,9 @@ public class EbeanInitializationTest {
         
         Database db = DB.getDefault();
         
-        // Test basic SQL query execution
+        // Test basic SQL query execution - use quoted identifier for H2 compatibility
         assertDoesNotThrow(() -> {
-            var result = db.sqlQuery("SELECT 1 AS value").findOne();
+            var result = db.sqlQuery("SELECT 1 AS \"value\"").findOne();
             assertNotNull(result, "Query should return a result");
         }, "Basic SQL query should execute successfully");
         
