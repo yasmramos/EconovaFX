@@ -32,10 +32,10 @@ public class SalesInvoice extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private InvoiceStatus status = InvoiceStatus.DRAFT;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate issueDate;
 
-    @Column(name = "due_date")
+    @Column(name = "due_date", columnDefinition = "DATE")
     private LocalDate dueDate;
 
     @ManyToOne
