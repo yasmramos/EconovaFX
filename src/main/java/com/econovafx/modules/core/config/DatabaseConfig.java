@@ -56,15 +56,15 @@ public class DatabaseConfig {
     }
 
     public static void initializeMaster() {
-        DataSourceConfig dsConfig = new DataSourceConfig();
-        dsConfig.setDriver(AppConfig.MASTER_DB_DRIVER);
-        dsConfig.setUrl(AppConfig.MASTER_DB_URL);
-        dsConfig.setUsername(AppConfig.MASTER_DB_USERNAME);
-        dsConfig.setPassword(AppConfig.MASTER_DB_PASSWORD);
-        dsConfig.setMinConnections(1);
-        dsConfig.setMaxConnections(10);
-
-        DataSourcePool pool = DataSourceFactory.create("master", dsConfig);
+        DataSourcePool pool = DataSourcePool.builder()
+                .name("master")
+                .driver(AppConfig.MASTER_DB_DRIVER)
+                .url(AppConfig.MASTER_DB_URL)
+                .username(AppConfig.MASTER_DB_USERNAME)
+                .password(AppConfig.MASTER_DB_PASSWORD)
+                .minConnections(1)
+                .maxConnections(10)
+                .build();
 
         DatabaseBuilder builder = Database.builder();
         builder.name("master")
