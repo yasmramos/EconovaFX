@@ -63,25 +63,46 @@ public class SplashController {
                 
                 updateProgress(1.0, "Aplicación lista!");
                 
+                // Pequeña pausa antes de mostrar la ventana principal
+                Thread.sleep(500);
+                
                 // Transición suave hacia la app principal
                 javafx.application.Platform.runLater(() -> {
-                    FadeTransition fadeOut = new FadeTransition(Duration.millis(800), rootPane);
-                    fadeOut.setFromValue(1.0);
-                    fadeOut.setToValue(0.0);
-                    fadeOut.setOnFinished(e -> {
+                    try {
+                        FadeTransition fadeOut = new FadeTransition(Duration.millis(800), rootPane);
+                        fadeOut.setFromValue(1.0);
+                        fadeOut.setToValue(0.0);
+                        fadeOut.setOnFinished(e -> {
+                            try {
+                                if (onInitializationComplete != null) {
+                                    System.out.println("Ejecutando callback de inicialización completa...");
+                                    onInitializationComplete.run();
+                                } else {
+                                    System.err.println("ERROR: onInitializationComplete es null!");
+                                }
+                            } catch (Exception ex) {
+                                System.err.println("Error al ejecutar callback: " + ex.getMessage());
+                                ex.printStackTrace();
+                            }
+                        });
+                        fadeOut.play();
+                    } catch (Exception e) {
+                        System.err.println("Error en la transición fade: " + e.getMessage());
+                        e.printStackTrace();
+                        // Intentar llamar directamente si falla la animación
                         if (onInitializationComplete != null) {
                             onInitializationComplete.run();
                         }
-                    });
-                    fadeOut.play();
+                    }
                 });
                 
             } catch (Exception e) {
+                System.err.println("Error durante la inicialización: " + e.getMessage());
+                e.printStackTrace();
                 javafx.application.Platform.runLater(() -> {
                     statusLabel.setText("Error: " + e.getMessage());
                     statusLabel.setStyle("-fx-text-fill: #e74c3c;");
                 });
-                e.printStackTrace();
             }
         });
     }
