@@ -36,10 +36,10 @@ public class CashMovement extends BaseEntity {
     @Column(nullable = false, length = 500)
     private String description;
 
-    @Column(name = "source_account_id")
+    @Column(name = "source_account_id", columnDefinition = "BIGINT")
     private Long sourceAccountId;
 
-    @Column(name = "destination_account_id")
+    @Column(name = "destination_account_id", columnDefinition = "BIGINT")
     private Long destinationAccountId;
 
     @Column(nullable = false, precision = 19, scale = 4)
@@ -61,7 +61,7 @@ public class CashMovement extends BaseEntity {
     @Column(nullable = false)
     private Boolean reconciled = false;
 
-    @Column(name = "posted_at")
+    @Column(name = "posted_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime postedAt;
 
     @Column(name = "posted_by")
