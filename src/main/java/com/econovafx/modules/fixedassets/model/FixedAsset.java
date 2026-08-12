@@ -31,7 +31,7 @@ public class FixedAsset extends BaseEntity {
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal acquisitionCost;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate acquisitionDate;
 
     @Column(name = "purchase_invoice_number", length = 50)
