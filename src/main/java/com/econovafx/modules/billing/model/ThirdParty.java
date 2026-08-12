@@ -5,6 +5,7 @@ import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.accounting.model.Transaction;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,17 +46,17 @@ public class ThirdParty extends BaseEntity {
     @Column(name = "tax_id")
     private String taxId; // NIT (Número de Identificación Tributaria)
 
-    @Column(name = "withholding_isr", precision = 19, scale = 4)
-    private Double withholdingIsr = 0.0; // Income Tax Withholding
+    @Column(name = "withholding_isr", columnDefinition = "DECIMAL(19,4)")
+    private BigDecimal withholdingIsr = BigDecimal.ZERO; // Income Tax Withholding
 
-    @Column(name = "withholding_itbis", precision = 19, scale = 4)
-    private Double withholdingItbis = 0.0; // ITBIS Withholding
+    @Column(name = "withholding_itbis", columnDefinition = "DECIMAL(19,4)")
+    private BigDecimal withholdingItbis = BigDecimal.ZERO; // ITBIS Withholding
 
-    @Column(name = "credit_limit", precision = 19, scale = 4)
-    private Double creditLimit = 0.0;
+    @Column(name = "credit_limit", columnDefinition = "DECIMAL(19,4)")
+    private BigDecimal creditLimit = BigDecimal.ZERO;
 
-    @Column(name = "current_balance", precision = 19, scale = 4)
-    private Double currentBalance = 0.0;
+    @Column(name = "current_balance", columnDefinition = "DECIMAL(19,4)")
+    private BigDecimal currentBalance = BigDecimal.ZERO;
 
     @Column(name = "payment_days", columnDefinition = "INTEGER")
     private Integer paymentDays = 30;
@@ -162,19 +163,19 @@ public class ThirdParty extends BaseEntity {
         this.taxId = taxId;
     }
 
-    public Double getCreditLimit() {
+    public BigDecimal getCreditLimit() {
         return creditLimit;
     }
 
-    public void setCreditLimit(Double creditLimit) {
+    public void setCreditLimit(BigDecimal creditLimit) {
         this.creditLimit = creditLimit;
     }
 
-    public Double getCurrentBalance() {
+    public BigDecimal getCurrentBalance() {
         return currentBalance;
     }
 
-    public void setCurrentBalance(Double currentBalance) {
+    public void setCurrentBalance(BigDecimal currentBalance) {
         this.currentBalance = currentBalance;
     }
 
@@ -218,19 +219,19 @@ public class ThirdParty extends BaseEntity {
         this.taxClassification = taxClassification;
     }
 
-    public Double getWithholdingIsr() {
+    public BigDecimal getWithholdingIsr() {
         return withholdingIsr;
     }
 
-    public void setWithholdingIsr(Double withholdingIsr) {
+    public void setWithholdingIsr(BigDecimal withholdingIsr) {
         this.withholdingIsr = withholdingIsr;
     }
 
-    public Double getWithholdingItbis() {
+    public BigDecimal getWithholdingItbis() {
         return withholdingItbis;
     }
 
-    public void setWithholdingItbis(Double withholdingItbis) {
+    public void setWithholdingItbis(BigDecimal withholdingItbis) {
         this.withholdingItbis = withholdingItbis;
     }
 
