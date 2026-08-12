@@ -107,4 +107,8 @@ public class SupplierInvoiceRepository {
             .where().eq("invoiceNumber", invoiceNumber)
             .exists();
     }
+
+    public boolean existsById(Long id) {
+        return findById(id).isPresent();
+    }
 }

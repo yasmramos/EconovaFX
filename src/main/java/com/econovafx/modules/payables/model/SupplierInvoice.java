@@ -237,11 +237,11 @@ public class SupplierInvoice extends BaseEntity {
     }
 
     public Transaction getAccountingTransaction() {
-        return accountingEntry;
+        return accountingTransaction;
     }
 
-    public void setAccountingTransaction(Transaction accountingEntry) {
-        this.accountingEntry = accountingEntry;
+    public void setAccountingTransaction(Transaction accountingTransaction) {
+        this.accountingTransaction = accountingTransaction;
     }
 
     public InvoiceStatus getStatus() {
