@@ -64,6 +64,7 @@ public class DatabaseConfig {
                 .password(AppConfig.MASTER_DB_PASSWORD)
                 .minConnections(1)
                 .maxConnections(10)
+                .applicationName("econovafx")
                 .build();
 
         DatabaseBuilder builder = Database.builder();
@@ -73,7 +74,7 @@ public class DatabaseConfig {
                 .ddlGenerate(true)
                 .ddlRun(true)
                 .databasePlatform(new H2Platform());
-        
+
         Database masterDb = builder.build();
         masterDatabase = masterDb;
         logger.info("Master database initialized successfully");
