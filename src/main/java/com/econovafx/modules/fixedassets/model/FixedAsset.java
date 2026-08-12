@@ -66,6 +66,30 @@ public class FixedAsset extends BaseEntity {
     @Column(name = "responsible_user_id", columnDefinition = "BIGINT")
     private Long responsibleUserId; // Usuario responsable del activo
 
+    @Column(precision = 18, scale = 2)
+    private BigDecimal residualValue; // Valor residual
+    
+    @Column(precision = 18, scale = 2, name = "original_value")
+    private BigDecimal originalValue; // Valor original (para revaluaciones)
+    
+    @Column(name = "useful_life_years")
+    private Integer usefulLifeYears; // Vida útil en años
+    
+    @Column(name = "depreciation_method", length = 50)
+    private String depreciationMethod; // Método de depreciación: STRAIGHT_LINE, DECLINING_BALANCE, UNITS_OF_PRODUCTION
+    
+    @Column(name = "current_depreciation", precision = 18, scale = 2)
+    private BigDecimal currentDepreciation = BigDecimal.ZERO; // Depreciación actual acumulada
+    
+    @Column(name = "revaluation_reason", length = 255)
+    private String revaluationReason; // Razón de la última revaluación
+    
+    @Column(name = "last_revaluation_date")
+    private LocalDate lastRevaluationDate; // Fecha de la última revaluación
+    
+    @Column(name = "is_active")
+    private boolean active = true; // Activo está en uso
+
     // Getters and Setters
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
@@ -114,6 +138,30 @@ public class FixedAsset extends BaseEntity {
 
     public Long getResponsibleUserId() { return responsibleUserId; }
     public void setResponsibleUserId(Long responsibleUserId) { this.responsibleUserId = responsibleUserId; }
+    
+    public BigDecimal getResidualValue() { return residualValue; }
+    public void setResidualValue(BigDecimal residualValue) { this.residualValue = residualValue; }
+    
+    public BigDecimal getOriginalValue() { return originalValue; }
+    public void setOriginalValue(BigDecimal originalValue) { this.originalValue = originalValue; }
+    
+    public Integer getUsefulLifeYears() { return usefulLifeYears; }
+    public void setUsefulLifeYears(Integer usefulLifeYears) { this.usefulLifeYears = usefulLifeYears; }
+    
+    public String getDepreciationMethod() { return depreciationMethod; }
+    public void setDepreciationMethod(String depreciationMethod) { this.depreciationMethod = depreciationMethod; }
+    
+    public BigDecimal getCurrentDepreciation() { return currentDepreciation; }
+    public void setCurrentDepreciation(BigDecimal currentDepreciation) { this.currentDepreciation = currentDepreciation; }
+    
+    public String getRevaluationReason() { return revaluationReason; }
+    public void setRevaluationReason(String revaluationReason) { this.revaluationReason = revaluationReason; }
+    
+    public LocalDate getLastRevaluationDate() { return lastRevaluationDate; }
+    public void setLastRevaluationDate(LocalDate lastRevaluationDate) { this.lastRevaluationDate = lastRevaluationDate; }
+    
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
     public enum AssetStatus {
         ACTIVE,        // En uso
