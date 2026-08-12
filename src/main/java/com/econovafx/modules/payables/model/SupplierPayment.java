@@ -2,7 +2,7 @@ package com.econovafx.modules.payables.model;
 
 import com.econovafx.modules.core.model.BaseEntity;
 import com.econovafx.modules.billing.model.ThirdParty;
-import com.econovafx.modules.accounting.model.AccountingEntry;
+import com.econovafx.modules.accounting.model.Transaction;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import jakarta.persistence.*;
@@ -81,7 +81,7 @@ public class SupplierPayment extends BaseEntity {
      */
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accounting_entry_id")
-    private AccountingEntry accountingEntry;
+    private Transaction accountingTransaction;
 
     /**
      * Payment status
@@ -181,11 +181,11 @@ public class SupplierPayment extends BaseEntity {
         }
     }
 
-    public AccountingEntry getAccountingEntry() {
+    public Transaction getAccountingTransaction() {
         return accountingEntry;
     }
 
-    public void setAccountingEntry(AccountingEntry accountingEntry) {
+    public void setAccountingTransaction(Transaction accountingEntry) {
         this.accountingEntry = accountingEntry;
     }
 

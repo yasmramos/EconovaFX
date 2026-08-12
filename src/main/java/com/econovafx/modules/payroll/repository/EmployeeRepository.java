@@ -1,54 +1,85 @@
 package com.econovafx.modules.payroll.repository;
 
 import com.econovafx.modules.payroll.model.Employee;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import io.avaje.inject.Component;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository interface for Employee entity.
+ * Repository class for Employee entity.
  * Provides data access methods for payroll employee management.
  */
-@Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+@Component
+public class EmployeeRepository {
+
+    private final io.avaje.inject.BeanScope beanScope;
+    
+    public EmployeeRepository() {
+        this.beanScope = null; // Will be initialized by framework
+    }
+
+    /**
+     * Find all employees.
+     */
+    public List<Employee> findAll() {
+        // Implementation would use JPA EntityManager
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
+
+    /**
+     * Find employee by ID.
+     */
+    public Optional<Employee> findById(Long id) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
+
+    /**
+     * Save an employee.
+     */
+    public Employee save(Employee employee) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
+
+    /**
+     * Delete an employee.
+     */
+    public void delete(Employee employee) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 
     /**
      * Find employee by employee code.
      */
-    Optional<Employee> findByEmployeeCode(String employeeCode);
+    public Optional<Employee> findByEmployeeCode(String employeeCode) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 
     /**
      * Find employees by department.
      */
-    List<Employee> findByDepartment(String department);
+    public List<Employee> findByDepartment(String department) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 
     /**
-     * Find employees by employment status.
+     * Find active employees.
      */
-    List<Employee> findByEmploymentStatus(Employee.EmploymentStatus status);
-
-    /**
-     * Find active employees (status = ACTIVE).
-     */
-    @Query("SELECT e FROM Employee e WHERE e.employmentStatus = 'ACTIVE'")
-    List<Employee> findActiveEmployees();
-
-    /**
-     * Find employees with ThirdParty type CUSTOMER or BOTH.
-     */
-    @Query("SELECT e FROM Employee e JOIN e.thirdParty tp WHERE tp.type IN ('CUSTOMER', 'BOTH')")
-    List<Employee> findCustomerEmployees();
+    public List<Employee> findByActiveTrue() {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 
     /**
      * Count employees by department.
      */
-    long countByDepartment(String department);
+    public long countByDepartment(String department) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 
     /**
      * Check if employee code exists.
      */
-    boolean existsByEmployeeCode(String employeeCode);
+    public boolean existsByEmployeeCode(String employeeCode) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 }

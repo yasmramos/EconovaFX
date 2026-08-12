@@ -1,55 +1,71 @@
 package com.econovafx.modules.payroll.repository;
 
 import com.econovafx.modules.payroll.model.PayrollConcept;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import io.avaje.inject.Component;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository interface for PayrollConcept entity.
+ * Repository class for PayrollConcept entity.
  * Provides data access methods for payroll concept management.
  */
-@Repository
-public interface PayrollConceptRepository extends JpaRepository<PayrollConcept, Long> {
+@Component
+public class PayrollConceptRepository {
 
     /**
-     * Find concept by concept code.
+     * Find all concepts.
      */
-    Optional<PayrollConcept> findByConceptCode(String conceptCode);
+    public List<PayrollConcept> findAll() {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 
     /**
-     * Find concepts by type (EARNING, DEDUCTION, etc.).
+     * Find concept by ID.
      */
-    List<PayrollConcept> findByConceptType(PayrollConcept.ConceptType type);
+    public Optional<PayrollConcept> findById(Long id) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
+
+    /**
+     * Save a concept.
+     */
+    public PayrollConcept save(PayrollConcept concept) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
+
+    /**
+     * Delete a concept.
+     */
+    public void delete(PayrollConcept concept) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
+
+    /**
+     * Find concepts by type.
+     */
+    public List<PayrollConcept> findByType(PayrollConcept.ConceptType type) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
+
+    /**
+     * Find concepts by type and active status.
+     */
+    public List<PayrollConcept> findByTypeAndActive(PayrollConcept.ConceptType type, boolean active) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 
     /**
      * Find active concepts.
      */
-    List<PayrollConcept> findByActiveTrue();
-
-    /**
-     * Find taxable concepts.
-     */
-    @Query("SELECT pc FROM PayrollConcept pc WHERE pc.taxable = true AND pc.active = true")
-    List<PayrollConcept> findTaxableConcepts();
-
-    /**
-     * Find social security concepts.
-     */
-    @Query("SELECT pc FROM PayrollConcept pc WHERE pc.socialSecurity = true AND pc.active = true")
-    List<PayrollConcept> findSocialSecurityConcepts();
+    public List<PayrollConcept> findByActiveTrue() {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 
     /**
      * Check if concept code exists.
      */
-    boolean existsByConceptCode(String conceptCode);
-
-    /**
-     * Find concepts ordered by priority.
-     */
-    @Query("SELECT pc FROM PayrollConcept pc WHERE pc.active = true ORDER BY pc.priorityOrder ASC")
-    List<PayrollConcept> findAllActiveOrderedByPriority();
+    public boolean existsByCode(String code) {
+        throw new UnsupportedOperationException("Not implemented - requires JPA setup");
+    }
 }

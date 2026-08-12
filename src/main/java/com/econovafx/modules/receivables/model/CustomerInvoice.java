@@ -1,7 +1,7 @@
 package com.econovafx.modules.receivables.model;
 
 import com.econovafx.modules.core.model.BaseEntity;
-import com.econovafx.modules.accounting.model.AccountingEntry;
+import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.billing.model.ThirdParty;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -94,7 +94,7 @@ public class CustomerInvoice extends BaseEntity {
      */
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accounting_entry_id")
-    private AccountingEntry accountingEntry;
+    private Transaction accountingTransaction;
 
     /**
      * Invoice status
@@ -222,11 +222,11 @@ public class CustomerInvoice extends BaseEntity {
         this.discountValue = discountValue;
     }
 
-    public AccountingEntry getAccountingEntry() {
+    public Transaction getAccountingTransaction() {
         return accountingEntry;
     }
 
-    public void setAccountingEntry(AccountingEntry accountingEntry) {
+    public void setAccountingTransaction(Transaction accountingEntry) {
         this.accountingEntry = accountingEntry;
     }
 
