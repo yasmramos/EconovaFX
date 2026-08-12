@@ -32,7 +32,7 @@ public class DepreciationRecord extends BaseEntity {
     @Column(precision = 18, scale = 2)
     private BigDecimal netBookValue;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate processingDate;
 
     @Column(name = "journal_entry_id")

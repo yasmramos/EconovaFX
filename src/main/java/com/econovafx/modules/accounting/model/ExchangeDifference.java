@@ -54,10 +54,10 @@ public class ExchangeDifference extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DifferenceType differenceType = DifferenceType.NONE; // GAIN, LOSS, NONE
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate invoiceDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate paymentDate;
 
     @Column(name = "journal_entry_id")

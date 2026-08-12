@@ -46,14 +46,14 @@ public abstract class BaseEntity {
      * User ID who created this record (for audit purposes).
      * Should be set automatically by the application before persisting.
      */
-    @Column(name = "created_by", updatable = false)
+    @Column(name = "created_by", updatable = false, columnDefinition = "BIGINT")
     private Long createdBy;
 
     /**
      * User ID who last modified this record (for audit purposes).
      * Should be set automatically by the application before updating.
      */
-    @Column(name = "updated_by")
+    @Column(name = "updated_by", columnDefinition = "BIGINT")
     private Long updatedBy;
 
     public Long getId() {
