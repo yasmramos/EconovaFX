@@ -26,7 +26,7 @@ public class CashMovement extends BaseEntity {
     @Column(name = "document_number", nullable = false, unique = true)
     private String documentNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)

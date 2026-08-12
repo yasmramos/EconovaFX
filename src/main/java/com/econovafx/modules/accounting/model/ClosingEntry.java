@@ -16,7 +16,7 @@ public class ClosingEntry extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ClosingType closingType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate closingDate;
 
     @Column(nullable = false)
