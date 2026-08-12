@@ -21,7 +21,7 @@ public class FinancialStatementRow extends BaseEntity {
     @JoinColumn(name = "model_id", nullable = false)
     private FinancialStatementModel model;
 
-    @Column(name = "row_number", nullable = false)
+    @Column(name = "row_number", nullable = false, columnDefinition = "INTEGER")
     private Integer rowNumber;
 
     @Column(nullable = false, length = 200)
@@ -38,7 +38,7 @@ public class FinancialStatementRow extends BaseEntity {
     @Column(name = "account_codes_pattern", length = 500)
     private String accountCodesPattern;
 
-    @Column(name = "sign_multiplier")
+    @Column(name = "sign_multiplier", columnDefinition = "INTEGER")
     private Integer signMultiplier = 1;
 
     @Column(name = "is_bold")
@@ -47,7 +47,7 @@ public class FinancialStatementRow extends BaseEntity {
     @Column(name = "is_italic")
     private Boolean isItalic = false;
 
-    @Column(name = "indent_level")
+    @Column(name = "indent_level", columnDefinition = "INTEGER")
     private Integer indentLevel = 0;
 
     // Getters and Setters

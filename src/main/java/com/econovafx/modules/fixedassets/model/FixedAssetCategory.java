@@ -24,7 +24,7 @@ public class FixedAssetCategory extends BaseEntity {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal depreciationRate; // Porcentaje anual de depreciación
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER")
     private Integer usefulLifeYears; // Vida útil en años
 
     @Column(name = "accumulated_depreciation_account", length = 20)

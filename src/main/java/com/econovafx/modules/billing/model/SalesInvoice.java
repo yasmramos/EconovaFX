@@ -63,10 +63,10 @@ public class SalesInvoice extends BaseEntity {
     @Column(length = 500)
     private String notes;
 
-    @Column(name = "journal_entry_id")
+    @Column(name = "journal_entry_id", columnDefinition = "BIGINT")
     private Long journalEntryId; // Referencia al asiento contable generado
 
-    @Column(name = "warehouse_id")
+    @Column(name = "warehouse_id", columnDefinition = "BIGINT")
     private Long warehouseId; // Almacén de origen
 
     // Getters and Setters

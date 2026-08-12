@@ -17,10 +17,10 @@ public class DepreciationRecord extends BaseEntity {
     @JoinColumn(name = "fixed_asset_id", nullable = false)
     private FixedAsset fixedAsset;
 
-    @Column(nullable = false, name = "record_year")
+    @Column(nullable = false, name = "record_year", columnDefinition = "INTEGER")
     private Integer year;
 
-    @Column(nullable = false, name = "record_month")
+    @Column(nullable = false, name = "record_month", columnDefinition = "INTEGER")
     private Integer month; // 1-12
 
     @Column(nullable = false, precision = 18, scale = 2)

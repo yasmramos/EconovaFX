@@ -9,8 +9,9 @@ target/
 
 # Dependencies
 .gradle/
-lib/
-deps/
+.mypy_cache/
+.pytest_cache/
+__pycache__/
 
 # Logs and temp files
 *.log
@@ -25,21 +26,4 @@ deps/
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Package manager specific
-node_modules/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
 ```
