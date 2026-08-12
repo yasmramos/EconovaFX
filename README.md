@@ -1,15 +1,15 @@
 # 📊 EconoNova FX - Sistema Contable Profesional
 
-[![Java](https://img.shields.io/badge/Java-21-orange.svg?logo=java)](https://openjdk.java.net/)
-[![JavaFX](https://img.shields.io/badge/JavaFX-21-blue.svg?logo=javafx)](https://openjfx.io/)
+[![Java](https://img.shields.io/badge/Java-17-orange.svg?logo=java)](https://openjdk.java.net/)
+[![JavaFX](https://img.shields.io/badge/JavaFX-17-blue.svg?logo=javafx)](https://openjfx.io/)
 [![Ebean ORM](https://img.shields.io/badge/Ebean-17.11.0-green.svg)](https://ebean.io/)
-[![H2 Database](https://img.shields.io/badge/H2-2.3.232-red.svg)](https://h2database.com/)
+[![H2 Database](https://img.shields.io/badge/H2-2.2.224-red.svg)](https://h2database.com/)
 [![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg?logo=apache-maven)](https://maven.apache.org/)
 [![Tests](https://img.shields.io/badge/tests-268%20passing-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/yasmramos/econovafx)
 
-Sistema contable moderno y profesional desarrollado con **JavaFX 21** y **Ebean ORM 17**, diseñado para cumplir con la normativa contable cubana (Resolución 340/2004).
+Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean ORM 17**, diseñado para cumplir con la normativa contable cubana (Resolución 340/2004).
 
 ## 📋 Tabla de Contenidos
 
@@ -77,21 +77,21 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 21** y **Ebean 
 
 | Tecnología | Versión | Descripción |
 |------------|---------|-------------|
-| **Java** | 21 LTS | Lenguaje de programación |
-| **JavaFX** | 21 | Interfaz gráfica de usuario moderna |
+| **Java** | 17 LTS | Lenguaje de programación |
+| **JavaFX** | 17 | Interfaz gráfica de usuario moderna |
 | **Ebean ORM** | 17.11.0 | Mapeo objeto-relacional de alto rendimiento |
-| **H2 Database** | 2.3.232 | Base de datos embebida para desarrollo/testing |
+| **H2 Database** | 2.2.224 | Base de datos embebida para desarrollo/testing |
 | **Maven** | 3.9+ | Gestión de dependencias y build |
-| **Logback** | 1.5.x | Framework de logging SLF4J |
-| **Avaje Inject** | 9.0 | Inyección de dependencias ligera |
-| **JUnit 5** | 5.10.x | Testing framework |
+| **Logback** | 1.4.14 | Framework de logging SLF4J |
+| **Avaje Inject** | 12.6 | Inyección de dependencias ligera |
+| **JUnit 5** | 5.11.0 | Testing framework |
 | **AssertJ** | 3.25.x | Assertions fluents para tests |
 
 ---
 
 ## 📋 Requisitos Previos
 
-- **Java JDK 21** o superior ([descargar](https://adoptium.net/))
+- **Java JDK 17** o superior ([descargar](https://adoptium.net/))
 - **Maven 3.9+** ([instalar](https://maven.apache.org/download.cgi))
 - **Git** para clonar el repositorio
 
