@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.econovafx.ui.controller.AccountingClosuresController"
+      fx:controller="com.econovafx.modules.accounting.controller.AccountingClosuresController"
       fx:id="contentArea"
       spacing="20"
       styleClass="bg-gray-50, p-6">

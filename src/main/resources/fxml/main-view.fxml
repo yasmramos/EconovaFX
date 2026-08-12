@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.econovafx.ui.controller.MainViewController"
+      fx:controller="com.econovafx.modules.core.ui.controller.MainViewController"
       spacing="0"
       styleClass="bg-gray-50"
       fx:id="rootVBox">
