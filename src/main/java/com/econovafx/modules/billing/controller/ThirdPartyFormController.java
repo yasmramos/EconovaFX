@@ -187,9 +187,9 @@ public class ThirdPartyFormController implements Initializable {
                 editingThirdParty.setTaxId(taxIdField.getText().trim());
                 
                 try {
-                    editingThirdParty.setCreditLimit(Double.parseDouble(creditLimitField.getText().trim()));
+                    editingThirdParty.setCreditLimit(new BigDecimal(creditLimitField.getText().trim()));
                 } catch (NumberFormatException e) {
-                    editingThirdParty.setCreditLimit(0.0);
+                    editingThirdParty.setCreditLimit(BigDecimal.ZERO);
                 }
                 
                 try {

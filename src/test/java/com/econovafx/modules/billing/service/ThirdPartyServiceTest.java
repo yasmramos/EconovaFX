@@ -389,14 +389,14 @@ class ThirdPartyServiceTest {
     void testUpdateBalance_WhenExists_Success() {
         Long id = 1L;
         ThirdParty thirdParty = createThirdParty(id, "Test Customer", "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
-        thirdParty.setCurrentBalance(100.0);
+        thirdParty.setCurrentBalance(new java.math.BigDecimal("100.0"));
         
         when(thirdPartyRepository.findById(id)).thenReturn(Optional.of(thirdParty));
         doNothing().when(thirdPartyRepository).update(thirdParty);
         
-        thirdPartyService.updateBalance(id, 50.0);
+        thirdPartyService.updateBalance(id, new java.math.BigDecimal("50.0"));
         
-        assertEquals(150.0, thirdParty.getCurrentBalance());
+        assertEquals(new java.math.BigDecimal("150.0"), thirdParty.getCurrentBalance());
         verify(thirdPartyRepository).update(thirdParty);
     }
 
@@ -404,14 +404,14 @@ class ThirdPartyServiceTest {
     void testUpdateBalance_WithNegativeAmount_Success() {
         Long id = 1L;
         ThirdParty thirdParty = createThirdParty(id, "Test Customer", "12345678901", ThirdParty.ThirdPartyType.CUSTOMER);
-        thirdParty.setCurrentBalance(100.0);
+        thirdParty.setCurrentBalance(new java.math.BigDecimal("100.0"));
         
         when(thirdPartyRepository.findById(id)).thenReturn(Optional.of(thirdParty));
         doNothing().when(thirdPartyRepository).update(thirdParty);
         
-        thirdPartyService.updateBalance(id, -30.0);
+        thirdPartyService.updateBalance(id, new java.math.BigDecimal("-30.0"));
         
-        assertEquals(70.0, thirdParty.getCurrentBalance());
+        assertEquals(new java.math.BigDecimal("70.0"), thirdParty.getCurrentBalance());
         verify(thirdPartyRepository).update(thirdParty);
     }
 
@@ -421,7 +421,7 @@ class ThirdPartyServiceTest {
         when(thirdPartyRepository.findById(id)).thenReturn(Optional.empty());
         
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            thirdPartyService.updateBalance(id, 50.0);
+            thirdPartyService.updateBalance(id, new java.math.BigDecimal("50.0"));
         });
         
         verify(thirdPartyRepository, never()).update(any());
