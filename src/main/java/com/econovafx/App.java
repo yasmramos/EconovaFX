@@ -81,6 +81,8 @@ public class App extends Application {
                     context.getTransactionService(),
                     context.getUserService()
             );
+            // Initialize the viewFactory reference in the controller
+            mainController.initializeViewFactory(viewFactory);
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-view.fxml"));
             loader.setControllerFactory(cls -> mainController);
