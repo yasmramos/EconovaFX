@@ -35,7 +35,7 @@ public class Transaction extends BaseEntity {
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TransactionEntry> entries = new ArrayList<>();
 
-    @Column(name = "created_by", updatable = false)
+    @Column(name = "created_by_user_id", updatable = false, columnDefinition = "BIGINT")
     private Long createdByUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
