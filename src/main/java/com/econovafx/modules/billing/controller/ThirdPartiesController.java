@@ -218,11 +218,8 @@ public class ThirdPartiesController implements Initializable {
     private void newThirdParty() {
         logger.debug("New third party clicked");
         try {
-            // Load the form FXML
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                getClass().getResource("/com/econovafx/view/third-party-form.fxml")
-            );
-            javafx.scene.Parent root = loader.load();
+            // Load the form FXML using ViewFactory to ensure proper dependency injection
+            javafx.scene.Parent root = viewFactory.loadThirdPartyForm(null);
             
             // Show using ModernDialog static method
             Stage ownerStage = (Stage) thirdPartiesTable.getScene().getWindow();
@@ -234,7 +231,11 @@ public class ThirdPartiesController implements Initializable {
             notificationService.showSuccess(rootContainer, "Third party created successfully");
         } catch (Exception e) {
             logger.error("Error opening new third party form", e);
-            notificationService.showError(rootContainer, "Failed to open form: " + e.getMessage());
+            if (rootContainer != null && notificationService != null) {
+                notificationService.showError(rootContainer, "Failed to open form: " + e.getMessage());
+            } else {
+                logger.error("Cannot show error notification - rootContainer or notificationService is null");
+            }
         }
     }
     
@@ -242,17 +243,18 @@ public class ThirdPartiesController implements Initializable {
     private void editThirdParty() {
         ThirdParty selected = thirdPartiesTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            notificationService.showWarning(rootContainer, "Please select a third party to edit");
+            if (rootContainer != null && notificationService != null) {
+                notificationService.showWarning(rootContainer, "Please select a third party to edit");
+            } else {
+                logger.warn("Cannot show warning - rootContainer or notificationService is null");
+            }
             return;
         }
         
         logger.debug("Edit third party: {}", selected.getIdentificationNumber());
         try {
-            // Load the form FXML
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                getClass().getResource("/com/econovafx/view/third-party-form.fxml")
-            );
-            javafx.scene.Parent root = loader.load();
+            // Load the form FXML using ViewFactory to ensure proper dependency injection
+            javafx.scene.Parent root = viewFactory.loadThirdPartyForm(selected);
             
             // Show using ModernDialog static method
             Stage ownerStage = (Stage) thirdPartiesTable.getScene().getWindow();
@@ -261,10 +263,16 @@ public class ThirdPartiesController implements Initializable {
             // Reload data after dialog closes
             loadThirdParties();
             updateStatistics(thirdPartyService.getAllThirdParties());
-            notificationService.showSuccess(rootContainer, "Third party updated successfully");
+            if (rootContainer != null && notificationService != null) {
+                notificationService.showSuccess(rootContainer, "Third party updated successfully");
+            }
         } catch (Exception e) {
             logger.error("Error editing third party", e);
-            notificationService.showError(rootContainer, "Failed to edit: " + e.getMessage());
+            if (rootContainer != null && notificationService != null) {
+                notificationService.showError(rootContainer, "Failed to edit: " + e.getMessage());
+            } else {
+                logger.error("Cannot show error notification - rootContainer or notificationService is null");
+            }
         }
     }
     

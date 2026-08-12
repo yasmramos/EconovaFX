@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.econovafx.ui.controller.MainViewController"
+      fx:controller="com.econovafx.modules.core.ui.controller.MainViewController"
       spacing="0"
       styleClass="bg-gray-50"
       fx:id="rootVBox">
@@ -15,6 +15,9 @@
 
         <!-- Sidebar Navigation (Full Height) -->
         <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets top="0" right="0" bottom="0" left="0"/>
+            </HBox.margin>
             <VBox fx:id="sidebarVBox" styleClass="sidebar-container, bg-slate-800" prefWidth="260" minWidth="260" maxWidth="260" fillWidth="true">
 
             <!-- Logo/Brand Section -->
@@ -71,6 +74,9 @@
 
         <!-- Right Side: Header + Content -->
         <BorderPane HBox.hgrow="ALWAYS" fx:id="mainContentPane">
+            <HBox.margin>
+                <Insets top="0" right="0" bottom="0" left="0"/>
+            </HBox.margin>
 
             <!-- Top: Header -->
             <top>
@@ -85,6 +91,9 @@
             <!-- Center: Content Area with Scroll -->
             <center>
                 <ScrollPane fx:id="contentScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="content-scroll">
+                    <BorderPane.margin>
+                        <Insets top="0" right="0" bottom="0" left="0"/>
+                    </BorderPane.margin>
                     <StackPane fx:id="contentArea" styleClass="bg-gray-50, p-6"/>
                 </ScrollPane>
             </center>

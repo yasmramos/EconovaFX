@@ -17,10 +17,10 @@ public class DepreciationRecord extends BaseEntity {
     @JoinColumn(name = "fixed_asset_id", nullable = false)
     private FixedAsset fixedAsset;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "record_year", columnDefinition = "INTEGER")
     private Integer year;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "record_month", columnDefinition = "INTEGER")
     private Integer month; // 1-12
 
     @Column(nullable = false, precision = 18, scale = 2)
@@ -32,10 +32,10 @@ public class DepreciationRecord extends BaseEntity {
     @Column(precision = 18, scale = 2)
     private BigDecimal netBookValue;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate processingDate;
 
-    @Column(name = "journal_entry_id")
+    @Column(name = "journal_entry_id", columnDefinition = "BIGINT")
     private Long journalEntryId; // Referencia al asiento contable generado
 
     @Column(length = 100)

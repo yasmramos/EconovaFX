@@ -360,12 +360,22 @@ public class DashboardController implements Initializable {
         BigDecimal profit = totalRevenue.subtract(totalExpenses);
         
         // Calculate average transaction amount
-        BigDecimal avgTransaction = allTransactions.stream()
-                .filter(Transaction::getIsPosted)
-                .map(Transaction::getTotalDebit)
-                .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .divide(BigDecimal.valueOf(allTransactions.stream().filter(Transaction::getIsPosted).count()), 
+        long postedCount = allTransactions.stream().filter(Transaction::getIsPosted).count();
+        BigDecimal avgTransaction;
+        if (postedCount > 0) {
+            BigDecimal totalPostedAmount = allTransactions.stream()
+                    .filter(Transaction::getIsPosted)
+                    .map(Transaction::getTotalDebit)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            if (totalPostedAmount != null && postedCount > 0) {
+                avgTransaction = totalPostedAmount.divide(BigDecimal.valueOf(postedCount), 
                         java.math.RoundingMode.HALF_UP);
+            } else {
+                avgTransaction = BigDecimal.ZERO;
+            }
+        } else {
+            avgTransaction = BigDecimal.ZERO;
+        }
         
         final BigDecimal finalRevenue = totalRevenue;
         final BigDecimal finalExpenses = totalExpenses;
@@ -654,10 +664,12 @@ public class DashboardController implements Initializable {
     }
 
     private void showLoading(boolean show) {
-        Platform.runLater(() -> {
-            loadingOverlay.setVisible(show);
-            loadingOverlay.setManaged(show);
-        });
+        if (loadingOverlay != null) {
+            Platform.runLater(() -> {
+                loadingOverlay.setVisible(show);
+                loadingOverlay.setManaged(show);
+            });
+        }
     }
 
     private void showNotification(String title, String message) {
@@ -665,8 +677,13 @@ public class DashboardController implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.initOwner(refreshButton.getScene().getWindow());
-        alert.showAndWait();
+        
+        // Only set owner if the button is properly initialized and added to the scene
+        if (refreshButton != null && refreshButton.getScene() != null) {
+            alert.initOwner(refreshButton.getScene().getWindow());
+        }
+        
+        alert.show();
     }
 
     private void showError(String message) {
@@ -674,8 +691,13 @@ public class DashboardController implements Initializable {
         alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.initOwner(refreshButton.getScene().getWindow());
-        alert.showAndWait();
+        
+        // Only set owner if the button is properly initialized and added to the scene
+        if (refreshButton != null && refreshButton.getScene() != null) {
+            alert.initOwner(refreshButton.getScene().getWindow());
+        }
+        
+        alert.show();
     }
 
     private String formatCurrency(BigDecimal amount) {
@@ -687,7 +709,12 @@ public class DashboardController implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.initOwner(refreshButton.getScene().getWindow());
+        
+        // Only set owner if the button is properly initialized and added to the scene
+        if (refreshButton != null && refreshButton.getScene() != null) {
+            alert.initOwner(refreshButton.getScene().getWindow());
+        }
+        
         alert.showAndWait();
     }
 }

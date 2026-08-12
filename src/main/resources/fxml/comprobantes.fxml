@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="16" styleClass="bg-gray-100, p-6" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.ui.controller.ComprobantesController">
+<VBox spacing="16" styleClass="bg-gray-100, p-6" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.accounting.controller.ComprobantesController">
 
     <!-- Header with Actions -->
     <HBox alignment="CENTER_LEFT" spacing="16" styleClass="dashboard-header">

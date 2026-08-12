@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -168,11 +169,11 @@ public class ThirdPartyService {
                thirdPartyRepository.countByType(ThirdParty.ThirdPartyType.BOTH);
     }
     
-    public void updateBalance(Long thirdPartyId, Double amount) {
+    public void updateBalance(Long thirdPartyId, BigDecimal amount) {
         ThirdParty thirdParty = thirdPartyRepository.findById(thirdPartyId)
                 .orElseThrow(() -> new IllegalArgumentException("ThirdParty not found with ID: " + thirdPartyId));
         
-        Double newBalance = thirdParty.getCurrentBalance() + amount;
+        BigDecimal newBalance = thirdParty.getCurrentBalance().add(amount);
         thirdParty.setCurrentBalance(newBalance);
         thirdPartyRepository.update(thirdParty);
         logger.debug("ThirdParty balance updated: {} -> {}", thirdParty.getName(), newBalance);

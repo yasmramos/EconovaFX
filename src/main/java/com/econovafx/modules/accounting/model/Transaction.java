@@ -20,7 +20,7 @@ public class Transaction extends BaseEntity {
     @Column(nullable = false)
     private String number;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate date;
 
     @Column(nullable = false)
@@ -35,7 +35,7 @@ public class Transaction extends BaseEntity {
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TransactionEntry> entries = new ArrayList<>();
 
-    @Column(name = "created_by", updatable = false)
+    @Column(name = "created_by_user_id", updatable = false, columnDefinition = "BIGINT")
     private Long createdByUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)

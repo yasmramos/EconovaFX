@@ -28,7 +28,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
-    @Column(name = "last_login")
+    @Column(name = "last_login", columnDefinition = "TIMESTAMP")
     private LocalDateTime lastLogin;
 
     /**

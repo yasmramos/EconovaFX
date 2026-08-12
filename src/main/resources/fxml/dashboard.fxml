@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="16" styleClass="p-6" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.ui.controller.DashboardController">
+<VBox spacing="16" styleClass="p-6" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.core.ui.controller.DashboardController">
 
     <!-- Header with Refresh -->
     <HBox alignment="CENTER_LEFT" spacing="16" styleClass="dashboard-header">

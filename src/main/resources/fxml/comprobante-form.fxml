@@ -6,7 +6,7 @@
 <?import javafx.scene.shape.Circle?>
 
 <!-- Main Dialog Container with Web Style -->
-<VBox styleClass="dialog-container" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.ui.controller.ComprobanteFormController">
+<VBox styleClass="dialog-container" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.accounting.controller.ComprobanteFormController">
 
     <!-- Dialog Header -->
     <HBox alignment="CENTER_LEFT" spacing="16" styleClass="dialog-header">
