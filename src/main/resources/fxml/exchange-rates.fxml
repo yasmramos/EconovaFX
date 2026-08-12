@@ -6,7 +6,7 @@
 <?import javafx.geometry.Insets?>
 
 <VBox fx:id="rootView" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.econovafx.ui.controller.ExchangeRatesController"
+      fx:controller="com.econovafx.modules.core.ui.controller.ExchangeRatesController"
       spacing="10" styleClass="content-view">
 
     <padding>
