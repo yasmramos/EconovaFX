@@ -367,8 +367,12 @@ public class DashboardController implements Initializable {
                     .filter(Transaction::getIsPosted)
                     .map(Transaction::getTotalDebit)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            avgTransaction = totalPostedAmount.divide(BigDecimal.valueOf(postedCount), 
-                    java.math.RoundingMode.HALF_UP);
+            if (totalPostedAmount != null && postedCount > 0) {
+                avgTransaction = totalPostedAmount.divide(BigDecimal.valueOf(postedCount), 
+                        java.math.RoundingMode.HALF_UP);
+            } else {
+                avgTransaction = BigDecimal.ZERO;
+            }
         } else {
             avgTransaction = BigDecimal.ZERO;
         }
@@ -679,7 +683,7 @@ public class DashboardController implements Initializable {
             alert.initOwner(refreshButton.getScene().getWindow());
         }
         
-        alert.showAndWait();
+        alert.show();
     }
 
     private void showError(String message) {
@@ -693,7 +697,7 @@ public class DashboardController implements Initializable {
             alert.initOwner(refreshButton.getScene().getWindow());
         }
         
-        alert.showAndWait();
+        alert.show();
     }
 
     private String formatCurrency(BigDecimal amount) {
