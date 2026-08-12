@@ -11,6 +11,7 @@ import io.ebean.datasource.DataSourceConfig;
 import io.ebean.datasource.DataSourceFactory;
 import io.ebean.datasource.DataSourcePool;
 import io.ebean.platform.h2.H2Platform;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * TenantMode.DB con CurrentTenantProvider y TenantDataSourceProvider para
  * gestionar bases de datos separadas por tenant de forma nativa en Ebean.
  */
+@Singleton
 public class DatabaseConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
@@ -38,6 +40,10 @@ public class DatabaseConfig {
     // Variables para testing
     public static boolean closeTenantDataSourceCalled = false;
     public static Long lastClosedTenantId = null;
+
+    public DatabaseConfig() {
+        this.initialize();
+    }
 
     /**
      * Inicializa la configuración multi-tenant nativa de Ebean.
@@ -64,7 +70,6 @@ public class DatabaseConfig {
                 .password(AppConfig.MASTER_DB_PASSWORD)
                 .minConnections(1)
                 .maxConnections(10)
-                .applicationName("econovafx")
                 .build();
 
         DatabaseBuilder builder = Database.builder();
@@ -73,7 +78,8 @@ public class DatabaseConfig {
                 .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                 .ddlGenerate(true)
                 .ddlRun(true)
-                .databasePlatform(new H2Platform());
+                .databasePlatform(new H2Platform())
+                .defaultDatabase(true);
 
         Database masterDb = builder.build();
         masterDatabase = masterDb;
