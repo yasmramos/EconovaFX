@@ -1,61 +1,50 @@
 ```
-# Compiled and build artifacts
-*.class
-*.o
-*.obj
-*.exe
-*.dll
-*.so
-*.a
-*.out
-build/
+# Database files
+db/*.mv.db
+db/*.trace.db
+
+# Compiled Java classes
+**/*.class
+
+# Build artifacts
 target/
+build/
 
 # Dependencies
-lib/
-libs/
-dependency/
-dependencies/
+.gradle/
+node_modules/
+venv/
+.venv/
 
-# Logs and temp files
+# IDE files
+.idea/
+.vscode/
+
+# Logs
 *.log
-*.tmp
-*.swp
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
+# OS generated files
+.DS_Store
+Thumbs.db
 
-# Database
-*.mv.db
-db/*.mv.db
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# Coverage
+# Coverage reports
 coverage/
 htmlcov/
 .coverage
 
-# Gradle
-.gradle/
-!gradle/wrapper/gradle-wrapper.jar
-
-# Maven
-.mvn/timing.properties
-.mvn/wrapper/maven-wrapper.properties
-
-# Pytest
-.pytest_cache/
-
-# MyPy
-.mypy_cache/
-
-# Distribution
-dist/
+# Temporary files
+*.tmp
+*.swp
+*.swo
 ```
