@@ -1,0 +1,270 @@
+package com.econovafx.modules.receivables.model;
+
+import com.econovafx.modules.core.model.BaseEntity;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.accounting.model.AccountingEntry;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import jakarta.persistence.*;
+
+/**
+ * CustomerPayment - Represents a payment received from a customer.
+ * 
+ * Implements Resolution 340/2004 requirements for the Receivables Module:
+ * - Payment registration with customer identification
+ * - Document reference
+ * - Date tracking
+ * - Total amount and partial payment balance
+ * - Accounting classification
+ * - Invoice allocation details
+ * 
+ * @author EconovaFX Development Team
+ * @version 1.0
+ * @since 2025
+ */
+@Entity
+@Table(name = "customer_payments")
+public class CustomerPayment extends BaseEntity {
+
+    /**
+     * Payment document number
+     */
+    @Column(name = "payment_number", unique = true, nullable = false)
+    private String paymentNumber;
+
+    /**
+     * Customer who made the payment
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private ThirdParty customer;
+
+    /**
+     * Payment date
+     */
+    @Column(name = "payment_date", nullable = false)
+    private LocalDate paymentDate;
+
+    /**
+     * Payment method
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
+    private PaymentMethod paymentMethod;
+
+    /**
+     * Reference document number (check, transfer, etc.)
+     */
+    @Column(name = "reference_document", length = 100)
+    private String referenceDocument;
+
+    /**
+     * Total payment amount
+     */
+    @Column(name = "total_amount", nullable = false, precision = 19, scale = 4)
+    private BigDecimal totalAmount;
+
+    /**
+     * Amount allocated to invoices
+     */
+    @Column(name = "allocated_amount", nullable = false, precision = 19, scale = 4)
+    private BigDecimal allocatedAmount;
+
+    /**
+     * Unallocated amount (advance payment)
+     */
+    @Column(name = "unallocated_amount", nullable = false, precision = 19, scale = 4)
+    private BigDecimal unallocatedAmount;
+
+    /**
+     * Related accounting entry
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "accounting_entry_id")
+    private AccountingEntry accountingEntry;
+
+    /**
+     * Payment status
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private PaymentStatus status;
+
+    /**
+     * Notes or observations
+     */
+    @Column(name = "notes", length = 500)
+    private String notes;
+
+    /**
+     * Indicates if this is an advance payment
+     */
+    @Column(name = "is_advance_payment", nullable = false)
+    private boolean advancePayment;
+
+    // Constructors
+    public CustomerPayment() {
+        this.allocatedAmount = BigDecimal.ZERO;
+        this.unallocatedAmount = BigDecimal.ZERO;
+        this.totalAmount = BigDecimal.ZERO;
+        this.status = PaymentStatus.PENDING;
+        this.advancePayment = false;
+    }
+
+    // Getters and Setters
+    public String getPaymentNumber() {
+        return paymentNumber;
+    }
+
+    public void setPaymentNumber(String paymentNumber) {
+        this.paymentNumber = paymentNumber;
+    }
+
+    public ThirdParty getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(ThirdParty customer) {
+        this.customer = customer;
+    }
+
+    public LocalDate getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(LocalDate paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getReferenceDocument() {
+        return referenceDocument;
+    }
+
+    public void setReferenceDocument(String referenceDocument) {
+        this.referenceDocument = referenceDocument;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+        updateUnallocatedAmount();
+    }
+
+    public BigDecimal getAllocatedAmount() {
+        return allocatedAmount;
+    }
+
+    public void setAllocatedAmount(BigDecimal allocatedAmount) {
+        this.allocatedAmount = allocatedAmount;
+        updateUnallocatedAmount();
+    }
+
+    public BigDecimal getUnallocatedAmount() {
+        return unallocatedAmount;
+    }
+
+    private void updateUnallocatedAmount() {
+        if (this.totalAmount != null && this.allocatedAmount != null) {
+            this.unallocatedAmount = this.totalAmount.subtract(this.allocatedAmount);
+            this.advancePayment = this.unallocatedAmount.compareTo(BigDecimal.ZERO) > 0;
+        }
+    }
+
+    public AccountingEntry getAccountingEntry() {
+        return accountingEntry;
+    }
+
+    public void setAccountingEntry(AccountingEntry accountingEntry) {
+        this.accountingEntry = accountingEntry;
+    }
+
+    public PaymentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public boolean isAdvancePayment() {
+        return advancePayment;
+    }
+
+    /**
+     * Allocate payment to an invoice
+     * @param invoice the invoice to allocate to
+     * @param amount amount to allocate
+     */
+    public void allocateToInvoice(CustomerInvoice invoice, BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Allocation amount must be greater than zero");
+        }
+        if (amount.compareTo(this.unallocatedAmount) > 0) {
+            throw new IllegalArgumentException("Allocation amount exceeds unallocated balance");
+        }
+        
+        invoice.applyPayment(amount);
+        this.allocatedAmount = this.allocatedAmount.add(amount);
+        updateUnallocatedAmount();
+        
+        if (this.unallocatedAmount.compareTo(BigDecimal.ZERO) == 0) {
+            this.status = PaymentStatus.FULLY_ALLOCATED;
+        }
+    }
+
+    /**
+     * Cancel/unallocate payment from an invoice
+     * @param invoice the invoice to unallocate from
+     * @param amount amount to unallocate
+     */
+    public void unallocateFromInvoice(CustomerInvoice invoice, BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Unallocation amount must be greater than zero");
+        }
+        if (amount.compareTo(this.allocatedAmount) > 0) {
+            throw new IllegalArgumentException("Unallocation amount exceeds allocated balance");
+        }
+        
+        // Reverse payment application (simplified - in real scenario would need more complex logic)
+        this.allocatedAmount = this.allocatedAmount.subtract(amount);
+        updateUnallocatedAmount();
+        this.status = PaymentStatus.PENDING;
+    }
+
+    // Enums
+    public enum PaymentMethod {
+        CASH,
+        BANK_TRANSFER,
+        CHECK,
+        CREDIT_CARD,
+        DEBIT_CARD,
+        PROMISSORY_NOTE,
+        OTHER
+    }
+
+    public enum PaymentStatus {
+        PENDING,
+        PARTIALLY_ALLOCATED,
+        FULLY_ALLOCATED,
+        CANCELLED
+    }
+}
