@@ -13,7 +13,7 @@ public class BankReconciliation extends BaseEntity {
     @Column(nullable = false)
     private String bankAccountNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate reconciliationDate;
 
     @Column(nullable = false, precision = 19, scale = 4)
@@ -29,10 +29,10 @@ public class BankReconciliation extends BaseEntity {
     private boolean isCompleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_user_id")
+    @JoinColumn(name = "completed_by_user_id")
     private com.econovafx.modules.core.model.User completedBy;
 
-    @Column
+    @Column(columnDefinition = "DATE")
     private LocalDate completedDate;
 
     // Getters y Setters
