@@ -14,13 +14,13 @@ public class BillingSeries extends BaseEntity {
     @Column(nullable = false, length = 10)
     private String seriesCode; // Ej: "A", "B", "001"
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER")
     private Integer currentNumber; // Próximo número a asignar
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER")
     private Integer startNumber = 1;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER")
     private Integer endNumber; // Límite autorizado (si aplica)
 
     @Column(nullable = false)

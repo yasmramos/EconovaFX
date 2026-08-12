@@ -24,7 +24,7 @@ public class FinancialReport extends BaseEntity {
     @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER")
     private Integer fiscalYear;
 
     @ElementCollection

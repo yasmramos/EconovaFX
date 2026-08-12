@@ -63,7 +63,7 @@ public class FixedAsset extends BaseEntity {
     @Column(name = "location", length = 150)
     private String location; // Ubicación física
 
-    @Column(name = "responsible_user_id")
+    @Column(name = "responsible_user_id", columnDefinition = "BIGINT")
     private Long responsibleUserId; // Usuario responsable del activo
 
     // Getters and Setters

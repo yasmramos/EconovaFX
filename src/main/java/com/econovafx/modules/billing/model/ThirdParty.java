@@ -57,7 +57,7 @@ public class ThirdParty extends BaseEntity {
     @Column(name = "current_balance", precision = 19, scale = 4)
     private Double currentBalance = 0.0;
 
-    @Column(name = "payment_days")
+    @Column(name = "payment_days", columnDefinition = "INTEGER")
     private Integer paymentDays = 30;
 
     @ManyToOne(fetch = FetchType.LAZY)
