@@ -29,7 +29,7 @@ public class ReconciliationItem extends BaseEntity {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate date;
 
     @Column(nullable = false, precision = 19, scale = 4)

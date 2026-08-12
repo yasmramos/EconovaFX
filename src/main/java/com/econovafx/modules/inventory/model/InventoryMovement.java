@@ -62,7 +62,7 @@ public class InventoryMovement extends BaseEntity {
     private Transaction relatedTransaction;
 
     @WhenCreated
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime movementDate;
 
     // ==================== CAMPOS PARA CUMPLIMIENTO RESOLUCIÓN 340/2004 CUBA ====================
@@ -92,7 +92,7 @@ public class InventoryMovement extends BaseEntity {
      * Fecha del período contable al que pertenece este movimiento.
      * Usado para validación de períodos cerrados.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate accountingPeriodDate;
 
     // Getters y Setters adicionales

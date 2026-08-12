@@ -18,10 +18,10 @@ public class FinancialReport extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReportType reportType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
 
     @Column(nullable = false)
