@@ -157,10 +157,16 @@ public class MainViewController implements Initializable {
             sidebarVBox.minHeightProperty().bind(sidebarScrollPane.heightProperty());
         }
         
-        showDashboard();
-        
-        // Show welcome notification
-        NotificationService.showInfo(getStage(), "Welcome to EconoNova FX v1.0.0");
+        // Defer dashboard loading to ensure scene is fully ready
+        javafx.application.Platform.runLater(() -> {
+            try {
+                showDashboard();
+                // Show welcome notification
+                NotificationService.showInfo(getStage(), "Welcome to EconoNova FX v1.0.0");
+            } catch (Exception e) {
+                logger.error("Error during dashboard initialization", e);
+            }
+        });
     }
 
     private void setActiveButton(Button button) {

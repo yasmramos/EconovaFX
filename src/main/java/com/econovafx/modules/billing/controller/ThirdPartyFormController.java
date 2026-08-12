@@ -12,6 +12,7 @@ import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -187,9 +188,9 @@ public class ThirdPartyFormController implements Initializable {
                 editingThirdParty.setTaxId(taxIdField.getText().trim());
                 
                 try {
-                    editingThirdParty.setCreditLimit(Double.parseDouble(creditLimitField.getText().trim()));
+                    editingThirdParty.setCreditLimit(new BigDecimal(creditLimitField.getText().trim()));
                 } catch (NumberFormatException e) {
-                    editingThirdParty.setCreditLimit(0.0);
+                    editingThirdParty.setCreditLimit(BigDecimal.ZERO);
                 }
                 
                 try {

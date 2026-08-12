@@ -6,7 +6,7 @@
 <?import javafx.scene.shape.SVGPath?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.econovafx.ui.controller.AccountingPeriodsController"
+      fx:controller="com.econovafx.modules.accounting.controller.AccountingPeriodsController"
       spacing="15"
       styleClass="p-4, bg-gray-50">
 

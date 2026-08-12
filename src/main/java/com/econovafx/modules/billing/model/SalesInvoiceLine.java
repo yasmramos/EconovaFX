@@ -17,7 +17,7 @@ public class SalesInvoiceLine extends BaseEntity {
     @JoinColumn(name = "sales_invoice_id", nullable = false)
     private SalesInvoice salesInvoice;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INTEGER")
     private Integer lineNumber;
 
     @Column(name = "product_code", length = 50)
@@ -52,7 +52,7 @@ public class SalesInvoiceLine extends BaseEntity {
     @Column(precision = 18, scale = 4, nullable = false)
     private BigDecimal total = BigDecimal.ZERO;
 
-    @Column(name = "warehouse_out_id")
+    @Column(name = "warehouse_out_id", columnDefinition = "BIGINT")
     private Long warehouseOutId; // Referencia a salida de almacén generada
 
     // Getters and Setters

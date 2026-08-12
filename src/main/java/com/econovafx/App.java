@@ -75,12 +75,16 @@ public class App extends Application {
 
     private void loadMainApp() {
         try {
+            logger.info("Loading main application view...");
+            
             ViewFactory viewFactory = context.getViewFactory();
             MainViewController mainController = new MainViewController(
                     context.getAccountService(),
                     context.getTransactionService(),
                     context.getUserService()
             );
+            // Initialize the viewFactory reference in the controller
+            mainController.initializeViewFactory(viewFactory);
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-view.fxml"));
             loader.setControllerFactory(cls -> mainController);
@@ -97,6 +101,9 @@ public class App extends Application {
             primaryStage.setMinWidth(1024);
             primaryStage.setMinHeight(768);
             primaryStage.centerOnScreen();
+            primaryStage.show(); // Explicitly show the primary stage
+            
+            logger.info("Main application window displayed successfully");
             
             // Close splash screen
             if (splashStage != null) {

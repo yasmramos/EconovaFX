@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.ui.controller.AuditLogsController" spacing="15">
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.core.ui.controller.AuditLogsController" spacing="15">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>

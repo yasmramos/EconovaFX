@@ -29,7 +29,7 @@ public class ReconciliationItem extends BaseEntity {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate date;
 
     @Column(nullable = false, precision = 19, scale = 4)
@@ -38,7 +38,7 @@ public class ReconciliationItem extends BaseEntity {
     @Column(nullable = false)
     private Boolean reconciled = false;
 
-    @Column(name = "cash_movement_id")
+    @Column(name = "cash_movement_id", columnDefinition = "BIGINT")
     private Long cashMovementId;
 
     @Column(name = "bank_reference")

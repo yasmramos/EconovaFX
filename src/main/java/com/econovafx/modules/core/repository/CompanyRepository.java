@@ -28,7 +28,7 @@ public class CompanyRepository {
     @Inject
     public CompanyRepository() {
         // Usamos la base de datos maestra (default) para gestionar las empresas
-        this.database = io.ebean.DB.getDefault();
+        this.database = io.ebean.DB.byName("master");
     }
 
     /**

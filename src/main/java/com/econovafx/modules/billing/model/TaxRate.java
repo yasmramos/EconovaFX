@@ -31,7 +31,7 @@ public class TaxRate extends BaseEntity {
     @Column(name = "account_code")
     private String accountCode; // Cuenta contable asociada al impuesto
 
-    @Column(name = "effective_from")
+    @Column(name = "effective_from", columnDefinition = "DATE")
     private LocalDate effectiveFrom;
 
     // Getters and Setters
