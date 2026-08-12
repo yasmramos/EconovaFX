@@ -14,7 +14,10 @@
     <HBox VBox.vgrow="ALWAYS" fillHeight="true">
 
         <!-- Sidebar Navigation (Full Height) -->
-        <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" HBox.hgrow="NEVER" HBox.margin="0">
+        <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" HBox.hgrow="NEVER">
+            <margin>
+                <Insets top="0" right="0" bottom="0" left="0"/>
+            </margin>
             <VBox fx:id="sidebarVBox" styleClass="sidebar-container, bg-slate-800" prefWidth="260" minWidth="260" maxWidth="260" fillWidth="true">
 
             <!-- Logo/Brand Section -->
@@ -70,7 +73,10 @@
         </ScrollPane>
 
         <!-- Right Side: Header + Content -->
-        <BorderPane HBox.hgrow="ALWAYS" fx:id="mainContentPane" HBox.margin="0">
+        <BorderPane HBox.hgrow="ALWAYS" fx:id="mainContentPane">
+            <margin>
+                <Insets top="0" right="0" bottom="0" left="0"/>
+            </margin>
 
             <!-- Top: Header -->
             <top>
@@ -84,7 +90,10 @@
 
             <!-- Center: Content Area with Scroll -->
             <center>
-                <ScrollPane fx:id="contentScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="content-scroll" BorderPane.margin="0">
+                <ScrollPane fx:id="contentScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="content-scroll">
+                    <margin>
+                        <Insets top="0" right="0" bottom="0" left="0"/>
+                    </margin>
                     <StackPane fx:id="contentArea" styleClass="bg-gray-50, p-6"/>
                 </ScrollPane>
             </center>
