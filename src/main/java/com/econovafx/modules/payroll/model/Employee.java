@@ -1,6 +1,6 @@
 package com.econovafx.modules.payroll.model;
 
-import com.econovafx.core.thirdparty.model.ThirdParty;
+import com.econovafx.modules.billing.model.ThirdParty;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;

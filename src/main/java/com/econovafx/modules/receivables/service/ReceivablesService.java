@@ -6,8 +6,8 @@ import com.econovafx.modules.receivables.repository.CustomerInvoiceRepository;
 import com.econovafx.modules.receivables.repository.CustomerPaymentRepository;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.service.ThirdPartyService;
-import com.econovafx.modules.accounting.model.AccountingEntry;
-import com.econovafx.modules.accounting.service.AccountingEntryService;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.config.UserContext;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
 import com.econovafx.modules.core.exception.ValidationException;
@@ -47,7 +47,7 @@ public class ReceivablesService {
     private final CustomerInvoiceRepository invoiceRepository;
     private final CustomerPaymentRepository paymentRepository;
     private final ThirdPartyService thirdPartyService;
-    private final AccountingEntryService accountingEntryService;
+    private final TransactionService transactionService;
     private final UserContext userContext;
 
     @Inject
@@ -55,12 +55,12 @@ public class ReceivablesService {
             CustomerInvoiceRepository invoiceRepository,
             CustomerPaymentRepository paymentRepository,
             ThirdPartyService thirdPartyService,
-            AccountingEntryService accountingEntryService,
+            TransactionService transactionService,
             UserContext userContext) {
         this.invoiceRepository = invoiceRepository;
         this.paymentRepository = paymentRepository;
         this.thirdPartyService = thirdPartyService;
-        this.accountingEntryService = accountingEntryService;
+        this.transactionService = transactionService;
         this.userContext = userContext;
     }
 
@@ -236,17 +236,17 @@ public class ReceivablesService {
     /**
      * Create accounting entry for invoice
      */
-    public CustomerInvoice createAccountingEntryForInvoice(Long invoiceId, AccountingEntry entry) {
+    public CustomerInvoice createTransactionForInvoice(Long invoiceId, Transaction entry) {
         CustomerInvoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new EntityNotFoundException(CustomerInvoice.class, invoiceId));
 
-        if (invoice.getAccountingEntry() != null) {
+        if (invoice.getTransaction() != null) {
             throw new ValidationException("accountingEntry", 
                 "Invoice already has an accounting entry");
         }
 
-        AccountingEntry savedEntry = accountingEntryService.createAccountingEntry(entry);
-        invoice.setAccountingEntry(savedEntry);
+        Transaction savedEntry = transactionService.createTransaction(entry);
+        invoice.setTransaction(savedEntry);
         invoiceRepository.update(invoice);
 
         logger.info("Accounting entry created for invoice: {}", invoice.getInvoiceNumber());
@@ -387,17 +387,17 @@ public class ReceivablesService {
     /**
      * Create accounting entry for payment
      */
-    public CustomerPayment createAccountingEntryForPayment(Long paymentId, AccountingEntry entry) {
+    public CustomerPayment createTransactionForPayment(Long paymentId, Transaction entry) {
         CustomerPayment payment = paymentRepository.findById(paymentId)
             .orElseThrow(() -> new EntityNotFoundException(CustomerPayment.class, paymentId));
 
-        if (payment.getAccountingEntry() != null) {
+        if (payment.getTransaction() != null) {
             throw new ValidationException("accountingEntry", 
                 "Payment already has an accounting entry");
         }
 
-        AccountingEntry savedEntry = accountingEntryService.createAccountingEntry(entry);
-        payment.setAccountingEntry(savedEntry);
+        Transaction savedEntry = transactionService.createTransaction(entry);
+        payment.setTransaction(savedEntry);
         paymentRepository.update(payment);
 
         logger.info("Accounting entry created for payment: {}", payment.getPaymentNumber());
