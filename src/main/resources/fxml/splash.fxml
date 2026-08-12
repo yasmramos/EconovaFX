@@ -10,7 +10,7 @@
 <?import javafx.geometry.Pos?>
 
 <StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.econovafx.ui.view.SplashController"
+           fx:controller="com.econovafx.modules.core.ui.view.SplashController"
            stylesheets="@../css/splash.css">
     
     <VBox alignment="CENTER" spacing="20" StackPane.alignment="CENTER">
