@@ -106,7 +106,7 @@ public class AppConfig {
         
         // Master Database
         MASTER_DB_DRIVER = Config.get("ebean.datasource.master.driver", "org.h2.Driver");
-        MASTER_DB_URL = Config.get("ebean.datasource.master.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1");
+        MASTER_DB_URL = Config.get("ebean.datasource.master.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
         MASTER_DB_USERNAME = Config.get("ebean.datasource.master.username", "sa");
         MASTER_DB_PASSWORD = Config.get("ebean.datasource.master.password", "");
         
