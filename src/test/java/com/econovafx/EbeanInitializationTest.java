@@ -70,9 +70,9 @@ public class EbeanInitializationTest {
         
         Database db = DB.getDefault();
         
-        // Test basic SQL query execution
+        // Test basic SQL query execution - use simple query without alias to avoid H2 syntax issues
         assertDoesNotThrow(() -> {
-            var result = db.sqlQuery("SELECT 1 AS value").findOne();
+            var result = db.sqlQuery("SELECT 1").findOne();
             assertNotNull(result, "Query should return a result");
         }, "Basic SQL query should execute successfully");
         
@@ -94,6 +94,13 @@ public class EbeanInitializationTest {
                           .findOne();
             assertNotNull(result, "Should retrieve inserted record");
         }, "Should be able to query records");
+        
+        // Allow background tasks to complete before test ends
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         
         logger.info("Database connectivity test passed");
     }

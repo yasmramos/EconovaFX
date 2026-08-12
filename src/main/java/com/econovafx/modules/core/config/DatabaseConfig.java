@@ -11,6 +11,7 @@ import io.ebean.datasource.DataSourceConfig;
 import io.ebean.datasource.DataSourceFactory;
 import io.ebean.datasource.DataSourcePool;
 import io.ebean.platform.h2.H2Platform;
+import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * TenantMode.DB con CurrentTenantProvider y TenantDataSourceProvider para
  * gestionar bases de datos separadas por tenant de forma nativa en Ebean.
  */
+@Singleton
 public class DatabaseConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
@@ -38,6 +40,10 @@ public class DatabaseConfig {
     // Variables para testing
     public static boolean closeTenantDataSourceCalled = false;
     public static Long lastClosedTenantId = null;
+
+    public DatabaseConfig() {
+        this.initialize();
+    }
 
     /**
      * Inicializa la configuración multi-tenant nativa de Ebean.
@@ -56,15 +62,15 @@ public class DatabaseConfig {
     }
 
     public static void initializeMaster() {
-        DataSourceConfig dsConfig = new DataSourceConfig();
-        dsConfig.setDriver(AppConfig.MASTER_DB_DRIVER);
-        dsConfig.setUrl(AppConfig.MASTER_DB_URL);
-        dsConfig.setUsername(AppConfig.MASTER_DB_USERNAME);
-        dsConfig.setPassword(AppConfig.MASTER_DB_PASSWORD);
-        dsConfig.setMinConnections(1);
-        dsConfig.setMaxConnections(10);
-
-        DataSourcePool pool = DataSourceFactory.create("master", dsConfig);
+        DataSourcePool pool = DataSourcePool.builder()
+                .name("master")
+                .driver(AppConfig.MASTER_DB_DRIVER)
+                .url(AppConfig.MASTER_DB_URL)
+                .username(AppConfig.MASTER_DB_USERNAME)
+                .password(AppConfig.MASTER_DB_PASSWORD)
+                .minConnections(1)
+                .maxConnections(10)
+                .build();
 
         DatabaseBuilder builder = Database.builder();
         builder.name("master")
@@ -72,8 +78,9 @@ public class DatabaseConfig {
                 .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                 .ddlGenerate(true)
                 .ddlRun(true)
-                .databasePlatform(new H2Platform());
-        
+                .databasePlatform(new H2Platform())
+                .defaultDatabase(true);
+
         Database masterDb = builder.build();
         masterDatabase = masterDb;
         logger.info("Master database initialized successfully");

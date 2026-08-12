@@ -99,14 +99,14 @@ public class AppConfig {
         
         // Database
         DB_DRIVER = Config.get("database.driver", "org.h2.Driver");
-        DB_URL = Config.get("database.url", "jdbc:h2:./db/econovadb;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
+        DB_URL = Config.get("database.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
         DB_USERNAME = Config.get("database.username", "sa");
         DB_PASSWORD = Config.get("database.password", "");
-        DB_PATH = Config.get("app.database.path", "./db/econovadb");
+        DB_PATH = Config.get("app.database.path", "./db/master");
         
         // Master Database
         MASTER_DB_DRIVER = Config.get("ebean.datasource.master.driver", "org.h2.Driver");
-        MASTER_DB_URL = Config.get("ebean.datasource.master.url", "jdbc:h2:./db/econova_master;DB_CLOSE_DELAY=-1");
+        MASTER_DB_URL = Config.get("ebean.datasource.master.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
         MASTER_DB_USERNAME = Config.get("ebean.datasource.master.username", "sa");
         MASTER_DB_PASSWORD = Config.get("ebean.datasource.master.password", "");
         
