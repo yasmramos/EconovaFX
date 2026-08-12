@@ -186,7 +186,7 @@ public class CustomerPayment extends BaseEntity {
         return accountingTransaction;
     }
 
-    public void setAccountingTransaction(Transaction accountingEntry) {
+    public void setAccountingTransaction(Transaction accountingTransaction) {
         this.accountingTransaction = accountingTransaction;
     }
 

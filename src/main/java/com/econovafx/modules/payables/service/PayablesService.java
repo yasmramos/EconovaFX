@@ -240,13 +240,13 @@ public class PayablesService {
         SupplierInvoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new EntityNotFoundException(SupplierInvoice.class, invoiceId));
 
-        if (invoice.getTransaction() != null) {
+        if (invoice.getAccountingTransaction() != null) {
             throw new ValidationException("accountingEntry", 
                 "Invoice already has an accounting entry");
         }
 
         Transaction savedEntry = transactionService.createTransaction(entry);
-        invoice.setTransaction(savedEntry);
+        invoice.setAccountingTransaction(savedEntry);
         invoiceRepository.update(invoice);
 
         logger.info("Accounting entry created for invoice: {}", invoice.getInvoiceNumber());
@@ -391,13 +391,13 @@ public class PayablesService {
         SupplierPayment payment = paymentRepository.findById(paymentId)
             .orElseThrow(() -> new EntityNotFoundException(SupplierPayment.class, paymentId));
 
-        if (payment.getTransaction() != null) {
+        if (payment.getAccountingTransaction() != null) {
             throw new ValidationException("accountingEntry", 
                 "Payment already has an accounting entry");
         }
 
         Transaction savedEntry = transactionService.createTransaction(entry);
-        payment.setTransaction(savedEntry);
+        payment.setAccountingTransaction(savedEntry);
         paymentRepository.update(payment);
 
         logger.info("Accounting entry created for payment: {}", payment.getPaymentNumber());
