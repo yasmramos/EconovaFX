@@ -17,7 +17,7 @@ public class DepreciationRecord extends BaseEntity {
     @JoinColumn(name = "fixed_asset_id", nullable = false)
     private FixedAsset fixedAsset;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "record_year")
     private Integer year;
 
     @Column(nullable = false)
@@ -35,7 +35,7 @@ public class DepreciationRecord extends BaseEntity {
     @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate processingDate;
 
-    @Column(name = "journal_entry_id")
+    @Column(name = "journal_entry_id", columnDefinition = "BIGINT")
     private Long journalEntryId; // Referencia al asiento contable generado
 
     @Column(length = 100)
