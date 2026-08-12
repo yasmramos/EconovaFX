@@ -20,7 +20,7 @@ public class DepreciationRecord extends BaseEntity {
     @Column(nullable = false, name = "record_year")
     private Integer year;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "record_month")
     private Integer month; // 1-12
 
     @Column(nullable = false, precision = 18, scale = 2)
