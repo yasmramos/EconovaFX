@@ -106,14 +106,18 @@ public class FixedAssetController {
         FixedAsset asset = fixedAssetRepository.findById(assetId)
             .orElseThrow(() -> new RuntimeException("Asset not found with id: " + assetId));
         
-        return depreciationService.calculateMonthlyDepreciation(asset, periodDate);
+        return depreciationService.calculateMonthlyDepreciation(asset);
     }
 
     /**
      * Process monthly depreciation for all assets
      */
     public List<DepreciationRecord> processMonthlyDepreciation(LocalDate periodDate) {
-        return depreciationService.processMonthlyDepreciation(periodDate);
+        return depreciationService.processMonthlyDepreciation(
+            periodDate.getYear(), 
+            periodDate.getMonthValue(), 
+            "system"
+        );
     }
 
     /**
