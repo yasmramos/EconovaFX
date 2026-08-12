@@ -110,8 +110,7 @@ public class DatabaseConfig {
 
             DatabaseBuilder builder = Database.builder();
             builder.name("econova-multi-tenant")
-                    .register(true)
-                    .defaultDatabase(true)
+                    .register(false)
                     .tenantMode(TenantMode.DB)
                     .currentTenantProvider(tenantProvider)
                     .tenantDataSourceProvider(dataSourceProvider)
