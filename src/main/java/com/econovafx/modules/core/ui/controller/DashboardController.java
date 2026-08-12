@@ -698,7 +698,12 @@ public class DashboardController implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.initOwner(refreshButton.getScene().getWindow());
+        
+        // Only set owner if the button is properly initialized and added to the scene
+        if (refreshButton != null && refreshButton.getScene() != null) {
+            alert.initOwner(refreshButton.getScene().getWindow());
+        }
+        
         alert.showAndWait();
     }
 }
