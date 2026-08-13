@@ -10,6 +10,8 @@ import com.econovafx.modules.reporting.model.FinancialReport;
 import com.econovafx.modules.reporting.model.FinancialReport.ReportLine;
 import com.econovafx.modules.reporting.repository.FinancialReportRepository;
 import io.ebean.annotation.Transactional;
+import io.avaje.inject.Component;
+import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,12 +21,14 @@ import java.util.*;
  * Service for generating financial reports required by Resolution 340/2004.
  * Implements Balance Sheet, Income Statement, Cash Flow, and Trial Balance generation.
  */
+@Component
 public class FinancialReportingService {
 
-    private FinancialReportRepository reportRepository;
-    private AccountRepository accountRepository;
-    private TransactionRepository transactionRepository;
+    private final FinancialReportRepository reportRepository;
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
+    @Inject
     public FinancialReportingService(FinancialReportRepository reportRepository,
                                      AccountRepository accountRepository,
                                      TransactionRepository transactionRepository) {
