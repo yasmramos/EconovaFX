@@ -31,8 +31,6 @@ jobs:
     - name: Build and Run Tests with Coverage
       run: mvn clean verify --file pom.xml
     
-    - name: Generate JaCoCo Coverage Report
-      run: mvn jacoco:report
     
     - name: Upload Coverage Report
       uses: actions/upload-artifact@v4
