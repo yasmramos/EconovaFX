@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.econovafx.ui.controller.SystemSettingsController"
+      styleClass="root-container" stylesheets="@../css/system-settings.css">
+    
+    <children>
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" styleClass="header-bar" spacing="15">
+            <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+            <Label text="⚙️ Configuración del Sistema" styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Cerrar" onAction="#closeWindow" styleClass="close-button"/>
+        </HBox>
+        
+        <Separator/>
+        
+        <!-- Contenido Principal -->
+        <HBox VBox.vgrow="ALWAYS" styleClass="main-content">
+            <children>
+                <!-- Barra Lateral (Navegación) -->
+                <VBox fx:id="sidebarContainer" prefWidth="220.0" styleClass="sidebar" spacing="5">
+                    <padding><Insets top="20" right="10" bottom="20" left="10"/></padding>
+                </VBox>
+                
+                <Separator orientation="VERTICAL"/>
+                
+                <!-- Área de Contenido Dinámico -->
+                <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS" styleClass="content-area">
+                    <padding><Insets top="20" right="30" bottom="20" left="30"/></padding>
+                </StackPane>
+            </children>
+        </HBox>
+    </children>
+</VBox>
