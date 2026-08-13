@@ -1,7 +1,9 @@
 package com.econovafx.modules.reporting.service;
 
 import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
 import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.TransactionEntry;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.reporting.model.FinancialReport;
@@ -50,15 +52,15 @@ public class FinancialReportingService {
         List<ReportLine> lines = new ArrayList<>();
         
         // Get all asset accounts
-        List<Account> assetAccounts = accountRepository.findByAccountType(Account.AccountType.ASSET);
+        List<Account> assetAccounts = accountRepository.findByType(AccountType.ASSET);
         BigDecimal totalAssets = BigDecimal.ZERO;
         
         for (Account account : assetAccounts) {
             BigDecimal balance = calculateAccountBalance(account, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getAccountCode(),
-                    account.getDescription(),
+                    account.getCode(),
+                    account.getName(),
                     balance.compareTo(BigDecimal.ZERO) > 0 ? balance.doubleValue() : 0.0,
                     balance.compareTo(BigDecimal.ZERO) < 0 ? balance.abs().doubleValue() : 0.0,
                     balance.doubleValue()
@@ -71,16 +73,16 @@ public class FinancialReportingService {
         lines.add(new ReportLine("", "TOTAL ASSETS", totalAssets.doubleValue(), 0.0, totalAssets.doubleValue()));
         
         // Get liability and equity accounts
-        List<Account> liabilityAccounts = accountRepository.findByAccountType(Account.AccountType.LIABILITY);
-        List<Account> equityAccounts = accountRepository.findByAccountType(Account.AccountType.EQUITY);
+        List<Account> liabilityAccounts = accountRepository.findByType(AccountType.LIABILITY);
+        List<Account> equityAccounts = accountRepository.findByType(AccountType.EQUITY);
         
         BigDecimal totalLiabilities = BigDecimal.ZERO;
         for (Account account : liabilityAccounts) {
             BigDecimal balance = calculateAccountBalance(account, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getAccountCode(),
-                    account.getDescription(),
+                    account.getCode(),
+                    account.getName(),
                     0.0,
                     balance.doubleValue(),
                     balance.negate().doubleValue()
@@ -94,8 +96,8 @@ public class FinancialReportingService {
             BigDecimal balance = calculateAccountBalance(account, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getAccountCode(),
-                    account.getDescription(),
+                    account.getCode(),
+                    account.getName(),
                     0.0,
                     balance.doubleValue(),
                     balance.negate().doubleValue()
@@ -134,15 +136,15 @@ public class FinancialReportingService {
         List<ReportLine> lines = new ArrayList<>();
         
         // Get revenue accounts
-        List<Account> revenueAccounts = accountRepository.findByAccountType(Account.AccountType.REVENUE);
+        List<Account> revenueAccounts = accountRepository.findByType(AccountType.REVENUE);
         BigDecimal totalRevenue = BigDecimal.ZERO;
         
         for (Account account : revenueAccounts) {
             BigDecimal balance = calculateAccountBalancePeriod(account, startDate, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getAccountCode(),
-                    account.getDescription(),
+                    account.getCode(),
+                    account.getName(),
                     0.0,
                     balance.doubleValue(),
                     balance.negate().doubleValue()
@@ -154,15 +156,15 @@ public class FinancialReportingService {
         lines.add(new ReportLine("", "TOTAL REVENUE", 0.0, totalRevenue.doubleValue(), totalRevenue.negate().doubleValue()));
         
         // Get expense accounts
-        List<Account> expenseAccounts = accountRepository.findByAccountType(Account.AccountType.EXPENSE);
+        List<Account> expenseAccounts = accountRepository.findByType(AccountType.EXPENSE);
         BigDecimal totalExpenses = BigDecimal.ZERO;
         
         for (Account account : expenseAccounts) {
             BigDecimal balance = calculateAccountBalancePeriod(account, startDate, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getAccountCode(),
-                    account.getDescription(),
+                    account.getCode(),
+                    account.getName(),
                     balance.doubleValue(),
                     0.0,
                     balance.doubleValue()
@@ -201,7 +203,7 @@ public class FinancialReportingService {
         report.setFinal(false);
 
         List<ReportLine> lines = new ArrayList<>();
-        List<Account> allAccounts = accountRepository.findAllByOrderByAccountCode();
+        List<Account> allAccounts = accountRepository.findAll();
         
         BigDecimal totalDebits = BigDecimal.ZERO;
         BigDecimal totalCredits = BigDecimal.ZERO;
@@ -213,8 +215,8 @@ public class FinancialReportingService {
                 double credit = balance.compareTo(BigDecimal.ZERO) < 0 ? balance.abs().doubleValue() : 0.0;
                 
                 lines.add(new ReportLine(
-                    account.getAccountCode(),
-                    account.getDescription(),
+                    account.getCode(),
+                    account.getName(),
                     debit,
                     credit,
                     balance.doubleValue()
@@ -252,24 +254,30 @@ public class FinancialReportingService {
 
         List<ReportLine> lines = new ArrayList<>();
         
-        // Find cash and bank accounts
-        List<Account> cashAccounts = accountRepository.findByAccountType(Account.AccountType.ASSET);
+        // Find cash and bank accounts - filter by code prefix for cash accounts
+        List<Account> allAccounts = accountRepository.findAll();
         BigDecimal operatingCashFlow = BigDecimal.ZERO;
         BigDecimal investingCashFlow = BigDecimal.ZERO;
         BigDecimal financingCashFlow = BigDecimal.ZERO;
         
         // Simplified cash flow calculation based on transaction analysis
-        List<Transaction> transactions = transactionRepository.findByTransactionDateBetween(startDate, endDate);
+        List<Transaction> transactions = transactionRepository.findByDateRange(startDate, endDate);
         
         for (Transaction transaction : transactions) {
             // Analyze transaction type and categorize cash flow
             // This is a simplified implementation - real implementation would need more detailed analysis
             if (transaction.getDescription().toLowerCase().contains("operating")) {
-                operatingCashFlow = operatingCashFlow.add(transaction.getAmount());
+                for (TransactionEntry entry : transaction.getEntries()) {
+                    operatingCashFlow = operatingCashFlow.add(entry.getDebitAmount().subtract(entry.getCreditAmount()));
+                }
             } else if (transaction.getDescription().toLowerCase().contains("investing")) {
-                investingCashFlow = investingCashFlow.add(transaction.getAmount());
+                for (TransactionEntry entry : transaction.getEntries()) {
+                    investingCashFlow = investingCashFlow.add(entry.getDebitAmount().subtract(entry.getCreditAmount()));
+                }
             } else if (transaction.getDescription().toLowerCase().contains("financing")) {
-                financingCashFlow = financingCashFlow.add(transaction.getAmount());
+                for (TransactionEntry entry : transaction.getEntries()) {
+                    financingCashFlow = financingCashFlow.add(entry.getDebitAmount().subtract(entry.getCreditAmount()));
+                }
             }
         }
         
@@ -327,5 +335,22 @@ public class FinancialReportingService {
         // Implementation depends on the actual transaction structure
         // This is a placeholder for the actual period balance calculation logic
         return BigDecimal.ZERO;
+    }
+
+    /**
+     * Get all reports.
+     * @return list of all reports
+     */
+    public List<FinancialReport> getAllReports() {
+        return reportRepository.findAll();
+    }
+
+    /**
+     * Get report by ID.
+     * @param id the report ID
+     * @return optional containing the report
+     */
+    public Optional<FinancialReport> getReportById(Long id) {
+        return reportRepository.findById(id);
     }
 }
