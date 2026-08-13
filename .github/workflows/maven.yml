@@ -15,7 +15,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  build:
+  build-and-coverage:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,11 +28,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
     
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    
-    - name: Run Tests
-      run: mvn test
+    - name: Build and Run Tests with Coverage
+      run: mvn clean verify --file pom.xml
     
     - name: Generate JaCoCo Coverage Report
       run: mvn jacoco:report
@@ -50,8 +47,8 @@ jobs:
         name: test-results
         path: target/surefire-reports/
 
-  coverage:
-    needs: build
+  coverage-comment:
+    needs: build-and-coverage
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     
@@ -65,8 +62,11 @@ jobs:
         distribution: 'temurin'
         cache: maven
     
-    - name: Run Tests with Coverage
-      run: mvn clean test jacoco:report
+    - name: Download Coverage Report
+      uses: actions/download-artifact@v4
+      with:
+        name: jacoco-report
+        path: target/site/jacoco/
     
     - name: JaCoCo Code Coverage Report
       uses: madrapps/jacoco-report@v1.6.1
