@@ -1,0 +1,244 @@
+package com.econovafx.modules.billing.model;
+import com.econovafx.modules.core.model.BaseEntity;
+
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.core.model.Company;
+import com.econovafx.modules.accounting.model.Transaction;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Third Party entity for managing Customers and Suppliers
+ * Compliant with Cuba ONAT Resolution 340-2004
+ */
+@Entity
+@Table(name = "third_parties")
+public class ThirdParty extends BaseEntity {
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(unique = true, nullable = false, length = 20)
+    private String identificationNumber; // NIT, Cédula, or Passport
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ThirdPartyType type = ThirdPartyType.CUSTOMER;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tax_classification", nullable = false)
+    private TaxClassification taxClassification = TaxClassification.STATE_ENTITY;
+
+    @Column(nullable = false)
+    private String email;
+
+    private String phone;
+
+    private String address;
+
+    private String city;
+
+    private String country = "Cuba";
+
+    @Column(name = "tax_id")
+    private String taxId; // NIT (Número de Identificación Tributaria)
+
+    @Column(name = "withholding_isr", columnDefinition = "DECIMAL(19,4)")
+    private BigDecimal withholdingIsr = BigDecimal.ZERO; // Income Tax Withholding
+
+    @Column(name = "withholding_itbis", columnDefinition = "DECIMAL(19,4)")
+    private BigDecimal withholdingItbis = BigDecimal.ZERO; // ITBIS Withholding
+
+    @Column(name = "credit_limit", columnDefinition = "DECIMAL(19,4)")
+    private BigDecimal creditLimit = BigDecimal.ZERO;
+
+    @Column(name = "current_balance", columnDefinition = "DECIMAL(19,4)")
+    private BigDecimal currentBalance = BigDecimal.ZERO;
+
+    @Column(name = "payment_days", columnDefinition = "INTEGER")
+    private Integer paymentDays = 30;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    @Column(name = "notes", length = 2000)
+    @Lob
+    private String notes;
+
+    @OneToMany(mappedBy = "thirdParty", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Transaction> transactions = new ArrayList<>();
+
+    /**
+     * Tax Classification types according to Cuba ONAT Resolution 340-2004
+     */
+    public enum TaxClassification {
+        STATE_ENTITY,           // Entidad Estatal Cubana
+        NON_STATE_ENTITY,       // Entidad No Estatal (TCP, CNA, etc.)
+        FOREIGN_COMPANY,        // Empresa Extranjera
+        GOVERNMENT_ORG,         // Organismo Gubernamental
+        INDIVIDUAL,             // Persona Natural
+        DIPLOMATIC              // Representación Diplomática
+    }
+
+    public enum ThirdPartyType {
+        CUSTOMER,      // Cliente
+        SUPPLIER,      // Proveedor
+        BOTH           // Both (Cliente y Proveedor)
+    }
+
+    // Getters and Setters
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIdentificationNumber() {
+        return identificationNumber;
+    }
+
+    public void setIdentificationNumber(String identificationNumber) {
+        this.identificationNumber = identificationNumber;
+    }
+
+    public ThirdPartyType getType() {
+        return type;
+    }
+
+    public void setType(ThirdPartyType type) {
+        this.type = type;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getTaxId() {
+        return taxId;
+    }
+
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
+    }
+
+    public BigDecimal getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(BigDecimal creditLimit) {
+        this.creditLimit = creditLimit;
+    }
+
+    public BigDecimal getCurrentBalance() {
+        return currentBalance;
+    }
+
+    public void setCurrentBalance(BigDecimal currentBalance) {
+        this.currentBalance = currentBalance;
+    }
+
+    public Integer getPaymentDays() {
+        return paymentDays;
+    }
+
+    public void setPaymentDays(Integer paymentDays) {
+        this.paymentDays = paymentDays;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public TaxClassification getTaxClassification() {
+        return taxClassification;
+    }
+
+    public void setTaxClassification(TaxClassification taxClassification) {
+        this.taxClassification = taxClassification;
+    }
+
+    public BigDecimal getWithholdingIsr() {
+        return withholdingIsr;
+    }
+
+    public void setWithholdingIsr(BigDecimal withholdingIsr) {
+        this.withholdingIsr = withholdingIsr;
+    }
+
+    public BigDecimal getWithholdingItbis() {
+        return withholdingItbis;
+    }
+
+    public void setWithholdingItbis(BigDecimal withholdingItbis) {
+        this.withholdingItbis = withholdingItbis;
+    }
+
+    // `createdAt`, `updatedAt` and `isActive` are inherited from BaseEntity
+
+    @Override
+    public String toString() {
+        return name + " (" + identificationNumber + ")";
+    }
+}

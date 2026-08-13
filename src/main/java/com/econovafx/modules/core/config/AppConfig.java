@@ -1,0 +1,310 @@
+package com.econovafx.modules.core.config;
+
+import io.avaje.config.Config;
+import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+
+/**
+ * Centralized configuration management using Avaje Config.
+ * Provides type-safe access to all application configuration properties.
+ */
+@Singleton
+public class AppConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(AppConfig.class);
+    
+    // Instance fields for bean injection
+    public final String appName;
+    public final String appVersion;
+    
+    // Database Configuration
+    public final String dbDriver;
+    public final String dbUrl;
+    public final String dbUsername;
+    public final String dbPassword;
+    public final String dbPath;
+    
+    // Master Database Configuration
+    public final String masterDbDriver;
+    public final String masterDbUrl;
+    public final String masterDbUsername;
+    public final String masterDbPassword;
+    
+    // Ebean Configuration
+    public final boolean ebeanDdlGenerate;
+    public final boolean ebeanDdlRun;
+    public final boolean ebeanMigrationAuto;
+    public final boolean ebeanMigrationRun;
+    public final String ebeanMigrationPath;
+    
+    // UI Configuration
+    public final String uiTheme;
+    public final int uiWidth;
+    public final int uiHeight;
+    
+    // Exchange Rate Configuration
+    public final int exchangeRateCacheTtlMinutes;
+    public final boolean exchangeRateSchedulerEnabled;
+    public final String exchangeRateSchedulerCron;
+    
+    // BCC API Configuration
+    public final String bccApiBaseUrl;
+    public final int bccApiTimeoutSeconds;
+    public final int bccApiRetryMaxAttempts;
+    public final long bccApiRetryDelayMs;
+    
+    // Security Configuration
+    public final String sessionTimeout;
+    public final int maxLoginAttempts;
+    
+    // Static fields for backward compatibility
+    public static final String APP_NAME;
+    public static final String APP_VERSION;
+    public static final String DB_DRIVER;
+    public static final String DB_URL;
+    public static final String DB_USERNAME;
+    public static final String DB_PASSWORD;
+    public static final String DB_PATH;
+    public static final String MASTER_DB_DRIVER;
+    public static final String MASTER_DB_URL;
+    public static final String MASTER_DB_USERNAME;
+    public static final String MASTER_DB_PASSWORD;
+    public static final boolean EBEAN_DDL_GENERATE;
+    public static final boolean EBEAN_DDL_RUN;
+    public static final boolean EBEAN_MIGRATION_AUTO;
+    public static final boolean EBEAN_MIGRATION_RUN;
+    public static final String EBEAN_MIGRATION_PATH;
+    public static final String UI_THEME;
+    public static final int UI_WIDTH;
+    public static final int UI_HEIGHT;
+    public static final int EXCHANGE_RATE_CACHE_TTL_MINUTES;
+    public static final boolean EXCHANGE_RATE_SCHEDULER_ENABLED;
+    public static final String EXCHANGE_RATE_SCHEDULER_CRON;
+    public static final String BCC_API_BASE_URL;
+    public static final int BCC_API_TIMEOUT_SECONDS;
+    public static final int BCC_API_RETRY_MAX_ATTEMPTS;
+    public static final long BCC_API_RETRY_DELAY_MS;
+    public static final String SESSION_TIMEOUT;
+    public static final int MAX_LOGIN_ATTEMPTS;
+    
+    static {
+        logger.info("Loading application configuration with Avaje Config...");
+        
+        // Application
+        APP_NAME = Config.get("app.name", "EconoNova FX");
+        APP_VERSION = Config.get("app.version", "1.0.0");
+        
+        // Database
+        DB_DRIVER = Config.get("database.driver", "org.h2.Driver");
+        DB_URL = Config.get("database.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
+        DB_USERNAME = Config.get("database.username", "sa");
+        DB_PASSWORD = Config.get("database.password", "");
+        DB_PATH = Config.get("app.database.path", "./db/master");
+        
+        // Master Database
+        MASTER_DB_DRIVER = Config.get("ebean.datasource.master.driver", "org.h2.Driver");
+        MASTER_DB_URL = Config.get("ebean.datasource.master.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
+        MASTER_DB_USERNAME = Config.get("ebean.datasource.master.username", "sa");
+        MASTER_DB_PASSWORD = Config.get("ebean.datasource.master.password", "");
+        
+        // Ebean
+        EBEAN_DDL_GENERATE = Config.getBool("ebean.ddl.generate", true);
+        EBEAN_DDL_RUN = Config.getBool("ebean.ddl.run", true);
+        EBEAN_MIGRATION_AUTO = Config.getBool("ebean.migration.auto", true);
+        EBEAN_MIGRATION_RUN = Config.getBool("ebean.migration.run", true);
+        EBEAN_MIGRATION_PATH = Config.get("ebean.migration.resourcePath", "dbmigration");
+        
+        // UI
+        UI_THEME = Config.get("ui.theme", "modern");
+        UI_WIDTH = Config.getInt("ui.width", 1200);
+        UI_HEIGHT = Config.getInt("ui.height", 800);
+        
+        // Exchange Rate
+        EXCHANGE_RATE_CACHE_TTL_MINUTES = Config.getInt("exchange.rate.cache.ttl.minutes", 60);
+        EXCHANGE_RATE_SCHEDULER_ENABLED = Config.getBool("exchange.rate.scheduler.enabled", true);
+        EXCHANGE_RATE_SCHEDULER_CRON = Config.get("exchange.rate.scheduler.cron", "0 0 6 * * ?");
+        
+        // BCC API
+        BCC_API_BASE_URL = Config.get("bcc.api.base.url", "https://api.bc.gob.cu/v1/tasas-de-cambio");
+        BCC_API_TIMEOUT_SECONDS = Config.getInt("bcc.api.timeout.seconds", 30);
+        BCC_API_RETRY_MAX_ATTEMPTS = Config.getInt("bcc.api.retry.max.attempts", 3);
+        BCC_API_RETRY_DELAY_MS = Config.getLong("bcc.api.retry.delay.ms", 2000L);
+        
+        // Security
+        SESSION_TIMEOUT = Config.get("security.session.timeout", "30m");
+        MAX_LOGIN_ATTEMPTS = Config.getInt("security.login.max.attempts", 5);
+        
+        logger.info("Configuration loaded successfully");
+        logger.debug("App: {} v{}", APP_NAME, APP_VERSION);
+        logger.debug("Database: {}", DB_URL);
+        logger.debug("UI: {} ({}x{})", UI_THEME, UI_WIDTH, UI_HEIGHT);
+    }
+    
+    /**
+     * Constructor for bean injection - loads configuration into instance fields
+     */
+    public AppConfig() {
+        this.appName = APP_NAME;
+        this.appVersion = APP_VERSION;
+        this.dbDriver = DB_DRIVER;
+        this.dbUrl = DB_URL;
+        this.dbUsername = DB_USERNAME;
+        this.dbPassword = DB_PASSWORD;
+        this.dbPath = DB_PATH;
+        this.masterDbDriver = MASTER_DB_DRIVER;
+        this.masterDbUrl = MASTER_DB_URL;
+        this.masterDbUsername = MASTER_DB_USERNAME;
+        this.masterDbPassword = MASTER_DB_PASSWORD;
+        this.ebeanDdlGenerate = EBEAN_DDL_GENERATE;
+        this.ebeanDdlRun = EBEAN_DDL_RUN;
+        this.ebeanMigrationAuto = EBEAN_MIGRATION_AUTO;
+        this.ebeanMigrationRun = EBEAN_MIGRATION_RUN;
+        this.ebeanMigrationPath = EBEAN_MIGRATION_PATH;
+        this.uiTheme = UI_THEME;
+        this.uiWidth = UI_WIDTH;
+        this.uiHeight = UI_HEIGHT;
+        this.exchangeRateCacheTtlMinutes = EXCHANGE_RATE_CACHE_TTL_MINUTES;
+        this.exchangeRateSchedulerEnabled = EXCHANGE_RATE_SCHEDULER_ENABLED;
+        this.exchangeRateSchedulerCron = EXCHANGE_RATE_SCHEDULER_CRON;
+        this.bccApiBaseUrl = BCC_API_BASE_URL;
+        this.bccApiTimeoutSeconds = BCC_API_TIMEOUT_SECONDS;
+        this.bccApiRetryMaxAttempts = BCC_API_RETRY_MAX_ATTEMPTS;
+        this.bccApiRetryDelayMs = BCC_API_RETRY_DELAY_MS;
+        this.sessionTimeout = SESSION_TIMEOUT;
+        this.maxLoginAttempts = MAX_LOGIN_ATTEMPTS;
+        
+        logger.info("AppConfig bean initialized");
+    }
+
+    /**
+     * Gets a string configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Configuration value or default
+     */
+    public static String getString(String key, String defaultValue) {
+        return Config.get(key, defaultValue);
+    }
+
+    /**
+     * Gets an integer configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Configuration value or default
+     */
+    public static int getInt(String key, int defaultValue) {
+        return Config.getInt(key, defaultValue);
+    }
+
+    /**
+     * Gets a boolean configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Configuration value or default
+     */
+    public static boolean getBoolean(String key, boolean defaultValue) {
+        return Config.getBool(key, defaultValue);
+    }
+
+    /**
+     * Gets a long configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Configuration value or default
+     */
+    public static long getLong(String key, long defaultValue) {
+        return Config.getLong(key, defaultValue);
+    }
+
+    /**
+     * Gets a duration configuration value.
+     * @param key Configuration key
+     * @param defaultValue Default value if key not found
+     * @return Duration value or default
+     */
+    public static Duration getDuration(String key, String defaultValue) {
+        return Config.getDuration(key, defaultValue);
+    }
+
+    /**
+     * Sets a string configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, String value) {
+        Config.setProperty(key, value);
+        logger.debug("Configuration property updated: {} = {}", key, value);
+    }
+
+    /**
+     * Sets an integer configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, int value) {
+        Config.setProperty(key, String.valueOf(value));
+        logger.debug("Configuration property updated: {} = {}", key, value);
+    }
+
+    /**
+     * Sets a boolean configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, boolean value) {
+        Config.setProperty(key, String.valueOf(value));
+        logger.debug("Configuration property updated: {} = {}", key, value);
+    }
+
+    /**
+     * Sets a long configuration property dynamically.
+     * @param key Configuration key
+     * @param value New value
+     */
+    public static void setProperty(String key, long value) {
+        Config.setProperty(key, String.valueOf(value));
+        logger.debug("Configuration property updated: {} = {}", key, value);
+    }
+
+    /**
+     * Saves the current configuration to the properties file.
+     * This persists all dynamic changes made via setProperty.
+     * Note: Avaje Config 5.x does not support saving to file directly.
+     * This method logs the current configuration for manual persistence.
+     */
+    public static void save() {
+        logger.info("Configuration snapshot - use external mechanism to persist changes");
+        logger.info("Current properties count: {}", Config.asProperties().size());
+    }
+
+    /**
+     * Reloads configuration from the properties file.
+     * This discards any unsaved dynamic changes.
+     * Note: Avaje Config 5.x does not support reload directly.
+     * Use onChange listeners for dynamic updates.
+     */
+    public static void reload() {
+        logger.warn("Reload not supported in Avaje Config 5.x - use onChange listeners instead");
+    }
+
+    /**
+     * Removes a configuration property.
+     * @param key Configuration key to remove
+     */
+    public static void removeProperty(String key) {
+        Config.clearProperty(key);
+        logger.debug("Configuration property removed: {}", key);
+    }
+
+    /**
+     * Checks if a configuration key exists.
+     * @param key Configuration key
+     * @return true if key exists, false otherwise
+     */
+    public static boolean containsKey(String key) {
+        return Config.getOptional(key).isPresent();
+    }
+}

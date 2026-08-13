@@ -1,0 +1,129 @@
+/* Modern Dialog Styles - Web-style appearance */
+
+/* Dialog Pane */
+.modern-dialog-pane {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 30, 0.5, 0, 10);
+    -fx-padding: 25;
+    -fx-spacing: 15;
+}
+
+/* Dialog Title */
+.modern-dialog-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a1a;
+    -fx-padding: 0 0 5 0;
+}
+
+/* Dialog Message */
+.modern-dialog-message {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4a4a4a;
+    -fx-line-spacing: 1.5;
+}
+
+/* Modern Buttons */
+.modern-button {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 20;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
+    -fx-min-width: 80px;
+}
+
+.modern-button:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.modern-button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Primary Button (Blue) */
+.button-primary {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}
+
+.button-primary:hover {
+    -fx-background-color: #2563eb;
+}
+
+/* Secondary Button (Gray) */
+.button-secondary {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #374151;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #d1d5db;
+}
+
+/* Success Button (Green) */
+.button-success {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+}
+
+.button-success:hover {
+    -fx-background-color: #059669;
+}
+
+/* Danger Button (Red) */
+.button-danger {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+}
+
+.button-danger:hover {
+    -fx-background-color: #dc2626;
+}
+
+/* Warning Button (Orange) */
+.button-warning {
+    -fx-background-color: #f59e0b;
+    -fx-text-fill: white;
+}
+
+.button-warning:hover {
+    -fx-background-color: #d97706;
+}
+
+/* Info Button (Blue) */
+.button-info {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}
+
+.button-info:hover {
+    -fx-background-color: #2563eb;
+}
+
+/* Dialog Type-specific Styling (optional border color) */
+.dialog-info .modern-dialog-pane {
+    -fx-border-color: #3b82f6;
+    -fx-border-width: 0 0 0 4;
+}
+
+.dialog-success .modern-dialog-pane {
+    -fx-border-color: #10b981;
+    -fx-border-width: 0 0 0 4;
+}
+
+.dialog-warning .modern-dialog-pane {
+    -fx-border-color: #f59e0b;
+    -fx-border-width: 0 0 0 4;
+}
+
+.dialog-error .modern-dialog-pane {
+    -fx-border-color: #ef4444;
+    -fx-border-width: 0 0 0 4;
+}
