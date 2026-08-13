@@ -218,12 +218,8 @@ public class ThirdPartiesController implements Initializable {
     private void newThirdParty() {
         logger.debug("New third party clicked");
         try {
-            // Load the form FXML using ViewFactory to ensure proper dependency injection
-            javafx.scene.Parent root = viewFactory.loadThirdPartyForm(null);
-            
-            // Show using ModernDialog static method
-            Stage ownerStage = (Stage) thirdPartiesTable.getScene().getWindow();
-            ModernDialog.showModal(ownerStage, root, "New Third Party");
+            // Use showThirdPartyFormDialog with null to create new third party
+            viewFactory.showThirdPartyFormDialog(null);
             
             // Reload data after dialog closes (assuming form saves directly)
             loadThirdParties();
@@ -253,12 +249,8 @@ public class ThirdPartiesController implements Initializable {
         
         logger.debug("Edit third party: {}", selected.getIdentificationNumber());
         try {
-            // Load the form FXML using ViewFactory to ensure proper dependency injection
-            javafx.scene.Parent root = viewFactory.loadThirdPartyForm(selected);
-            
-            // Show using ModernDialog static method
-            Stage ownerStage = (Stage) thirdPartiesTable.getScene().getWindow();
-            ModernDialog.showModal(ownerStage, root, "Edit Third Party");
+            // Use showThirdPartyFormDialog with selected third party to edit
+            viewFactory.showThirdPartyFormDialog(selected);
             
             // Reload data after dialog closes
             loadThirdParties();

@@ -157,6 +157,13 @@ public class PayrollBatch {
         return details;
     }
 
+    /**
+     * Get payroll details (alias for getDetails).
+     */
+    public List<PayrollDetail> getPayrollDetails() {
+        return details;
+    }
+
     public void setDetails(List<PayrollDetail> details) {
         this.details = details;
     }

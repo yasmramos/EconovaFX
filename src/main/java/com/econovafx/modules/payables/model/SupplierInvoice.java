@@ -197,6 +197,10 @@ public class SupplierInvoice extends BaseEntity {
         return pendingAmount;
     }
 
+    public void setPendingAmount(BigDecimal pendingAmount) {
+        this.pendingAmount = pendingAmount;
+    }
+
     public BigDecimal getPaidAmount() {
         return paidAmount;
     }

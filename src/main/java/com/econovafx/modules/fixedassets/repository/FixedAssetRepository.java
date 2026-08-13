@@ -2,6 +2,7 @@ package com.econovafx.modules.fixedassets.repository;
 
 import com.econovafx.modules.fixedassets.model.FixedAsset;
 import com.econovafx.modules.fixedassets.model.FixedAsset.AssetStatus;
+import com.econovafx.modules.fixedassets.model.FixedAssetCategory;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;
@@ -119,5 +120,16 @@ public class FixedAssetRepository {
                 .eq("status", AssetStatus.ACTIVE)
                 .gt("acquisitionCost", 0)
                 .findList();
+    }
+
+    public List<FixedAssetCategory> findAllCategories() {
+        return database.find(FixedAssetCategory.class)
+                .orderBy().asc("name").findList();
+    }
+
+    public FixedAssetCategory saveCategory(FixedAssetCategory category) {
+        database.save(category);
+        logger.debug("FixedAssetCategory saved: {}", category.getName());
+        return category;
     }
 }

@@ -102,7 +102,7 @@ public class FixedAssetController {
     /**
      * Calculate depreciation for an asset
      */
-    public DepreciationRecord calculateDepreciation(Long assetId, LocalDate periodDate) {
+    public BigDecimal calculateDepreciation(Long assetId) {
         FixedAsset asset = fixedAssetRepository.findById(assetId)
             .orElseThrow(() -> new RuntimeException("Asset not found with id: " + assetId));
         
@@ -112,10 +112,10 @@ public class FixedAssetController {
     /**
      * Process monthly depreciation for all assets
      */
-    public List<DepreciationRecord> processMonthlyDepreciation(LocalDate periodDate) {
+    public List<DepreciationRecord> processMonthlyDepreciation(Integer year, Integer month) {
         return depreciationService.processMonthlyDepreciation(
-            periodDate.getYear(), 
-            periodDate.getMonthValue(), 
+            year, 
+            month, 
             "system"
         );
     }
@@ -159,6 +159,6 @@ public class FixedAssetController {
      * Create new category
      */
     public FixedAssetCategory createCategory(FixedAssetCategory category) {
-        return fixedAssetRepository.save(category);
+        return fixedAssetRepository.saveCategory(category);
     }
 }

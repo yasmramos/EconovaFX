@@ -137,8 +137,9 @@ public class PayablesService {
             throw new ValidationException("supplier", "Supplier is required");
         }
         
-        supplier = thirdPartyService.getThirdPartyById(supplier.getId())
-            .orElseThrow(() -> new EntityNotFoundException(ThirdParty.class, supplier.getId()));
+        final Long supplierId = supplier.getId();
+        supplier = thirdPartyService.getThirdPartyById(supplierId)
+            .orElseThrow(() -> new EntityNotFoundException(ThirdParty.class, supplierId));
         
         if (supplier.getType() != ThirdParty.ThirdPartyType.SUPPLIER && 
             supplier.getType() != ThirdParty.ThirdPartyType.BOTH) {
@@ -213,7 +214,7 @@ public class PayablesService {
      * Cancel an invoice (required for modifications per Resolution 340/2004)
      */
     public SupplierInvoice cancelInvoice(Long invoiceId, String reason) {
-        SupplierInvoice invoice = invoiceRepository.findById(invoiceId)
+        final SupplierInvoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new EntityNotFoundException(SupplierInvoice.class, invoiceId));
 
         if (invoice.getStatus() == SupplierInvoice.InvoiceStatus.CANCELLED) {
@@ -237,7 +238,7 @@ public class PayablesService {
      * Create accounting entry for invoice
      */
     public SupplierInvoice createTransactionForInvoice(Long invoiceId, Transaction entry) {
-        SupplierInvoice invoice = invoiceRepository.findById(invoiceId)
+        final SupplierInvoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new EntityNotFoundException(SupplierInvoice.class, invoiceId));
 
         if (invoice.getAccountingTransaction() != null) {
@@ -245,7 +246,23 @@ public class PayablesService {
                 "Invoice already has an accounting entry");
         }
 
-        Transaction savedEntry = transactionService.createTransaction(entry);
+        List<TransactionService.TransactionEntryData> entries = new java.util.ArrayList<>();
+        // Create accounting entries for invoice (Expense and Accounts Payable)
+        // Debit: Expense, Credit: Accounts Payable
+        entries.add(new TransactionService.TransactionEntryData(
+            entry.getEntries().get(0).getAccount().getId(),
+            entry.getEntries().get(0).getDebitAmount(),
+            BigDecimal.ZERO,
+            "Invoice: " + invoice.getInvoiceNumber()
+        ));
+        entries.add(new TransactionService.TransactionEntryData(
+            entry.getEntries().get(1).getAccount().getId(),
+            BigDecimal.ZERO,
+            entry.getEntries().get(1).getCreditAmount(),
+            "Invoice: " + invoice.getInvoiceNumber()
+        ));
+        
+        Transaction savedEntry = transactionService.createTransaction(entry, entries);
         invoice.setAccountingTransaction(savedEntry);
         invoiceRepository.update(invoice);
 
@@ -312,8 +329,9 @@ public class PayablesService {
             throw new ValidationException("supplier", "Supplier is required");
         }
         
-        supplier = thirdPartyService.getThirdPartyById(supplier.getId())
-            .orElseThrow(() -> new EntityNotFoundException(ThirdParty.class, supplier.getId()));
+        final Long supplierId = supplier.getId();
+        supplier = thirdPartyService.getThirdPartyById(supplierId)
+            .orElseThrow(() -> new EntityNotFoundException(ThirdParty.class, supplierId));
         
         if (supplier.getType() != ThirdParty.ThirdPartyType.SUPPLIER && 
             supplier.getType() != ThirdParty.ThirdPartyType.BOTH) {
@@ -355,10 +373,10 @@ public class PayablesService {
      * Allocate payment to an invoice
      */
     public SupplierPayment allocatePaymentToInvoice(Long paymentId, Long invoiceId, BigDecimal amount) {
-        SupplierPayment payment = paymentRepository.findById(paymentId)
+        final SupplierPayment payment = paymentRepository.findById(paymentId)
             .orElseThrow(() -> new EntityNotFoundException(SupplierPayment.class, paymentId));
         
-        SupplierInvoice invoice = invoiceRepository.findById(invoiceId)
+        final SupplierInvoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new EntityNotFoundException(SupplierInvoice.class, invoiceId));
 
         payment.allocateToInvoice(invoice, amount);
@@ -373,7 +391,7 @@ public class PayablesService {
      * Unallocate payment from an invoice
      */
     public SupplierPayment unallocatePaymentFromInvoice(Long paymentId, Long invoiceId, BigDecimal amount) {
-        SupplierPayment payment = paymentRepository.findById(paymentId)
+        final SupplierPayment payment = paymentRepository.findById(paymentId)
             .orElseThrow(() -> new EntityNotFoundException(SupplierPayment.class, paymentId));
 
         payment.unallocateFromInvoice(null, amount); // Simplified - would need invoice reference in real scenario
@@ -388,7 +406,7 @@ public class PayablesService {
      * Create accounting entry for payment
      */
     public SupplierPayment createTransactionForPayment(Long paymentId, Transaction entry) {
-        SupplierPayment payment = paymentRepository.findById(paymentId)
+        final SupplierPayment payment = paymentRepository.findById(paymentId)
             .orElseThrow(() -> new EntityNotFoundException(SupplierPayment.class, paymentId));
 
         if (payment.getAccountingTransaction() != null) {
@@ -396,7 +414,23 @@ public class PayablesService {
                 "Payment already has an accounting entry");
         }
 
-        Transaction savedEntry = transactionService.createTransaction(entry);
+        List<TransactionService.TransactionEntryData> entries = new java.util.ArrayList<>();
+        // Create accounting entries for payment (Accounts Payable and Cash/Bank)
+        // Debit: Accounts Payable, Credit: Cash/Bank
+        entries.add(new TransactionService.TransactionEntryData(
+            entry.getEntries().get(0).getAccount().getId(),
+            entry.getEntries().get(0).getDebitAmount(),
+            BigDecimal.ZERO,
+            "Payment: " + payment.getPaymentNumber()
+        ));
+        entries.add(new TransactionService.TransactionEntryData(
+            entry.getEntries().get(1).getAccount().getId(),
+            BigDecimal.ZERO,
+            entry.getEntries().get(1).getCreditAmount(),
+            "Payment: " + payment.getPaymentNumber()
+        ));
+        
+        Transaction savedEntry = transactionService.createTransaction(entry, entries);
         payment.setAccountingTransaction(savedEntry);
         paymentRepository.update(payment);
 
