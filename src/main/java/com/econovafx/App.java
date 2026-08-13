@@ -5,12 +5,15 @@ import com.econovafx.modules.core.config.DatabaseConfig;
 import com.econovafx.modules.core.ui.controller.MainViewController;
 import com.econovafx.modules.core.ui.view.SplashController;
 import com.econovafx.modules.core.ui.view.ViewFactory;
+import com.econovafx.modules.security.ui.controller.LoginController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +28,9 @@ public class App extends Application {
     private AppContext context;
     private Stage primaryStage;
     private Stage splashStage;
+    private Stage loginStage;
     private SplashController splashController;
+    private LoginController loginController;
 
     @Override
     public void init() throws Exception {
@@ -61,11 +66,12 @@ public class App extends Application {
             splashStage.setScene(splashScene);
             splashStage.setTitle("EconoNova FX - Loading");
             splashStage.setResizable(false);
+            splashStage.initStyle(StageStyle.UNDECORATED);
             splashStage.centerOnScreen();
             splashStage.show();
             
             // Set callback for when initialization is complete
-            splashController.setOnInitializationComplete(this::loadMainApp);
+            splashController.setOnInitializationComplete(this::showLoginScreen);
             
         } catch (IOException e) {
             logger.error("Failed to load splash screen", e);
@@ -73,9 +79,49 @@ public class App extends Application {
         }
     }
 
+    private void showLoginScreen() {
+        try {
+            logger.info("Showing login screen...");
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login-view.fxml"));
+            VBox root = loader.load();
+            loginController = loader.getController();
+            
+            Scene loginScene = new Scene(root);
+            loginScene.getStylesheets().add(getClass().getResource("/css/login-styles.css").toExternalForm());
+            
+            loginStage = new Stage();
+            loginStage.setScene(loginScene);
+            loginStage.setTitle("EconoNova FX - Login");
+            loginStage.setResizable(false);
+            loginStage.initStyle(StageStyle.UNDECORATED);
+            loginStage.centerOnScreen();
+            
+            // Set callback for successful login
+            loginController.setOnLoginSuccess(this::loadMainApp);
+            
+            // Close splash and show login
+            if (splashStage != null) {
+                splashStage.close();
+            }
+            loginStage.show();
+            
+            logger.info("Login screen displayed successfully");
+            
+        } catch (IOException e) {
+            logger.error("Failed to load login screen", e);
+            throw new RuntimeException("Failed to load login screen", e);
+        }
+    }
+
     private void loadMainApp() {
         try {
             logger.info("Loading main application view...");
+            
+            // Close login dialog
+            if (loginStage != null) {
+                loginStage.close();
+            }
             
             ViewFactory viewFactory = context.getViewFactory();
             MainViewController mainController = new MainViewController(
@@ -104,12 +150,6 @@ public class App extends Application {
             primaryStage.show(); // Explicitly show the primary stage
             
             logger.info("Main application window displayed successfully");
-            
-            // Close splash screen
-            if (splashStage != null) {
-                splashStage.close();
-            }
-
             logger.info("Application started successfully");
 
         } catch (IOException e) {
