@@ -235,7 +235,7 @@ class PayrollServiceTest {
         PayrollBatch batch = new PayrollBatch();
         batch.setId(1L);
         batch.setTotalGross(new BigDecimal("5000.00"));
-        batch TotalDeductions(new BigDecimal("500.00"));
+        batch.setTotalDeductions(new BigDecimal("500.00"));
         batch.setTotalNet(new BigDecimal("4500.00"));
         batch.setTotalSocialSecurity(new BigDecimal("200.00"));
         batch.setTotalTaxWithheld(new BigDecimal("300.00"));
@@ -324,7 +324,7 @@ class PayrollServiceTest {
     void testIsEligibleForBonus_LessThanYear_False() {
         // Arrange
         testEmployee.setHireDate(LocalDate.of(2023, 12, 1));
-        LocalDate bonusDate = LocalDate.of(2024, 1, 1));
+        LocalDate bonusDate = LocalDate.of(2024, 1, 1);
 
         // Act
         boolean eligible = payrollService.isEligibleForBonus(testEmployee, bonusDate);
