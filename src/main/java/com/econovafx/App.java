@@ -2,7 +2,12 @@ package com.econovafx;
 
 import com.econovafx.modules.core.config.AppContext;
 import com.econovafx.modules.core.config.DatabaseConfig;
+import com.econovafx.modules.core.config.TenantContext;
+import com.econovafx.modules.core.model.Company;
+import com.econovafx.modules.core.service.BusinessUnitService;
 import com.econovafx.modules.core.ui.controller.MainViewController;
+import com.econovafx.modules.core.ui.controller.CompanySelectionController;
+import com.econovafx.modules.core.ui.controller.UnitSelectionController;
 import com.econovafx.modules.core.ui.view.SplashController;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.security.ui.controller.LoginController;
@@ -12,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
@@ -98,7 +104,7 @@ public class App extends Application {
             loginStage.centerOnScreen();
             
             // Set callback for successful login
-            loginController.setOnLoginSuccess(this::loadMainApp);
+            loginController.setOnLoginSuccess(this::showCompanySelection);
             
             // Close splash and show login
             if (splashStage != null) {
@@ -111,6 +117,126 @@ public class App extends Application {
         } catch (IOException e) {
             logger.error("Failed to load login screen", e);
             throw new RuntimeException("Failed to load login screen", e);
+        }
+    }
+
+    private Stage companySelectionStage;
+    private Stage unitSelectionStage;
+    private Company selectedCompany;
+
+    private void showCompanySelection() {
+        try {
+            logger.info("Showing company selection dialog...");
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/company-selection.fxml"));
+            VBox root = loader.load();
+            CompanySelectionController controller = loader.getController();
+            
+            Scene selectionScene = new Scene(root);
+            selectionScene.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
+            
+            companySelectionStage = new Stage();
+            companySelectionStage.setScene(selectionScene);
+            companySelectionStage.setTitle("Select Company");
+            companySelectionStage.setResizable(false);
+            companySelectionStage.initStyle(StageStyle.UNDECORATED);
+            companySelectionStage.initModality(Modality.APPLICATION_MODAL);
+            companySelectionStage.initOwner(loginStage);
+            companySelectionStage.centerOnScreen();
+            
+            // Set callbacks
+            controller.setOnCompanySelected(() -> {
+                // Company selected, now check if it has units
+                selectedCompany = TenantContext.getCurrentTenant();
+                companySelectionStage.close();
+                checkAndShowUnitSelection();
+            });
+            
+            controller.setOnCancel(() -> {
+                companySelectionStage.close();
+                System.exit(0);
+            });
+            
+            // Close login and show company selection
+            if (loginStage != null) {
+                loginStage.close();
+            }
+            companySelectionStage.show();
+            
+            logger.info("Company selection dialog displayed successfully");
+            
+        } catch (IOException e) {
+            logger.error("Failed to load company selection dialog", e);
+            throw new RuntimeException("Failed to load company selection dialog", e);
+        }
+    }
+
+    private void checkAndShowUnitSelection() {
+        if (selectedCompany == null) {
+            logger.error("No company selected");
+            return;
+        }
+        
+        BusinessUnitService unitService = new BusinessUnitService();
+        boolean hasUnits = unitService.hasUnits(selectedCompany.getId());
+        
+        if (hasUnits) {
+            logger.info("Company {} has business units, showing unit selection", selectedCompany.getName());
+            showUnitSelection();
+        } else {
+            logger.info("Company {} has no business units, proceeding to main app", selectedCompany.getName());
+            loadMainApp();
+        }
+    }
+
+    private void showUnitSelection() {
+        try {
+            logger.info("Showing business unit selection dialog...");
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/unit-selection.fxml"));
+            VBox root = loader.load();
+            UnitSelectionController controller = loader.getController();
+            
+            // Pass the selected company to the controller
+            controller.setCompany(selectedCompany);
+            
+            Scene selectionScene = new Scene(root);
+            selectionScene.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
+            
+            unitSelectionStage = new Stage();
+            unitSelectionStage.setScene(selectionScene);
+            unitSelectionStage.setTitle("Select Business Unit");
+            unitSelectionStage.setResizable(false);
+            unitSelectionStage.initStyle(StageStyle.UNDECORATED);
+            unitSelectionStage.initModality(Modality.APPLICATION_MODAL);
+            unitSelectionStage.initOwner(companySelectionStage);
+            unitSelectionStage.centerOnScreen();
+            
+            // Set callbacks
+            controller.setOnUnitSelected(() -> {
+                unitSelectionStage.close();
+                loadMainApp();
+            });
+            
+            controller.setOnUnitSkipped(() -> {
+                unitSelectionStage.close();
+                loadMainApp();
+            });
+            
+            controller.setOnCancel(() -> {
+                unitSelectionStage.close();
+                // Return to company selection
+                showCompanySelection();
+            });
+            
+            companySelectionStage.close();
+            unitSelectionStage.show();
+            
+            logger.info("Business unit selection dialog displayed successfully");
+            
+        } catch (IOException e) {
+            logger.error("Failed to load unit selection dialog", e);
+            throw new RuntimeException("Failed to load unit selection dialog", e);
         }
     }
 
