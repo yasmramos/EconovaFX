@@ -143,6 +143,21 @@ public class Employee {
         this.baseSalary = baseSalary;
     }
 
+    /**
+     * Get the minimum wage for this employee based on their category and location.
+     * Simplified implementation - returns a default minimum wage.
+     * 
+     * @return The minimum wage amount
+     */
+    public BigDecimal getMinimumWage() {
+        // Simplified: In real scenario, this would be calculated based on:
+        // - Employee category
+        // - Geographic location
+        // - Industry sector
+        // - Current legal minimum wage
+        return new BigDecimal("450.00");
+    }
+
     public SalaryType getSalaryType() {
         return salaryType;
     }

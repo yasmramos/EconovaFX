@@ -41,6 +41,12 @@ public class DepreciationRecordRepository {
                 .where().eq("fixedAsset.id", fixedAssetId)
                 .orderBy("year desc, month desc").findList();
     }
+    
+    public List<DepreciationRecord> findByAssetOrderByPeriodDateDesc(com.econovafx.modules.fixedassets.model.FixedAsset asset) {
+        return database.find(DepreciationRecord.class)
+                .where().eq("fixedAsset", asset)
+                .orderBy("periodDate desc").findList();
+    }
 
     public List<DepreciationRecord> findByYearAndMonth(Integer year, Integer month) {
         return database.find(DepreciationRecord.class)

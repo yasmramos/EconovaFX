@@ -160,6 +160,23 @@ public class PayrollConcept {
     }
 
     /**
+     * Check if this concept is applicable to a specific employee.
+     * 
+     * @param employee The employee to check
+     * @return true if the concept applies to the employee
+     */
+    public boolean isApplicableToEmployee(Employee employee) {
+        // Basic implementation - can be extended with employee-specific rules
+        if (!this.active) {
+            return false;
+        }
+        
+        // Check if employee meets minimum requirements (if any)
+        // This can be extended based on employee category, department, etc.
+        return true;
+    }
+
+    /**
      * Concept type enumeration.
      */
     public enum ConceptType {
