@@ -2,6 +2,7 @@ package com.econovafx.modules.core.model;
 
 import io.ebean.annotation.*;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**

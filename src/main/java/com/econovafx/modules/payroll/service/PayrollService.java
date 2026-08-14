@@ -7,6 +7,7 @@ import com.econovafx.modules.core.model.SystemConfiguration;
 import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.accounting.model.*;
 import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.accounting.service.TransactionService.TransactionEntryData;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -201,6 +202,7 @@ public class PayrollService {
         // Create payroll transaction with double-entry bookkeeping
         Transaction payrollTransaction = new Transaction();
         payrollTransaction.setNumber(generatePayrollTransactionNumber(batch));
+        payrollTransaction.setType("NOMINA");
         payrollTransaction.setDate(batch.getPeriod().getEndDate());
         payrollTransaction.setDescription("Nómina - Período: " + batch.getPeriod().getStartDate() + " a " + batch.getPeriod().getEndDate());
         payrollTransaction.setStatus(TransactionStatus.DRAFT);
@@ -210,7 +212,6 @@ public class PayrollService {
         // Calculate totals for employer social security contributions
         BigDecimal totalGross = batch.getTotalGross();
         BigDecimal totalEmployeeSocialSecurity = BigDecimal.ZERO;
-        BigDecimal totalNet = batch.getTotalNet();
         
         for (PayrollDetail detail : batch.getPayrollDetails()) {
             totalEmployeeSocialSecurity = totalEmployeeSocialSecurity.add(
@@ -220,55 +221,58 @@ public class PayrollService {
         
         BigDecimal employerSocialSecurity = totalGross.multiply(config.getSocialSecurityRateEmployer());
         
+        // Salaries payable is the net amount owed to employees after the payroll
+        // withholdings recorded below (gross minus employee social security). This
+        // keeps the employee side balanced by construction regardless of other
+        // deduction concepts contributing to totalNet.
+        BigDecimal salariesPayable = totalGross.subtract(totalEmployeeSocialSecurity);
+        
+        // Resolve all accounts up front, failing fast with a clear message if any
+        // configured account code cannot be found (instead of silently dropping lines).
+        Account expenseAccount = requireAccountByCode(config.getPayrollExpenseAccountCode());
+        Account employerSSExpenseAccount = requireAccountByCode(config.getEmployerSocialSecurityExpenseAccountCode());
+        Account socialSecurityPayableAccount = requireAccountByCode(config.getSocialSecurityPayableAccountCode());
+        Account salariesPayableAccount = requireAccountByCode(config.getPayrollPayableAccountCode());
+        
         // Entry 1: Debit Salary Expense (gasto de salarios)
-        Account expenseAccount = findAccountByCode(config.getPayrollExpenseAccountCode());
-        if (expenseAccount != null) {
-            TransactionEntryData expenseEntry = new TransactionEntryData();
-            expenseEntry.setAccountId(expenseAccount.getId());
-            expenseEntry.setDebitAmount(totalGross.setScale(4, RoundingMode.HALF_UP));
-            expenseEntry.setCreditAmount(BigDecimal.ZERO);
-            entries.add(expenseEntry);
-        }
+        entries.add(new TransactionEntryData(
+            expenseAccount.getId(),
+            totalGross.setScale(4, RoundingMode.HALF_UP),
+            BigDecimal.ZERO,
+            "Gasto de salarios"
+        ));
         
         // Entry 2: Debit Employer Social Security Expense
-        Account employerSSExpenseAccount = findAccountByCode(config.getEmployerSocialSecurityExpenseAccountCode());
-        if (employerSSExpenseAccount != null) {
-            TransactionEntryData employerSSEntry = new TransactionEntryData();
-            employerSSEntry.setAccountId(employerSSExpenseAccount.getId());
-            employerSSEntry.setDebitAmount(employerSocialSecurity.setScale(4, RoundingMode.HALF_UP));
-            employerSSEntry.setCreditAmount(BigDecimal.ZERO);
-            entries.add(employerSSEntry);
-        }
+        entries.add(new TransactionEntryData(
+            employerSSExpenseAccount.getId(),
+            employerSocialSecurity.setScale(4, RoundingMode.HALF_UP),
+            BigDecimal.ZERO,
+            "Gasto de seguridad social (empleador)"
+        ));
         
         // Entry 3: Credit Employee Social Security Payable (retenciones)
-        Account employeeSSPayableAccount = findAccountByCode(config.getSocialSecurityPayableAccountCode());
-        if (employeeSSPayableAccount != null) {
-            TransactionEntryData employeeSSPayableEntry = new TransactionEntryData();
-            employeeSSPayableEntry.setAccountId(employeeSSPayableAccount.getId());
-            employeeSSPayableEntry.setDebitAmount(BigDecimal.ZERO);
-            employeeSSPayableEntry.setCreditAmount(totalEmployeeSocialSecurity.setScale(4, RoundingMode.HALF_UP));
-            entries.add(employeeSSPayableEntry);
-        }
+        entries.add(new TransactionEntryData(
+            socialSecurityPayableAccount.getId(),
+            BigDecimal.ZERO,
+            totalEmployeeSocialSecurity.setScale(4, RoundingMode.HALF_UP),
+            "Retención seguridad social (empleado)"
+        ));
         
         // Entry 4: Credit Employer Social Security Payable
-        Account employerSSPayableAccount = findAccountByCode(config.getSocialSecurityPayableAccountCode());
-        if (employerSSPayableAccount != null) {
-            TransactionEntryData employerSSPayableEntry = new TransactionEntryData();
-            employerSSPayableEntry.setAccountId(employerSSPayableAccount.getId());
-            employerSSPayableEntry.setDebitAmount(BigDecimal.ZERO);
-            employerSSPayableEntry.setCreditAmount(employerSocialSecurity.setScale(4, RoundingMode.HALF_UP));
-            entries.add(employerSSPayableEntry);
-        }
+        entries.add(new TransactionEntryData(
+            socialSecurityPayableAccount.getId(),
+            BigDecimal.ZERO,
+            employerSocialSecurity.setScale(4, RoundingMode.HALF_UP),
+            "Seguridad social por pagar (empleador)"
+        ));
         
         // Entry 5: Credit Salaries Payable (líquido a pagar)
-        Account salariesPayableAccount = findAccountByCode(config.getPayrollPayableAccountCode());
-        if (salariesPayableAccount != null) {
-            TransactionEntryData salariesPayableEntry = new TransactionEntryData();
-            salariesPayableEntry.setAccountId(salariesPayableAccount.getId());
-            salariesPayableEntry.setDebitAmount(BigDecimal.ZERO);
-            salariesPayableEntry.setCreditAmount(totalNet.setScale(4, RoundingMode.HALF_UP));
-            entries.add(salariesPayableEntry);
-        }
+        entries.add(new TransactionEntryData(
+            salariesPayableAccount.getId(),
+            BigDecimal.ZERO,
+            salariesPayable.setScale(4, RoundingMode.HALF_UP),
+            "Salarios por pagar"
+        ));
         
         // Validate that debits equal credits
         BigDecimal totalDebits = entries.stream()
@@ -327,14 +331,12 @@ public class PayrollService {
     }
     
     /**
-     * Find an account by its code using the AccountRepository.
+     * Find an account by its code using the AccountRepository, failing fast with a
+     * clear error if the configured account code cannot be resolved.
      */
-    private Account findAccountByCode(String accountCode) {
-        try {
-            return accountRepository.findByCode(accountCode).orElse(null);
-        } catch (Exception e) {
-            logger.warn("Could not find account with code: {}", accountCode, e);
-            return null;
-        }
+    private Account requireAccountByCode(String accountCode) {
+        return accountRepository.findByCode(accountCode)
+            .orElseThrow(() -> new IllegalStateException(
+                "Payroll account not found for configured code: " + accountCode));
     }
 }
