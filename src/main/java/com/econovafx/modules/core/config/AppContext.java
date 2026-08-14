@@ -12,6 +12,7 @@ import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.core.service.ExchangeRateService;
+import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.core.ui.controller.*;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.accounting.controller.AccountsController;
@@ -99,6 +100,7 @@ public final class AppContext {
         ExportService exportService = beanScope.get(ExportService.class);
         AccountingPeriodService accountingPeriodService = beanScope.get(AccountingPeriodService.class);
         NotificationService notificationService = beanScope.get(NotificationService.class);
+        SystemConfigService systemConfigService = beanScope.get(SystemConfigService.class);
         
         ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
 
@@ -145,7 +147,7 @@ public final class AppContext {
         );
 
         // Now create controllers that need ViewFactory and initialize them
-        dashboardController = new DashboardController(accountService, transactionService);
+        dashboardController = new DashboardController(accountService, transactionService, systemConfigService);
         dashboardController.initializeViewFactory(viewFactory);
 
         accountsController = new AccountsController(accountService);
