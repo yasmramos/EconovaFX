@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Service for generating fiscal reports and managing inventory closures
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
  */
 @Component
 public class InventoryReportService {
+
+    private static final Logger logger = LoggerFactory.getLogger(InventoryReportService.class);
 
     @Inject
     InventoryItemRepository itemRepository;
@@ -229,6 +233,6 @@ public class InventoryReportService {
 
         // Mark period as closed in configuration
         // This would integrate with AccountingPeriodService
-        // Logging handled by caller
+        logger.info("Inventory period {} closed successfully. Annual closure: {}", periodCode, isAnnual);
     }
 }
