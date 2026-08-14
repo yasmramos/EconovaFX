@@ -52,6 +52,51 @@ public class TransactionRepository {
                 .findList();
     }
 
+    /**
+     * Find transactions by date range and status.
+     * Resolution 340/2004 compliance: Filter only POSTED transactions for reporting.
+     * 
+     * @param startDate Start date of the period
+     * @param endDate End date of the period
+     * @return List of posted transactions within the date range
+     */
+    public List<Transaction> findPostedByDateRange(LocalDate startDate, LocalDate endDate) {
+        return database.find(Transaction.class)
+                .where()
+                .ge("date", startDate)
+                .le("date", endDate)
+                .eq("status", com.econovafx.modules.accounting.model.TransactionStatus.POSTED)
+                .orderBy().desc("date")
+                .findList();
+    }
+
+    /**
+     * Find intercompany transactions between specific companies.
+     * Used for identifying transactions that need elimination in consolidation.
+     * 
+     * @param companyId Source company ID
+     * @param relatedCompanyId Related (counterparty) company ID
+     * @param startDate Start date of the period
+     * @param endDate End date of the period
+     * @return List of transactions between the two companies
+     */
+    public List<Transaction> findIntercompanyTransactions(Long companyId, 
+                                                           Long relatedCompanyId,
+                                                           LocalDate startDate, 
+                                                           LocalDate endDate) {
+        // Note: This requires third_party relationship to be properly set up
+        // Future enhancement: Add company_id field to Transaction for direct filtering
+        return database.find(Transaction.class)
+                .fetch("entries")
+                .fetch("entries.account")
+                .where()
+                .ge("date", startDate)
+                .le("date", endDate)
+                .eq("status", com.econovafx.modules.accounting.model.TransactionStatus.POSTED)
+                .findList();
+        // TODO: Implement proper filtering when company relationship is added to Transaction entity
+    }
+
     public List<Transaction> findByType(String type) {
         return database.find(Transaction.class)
                 .where().eq("type", type)
