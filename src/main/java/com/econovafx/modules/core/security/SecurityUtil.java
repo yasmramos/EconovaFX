@@ -40,18 +40,20 @@ public class SecurityUtil {
     static {
         // Parse SESSION_TIMEOUT from AppConfig (format: "30m", "1h", etc.)
         String timeoutStr = AppConfig.SESSION_TIMEOUT;
+        Duration parsedDuration;
         try {
-            SESSION_TIMEOUT_DURATION = Duration.parse("PT" + timeoutStr.toUpperCase().replace("M", "M").replace("H", "H"));
+            parsedDuration = Duration.parse("PT" + timeoutStr.toUpperCase().replace("M", "M").replace("H", "H"));
         } catch (Exception e) {
             // Fallback: try to parse as minutes if format is just a number
             try {
                 int minutes = Integer.parseInt(timeoutStr.replaceAll("\\D+", ""));
-                SESSION_TIMEOUT_DURATION = Duration.ofMinutes(minutes);
+                parsedDuration = Duration.ofMinutes(minutes);
             } catch (NumberFormatException ex) {
                 logger.warn("Invalid SESSION_TIMEOUT format: {}, defaulting to 30 minutes", timeoutStr);
-                SESSION_TIMEOUT_DURATION = Duration.ofMinutes(30);
+                parsedDuration = Duration.ofMinutes(30);
             }
         }
+        SESSION_TIMEOUT_DURATION = parsedDuration;
         logger.info("Session timeout configured to {} minutes", SESSION_TIMEOUT_DURATION.toMinutes());
     }
     

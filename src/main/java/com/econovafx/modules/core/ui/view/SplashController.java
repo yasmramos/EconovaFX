@@ -1,8 +1,10 @@
 package com.econovafx.modules.core.ui.view;
 
 import com.econovafx.modules.core.config.DatabaseConfig;
+import com.econovafx.modules.core.config.DatabaseSeeder;
 import com.econovafx.modules.core.security.AuthService;
 import com.econovafx.modules.core.service.CompanyService;
+import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -31,6 +33,9 @@ public class SplashController {
     private Label versionLabel;
 
     private Runnable onInitializationComplete;
+    
+    @Inject
+    private DatabaseSeeder databaseSeeder;
 
     public void setOnInitializationComplete(Runnable callback) {
         this.onInitializationComplete = callback;
@@ -57,8 +62,13 @@ public class SplashController {
                 
                 updateProgress(0.5, "Seeding initial data...");
                 // Seed database with default data (company, currencies, admin user)
-                DatabaseSeeder seeder = new DatabaseSeeder();
-                seeder.seed();
+                if (databaseSeeder != null) {
+                    databaseSeeder.seed();
+                } else {
+                    logger.warn("DatabaseSeeder not injected, using fallback");
+                    DatabaseSeeder seeder = new DatabaseSeeder();
+                    seeder.seed();
+                }
                 
                 updateProgress(0.7, "Loading core modules...");
                 Thread.sleep(500); // Small pause to allow rendering

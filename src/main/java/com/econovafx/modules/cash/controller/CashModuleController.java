@@ -565,7 +565,8 @@ public class CashModuleController {
         
         try {
             // Get current user from security context
-            String currentUser = SecurityUtil.getCurrentUserUsername();
+            com.econovafx.modules.core.model.User currentUserObj = SecurityUtil.getCurrentUser();
+            String currentUser = (currentUserObj != null) ? currentUserObj.getUsername() : "system";
             if (currentUser == null || currentUser.isEmpty()) {
                 currentUser = "system";
             }
