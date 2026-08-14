@@ -256,18 +256,76 @@ public class IntercompanyEliminationService {
             List<com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow> consolidatedRows,
             List<IntercompanyElimination> eliminations) {
         
-        // TODO: Implement actual elimination logic
-        // This requires mapping account codes to consolidated row labels
-        // For now, return rows unchanged
+        logger.info("Applying {} receivables/payables eliminations", eliminations.size());
         
-        logger.debug("Receivables/Payables elimination: {} eliminations identified", eliminations.size());
-        // Placeholder: In production, this would:
-        // 1. Identify rows corresponding to intercompany receivable accounts
-        // 2. Identify rows corresponding to intercompany payable accounts
-        // 3. Subtract the elimination amounts from both sides
-        // 4. Ensure the consolidated balance shows zero net intercompany position
+        if (eliminations == null || eliminations.isEmpty()) {
+            return consolidatedRows;
+        }
         
-        return consolidatedRows;
+        // Create a mutable copy of rows for modification
+        List<com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow> adjustedRows = new ArrayList<>();
+        for (com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow row : consolidatedRows) {
+            adjustedRows.add(createMutableCopy(row));
+        }
+        
+        // Group eliminations by account code pattern
+        Map<String, BigDecimal> receivableEliminations = new HashMap<>();
+        Map<String, BigDecimal> payableEliminations = new HashMap<>();
+        
+        for (IntercompanyElimination elimination : eliminations) {
+            String accountCode = elimination.getAccountCode();
+            String counterAccountCode = elimination.getCounterAccountCode();
+            BigDecimal amount = elimination.getAmount();
+            
+            // Identify receivable accounts (typically 1.1.3.x or containing INTERCOMPANY_RECEIVABLE)
+            if (accountCode.contains("INTERCOMPANY_RECEIVABLE") || accountCode.matches("1\\.1\\.3\\..*")) {
+                receivableEliminations.merge(accountCode, amount, BigDecimal::add);
+            } else if (counterAccountCode.contains("INTERCOMPANY_RECEIVABLE") || counterAccountCode.matches("1\\.1\\.3\\..*")) {
+                receivableEliminations.merge(counterAccountCode, amount, BigDecimal::add);
+            }
+            
+            // Identify payable accounts (typically 2.1.3.x or containing INTERCOMPANY_PAYABLE)
+            if (accountCode.contains("INTERCOMPANY_PAYABLE") || accountCode.matches("2\\.1\\.3\\..*")) {
+                payableEliminations.merge(accountCode, amount, BigDecimal::add);
+            } else if (counterAccountCode.contains("INTERCOMPANY_PAYABLE") || counterAccountCode.matches("2\\.1\\.3\\..*")) {
+                payableEliminations.merge(counterAccountCode, amount, BigDecimal::add);
+            }
+        }
+        
+        // Apply eliminations to consolidated rows
+        for (int i = 0; i < adjustedRows.size(); i++) {
+            com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow row = adjustedRows.get(i);
+            String label = row.getLabel().toUpperCase();
+            
+            // Check if this row corresponds to intercompany receivables
+            if (label.contains("INTERCOMPANY RECEIVABLE") || label.contains("CUENTAS POR COBRAR INTERCOMPAÑÍA") ||
+                label.contains("INTERCOMPANY RECEIVABLES")) {
+                BigDecimal totalReceivableElimination = receivableEliminations.values().stream()
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                
+                if (totalReceivableElimination.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal newValue = row.getConsolidatedValue().subtract(totalReceivableElimination);
+                    adjustedRows.set(i, createRowWithNewValue(row, newValue));
+                    logger.debug("Eliminated {} from intercompany receivables row: {}", totalReceivableElimination, label);
+                }
+            }
+            
+            // Check if this row corresponds to intercompany payables
+            if (label.contains("INTERCOMPANY PAYABLE") || label.contains("CUENTAS POR PAGAR INTERCOMPAÑÍA") ||
+                label.contains("INTERCOMPANY PAYABLES")) {
+                BigDecimal totalPayableElimination = payableEliminations.values().stream()
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                
+                if (totalPayableElimination.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal newValue = row.getConsolidatedValue().subtract(totalPayableElimination);
+                    adjustedRows.set(i, createRowWithNewValue(row, newValue));
+                    logger.debug("Eliminated {} from intercompany payables row: {}", totalPayableElimination, label);
+                }
+            }
+        }
+        
+        logger.info("Receivables/Payables eliminations applied successfully");
+        return adjustedRows;
     }
 
     /**
@@ -284,17 +342,76 @@ public class IntercompanyEliminationService {
             List<com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow> consolidatedRows,
             List<IntercompanyElimination> eliminations) {
         
-        // TODO: Implement actual elimination logic
-        // This requires mapping revenue and expense account codes to consolidated rows
+        logger.info("Applying {} revenue/expense eliminations", eliminations.size());
         
-        logger.debug("Revenue/Expense elimination: {} eliminations identified", eliminations.size());
-        // Placeholder: In production, this would:
-        // 1. Identify rows corresponding to intercompany revenue accounts
-        // 2. Identify rows corresponding to intercompany expense accounts
-        // 3. Subtract the elimination amounts from both revenue and expense
-        // 4. Ensure consolidated income statement excludes internal transactions
+        if (eliminations == null || eliminations.isEmpty()) {
+            return consolidatedRows;
+        }
         
-        return consolidatedRows;
+        // Create a mutable copy of rows for modification
+        List<com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow> adjustedRows = new ArrayList<>();
+        for (com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow row : consolidatedRows) {
+            adjustedRows.add(createMutableCopy(row));
+        }
+        
+        // Group eliminations by account code pattern
+        Map<String, BigDecimal> revenueEliminations = new HashMap<>();
+        Map<String, BigDecimal> expenseEliminations = new HashMap<>();
+        
+        for (IntercompanyElimination elimination : eliminations) {
+            String accountCode = elimination.getAccountCode();
+            String counterAccountCode = elimination.getCounterAccountCode();
+            BigDecimal amount = elimination.getAmount();
+            
+            // Identify revenue accounts (typically 4.1.x or containing INTERCOMPANY_REVENUE)
+            if (accountCode.contains("INTERCOMPANY_REVENUE") || accountCode.matches("4\\\\.1\\\\..*")) {
+                revenueEliminations.merge(accountCode, amount, BigDecimal::add);
+            } else if (counterAccountCode.contains("INTERCOMPANY_REVENUE") || counterAccountCode.matches("4\\\\.1\\\\..*")) {
+                revenueEliminations.merge(counterAccountCode, amount, BigDecimal::add);
+            }
+            
+            // Identify expense accounts (typically 5.1.x or containing INTERCOMPANY_EXPENSE)
+            if (accountCode.contains("INTERCOMPANY_EXPENSE") || accountCode.matches("5\\\\.1\\\\..*")) {
+                expenseEliminations.merge(accountCode, amount, BigDecimal::add);
+            } else if (counterAccountCode.contains("INTERCOMPANY_EXPENSE") || counterAccountCode.matches("5\\\\.1\\\\..*")) {
+                expenseEliminations.merge(counterAccountCode, amount, BigDecimal::add);
+            }
+        }
+        
+        // Apply eliminations to consolidated rows
+        for (int i = 0; i < adjustedRows.size(); i++) {
+            com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow row = adjustedRows.get(i);
+            String label = row.getLabel().toUpperCase();
+            
+            // Check if this row corresponds to intercompany revenues
+            if (label.contains("INTERCOMPANY REVENUE") || label.contains("INGRESOS INTERCOMPAÑÍA") ||
+                label.contains("INTERCOMPANY SALES")) {
+                BigDecimal totalRevenueElimination = revenueEliminations.values().stream()
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                
+                if (totalRevenueElimination.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal newValue = row.getConsolidatedValue().subtract(totalRevenueElimination);
+                    adjustedRows.set(i, createRowWithNewValue(row, newValue));
+                    logger.debug("Eliminated {} from intercompany revenue row: {}", totalRevenueElimination, label);
+                }
+            }
+            
+            // Check if this row corresponds to intercompany expenses
+            if (label.contains("INTERCOMPANY EXPENSE") || label.contains("GASTOS INTERCOMPAÑÍA") ||
+                label.contains("INTERCOMPANY PURCHASES")) {
+                BigDecimal totalExpenseElimination = expenseEliminations.values().stream()
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                
+                if (totalExpenseElimination.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal newValue = row.getConsolidatedValue().subtract(totalExpenseElimination);
+                    adjustedRows.set(i, createRowWithNewValue(row, newValue));
+                    logger.debug("Eliminated {} from intercompany expense row: {}", totalExpenseElimination, label);
+                }
+            }
+        }
+        
+        logger.info("Revenue/Expense eliminations applied successfully");
+        return adjustedRows;
     }
 
     /**
@@ -383,5 +500,47 @@ public class IntercompanyEliminationService {
         }
         
         return balanced;
+    }
+
+    /**
+     * Creates a mutable copy of a ConsolidatedRow with the same properties.
+     * 
+     * @param original The original row to copy
+     * @return A new ConsolidatedRow with the same values
+     */
+    private com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow createMutableCopy(
+            com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow original) {
+        return new com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow(
+                original.getRowNumber(),
+                original.getLabel(),
+                original.getRowType(),
+                original.getConsolidatedValue(),
+                original.getIndentLevel(),
+                original.getIsBold(),
+                original.getIsItalic(),
+                original.getCompanyValues()
+        );
+    }
+
+    /**
+     * Creates a new ConsolidatedRow with an updated value.
+     * 
+     * @param original The original row
+     * @param newValue The new consolidated value
+     * @return A new ConsolidatedRow with the updated value
+     */
+    private com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow createRowWithNewValue(
+            com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow original,
+            BigDecimal newValue) {
+        return new com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow(
+                original.getRowNumber(),
+                original.getLabel(),
+                original.getRowType(),
+                newValue,
+                original.getIndentLevel(),
+                original.getIsBold(),
+                original.getIsItalic(),
+                original.getCompanyValues()
+        );
     }
 }
