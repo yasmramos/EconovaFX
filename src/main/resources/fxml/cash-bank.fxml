@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.modules.cash.controller.CashBankController"
@@ -14,25 +15,39 @@
 
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" spacing="12">
-        <Label text="💵 Cash &amp; Bank Management" styleClass="text-xl, font-bold, text-slate-800"/>
+        <Label text="Cash &amp; Bank Management" styleClass="text-xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2c-cash-multiple" iconSize="24"/></graphic></Label>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="btnNewMovement" text="➕ New Movement" onAction="#handleNewMovement" 
-                styleClass="btn, btn-primary"/>
-        <Button fx:id="btnReconciliation" text="📋 Bank Reconciliation" onAction="#handleReconciliation" 
-                styleClass="btn, btn-secondary" layoutX="200" layoutY="10"/>
+        <Button fx:id="btnNewMovement" graphicTextGap="8" onAction="#handleNewMovement" 
+                styleClass="btn, btn-primary">
+            <text>New Movement</text>
+            <graphic><FontIcon iconLiteral="mdi2a-plus" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnReconciliation" graphicTextGap="8" onAction="#handleReconciliation" 
+                styleClass="btn, btn-secondary" layoutX="200" layoutY="10">
+            <text>Bank Reconciliation</text>
+            <graphic><FontIcon iconLiteral="mdi2c-clipboard-check-outline" iconSize="18"/></graphic>
+        </Button>
     </HBox>
 
     <!-- Tabs for different views -->
     <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         
         <!-- Bank Accounts Tab -->
-        <Tab text="🏦 Bank Accounts" fx:id="tabBankAccounts">
+        <Tab fx:id="tabBankAccounts">
+            <graphic><FontIcon iconLiteral="mdi2b-bank" iconSize="18"/></graphic>
+            <text>Bank Accounts</text>
             <VBox spacing="12" styleClass="p-4">
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <TextField fx:id="txtSearchBank" promptText="Search bank account..." 
                                HBox.hgrow="ALWAYS" onKeyTyped="#handleSearchBank"/>
-                    <Button text="🔍 Search" onAction="#handleSearchBank"/>
-                    <Button text="➕ Add Bank" onAction="#handleAddBank" styleClass="btn, btn-primary"/>
+                    <Button graphicTextGap="8" onAction="#handleSearchBank">
+                        <text>Search</text>
+                        <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
+                    </Button>
+                    <Button graphicTextGap="8" onAction="#handleAddBank" styleClass="btn, btn-primary">
+                        <text>Add Bank</text>
+                        <graphic><FontIcon iconLiteral="mdi2a-plus" iconSize="16"/></graphic>
+                    </Button>
                 </HBox>
                 
                 <TableView fx:id="tblBankAccounts" VBox.vgrow="ALWAYS">
@@ -50,13 +65,21 @@
         </Tab>
 
         <!-- Cash Boxes Tab -->
-        <Tab text="📦 Cash Boxes" fx:id="tabCashBoxes">
+        <Tab fx:id="tabCashBoxes">
+            <graphic><FontIcon iconLiteral="mdi2c-cash" iconSize="18"/></graphic>
+            <text>Cash Boxes</text>
             <VBox spacing="12" styleClass="p-4">
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <TextField fx:id="txtSearchCash" promptText="Search cash box..." 
                                HBox.hgrow="ALWAYS" onKeyTyped="#handleSearchCash"/>
-                    <Button text="🔍 Search" onAction="#handleSearchCash"/>
-                    <Button text="➕ Add Cash Box" onAction="#handleAddCashBox" styleClass="btn, btn-primary"/>
+                    <Button graphicTextGap="8" onAction="#handleSearchCash">
+                        <text>Search</text>
+                        <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
+                    </Button>
+                    <Button graphicTextGap="8" onAction="#handleAddCashBox" styleClass="btn, btn-primary">
+                        <text>Add Cash Box</text>
+                        <graphic><FontIcon iconLiteral="mdi2a-plus" iconSize="16"/></graphic>
+                    </Button>
                 </HBox>
                 
                 <TableView fx:id="tblCashBoxes" VBox.vgrow="ALWAYS">
@@ -74,7 +97,9 @@
         </Tab>
 
         <!-- Movements Tab -->
-        <Tab text="📝 Movements" fx:id="tabMovements">
+        <Tab fx:id="tabMovements">
+            <graphic><FontIcon iconLiteral="mdi2r-receipt-outline" iconSize="18"/></graphic>
+            <text>Movements</text>
             <VBox spacing="12" styleClass="p-4">
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <TextField fx:id="txtSearchMovement" promptText="Search movement..." 
@@ -83,7 +108,10 @@
                     <DatePicker fx:id="dpMovementTo" promptText="To Date"/>
                     <ComboBox fx:id="cbMovementType" promptText="All Types" 
                               items="${FXCollections.observableArrayList('ALL', 'INCOME', 'EXPENSE', 'TRANSFER')}"/>
-                    <Button text="🔍 Filter" onAction="#handleFilterMovements"/>
+                    <Button graphicTextGap="8" onAction="#handleFilterMovements">
+                        <text>Filter</text>
+                        <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
+                    </Button>
                 </HBox>
                 
                 <TableView fx:id="tblMovements" VBox.vgrow="ALWAYS">
@@ -102,7 +130,9 @@
         </Tab>
 
         <!-- Reconciliation Tab -->
-        <Tab text="🔄 Reconciliation" fx:id="tabReconciliation">
+        <Tab fx:id="tabReconciliation">
+            <graphic><FontIcon iconLiteral="mdi2r-refresh" iconSize="18"/></graphic>
+            <text>Reconciliation</text>
             <VBox spacing="12" styleClass="p-4">
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <Label text="Bank Account:"/>
@@ -111,14 +141,17 @@
                     <DatePicker fx:id="dpReconciliationFrom"/>
                     <Label text="To:"/>
                     <DatePicker fx:id="dpReconciliationTo"/>
-                    <Button text="📊 Start Reconciliation" onAction="#handleStartReconciliation" 
-                            styleClass="btn, btn-primary"/>
+                    <Button graphicTextGap="8" onAction="#handleStartReconciliation" 
+                            styleClass="btn, btn-primary">
+                        <text>Start Reconciliation</text>
+                        <graphic><FontIcon iconLiteral="mdi2c-chart-bar" iconSize="16"/></graphic>
+                    </Button>
                 </HBox>
                 
                 <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
                     <!-- System Items -->
                     <VBox spacing="8" styleClass="p-2">
-                        <Label text="📌 System Items" styleClass="font-bold, text-slate-700"/>
+                        <Label text="System Items" styleClass="font-bold, text-slate-700"><graphic><FontIcon iconLiteral="mdi2p-pin" iconSize="16"/></graphic></Label>
                         <TableView fx:id="tblSystemItems" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="colSysItemDate" text="Date" prefWidth="100"/>
@@ -132,7 +165,7 @@
                     
                     <!-- Bank Items -->
                     <VBox spacing="8" styleClass="p-2">
-                        <Label text="🏦 Bank Statement Items" styleClass="font-bold, text-slate-700"/>
+                        <Label text="Bank Statement Items" styleClass="font-bold, text-slate-700"><graphic><FontIcon iconLiteral="mdi2b-bank" iconSize="16"/></graphic></Label>
                         <TableView fx:id="tblBankItems" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="colBankItemDate" text="Date" prefWidth="100"/>
@@ -146,7 +179,8 @@
                 </SplitPane>
                 
                 <!-- Reconciliation Summary -->
-                <TitledPane text="📊 Reconciliation Summary" expanded="true">
+                <TitledPane text="Reconciliation Summary" expanded="true">
+                    <graphic><FontIcon iconLiteral="mdi2c-chart-pie" iconSize="16"/></graphic>
                     <GridPane hgap="16" vgap="8">
                         <ColumnConstraints percentWidth="25"/>
                         <ColumnConstraints percentWidth="25"/>
@@ -171,10 +205,16 @@
                         
                         <HBox spacing="8" GridPane.columnSpan="4" GridPane.rowIndex="2" 
                               alignment="CENTER_RIGHT">
-                            <Button text="💾 Save" onAction="#handleSaveReconciliation" 
-                                    styleClass="btn, btn-primary"/>
-                            <Button text="✅ Post" onAction="#handlePostReconciliation" 
-                                    styleClass="btn, btn-success"/>
+                            <Button graphicTextGap="8" onAction="#handleSaveReconciliation" 
+                                    styleClass="btn, btn-primary">
+                                <text>Save</text>
+                                <graphic><FontIcon iconLiteral="mdi2c-content-save" iconSize="16"/></graphic>
+                            </Button>
+                            <Button graphicTextGap="8" onAction="#handlePostReconciliation" 
+                                    styleClass="btn, btn-success">
+                                <text>Post</text>
+                                <graphic><FontIcon iconLiteral="mdi2c-check-circle" iconSize="16"/></graphic>
+                            </Button>
                         </HBox>
                     </GridPane>
                 </TitledPane>

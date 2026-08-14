@@ -27,8 +27,8 @@ ebean:
     defaultServer: true
   # Disable DDL generation and migrations for tests (using in-memory DB)
   ddl:
-    generate: false
-    run: false
+    generate: true
+    run: true
   migration:
     auto: false
     run: false

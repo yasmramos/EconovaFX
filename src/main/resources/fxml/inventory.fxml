@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.modules.inventory.controller.InventoryController"
+      fx:id="contentArea"
+      spacing="20"
+      styleClass="bg-gray-50, p-6">
+
+    <Label text="Inventory Management" styleClass="text-2xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2c-cube-outline" iconSize="24"/></graphic></Label>
+
+    <Separator/>
+
+    <!-- Toolbar -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button fx:id="btnNuevo" graphicTextGap="8" onAction="#handleNuevo" styleClass="btn, btn-primary">
+            <text>New Product</text>
+            <graphic><FontIcon iconLiteral="mdi2c-plus-circle" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnEditar" graphicTextGap="8" onAction="#handleEditar" styleClass="btn, btn-secondary">
+            <text>Edit</text>
+            <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnEliminar" graphicTextGap="8" onAction="#handleEliminar" styleClass="btn, btn-danger">
+            <text>Delete</text>
+            <graphic><FontIcon iconLiteral="mdi2d-delete-outline" iconSize="18"/></graphic>
+        </Button>
+        <Separator orientation="VERTICAL" prefHeight="30"/>
+        <Button fx:id="btnSalida" graphicTextGap="8" onAction="#handleSalida" styleClass="btn, btn-warning">
+            <text>Register Output</text>
+            <graphic><FontIcon iconLiteral="mdi2a-arrow-down-bold-circle" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnAjuste" graphicTextGap="8" onAction="#handleAjuste" styleClass="btn, btn-info">
+            <text>Adjustment</text>
+            <graphic><FontIcon iconLiteral="mdi2s-scale-balance" iconSize="18"/></graphic>
+        </Button>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="txtBuscar" prefWidth="250" promptText="Search products...">
+            <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="18"/></graphic>
+        </TextField>
+    </HBox>
+
+    <!-- Products Table -->
+    <VBox styleClass="card, bg-white, p-6" spacing="15" VBox.vgrow="ALWAYS">
+        <Label text="Products List" styleClass="text-lg, font-semibold, text-slate-700"/>
+        
+        <TableView fx:id="productsTable" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="colCodigo" text="Code" prefWidth="100"/>
+                <TableColumn fx:id="colNombre" text="Name" prefWidth="200"/>
+                <TableColumn fx:id="colCategoria" text="Category" prefWidth="150"/>
+                <TableColumn fx:id="colAlmacen" text="Warehouse" prefWidth="150"/>
+                <TableColumn fx:id="colStock" text="Current Stock" prefWidth="100"/>
+                <TableColumn fx:id="colCosto" text="Unit Cost" prefWidth="100"/>
+                <TableColumn fx:id="colEstado" text="Status" prefWidth="120"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN"/>
+            </columnResizePolicy>
+        </TableView>
+        
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="lblTotalProductos" text="Total Products: 0" styleClass="text-slate-600"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblStockBajo" text="Low Stock Items: 0" styleClass="text-warning"/>
+        </HBox>
+    </VBox>
+
+</VBox>

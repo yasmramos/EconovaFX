@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox fx:id="rootView" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.modules.core.ui.controller.ExchangeRatesController"
@@ -16,54 +17,65 @@
 
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" spacing="10">
-        <Label text="Gestión de Tasas de Cambio" styleClass="page-title"/>
+        <Label text="Exchange Rates Management" styleClass="page-title"><graphic><FontIcon iconLiteral="mdi2c-currency-usd" iconSize="20"/></graphic></Label>
         <Region HBox.hgrow="ALWAYS"/>
         <Label fx:id="statusLabel" styleClass="status-label"/>
-        <Button text="🔄 Actualizar" onAction="#handleRefreshRates" styleClass="btn-primary"/>
+        <Button graphicTextGap="8" onAction="#handleRefreshRates" styleClass="btn-primary">
+            <text>Update</text>
+            <graphic><FontIcon iconLiteral="mdi2r-refresh" iconSize="16"/></graphic>
+        </Button>
     </HBox>
 
     <!-- Active Rates Section -->
-    <TitledPane text="Tasas Activas (Vigentes)" expanded="true" VBox.vgrow="ALWAYS">
+    <TitledPane text="Active Rates (Current)" expanded="true" VBox.vgrow="ALWAYS">
+        <graphic><FontIcon iconLiteral="mdi2c-currency-multiple" iconSize="16"/></graphic>
         <VBox spacing="10">
             <HBox alignment="CENTER_RIGHT" spacing="5">
                 <Label fx:id="lastUpdateLabel" styleClass="info-label"/>
             </HBox>
             <TableView fx:id="activeRatesTable" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="currencyCodeCol" text="Código" prefWidth="80"/>
-                    <TableColumn fx:id="currencyNameCol" text="Moneda" prefWidth="150"/>
-                    <TableColumn fx:id="buyRateCol" text="Compra" prefWidth="100"/>
-                    <TableColumn fx:id="sellRateCol" text="Venta" prefWidth="100"/>
-                    <TableColumn fx:id="dateCol" text="Fecha" prefWidth="120"/>
-                    <TableColumn fx:id="sourceCol" text="Fuente" prefWidth="100"/>
+                    <TableColumn fx:id="currencyCodeCol" text="Code" prefWidth="80"/>
+                    <TableColumn fx:id="currencyNameCol" text="Currency" prefWidth="150"/>
+                    <TableColumn fx:id="buyRateCol" text="Buy" prefWidth="100"/>
+                    <TableColumn fx:id="sellRateCol" text="Sell" prefWidth="100"/>
+                    <TableColumn fx:id="dateCol" text="Date" prefWidth="120"/>
+                    <TableColumn fx:id="sourceCol" text="Source" prefWidth="100"/>
                 </columns>
             </TableView>
         </VBox>
     </TitledPane>
 
     <!-- Historical Rates Section -->
-    <TitledPane text="Histórico de Tasas" expanded="true" VBox.vgrow="ALWAYS">
+    <TitledPane text="Historical Rates" expanded="true" VBox.vgrow="ALWAYS">
+        <graphic><FontIcon iconLiteral="mdi2h-history" iconSize="16"/></graphic>
         <VBox spacing="10">
             <!-- Filters -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Desde:"/>
+                <Label text="From:"/>
                 <DatePicker fx:id="fromDatePicker" prefWidth="150"/>
-                <Label text="Hasta:"/>
+                <Label text="To:"/>
                 <DatePicker fx:id="toDatePicker" prefWidth="150"/>
-                <Label text="Moneda:"/>
+                <Label text="Currency:"/>
                 <ComboBox fx:id="currencyFilterCombo" prefWidth="120"/>
-                <Button text="🔍 Buscar" onAction="#handleSearchHistory" styleClass="btn-secondary"/>
+                <Button graphicTextGap="8" onAction="#handleSearchHistory" styleClass="btn-secondary">
+                    <text>Search</text>
+                    <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
+                </Button>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="📄 Exportar CSV" onAction="#handleExportToCSV" styleClass="btn-success"/>
+                <Button graphicTextGap="8" onAction="#handleExportToCSV" styleClass="btn-success">
+                    <text>Export CSV</text>
+                    <graphic><FontIcon iconLiteral="mdi2f-file-document-outline" iconSize="16"/></graphic>
+                </Button>
             </HBox>
             
             <!-- Historical Table -->
             <TableView fx:id="historicalRatesTable" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="histCurrencyCodeCol" text="Código" prefWidth="80"/>
-                    <TableColumn fx:id="histDateCol" text="Fecha" prefWidth="120"/>
-                    <TableColumn fx:id="histBuyRateCol" text="Compra" prefWidth="100"/>
-                    <TableColumn fx:id="histSellRateCol" text="Venta" prefWidth="100"/>
+                    <TableColumn fx:id="histCurrencyCodeCol" text="Code" prefWidth="80"/>
+                    <TableColumn fx:id="histDateCol" text="Date" prefWidth="120"/>
+                    <TableColumn fx:id="histBuyRateCol" text="Buy" prefWidth="100"/>
+                    <TableColumn fx:id="histSellRateCol" text="Sell" prefWidth="100"/>
                 </columns>
             </TableView>
         </VBox>
