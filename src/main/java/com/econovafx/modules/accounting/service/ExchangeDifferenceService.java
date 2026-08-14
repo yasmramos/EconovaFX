@@ -5,6 +5,7 @@ import com.econovafx.modules.accounting.repository.ExchangeDifferenceRepository;
 import com.econovafx.modules.core.repository.ExchangeRateRepository;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.core.service.AuditService;
+import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.core.model.AuditLog;
 import com.econovafx.modules.core.model.Currency;
 import com.econovafx.modules.core.model.ExchangeRate;
@@ -36,6 +37,7 @@ public class ExchangeDifferenceService {
     private final TransactionService transactionService;
     private final AccountRepository accountRepository;
     private final AuditService auditService;
+    private final SystemConfigService systemConfigService;
 
     @Inject
     public ExchangeDifferenceService(
@@ -43,12 +45,14 @@ public class ExchangeDifferenceService {
             ExchangeRateRepository exchangeRateRepository,
             TransactionService transactionService,
             AccountRepository accountRepository,
-            AuditService auditService) {
+            AuditService auditService,
+            SystemConfigService systemConfigService) {
         this.exchangeDifferenceRepository = exchangeDifferenceRepository;
         this.exchangeRateRepository = exchangeRateRepository;
         this.transactionService = transactionService;
         this.accountRepository = accountRepository;
         this.auditService = auditService;
+        this.systemConfigService = systemConfigService;
     }
 
     /**
@@ -196,9 +200,9 @@ public class ExchangeDifferenceService {
         BigDecimal differenceAmount = difference.getDifferenceAmount();
         ExchangeDifference.DifferenceType type = difference.getDifferenceType();
 
-        // Obtener cuentas configurables
-        String gainAccountCode = "499-001"; // Ingresos por diferencia cambiaria (configurable)
-        String lossAccountCode = "599-001"; // Gastos por diferencia cambiaria (configurable)
+        // Obtener cuentas configurables desde SystemConfiguration
+        String gainAccountCode = systemConfigService.getCurrentConfig().getExchangeGainAccountCode();
+        String lossAccountCode = systemConfigService.getCurrentConfig().getExchangeLossAccountCode();
         
         Account differenceAccount;
         if (type == ExchangeDifference.DifferenceType.GAIN) {
@@ -259,11 +263,10 @@ public class ExchangeDifferenceService {
      * Obtiene la cuenta de efectivo o por pagar según el tipo de documento.
      */
     private Account getCashOrPayableAccount(ExchangeDifference difference) {
-        // Esta lógica debe adaptarse según si es factura de venta o compra
-        // Por ahora retorna una cuenta genérica configurable
+        // Obtener cuentas configurables desde SystemConfiguration según tipo de documento
         String accountCode = difference.getDocumentType().equals("SALES_INVOICE") 
-            ? "106-001" // Cuentas por cobrar clientes
-            : "201-001"; // Cuentas por pagar proveedores
+            ? systemConfigService.getCurrentConfig().getExchangeReceivableAccountCode()
+            : systemConfigService.getCurrentConfig().getExchangePayableAccountCode();
         
         return accountRepository.findByCode(accountCode)
             .orElseThrow(() -> new IllegalArgumentException(
