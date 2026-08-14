@@ -60,7 +60,12 @@
             <!-- SISTEMA Section -->
             <Separator styleClass="sidebar-separator"/>
             <Label text="SISTEMA" styleClass="sidebar-section-title"/>
-            <Button fx:id="btnSettings" text="⚙️ Configuración" onAction="#toggleSettingsMenu" styleClass="btn, btn-ghost, sidebar-btn"/>
+            <VBox styleClass="sidebar-menu-group">
+                <StackPane styleClass="sidebar-btn-wrapper">
+                    <Button fx:id="btnSettings" text="⚙️ Configuración" onAction="#toggleSettingsMenu" styleClass="btn, btn-ghost, sidebar-btn"/>
+                    <Label fx:id="settingsChevron" text="▼" styleClass="sidebar-chevron-float" StackPane.alignment="CENTER_RIGHT"/>
+                </StackPane>
+            </VBox>
             <VBox fx:id="settingsSubmenu" visible="false" managed="false" styleClass="sidebar-submenu">
                 <Button fx:id="btnPerfil" text="👤 Mi Perfil" onAction="#showPerfil" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
                 <Button fx:id="btnAppSettings" text="🔧 Ajustes de la App" onAction="#showAppSettings" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn"/>
