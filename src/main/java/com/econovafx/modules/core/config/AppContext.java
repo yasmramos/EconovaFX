@@ -72,6 +72,7 @@ public final class AppContext {
     private final TransactionEntryController transactionEntryController;
     private ComprobantesController comprobantesController;
     private SystemSettingsController systemSettingsController;
+    private InventoryController inventoryController;
 
     // View Factory
     private ViewFactory viewFactory;
@@ -113,7 +114,11 @@ public final class AppContext {
         // Get InventoryService and UserContext for InventoryController
         InventoryService inventoryService = beanScope.get(InventoryService.class);
         UserContext userContext = beanScope.get(UserContext.class);
-        InventoryController inventoryController = new InventoryController(inventoryService, userContext);
+        inventoryController = new InventoryController(inventoryService, userContext);
+
+        // Get BackupSchedulerService for SystemSettingsController
+        com.econovafx.modules.core.service.backup.BackupSchedulerService backupSchedulerService = 
+            beanScope.get(com.econovafx.modules.core.service.backup.BackupSchedulerService.class);
 
         // Create ViewFactory with controllers that don't need it back
         viewFactory = new ViewFactory(
@@ -155,7 +160,8 @@ public final class AppContext {
         comprobantesController = new ComprobantesController(transactionService, accountService, exportService);
         comprobantesController.initializeViewFactory(viewFactory);
 
-        systemSettingsController = new SystemSettingsController();
+        // Create SystemSettingsController using DI to inject BackupSchedulerService
+        systemSettingsController = beanScope.get(SystemSettingsController.class);
         systemSettingsController.initializeViewFactory(viewFactory);
 
         // Re-create ViewFactory with all controllers properly initialized
@@ -189,7 +195,7 @@ public final class AppContext {
         thirdPartiesController.completeInitialization(viewFactory);
         comprobantesController.completeInitialization(viewFactory);
         systemSettingsController.completeInitialization(viewFactory);
-
+        
         logger.info("Application context initialized successfully with Avaje Inject");
     }
 
