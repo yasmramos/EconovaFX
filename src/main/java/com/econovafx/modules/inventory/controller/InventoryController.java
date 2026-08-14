@@ -210,13 +210,11 @@ public class InventoryController {
         logger.debug("Creating new product");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/modules/inventory/ui/inventory-item-form.fxml"));
+            InventoryItemDialogController controller = new InventoryItemDialogController(inventoryService);
+            loader.setControllerFactory(cls -> controller);
             Node content = loader.load();
             
-            InventoryItemDialogController controller = loader.getController();
             controller.initNew();
-            
-            Stage stage = new Stage();
-            controller.setStage(stage);
             
             ModernDialog.showAndWait((Stage) productsTable.getScene().getWindow(), content, "New Product");
             
@@ -244,13 +242,11 @@ public class InventoryController {
         
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/modules/inventory/ui/inventory-item-form.fxml"));
+            InventoryItemDialogController controller = new InventoryItemDialogController(inventoryService);
+            loader.setControllerFactory(cls -> controller);
             Node content = loader.load();
             
-            InventoryItemDialogController controller = loader.getController();
             controller.initEdit(selectedItem);
-            
-            Stage stage = new Stage();
-            controller.setStage(stage);
             
             ModernDialog.showAndWait((Stage) productsTable.getScene().getWindow(), content, "Edit Product");
             
@@ -307,13 +303,11 @@ public class InventoryController {
         
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/modules/inventory/ui/inventory-movement-form.fxml"));
+            InventoryMovementDialogController controller = new InventoryMovementDialogController(inventoryService, userContext);
+            loader.setControllerFactory(cls -> controller);
             Node content = loader.load();
             
-            InventoryMovementDialogController controller = loader.getController();
             controller.initOutput(selectedItem);
-            
-            Stage stage = new Stage();
-            controller.setStage(stage);
             
             ModernDialog.showAndWait((Stage) productsTable.getScene().getWindow(), content, "Register Output");
             
@@ -341,13 +335,11 @@ public class InventoryController {
         
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/modules/inventory/ui/inventory-movement-form.fxml"));
+            InventoryMovementDialogController controller = new InventoryMovementDialogController(inventoryService, userContext);
+            loader.setControllerFactory(cls -> controller);
             Node content = loader.load();
             
-            InventoryMovementDialogController controller = loader.getController();
             controller.initAdjustment(selectedItem);
-            
-            Stage stage = new Stage();
-            controller.setStage(stage);
             
             ModernDialog.showAndWait((Stage) productsTable.getScene().getWindow(), content, "Register Adjustment");
             

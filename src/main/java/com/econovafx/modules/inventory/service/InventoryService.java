@@ -521,7 +521,9 @@ public class InventoryService {
             String reason,
             User currentUser) {
         
-        validateMovement(item, warehouse, quantityChange, documentNumber);
+        // Los ajustes admiten valores negativos (disminuciones) además de positivos,
+        // por lo que no se usa validateMovement (que exige cantidad > 0).
+        validateAdjustmentMovement(item, warehouse, quantityChange, documentNumber);
         
         InventoryMovement.MovementType type = InventoryMovement.MovementType.ADJUSTMENT;
         
@@ -653,6 +655,25 @@ public class InventoryService {
         }
         if (quantity == null || quantity.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor a cero");
+        }
+        if (documentNumber == null || documentNumber.isBlank()) {
+            throw new IllegalArgumentException("El número de documento es obligatorio");
+        }
+    }
+
+    /**
+     * Validación para ajustes de inventario. A diferencia de {@link #validateMovement},
+     * admite cantidades negativas (disminuciones) pero rechaza el cero.
+     */
+    private void validateAdjustmentMovement(InventoryItem item, Warehouse warehouse, BigDecimal quantity, String documentNumber) {
+        if (item == null || item.getId() == null) {
+            throw new IllegalArgumentException("El producto es obligatorio");
+        }
+        if (warehouse == null || warehouse.getId() == null) {
+            throw new IllegalArgumentException("El almacén es obligatorio");
+        }
+        if (quantity == null || quantity.compareTo(BigDecimal.ZERO) == 0) {
+            throw new IllegalArgumentException("La cantidad del ajuste no puede ser cero");
         }
         if (documentNumber == null || documentNumber.isBlank()) {
             throw new IllegalArgumentException("El número de documento es obligatorio");
