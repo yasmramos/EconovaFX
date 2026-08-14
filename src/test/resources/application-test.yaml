@@ -1,7 +1,8 @@
 # =============================================================================
 # Test Configuration for EconovaFX
 # This configuration is used when running tests to ensure proper Ebean initialization
-# Replicates application.properties structure to reproduce and fix the "DataSource user if not set" error
+# Note: Primary configuration is in application-test.properties to avoid SnakeYAML dependency
+# Only platform-specific overrides should be placed here
 # =============================================================================
 
 # Application Configuration
@@ -11,28 +12,8 @@ app:
   database:
     path: ./db/test
 
-# Ebean Test Configuration - Must come first for ebean-test to pick it up
+# Ebean Test Configuration - Minimal config, main settings in application-test.properties
 ebean:
   test:
     platform: h2
-    dbName: test
-    username: sa
-    password: ""
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-    driver: org.h2.Driver
-    ddl:
-      generate: true
-      run: true
-    migration:
-      auto: false
-      run: false
-
-# Database Configuration - Explicit DataSource settings to avoid "DataSource user if not set" warning
-datasource:
-  default:
-    driver: org.h2.Driver
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-    username: sa
-    password: ""
-    minConnections: 1
-    maxConnections: 10
+    ddlMode: dropCreate
