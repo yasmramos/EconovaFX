@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 
+import com.econovafx.modules.core.config.TenantContext;
+
 /**
  * Servicio interno para backup y restore de datos por tenant.
  * NO expone endpoints REST ni CLI, se invoca desde la lógica interna del sistema.
@@ -168,15 +170,8 @@ public class TenantBackupService {
     // Métodos auxiliares privados
 
     private Long getCurrentTenantId() {
-        // Usar reflexión o acceso directo según tu implementación de TenantContext
-        try {
-            Class<?> tenantContextClass = Class.forName("com.econovafx.config.TenantContext");
-            var method = tenantContextClass.getMethod("getCurrentTenantId");
-            return (Long) method.invoke(null);
-        } catch (Exception e) {
-            log.error("Error obteniendo tenantId actual", e);
-            return null;
-        }
+        // Llamada directa al método estático de TenantContext sin reflexión
+        return TenantContext.getCurrentTenantId();
     }
 
     private void writeHeader(BufferedWriter writer, String tenantId) throws IOException {
