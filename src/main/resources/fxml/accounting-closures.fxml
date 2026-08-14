@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.modules.accounting.controller.AccountingClosuresController"
@@ -11,7 +12,7 @@
       spacing="20"
       styleClass="bg-gray-50, p-6">
 
-    <Label text="🔒 Accounting Closures" styleClass="text-2xl, font-bold, text-slate-800"/>
+    <Label text="Accounting Closures" styleClass="text-2xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2l-lock" iconSize="24"/></graphic></Label>
     
     <Separator/>
 
@@ -22,9 +23,18 @@
                styleClass="text-slate-600" wrapText="true"/>
         
         <HBox spacing="15" alignment="CENTER_LEFT">
-            <Button fx:id="btnVerPeriodos" text="📊 View Open Periods" styleClass="btn, btn-primary" onAction="#handleVerPeriodos"/>
-            <Button fx:id="btnCierreMensual" text="🔒 Execute Monthly Close" styleClass="btn, btn-warning" onAction="#handleCierreMensual"/>
-            <Button fx:id="btnCierreAnual" text="📅 Execute Annual Close" styleClass="btn, btn-danger" onAction="#handleCierreAnual"/>
+            <Button fx:id="btnVerPeriodos" graphicTextGap="8" onAction="#handleVerPeriodos" styleClass="btn, btn-primary">
+                <text>View Open Periods</text>
+                <graphic><FontIcon iconLiteral="mdi2c-chart-bar" iconSize="18"/></graphic>
+            </Button>
+            <Button fx:id="btnCierreMensual" graphicTextGap="8" onAction="#handleCierreMensual" styleClass="btn, btn-warning">
+                <text>Execute Monthly Close</text>
+                <graphic><FontIcon iconLiteral="mdi2l-lock" iconSize="18"/></graphic>
+            </Button>
+            <Button fx:id="btnCierreAnual" graphicTextGap="8" onAction="#handleCierreAnual" styleClass="btn, btn-danger">
+                <text>Execute Annual Close</text>
+                <graphic><FontIcon iconLiteral="mdi2c-calendar-clock" iconSize="18"/></graphic>
+            </Button>
         </HBox>
     </VBox>
 
