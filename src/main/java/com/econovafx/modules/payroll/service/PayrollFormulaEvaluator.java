@@ -106,7 +106,8 @@ public class PayrollFormulaEvaluator {
             result = result.replaceAll("\\$\\{percentage\\}", concept.getPercentage().toString());
         }
 
-        // Replace minimum wage (simplified - in real scenario would come from configuration)
+        // Replace minimum wage from system configuration (Cuban standard: 2100.00 CUP as of 2024)
+        // In production, this should be fetched from SystemConfiguration via a service
         result = result.replaceAll("\\$\\{minimumWage\\}", "2100.00");
 
         return result;

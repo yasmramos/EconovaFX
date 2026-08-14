@@ -316,7 +316,6 @@ public class PayrollService {
         
         return true;
     }
-}
 
     /**
      * Generate a unique transaction number for payroll entries.
