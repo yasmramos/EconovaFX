@@ -17,7 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesign2;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +121,7 @@ public class TransactionEntryController implements Initializable {
             private final Button deleteButton = new Button();
             
             {
-                deleteButton.setGraphic(new FontIcon(MaterialDesign2.DELETE));
+                deleteButton.setGraphic(new FontIcon(MaterialDesignD.DELETE));
                 deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand;");
                 deleteButton.setOnAction(event -> {
                     EntryRow row = getTableView().getItems().get(getIndex());
