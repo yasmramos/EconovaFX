@@ -211,12 +211,9 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.15.3</version>
         </dependency>
-        <dependency>
-            <groupId>io.ebean</groupId>
-            <artifactId>ebean-annotation</artifactId>
-            <version>7.8</version>
-            <type>jar</type>
-        </dependency>
+        <!-- ebean-annotation is provided transitively by ebean ${ebean.version};
+             do not pin an older version (was 7.8) so annotations like @Where stay
+             consistent with the Ebean 17.x enhancer. -->
     </dependencies>
 
     <build>
