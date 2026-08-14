@@ -3,6 +3,7 @@ package com.econovafx.modules.security.ui.controller;
 import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.core.security.AuthService;
 import com.econovafx.modules.core.security.SecurityUtil;
+import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -34,11 +35,12 @@ public class LoginController {
     @FXML
     private ProgressBar progressBar;
 
-    private AuthService authService;
+    private final AuthService authService;
     private Runnable onLoginSuccess;
 
-    public LoginController() {
-        this.authService = new AuthService();
+    @Inject
+    public LoginController(AuthService authService) {
+        this.authService = authService;
     }
 
     @FXML

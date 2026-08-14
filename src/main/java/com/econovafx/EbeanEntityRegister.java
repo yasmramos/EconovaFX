@@ -1,6 +1,10 @@
 package com.econovafx;
 
 import io.ebean.config.EntityClassRegister;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Auto-generated entity register for Ebean.
@@ -10,8 +14,8 @@ import io.ebean.config.EntityClassRegister;
 public class EbeanEntityRegister implements EntityClassRegister {
     
     @Override
-    public java.util.Set<Class<?>> getClasses() {
-        java.util.Set<Class<?>> classes = new java.util.HashSet<>();
+    public List<Class<?>> classesFor(String name, boolean includeAbstract) {
+        Set<Class<?>> classes = new HashSet<>();
         
         // Core module entities
         classes.add(com.econovafx.modules.core.model.Company.class);
@@ -34,16 +38,17 @@ public class EbeanEntityRegister implements EntityClassRegister {
         
         // Billing module entities
         classes.add(com.econovafx.modules.billing.model.ThirdParty.class);
-        classes.add(com.econovafx.modules.billing.model.Bill.class);
-        classes.add(com.econovafx.modules.billing.model.BillItem.class);
+        classes.add(com.econovafx.modules.billing.model.SalesInvoice.class);
+        classes.add(com.econovafx.modules.billing.model.SalesInvoiceLine.class);
+        classes.add(com.econovafx.modules.billing.model.BillingSeries.class);
+        classes.add(com.econovafx.modules.billing.model.TaxRate.class);
         
         // Payroll module entities
         classes.add(com.econovafx.modules.payroll.model.Employee.class);
         classes.add(com.econovafx.modules.payroll.model.PayrollBatch.class);
-        classes.add(com.econovafx.modules.payroll.model.PayrollMovement.class);
         classes.add(com.econovafx.modules.payroll.model.PayrollPeriod.class);
-        classes.add(com.econovafx.modules.payroll.model.Concept.class);
-        classes.add(com.econovafx.modules.payroll.model.Formula.class);
+        classes.add(com.econovafx.modules.payroll.model.PayrollConcept.class);
+        classes.add(com.econovafx.modules.payroll.model.PayrollDetail.class);
         
         // Inventory module entities
         classes.add(com.econovafx.modules.inventory.model.InventoryItem.class);
@@ -68,6 +73,6 @@ public class EbeanEntityRegister implements EntityClassRegister {
         classes.add(com.econovafx.modules.cash.model.CashBox.class);
         classes.add(com.econovafx.modules.cash.model.CashMovement.class);
         
-        return classes;
+        return new ArrayList<>(classes);
     }
 }
