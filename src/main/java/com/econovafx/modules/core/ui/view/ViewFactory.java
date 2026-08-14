@@ -22,6 +22,9 @@ import com.econovafx.modules.billing.controller.ThirdPartiesController;
 import com.econovafx.modules.billing.controller.ThirdPartyFormController;
 import com.econovafx.modules.accounting.controller.TransactionEntryController;
 import com.econovafx.modules.accounting.controller.TransactionsController;
+import com.econovafx.modules.inventory.controller.InventoryController;
+import com.econovafx.modules.inventory.service.InventoryService;
+import com.econovafx.modules.core.config.TenantContext;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -56,11 +59,14 @@ public class ViewFactory {
     private final TransactionEntryController transactionEntryController;
     private final ComprobantesController comprobantesController;
     private final SystemSettingsController systemSettingsController;
+    private final InventoryController inventoryController;
     private final AccountService accountService;
     private final ThirdPartyService thirdPartyService;
     private final TransactionService transactionService;
     private final ExportService exportService;
     private final AccountingPeriodService accountingPeriodService;
+    private final InventoryService inventoryService;
+    private final TenantContext tenantContext;
 
     public ViewFactory(DashboardController dashboardController,
                       AccountsController accountsController,
@@ -74,12 +80,15 @@ public class ViewFactory {
                       TransactionEntryController transactionEntryController,
                       ComprobantesController comprobantesController,
                       SystemSettingsController systemSettingsController,
+                      InventoryController inventoryController,
                       AccountService accountService,
                       ThirdPartyService thirdPartyService,
                       TransactionService transactionService,
                       ExportService exportService,
                       AccountingPeriodService accountingPeriodService,
-                      NotificationService notificationService) {
+                      NotificationService notificationService,
+                      InventoryService inventoryService,
+                      TenantContext tenantContext) {
         this.dashboardController = dashboardController;
         this.accountsController = accountsController;
         this.transactionsController = transactionsController;
@@ -92,11 +101,14 @@ public class ViewFactory {
         this.transactionEntryController = transactionEntryController;
         this.comprobantesController = comprobantesController;
         this.systemSettingsController = systemSettingsController;
+        this.inventoryController = inventoryController;
         this.accountService = accountService;
         this.thirdPartyService = thirdPartyService;
         this.transactionService = transactionService;
         this.exportService = exportService;
         this.accountingPeriodService = accountingPeriodService;
+        this.inventoryService = inventoryService;
+        this.tenantContext = tenantContext;
     }
 
     public TransactionService getTransactionService() {
@@ -201,6 +213,17 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading accounting closures view", e);
             throw new RuntimeException("Failed to load accounting closures view", e);
+        }
+    }
+    
+    public Node createInventoryView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/inventory.fxml"));
+            loader.setControllerFactory(cls -> inventoryController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading inventory view", e);
+            throw new RuntimeException("Failed to load inventory view", e);
         }
     }
     

@@ -474,7 +474,9 @@ public class MainViewController implements Initializable {
     private void showInventarios() {
         logger.debug("Showing inventarios");
         setActiveButton(btnInventarios);
-        updateStatus("Inventarios - Próximamente");
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createInventoryView());
+        updateStatus("Inventarios");
     }
 
     @FXML
