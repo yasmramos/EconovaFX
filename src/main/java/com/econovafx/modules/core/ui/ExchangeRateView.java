@@ -15,8 +15,8 @@ import javafx.collections.ObservableList;
 import javafx.util.Callback;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignD;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignR;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignS;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -153,7 +153,7 @@ public class ExchangeRateView extends VBox {
         currencyFilterCombo.setValue("TODOS");
 
         searchButton = new Button();
-        searchButton.setGraphic(new FontIcon(MaterialDesignS.SEARCH));
+        searchButton.setGraphic(new FontIcon(MaterialDesignM.MAGNIFY));
         searchButton.setText(" Buscar");
         searchButton.setOnAction(e -> handleSearchHistory());
 
