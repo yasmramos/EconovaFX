@@ -2,7 +2,7 @@ package com.econovafx.modules.payroll.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Payroll period entity for defining payroll cycles.
@@ -166,7 +166,7 @@ public class PayrollPeriod {
         if (startDate == null || endDate == null) {
             return 0;
         }
-        return Period.between(startDate, endDate).getDays() + 1;
+        return (int) (ChronoUnit.DAYS.between(startDate, endDate) + 1);
     }
 
     /**
