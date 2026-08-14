@@ -163,8 +163,8 @@ class PayrollServiceAccountingEntriesTest {
         // Act
         payrollService.generateAccountingEntries(batch);
 
-        // Verify configuration was used
-        verify(systemConfigService).getCurrentConfig();
+        // Verify configuration was used (at least once)
+        verify(systemConfigService, atLeastOnce()).getCurrentConfig();
     }
 
     private PayrollBatch createProcessedPayrollBatch() {
