@@ -108,6 +108,20 @@ public class SystemConfiguration extends BaseEntity {
     @Column(length = 10)
     private String locale = "es_CU";
     
+    // ==================== CONFIGURACIÓN DE DIFERENCIAS CAMBIARIAS ====================
+    
+    @Column(length = 20)
+    private String exchangeGainAccountCode = "499-001"; // Ingresos por diferencia cambiaria
+    
+    @Column(length = 20)
+    private String exchangeLossAccountCode = "599-001"; // Gastos por diferencia cambiaria
+    
+    @Column(length = 20)
+    private String exchangeReceivableAccountCode = "106-001"; // Cuentas por cobrar clientes (ventas)
+    
+    @Column(length = 20)
+    private String exchangePayableAccountCode = "201-001"; // Cuentas por pagar proveedores (compras)
+    
     // ==================== GETTERS Y SETTERS ====================
     
     public String getEntityName() {
@@ -372,5 +386,39 @@ public class SystemConfiguration extends BaseEntity {
     
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+    
+    // ==================== GETTERS Y SETTERS - DIFERENCIAS CAMBIARIAS ====================
+    
+    public String getExchangeGainAccountCode() {
+        return exchangeGainAccountCode;
+    }
+    
+    public void setExchangeGainAccountCode(String exchangeGainAccountCode) {
+        this.exchangeGainAccountCode = exchangeGainAccountCode;
+    }
+    
+    public String getExchangeLossAccountCode() {
+        return exchangeLossAccountCode;
+    }
+    
+    public void setExchangeLossAccountCode(String exchangeLossAccountCode) {
+        this.exchangeLossAccountCode = exchangeLossAccountCode;
+    }
+    
+    public String getExchangeReceivableAccountCode() {
+        return exchangeReceivableAccountCode;
+    }
+    
+    public void setExchangeReceivableAccountCode(String exchangeReceivableAccountCode) {
+        this.exchangeReceivableAccountCode = exchangeReceivableAccountCode;
+    }
+    
+    public String getExchangePayableAccountCode() {
+        return exchangePayableAccountCode;
+    }
+    
+    public void setExchangePayableAccountCode(String exchangePayableAccountCode) {
+        this.exchangePayableAccountCode = exchangePayableAccountCode;
     }
 }
