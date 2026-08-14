@@ -143,6 +143,10 @@
                                                 <Button fx:id="btnCompleteReconciliation" mnemonicParsing="false" onAction="#handleCompleteReconciliation" text="Complete" />
                                                 <Button fx:id="btnPrintReconciliation" mnemonicParsing="false" onAction="#handlePrintReconciliation" text="Print Report" />
                                                 <Region HBox.hgrow="ALWAYS" />
+                                                <Label text="From:" />
+                                                <DatePicker fx:id="dpReconciliationFrom" promptText="From Date" />
+                                                <Label text="To:" />
+                                                <DatePicker fx:id="dpReconciliationTo" promptText="To Date" />
                                                 <ComboBox fx:id="cbReconciliationBank" promptText="Select Bank Account" />
                                             </children>
                                         </HBox>

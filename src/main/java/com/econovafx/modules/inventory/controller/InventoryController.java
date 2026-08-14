@@ -110,9 +110,11 @@ public class InventoryController {
         // Configure table columns
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("code"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colCategoria.setCellValueFactory(cellData -> 
-            new javafx.beans.property.SimpleStringProperty(
-                cellData.getValue().getCategory().getName()));
+        colCategoria.setCellValueFactory(cellData -> {
+            InventoryItem item = cellData.getValue();
+            String categoryName = item.getCategory() != null ? item.getCategory().getName() : "";
+            return new javafx.beans.property.SimpleStringProperty(categoryName);
+        });
         colAlmacen.setCellValueFactory(cellData -> {
             // InventoryItem doesn't have a warehouse field in this version
             return new javafx.beans.property.SimpleStringProperty("Main Warehouse");

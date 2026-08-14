@@ -130,6 +130,10 @@ public class CashModuleController {
     @FXML
     private ComboBox<BankAccount> cbReconciliationBank;
     @FXML
+    private DatePicker dpReconciliationFrom;
+    @FXML
+    private DatePicker dpReconciliationTo;
+    @FXML
     private TableView<?> systemItemsTable;
     @FXML
     private TableColumn<?, ?> colSysItemDate;
