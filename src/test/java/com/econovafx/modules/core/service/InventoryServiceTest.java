@@ -475,4 +475,80 @@ class InventoryServiceTest {
             inventoryService.calculateOutputCost(item, warehouse, quantity);
         }, "Debe lanzar excepción cuando no hay stock suficiente para FIFO");
     }
+
+    @Test
+    void testSaveItem_AuditLogCorrectArguments() {
+        InventoryItem item = new InventoryItem();
+        item.setCode("PROD001");
+        item.setName("Producto de Prueba");
+        item.setUnitCost(new BigDecimal("10.00"));
+        item.setSalePrice(new BigDecimal("15.00"));
+        item.setCurrentStock(BigDecimal.ZERO);
+        item.setMinimumStock(new BigDecimal("10"));
+        item.setMaximumStock(new BigDecimal("100"));
+
+        InventoryCategory category = new InventoryCategory();
+        category.setId(1L);
+        item.setCategory(category);
+
+        User user = new User();
+        user.setUsername("testuser");
+
+        when(itemRepository.existsByCodeExclude(anyString(), isNull())).thenReturn(false);
+        doAnswer(invocation -> {
+            ((InventoryItem) invocation.getArgument(0)).setId(1L);
+            return null;
+        }).when(itemRepository).save(any(InventoryItem.class));
+
+        inventoryService.saveItem(item, user);
+
+        // Verificar que auditService.logWithValues fue llamado con los argumentos correctos
+        verify(auditService).logWithValues(
+            eq("testuser"),                              // username
+            eq(AuditLog.OperationType.CREATE),           // operationType
+            eq("InventoryItem"),                         // entityType
+            eq(1L),                                      // entityId
+            eq("Producto creado"),                       // description
+            isNull(),                                    // oldValues
+            anyString()                                  // newValues
+        );
+    }
+
+    @Test
+    void testUpdateItem_AuditLogCorrectArguments() {
+        InventoryItem existingItem = new InventoryItem();
+        existingItem.setId(1L);
+        existingItem.setCode("PROD001");
+        existingItem.setName("Producto Original");
+
+        InventoryItem updatedItem = new InventoryItem();
+        updatedItem.setId(1L);
+        updatedItem.setCode("PROD001");
+        updatedItem.setName("Producto Actualizado");
+        updatedItem.setUnitCost(new BigDecimal("12.00"));
+        updatedItem.setSalePrice(new BigDecimal("18.00"));
+
+        InventoryCategory category = new InventoryCategory();
+        category.setId(1L);
+        updatedItem.setCategory(category);
+
+        User user = new User();
+        user.setUsername("testuser");
+
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(existingItem));
+        when(itemRepository.existsByCodeExclude("PROD001", 1L)).thenReturn(false);
+
+        inventoryService.updateItem(updatedItem, user);
+
+        // Verificar que auditService.logWithValues fue llamado con los argumentos correctos
+        verify(auditService).logWithValues(
+            eq("testuser"),                              // username
+            eq(AuditLog.OperationType.UPDATE),           // operationType
+            eq("InventoryItem"),                         // entityType
+            eq(1L),                                      // entityId
+            eq("Producto actualizado"),                  // description
+            anyString(),                                 // oldValues
+            anyString()                                  // newValues
+        );
+    }
 }

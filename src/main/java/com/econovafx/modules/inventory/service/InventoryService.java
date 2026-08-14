@@ -182,11 +182,11 @@ public class InventoryService {
         
         // Registrar auditoría
         auditService.logWithValues(
-            "Producto creado",
+            currentUser != null ? currentUser.getUsername() : "unknown",
             AuditLog.OperationType.CREATE,
             "InventoryItem",
             item.getId(),
-            currentUser != null ? currentUser.getUsername() : "unknown",
+            "Producto creado",
             null,
             item.toString()
         );
@@ -219,11 +219,11 @@ public class InventoryService {
         
         // Registrar auditoría
         auditService.logWithValues(
-            "Producto actualizado",
+            currentUser != null ? currentUser.getUsername() : "unknown",
             AuditLog.OperationType.UPDATE,
             "InventoryItem",
             item.getId(),
-            currentUser != null ? currentUser.getUsername() : "unknown",
+            "Producto actualizado",
             oldValue,
             item.toString()
         );
@@ -291,11 +291,11 @@ public class InventoryService {
         itemRepository.update(item);
         
         auditService.logWithValues(
-            "Carga inicial iniciada",
+            currentUser != null ? currentUser.getUsername() : "unknown",
             AuditLog.OperationType.UPDATE,
             "InventoryItem",
             item.getId(),
-            currentUser != null ? currentUser.getUsername() : "unknown",
+            "Carga inicial iniciada",
             null,
             "Physical Count: " + physicalCount
         );
@@ -343,11 +343,11 @@ public class InventoryService {
         itemRepository.update(item);
         
         auditService.logWithValues(
-            "Carga inicial completada",
+            currentUser != null ? currentUser.getUsername() : "unknown",
             AuditLog.OperationType.UPDATE,
             "InventoryItem",
             item.getId(),
-            currentUser != null ? currentUser.getUsername() : "unknown",
+            "Carga inicial completada",
             null,
             "Stock final: " + item.getCurrentStock()
         );
@@ -381,11 +381,11 @@ public class InventoryService {
         movementRepository.save(movement);
         
         auditService.logWithValues(
-            "Movimiento transferido a contabilidad",
+            currentUser != null ? currentUser.getUsername() : "unknown",
             AuditLog.OperationType.UPDATE,
             "InventoryMovement",
             movement.getId(),
-            currentUser != null ? currentUser.getUsername() : "unknown",
+            "Movimiento transferido a contabilidad",
             null,
             "Posted: true"
         );
@@ -437,11 +437,11 @@ public class InventoryService {
         
         // Registrar auditoría
         auditService.logWithValues(
-            "Entrada de inventario registrada",
+            currentUser != null ? currentUser.getUsername() : "unknown",
             AuditLog.OperationType.CREATE,
             "InventoryMovement",
             movement.getId(),
-            currentUser != null ? currentUser.getUsername() : "unknown",
+            "Entrada de inventario registrada",
             null,
             movement.toString()
         );
@@ -494,11 +494,11 @@ public class InventoryService {
         
         // Registrar auditoría
         auditService.logWithValues(
-            "Salida de inventario registrada",
+            currentUser != null ? currentUser.getUsername() : "unknown",
             AuditLog.OperationType.CREATE,
             "InventoryMovement",
             movement.getId(),
-            currentUser != null ? currentUser.getUsername() : "unknown",
+            "Salida de inventario registrada",
             null,
             movement.toString()
         );
