@@ -11,7 +11,23 @@ app:
   database:
     path: ./db/test
 
-# Database Configuration - Explicit DataSource settings to avoid "user if not set" warning
+# Ebean Test Configuration - Must come first for ebean-test to pick it up
+ebean:
+  test:
+    platform: h2
+    dbName: test
+    username: sa
+    password: ""
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driver: org.h2.Driver
+    ddl:
+      generate: true
+      run: true
+    migration:
+      auto: false
+      run: false
+
+# Database Configuration - Explicit DataSource settings to avoid "DataSource user if not set" warning
 database:
   driver: org.h2.Driver
   url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
@@ -19,12 +35,9 @@ database:
   password: ""
 
 # Master Database Configuration - Explicit settings
-ebean:
-  test:
-    platform: h2
-  server:
-    name: test-server
-    defaultServer: true
+ebean-server:
+  name: test-server
+  defaultServer: true
   # Disable DDL generation and migrations for tests (using in-memory DB)
   ddl:
     generate: true

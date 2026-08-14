@@ -225,7 +225,7 @@
                     <ColumnConstraints percentWidth="70" />
                 </columnConstraints>
 
-                <Label styleClass="form-label" text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="0"><graphic><FontIcon iconLiteral="mdi2t-type" iconSize="14"/></graphic></Label>
+                <Label styleClass="form-label" text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="0"><graphic><FontIcon iconLiteral="mdi2s-shape-outline" iconSize="14"/></graphic></Label>
                 <ComboBox fx:id="quickTransactionType" styleClass="form-combo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                 <Label styleClass="form-label" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="1"><graphic><FontIcon iconLiteral="mdi2p-pencil-outline" iconSize="14"/></graphic></Label>
