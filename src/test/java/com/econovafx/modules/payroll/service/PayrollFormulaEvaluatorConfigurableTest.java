@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
  * Unit tests for PayrollFormulaEvaluator with configurable parameters.
  * Verifies that minimum wage and other parameters are read from SystemConfiguration.
  */
-class PayrollFormulaEvaluatorConfigurableTest {
+public class PayrollFormulaEvaluatorConfigurableTest {
 
     @Mock
     private SystemConfigService systemConfigService;
