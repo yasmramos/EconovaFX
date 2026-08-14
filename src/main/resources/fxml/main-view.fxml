@@ -14,7 +14,7 @@
     <HBox VBox.vgrow="ALWAYS" fillHeight="true">
 
         <!-- Sidebar Navigation (Full Height) -->
-        <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" HBox.hgrow="NEVER">
+        <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" HBox.hgrow="NEVER" minWidth="260" prefWidth="260">
             <HBox.margin>
                 <Insets top="0" right="0" bottom="0" left="0"/>
             </HBox.margin>
