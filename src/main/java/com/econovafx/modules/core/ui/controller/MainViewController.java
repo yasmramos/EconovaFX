@@ -23,6 +23,7 @@ import javafx.animation.Interpolator;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import javafx.scene.layout.Region;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +70,7 @@ public class MainViewController implements Initializable {
     private VBox contabilidadSubmenu;
 
     @FXML
-    private Label contabilidadChevron;
+    private FontIcon contabilidadChevron;
 
     @FXML
     private Button btnComprobantes;
@@ -111,7 +112,7 @@ public class MainViewController implements Initializable {
     private Button btnSettings;
 
     @FXML
-    private Label settingsChevron;
+    private FontIcon settingsChevron;
 
     @FXML
     private VBox settingsSubmenu;
