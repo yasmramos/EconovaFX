@@ -348,9 +348,18 @@
                         <!-- Ensure Ebean agent is loaded at runtime to enhance beans when necessary -->
                         <option>-javaagent=${project.basedir}/lib/ebean-agent-${ebean.version}.jar</option>
 
-                        <option>--add-opens=EconoNovaFXAccountingSystem/com.econovafx.domain=io.ebean.core</option>
-                        <option>--add-opens=EconoNovaFXAccountingSystem/com.econovafx.domain=io.ebean</option>
-                        <option>--add-opens=EconoNovaFXAccountingSystem/com.econovafx.domain=ALL-UNNAMED</option>
+                        <!-- Open entity model packages to Ebean for reflective access.
+                             The module name is 'econonovafx' (see module-info.java); the
+                             previous target 'com.econovafx.domain' did not exist. -->
+                        <option>--add-opens=econonovafx/com.econovafx.modules.core.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.accounting.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.billing.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.payroll.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.inventory.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.receivables.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.payables.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.bank.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.cash.model=io.ebean.core</option>
                         <option>--add-opens=java.base/java.lang=ALL-UNNAMED</option>
                         <option>--add-opens=java.base/java.lang.invoke=ALL-UNNAMED</option>
                         <option>--add-opens=java.base/java.lang.reflect=ALL-UNNAMED</option>
