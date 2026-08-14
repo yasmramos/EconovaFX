@@ -24,7 +24,6 @@ import com.econovafx.modules.accounting.controller.TransactionEntryController;
 import com.econovafx.modules.accounting.controller.TransactionsController;
 import com.econovafx.modules.inventory.controller.InventoryController;
 import com.econovafx.modules.inventory.service.InventoryService;
-import com.econovafx.modules.core.config.TenantContext;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -66,7 +65,6 @@ public class ViewFactory {
     private final ExportService exportService;
     private final AccountingPeriodService accountingPeriodService;
     private final InventoryService inventoryService;
-    private final TenantContext tenantContext;
 
     public ViewFactory(DashboardController dashboardController,
                       AccountsController accountsController,
@@ -87,8 +85,7 @@ public class ViewFactory {
                       ExportService exportService,
                       AccountingPeriodService accountingPeriodService,
                       NotificationService notificationService,
-                      InventoryService inventoryService,
-                      TenantContext tenantContext) {
+                      InventoryService inventoryService) {
         this.dashboardController = dashboardController;
         this.accountsController = accountsController;
         this.transactionsController = transactionsController;
@@ -108,7 +105,6 @@ public class ViewFactory {
         this.exportService = exportService;
         this.accountingPeriodService = accountingPeriodService;
         this.inventoryService = inventoryService;
-        this.tenantContext = tenantContext;
     }
 
     public TransactionService getTransactionService() {
