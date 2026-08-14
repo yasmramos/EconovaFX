@@ -183,10 +183,16 @@ public class DatabaseConfig {
                     // Build URL from configuration
                     if ("postgres".equalsIgnoreCase(dbType)) {
                         driver = "org.postgresql.Driver";
+                        // Derive a per-tenant database name so each company gets its own
+                        // PostgreSQL database (required by TenantMode.DB, which has no
+                        // tenant_id discriminator column).
+                        String tenantDatabaseName = String.format("%s_%s",
+                                AppConfig.POSTGRES_DATABASE,
+                                company.getCode());
                         url = String.format("jdbc:postgresql://%s:%d/%s?sslmode=%s",
                                 AppConfig.POSTGRES_HOST,
                                 AppConfig.POSTGRES_PORT,
-                                AppConfig.POSTGRES_DATABASE,
+                                tenantDatabaseName,
                                 AppConfig.POSTGRES_SSLMODE);
                     } else {
                         driver = "org.h2.Driver";

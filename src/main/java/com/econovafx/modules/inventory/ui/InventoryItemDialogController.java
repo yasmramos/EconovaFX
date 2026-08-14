@@ -69,7 +69,6 @@ public class InventoryItemDialogController {
     private Button saveButton;
 
     private final InventoryService inventoryService;
-    private Stage stage;
     private InventoryItem currentItem;
     private boolean saved = false;
 
@@ -140,7 +139,12 @@ public class InventoryItemDialogController {
 
     @FXML
     private void handleCancel() {
-        stage.close();
+        closeDialog();
+    }
+
+    private void closeDialog() {
+        Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
+        dialogStage.close();
     }
 
     @FXML
@@ -205,7 +209,7 @@ public class InventoryItemDialogController {
             }
 
             saved = true;
-            stage.close();
+            closeDialog();
 
         } catch (Exception e) {
             logger.error("Error saving product", e);
@@ -219,10 +223,6 @@ public class InventoryItemDialogController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     public boolean isSaved() {

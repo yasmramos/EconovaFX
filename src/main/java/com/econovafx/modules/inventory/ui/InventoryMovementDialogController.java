@@ -1,5 +1,7 @@
 package com.econovafx.modules.inventory.ui;
 
+import com.econovafx.modules.core.config.UserContext;
+import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.inventory.model.InventoryItem;
 import com.econovafx.modules.inventory.model.InventoryMovement;
 import com.econovafx.modules.inventory.model.Warehouse;
@@ -52,7 +54,7 @@ public class InventoryMovementDialogController {
     private Button saveButton;
 
     private final InventoryService inventoryService;
-    private Stage stage;
+    private final UserContext userContext;
     private InventoryItem currentItem;
     private MovementType movementType;
     private boolean saved = false;
@@ -62,23 +64,17 @@ public class InventoryMovementDialogController {
         ADJUSTMENT
     }
 
-    public InventoryMovementDialogController(InventoryService inventoryService) {
+    public InventoryMovementDialogController(InventoryService inventoryService, UserContext userContext) {
         this.inventoryService = inventoryService;
+        this.userContext = userContext;
     }
     
     /**
-     * Gets the current user from UserContext.
+     * Gets the current logged-in user from UserContext.
      * Returns null if no user is logged in.
      */
-    private com.econovafx.modules.core.model.User getCurrentUser() {
-        try {
-            // Pass null for now - the service will handle audit with unknown user
-            // A proper implementation would inject UserContext into this controller
-            return null;
-        } catch (Exception e) {
-            logger.warn("Could not get current user", e);
-            return null;
-        }
+    private User getCurrentUser() {
+        return userContext != null ? userContext.getCurrentUser() : null;
     }
 
     /**
@@ -132,7 +128,12 @@ public class InventoryMovementDialogController {
 
     @FXML
     private void handleCancel() {
-        stage.close();
+        closeDialog();
+    }
+
+    private void closeDialog() {
+        Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
+        dialogStage.close();
     }
 
     @FXML
@@ -147,8 +148,12 @@ public class InventoryMovementDialogController {
             BigDecimal quantity;
             try {
                 quantity = new BigDecimal(quantityField.getText().trim());
-                if (quantity.compareTo(BigDecimal.ZERO) <= 0) {
+                if (movementType == MovementType.OUTPUT && quantity.compareTo(BigDecimal.ZERO) <= 0) {
                     showError("Quantity must be greater than zero");
+                    return;
+                }
+                if (movementType == MovementType.ADJUSTMENT && quantity.compareTo(BigDecimal.ZERO) == 0) {
+                    showError("Quantity must not be zero");
                     return;
                 }
             } catch (NumberFormatException e) {
@@ -172,9 +177,11 @@ public class InventoryMovementDialogController {
             }
 
             // Get current user from UserContext (injected dependency)
-            // For now, we'll need to get it via the controller parameter or pass null
-            // The actual implementation should receive UserContext as a constructor parameter
-            var currentUser = getCurrentUser();
+            User currentUser = getCurrentUser();
+            if (currentUser == null) {
+                showError("No user is currently logged in. Cannot register movement.");
+                return;
+            }
 
             // Register movement based on type
             InventoryMovement movement;
@@ -202,7 +209,7 @@ public class InventoryMovementDialogController {
             }
 
             saved = true;
-            stage.close();
+            closeDialog();
 
         } catch (Exception e) {
             logger.error("Error registering movement", e);
@@ -216,10 +223,6 @@ public class InventoryMovementDialogController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     public boolean isSaved() {
