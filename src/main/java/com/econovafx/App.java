@@ -90,6 +90,9 @@ public class App extends Application {
             logger.info("Showing login screen...");
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login-view.fxml"));
+            // LoginController requires constructor injection (AuthService), so resolve it
+            // from the DI container instead of letting FXMLLoader use the no-arg constructor.
+            loader.setControllerFactory(cls -> context.getBeanScope().get(cls));
             VBox root = loader.load();
             loginController = loader.getController();
             

@@ -51,7 +51,6 @@ class AuthServiceTest {
             when(mockExpressionList.eq("email", "test@example.com")).thenReturn(mockExpressionList);
             when(mockExpressionList.query()).thenReturn(mockQuery);
             when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.of(user));
-            doNothing().when(mockedDB).invoke(() -> DB.save(any()));
 
             // Authenticate
             User result = authService.authenticate("test@example.com", "password123");
@@ -169,7 +168,6 @@ class AuthServiceTest {
             when(mockExpressionList.eq("email", email)).thenReturn(mockExpressionList);
             when(mockExpressionList.query()).thenReturn(mockQuery);
             when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.of(user));
-            doNothing().when(mockedDB).invoke(() -> DB.save(any()));
 
             // Simulate MAX_LOGIN_ATTEMPTS failed attempts
             for (int i = 0; i < AppConfig.MAX_LOGIN_ATTEMPTS; i++) {
@@ -208,7 +206,6 @@ class AuthServiceTest {
             when(mockExpressionList.eq("email", email)).thenReturn(mockExpressionList);
             when(mockExpressionList.query()).thenReturn(mockQuery);
             when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.of(user));
-            doNothing().when(mockedDB).invoke(() -> DB.save(any()));
 
             // Simulate some failed attempts
             for (int i = 0; i < 3; i++) {
