@@ -23,6 +23,9 @@ import com.econovafx.modules.billing.controller.ThirdPartiesController;
 import com.econovafx.modules.billing.controller.ThirdPartyFormController;
 import com.econovafx.modules.accounting.controller.AccountingPeriodsController;
 import com.econovafx.modules.accounting.controller.AccountingClosuresController;
+import com.econovafx.modules.inventory.controller.InventoryController;
+import com.econovafx.modules.inventory.service.InventoryService;
+import com.econovafx.modules.core.config.TenantContext;
 import io.avaje.inject.BeanScope;
 import io.ebean.Database;
 import org.slf4j.Logger;
@@ -107,6 +110,12 @@ public final class AppContext {
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
         exchangeRatesController = new ExchangeRatesController();
+        
+        // Get InventoryService, TenantContext and UserContext for InventoryController
+        InventoryService inventoryService = beanScope.get(InventoryService.class);
+        TenantContext tenantContext = beanScope.get(TenantContext.class);
+        UserContext userContext = beanScope.get(UserContext.class);
+        InventoryController inventoryController = new InventoryController(inventoryService, tenantContext, userContext);
 
         // Create ViewFactory with controllers that don't need it back
         viewFactory = new ViewFactory(
@@ -122,12 +131,15 @@ public final class AppContext {
                 transactionEntryController,
                 null, // comprobantesController - will be set later
                 null, // systemSettingsController - will be set later
+                inventoryController,
                 accountService,
                 thirdPartyService,
                 transactionService,
                 exportService,
                 accountingPeriodService,
-                notificationService
+                notificationService,
+                inventoryService,
+                tenantContext
         );
 
         // Now create controllers that need ViewFactory and initialize them
@@ -163,12 +175,15 @@ public final class AppContext {
                 transactionEntryController,
                 comprobantesController,
                 systemSettingsController,
+                inventoryController,
                 accountService,
                 thirdPartyService,
                 transactionService,
                 exportService,
                 accountingPeriodService,
-                notificationService
+                notificationService,
+                inventoryService,
+                tenantContext
         );
 
         // Final initialization pass for controllers that need the complete ViewFactory

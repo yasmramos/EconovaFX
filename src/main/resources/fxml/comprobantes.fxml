@@ -3,40 +3,59 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox spacing="16" styleClass="bg-gray-100, p-6" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.accounting.controller.ComprobantesController">
 
     <!-- Header with Actions -->
     <HBox alignment="CENTER_LEFT" spacing="16" styleClass="dashboard-header">
         <VBox>
-            <Label styleClass="dashboard-title" text="📄 Vouchers" />
+            <Label styleClass="dashboard-title" text="Vouchers"><graphic><FontIcon iconLiteral="mdi2f-file-document" iconSize="18"/></graphic></Label>
             <Label styleClass="dashboard-subtitle" text="Accounting vouchers management" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
-        <Button fx:id="btnNewComprobante" onAction="#newComprobante" styleClass="submit-btn" text="➕ New Voucher" />
-        <Button fx:id="btnRefresh" onAction="#refreshData" styleClass="refresh-btn" text="🔄 Refresh" />
-        <Button fx:id="btnExportPdf" onAction="#exportToPdf" styleClass="action-btn" text="📄 Export PDF" />
-        <Button fx:id="btnExportExcel" onAction="#exportToExcel" styleClass="action-btn" text="📊 Export Excel" />
+        <Button fx:id="btnNewComprobante" onAction="#newComprobante" styleClass="submit-btn" graphicTextGap="8">
+            <text>New Voucher</text>
+            <graphic><FontIcon iconLiteral="mdi2a-plus" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnRefresh" onAction="#refreshData" styleClass="refresh-btn" graphicTextGap="8">
+            <text>Refresh</text>
+            <graphic><FontIcon iconLiteral="mdi2r-refresh" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnExportPdf" onAction="#exportToPdf" styleClass="action-btn" graphicTextGap="8">
+            <text>Export PDF</text>
+            <graphic><FontIcon iconLiteral="mdi2f-file-pdf-box" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnExportExcel" onAction="#exportToExcel" styleClass="action-btn" graphicTextGap="8">
+            <text>Export Excel</text>
+            <graphic><FontIcon iconLiteral="mdi2m-microsoft-excel" iconSize="18"/></graphic>
+        </Button>
     </HBox>
 
     <!-- Filters Section -->
     <VBox styleClass="filter-section">
         <HBox spacing="12" alignment="CENTER_LEFT">
-            <Label styleClass="filter-label" text="📅 Date:" />
+            <Label styleClass="filter-label" text="Date:"><graphic><FontIcon iconLiteral="mdi2c-calendar" iconSize="16"/></graphic></Label>
             <DatePicker fx:id="filterStartDate" promptText="Start date" styleClass="filter-date-picker" />
             <Label styleClass="filter-label" text="—" />
             <DatePicker fx:id="filterEndDate" promptText="End date" styleClass="filter-date-picker" />
             
             <Region HBox.hgrow="ALWAYS" />
             
-            <Label styleClass="filter-label" text="📋 Status:" />
+            <Label styleClass="filter-label" text="Status:"><graphic><FontIcon iconLiteral="mdi2s-state-machine" iconSize="16"/></graphic></Label>
             <ComboBox fx:id="filterStatusCombo" promptText="All" styleClass="form-combo" prefWidth="150" />
             
-            <Label styleClass="filter-label" text="🔍 Search:" />
+            <Label styleClass="filter-label" text="Search:"><graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic></Label>
             <TextField fx:id="searchField" promptText="Number or description..." styleClass="form-input" prefWidth="250" />
             
-            <Button onAction="#applyFilters" styleClass="filter-btn" text="🔍 Filter" />
-            <Button onAction="#clearFilters" styleClass="clear-btn" text="🗑️ Clear" />
+            <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8">
+                <text>Filter</text>
+                <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
+            </Button>
+            <Button onAction="#clearFilters" styleClass="clear-btn" graphicTextGap="8">
+                <text>Clear</text>
+                <graphic><FontIcon iconLiteral="mdi2d-delete-outline" iconSize="16"/></graphic>
+            </Button>
         </HBox>
     </VBox>
 
@@ -53,7 +72,7 @@
         <VBox styleClass="summary-card, card-assets" GridPane.columnIndex="0">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg">
-                    <Label styleClass="text-3xl" text="📄" />
+                    <FontIcon iconLiteral="mdi2f-file-document" iconSize="32" iconColor="#10B981"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Vouchers" />
@@ -66,7 +85,7 @@
         <VBox styleClass="summary-card, card-equity" GridPane.columnIndex="1">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-blue">
-                    <Label styleClass="text-3xl" text="✅" />
+                    <FontIcon iconLiteral="mdi2c-check-circle" iconSize="32" iconColor="#3B82F6"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Posted" />
@@ -79,7 +98,7 @@
         <VBox styleClass="summary-card, card-balance" GridPane.columnIndex="2">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-amber">
-                    <Label styleClass="text-3xl" text="📝" />
+                    <FontIcon iconLiteral="mdi2f-file-edit-outline" iconSize="32" iconColor="#F59E0B"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Draft" />
@@ -92,7 +111,7 @@
         <VBox styleClass="summary-card, card-liabilities" GridPane.columnIndex="3">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-red">
-                    <Label styleClass="text-3xl" text="❌" />
+                    <FontIcon iconLiteral="mdi2c-close-circle" iconSize="32" iconColor="#EF4444"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Cancelled" />
@@ -127,12 +146,24 @@
     <!-- Detail Panel (shown when row selected) -->
     <VBox fx:id="detailPanel" visible="false" managed="false" styleClass="bg-white, rounded-xl, shadow-md, p-5">
         <HBox alignment="CENTER_LEFT" spacing="16">
-            <Label styleClass="stats-title" text="📋 Voucher Details" />
+            <Label styleClass="stats-title" text="Voucher Details"><graphic><FontIcon iconLiteral="mdi2c-clipboard-text" iconSize="18"/></graphic></Label>
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="btnEdit" onAction="#editComprobante" styleClass="submit-btn" text="✏️ Edit" />
-            <Button fx:id="btnPublish" onAction="#publishComprobante" styleClass="filter-btn" text="✅ Post" />
-            <Button fx:id="btnCancel" onAction="#cancelComprobante" styleClass="clear-btn" text="❌ Cancel" />
-            <Button fx:id="btnCloseDetail" onAction="#closeDetail" styleClass="clear-btn" text="✖ Close" />
+            <Button fx:id="btnEdit" onAction="#editComprobante" styleClass="submit-btn" graphicTextGap="8">
+                <text>Edit</text>
+                <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="16"/></graphic>
+            </Button>
+            <Button fx:id="btnPublish" onAction="#publishComprobante" styleClass="filter-btn" graphicTextGap="8">
+                <text>Post</text>
+                <graphic><FontIcon iconLiteral="mdi2c-check-circle" iconSize="16"/></graphic>
+            </Button>
+            <Button fx:id="btnCancel" onAction="#cancelComprobante" styleClass="clear-btn" graphicTextGap="8">
+                <text>Cancel</text>
+                <graphic><FontIcon iconLiteral="mdi2c-close-circle" iconSize="16"/></graphic>
+            </Button>
+            <Button fx:id="btnCloseDetail" onAction="#closeDetail" styleClass="clear-btn" graphicTextGap="8">
+                <text>Close</text>
+                <graphic><FontIcon iconLiteral="mdi2c-close" iconSize="16"/></graphic>
+            </Button>
         </HBox>
         <Separator styleClass="sidebar-separator" />
         <GridPane hgap="16" vgap="12">

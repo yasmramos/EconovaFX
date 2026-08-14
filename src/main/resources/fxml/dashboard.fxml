@@ -67,7 +67,7 @@
         <VBox styleClass="card-liabilities" GridPane.columnIndex="1">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-red">
-                    <Label styleClass="text-3xl" text="📋" />
+                    <FontIcon iconLiteral="mdi2l-label-outline" iconSize="32" iconColor="#EF4444"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Pasivos" />
@@ -81,7 +81,7 @@
         <VBox styleClass="card-equity" GridPane.columnIndex="2">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-blue">
-                    <Label styleClass="text-3xl" text="🏦" />
+                    <FontIcon iconLiteral="mdi2b-bank" iconSize="32" iconColor="#3B82F6"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Patrimonio" />
@@ -95,7 +95,7 @@
         <VBox styleClass="card-balance" GridPane.columnIndex="3">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-amber">
-                    <Label styleClass="text-3xl" text="⚖️" />
+                    <FontIcon iconLiteral="mdi2s-scale-balance" iconSize="32" iconColor="#F59E0B"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Balance General" />
@@ -173,14 +173,23 @@
     <!-- Recent Transactions with Filters -->
     <VBox styleClass="p-5" VBox.vgrow="ALWAYS">
         <HBox alignment="CENTER_LEFT" spacing="12" styleClass="filter-section">
-            <Label styleClass="filter-label" text="📅 Período:" />
+            <Label styleClass="filter-label" text="Período:"><graphic><FontIcon iconLiteral="mdi2c-calendar" iconSize="16"/></graphic></Label>
             <DatePicker fx:id="filterStartDate" promptText="Fecha inicio" styleClass="filter-date-picker" />
             <Label styleClass="filter-label" text="—" />
             <DatePicker fx:id="filterEndDate" promptText="Fecha fin" styleClass="filter-date-picker" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button onAction="#applyFilters" styleClass="filter-btn" text="🔍 Filtrar" />
-            <Button onAction="#clearFilters" styleClass="clear-btn" text="🗑️ Limpiar" />
-            <Button onAction="#viewAllTransactions" styleClass="view-all-btn" text="📄 Ver Todas" />
+            <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8">
+                <text>Filtrar</text>
+                <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
+            </Button>
+            <Button onAction="#clearFilters" styleClass="clear-btn" graphicTextGap="8">
+                <text>Limpiar</text>
+                <graphic><FontIcon iconLiteral="mdi2d-delete-outline" iconSize="16"/></graphic>
+            </Button>
+            <Button onAction="#viewAllTransactions" styleClass="view-all-btn" graphicTextGap="8">
+                <text>Ver Todas</text>
+                <graphic><FontIcon iconLiteral="mdi2f-file-document" iconSize="16"/></graphic>
+            </Button>
         </HBox>
 
         <TableView fx:id="recentTransactionsTable" styleClass="transactions-table" VBox.vgrow="ALWAYS">
@@ -209,26 +218,29 @@
 
         <!-- Quick Transaction -->
         <VBox styleClass="quick-form-card" GridPane.columnIndex="0">
-            <Label styleClass="quick-form-title" text="⚡ Nueva Transacción Rápida" />
+            <Label styleClass="quick-form-title" text="Nueva Transacción Rápida"><graphic><FontIcon iconLiteral="mdi2l-lightning-bolt" iconSize="18"/></graphic></Label>
             <GridPane hgap="16" vgap="14">
                 <columnConstraints>
                     <ColumnConstraints percentWidth="30" />
                     <ColumnConstraints percentWidth="70" />
                 </columnConstraints>
 
-                <Label styleClass="form-label" text="💼 Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label styleClass="form-label" text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="0"><graphic><FontIcon iconLiteral="mdi2t-type" iconSize="14"/></graphic></Label>
                 <ComboBox fx:id="quickTransactionType" styleClass="form-combo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                <Label styleClass="form-label" text="📝 Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label styleClass="form-label" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="1"><graphic><FontIcon iconLiteral="mdi2p-pencil-outline" iconSize="14"/></graphic></Label>
                 <TextField fx:id="quickDescription" promptText="Descripción de la transacción" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                <Label styleClass="form-label" text="💵 Monto:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label styleClass="form-label" text="Monto:" GridPane.columnIndex="0" GridPane.rowIndex="2"><graphic><FontIcon iconLiteral="mdi2c-cash-multiple" iconSize="14"/></graphic></Label>
                 <TextField fx:id="quickAmount" promptText="0.00" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                <Label styleClass="form-label" text="🏦 Cuenta:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <Label styleClass="form-label" text="Cuenta:" GridPane.columnIndex="0" GridPane.rowIndex="3"><graphic><FontIcon iconLiteral="mdi2b-bank-outline" iconSize="14"/></graphic></Label>
                 <ComboBox fx:id="quickAccountSelect" promptText="Seleccione cuenta" styleClass="form-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                <Button onAction="#createQuickTransaction" styleClass="submit-btn" text="✓ Crear Transacción" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                <Button onAction="#createQuickTransaction" styleClass="submit-btn" graphicTextGap="8" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                    <text>Crear Transacción</text>
+                    <graphic><FontIcon iconLiteral="mdi2c-check" iconSize="16"/></graphic>
+                </Button>
             <rowConstraints>
                <RowConstraints />
                <RowConstraints />
@@ -241,11 +253,11 @@
 
         <!-- KPI Metrics -->
         <VBox styleClass="stats-card" GridPane.columnIndex="1">
-            <Label styleClass="stats-title" text="📈 Indicadores del Mes" />
+            <Label styleClass="stats-title" text="Indicadores del Mes"><graphic><FontIcon iconLiteral="mdi2c-chart-bar" iconSize="18"/></graphic></Label>
             <VBox spacing="12">
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
                     <HBox styleClass="stat-icon-green">
-                        <Label styleClass="text-2xl" text="💵" />
+                        <FontIcon iconLiteral="mdi2c-cash" iconSize="24" iconColor="#10B981"/>
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Ingresos del Mes" />
@@ -256,7 +268,7 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
                     <HBox styleClass="stat-icon-red">
-                        <Label styleClass="text-2xl" text="💸" />
+                        <FontIcon iconLiteral="mdi2c-cash-remove" iconSize="24" iconColor="#EF4444"/>
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Gastos del Mes" />
@@ -267,7 +279,7 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
                     <HBox styleClass="stat-icon-blue">
-                        <Label styleClass="text-2xl" text="🧾" />
+                        <FontIcon iconLiteral="mdi2r-receipt-outline" iconSize="24" iconColor="#3B82F6"/>
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Ticket Promedio" />
@@ -279,11 +291,11 @@
 
         <!-- Statistics -->
         <VBox styleClass="stats-card" GridPane.columnIndex="2">
-            <Label styleClass="stats-title" text="📊 Estadísticas" />
+            <Label styleClass="stats-title" text="Estadísticas"><graphic><FontIcon iconLiteral="mdi2c-chart-pie" iconSize="18"/></graphic></Label>
             <VBox spacing="12">
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
                     <HBox styleClass="stat-icon-blue">
-                        <Label styleClass="text-2xl" text="📝" />
+                        <FontIcon iconLiteral="mdi2f-file-document-outline" iconSize="24" iconColor="#3B82F6"/>
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Total Transacciones" />
@@ -293,7 +305,7 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
                     <HBox styleClass="stat-icon-green">
-                        <Label styleClass="text-2xl" text="✅" />
+                        <FontIcon iconLiteral="mdi2c-check-circle-outline" iconSize="24" iconColor="#10B981"/>
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Transacciones Publicadas" />
@@ -303,7 +315,7 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
                     <HBox styleClass="stat-icon-amber">
-                        <Label styleClass="text-2xl" text="⏳" />
+                        <FontIcon iconLiteral="mdi2h-hourglass-empty" iconSize="24" iconColor="#F59E0B"/>
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Transacciones Borrador" />
@@ -313,7 +325,7 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
                     <HBox styleClass="stat-icon-purple">
-                        <Label styleClass="text-2xl" text="📁" />
+                        <FontIcon iconLiteral="mdi2f-folder-outline" iconSize="24" iconColor="#8B5CF6"/>
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Total Cuentas" />
