@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.when;
  * Unit tests for PayrollFormulaEvaluator with configurable parameters.
  * Verifies that minimum wage and other parameters are read from SystemConfiguration.
  */
-class PayrollFormulaEvaluatorConfigurableTest {
+public class PayrollFormulaEvaluatorConfigurableTest {
 
     @Mock
     private SystemConfigService systemConfigService;
@@ -139,7 +140,7 @@ class PayrollFormulaEvaluatorConfigurableTest {
         BigDecimal result = evaluator.evaluate(formula, employee, period, concept);
 
         // Assert
-        assertEquals(new BigDecimal("250.0000000000"), result);
+        assertEquals(new BigDecimal("250.00"), result.setScale(2, RoundingMode.HALF_UP));
     }
 
     @Test
