@@ -18,6 +18,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import com.econovafx.modules.core.config.TenantContext;
+import com.econovafx.modules.core.config.DatabaseConfig;
 
 /**
  * Servicio interno para backup y restore de datos por tenant.
@@ -54,18 +55,20 @@ public class TenantBackupService {
 
         log.info("Iniciando backup del tenant: {} en {}", tenantId, fullPath);
 
+        // Obtener la base de datos específica del tenant actual
+        Database db = DatabaseConfig.getTenantDatabase();
+        DataSource ds = db.dataSource();
+        
         try (BufferedWriter writer = Files.newBufferedWriter(fullPath)) {
             writeHeader(writer, tenantId.toString());
             
-            Database db = DB.getDefault();
-            DataSource ds = db.dataSource();
             try (Connection conn = ds.getConnection()) {
                 // Obtener lista de tablas (ajustar según PostgreSQL/MySQL)
                 List<String> tables = getTenantTables(conn);
                 
                 for (String table : tables) {
                     log.debug("Exportando tabla: {}", table);
-                    exportTableData(conn, writer, table, tenantId);
+                    exportTableData(conn, writer, table);
                 }
             }
         }
@@ -96,7 +99,8 @@ public class TenantBackupService {
         log.warn("Iniciando RESTAURE del tenant: {} desde {}", tenantId, backupFilePath);
         log.warn("ADVERTENCIA: Esta operación puede sobreescribir datos existentes");
 
-        Database db = DB.getDefault();
+        // Obtener la base de datos específica del tenant actual
+        Database db = DatabaseConfig.getTenantDatabase();
         DataSource ds = db.dataSource();
         
         // Ejecutar en una sola transacción grande
@@ -199,16 +203,14 @@ public class TenantBackupService {
         return tables;
     }
 
-    private void exportTableData(Connection conn, BufferedWriter writer, String tableName, Long tenantId) 
+    private void exportTableData(Connection conn, BufferedWriter writer, String tableName) 
             throws SQLException, IOException {
         
-        // Construir query SELECT para obtener todos los datos de la tabla filtrados por tenant_id
-        // Asumimos que todas las tablas multi-tenant tienen columna tenant_id
-        String selectSql = "SELECT * FROM " + tableName + " WHERE tenant_id = ?";
+        // Construir query SELECT para obtener todos los datos de la tabla
+        // En modo TenantMode.DB no hay columna tenant_id, ya que cada tenant tiene su propia BD
+        String selectSql = "SELECT * FROM " + tableName;
         
         try (var stmt = conn.prepareStatement(selectSql)) {
-            stmt.setLong(1, tenantId);
-            
             try (var rs = stmt.executeQuery()) {
                 var rsmd = rs.getMetaData();
                 int columnCount = rsmd.getColumnCount();
@@ -258,9 +260,13 @@ public class TenantBackupService {
     }
 
     private void disableConstraints(Connection conn) throws SQLException {
-        // Implementación específica para PostgreSQL
+        // Implementación para H2 (motor usado por defecto)
+        // H2 no soporta SET CONSTRAINTS ALL DEFERRED como PostgreSQL
+        // Se usa sintaxis compatible con H2
         try (var stmt = conn.createStatement()) {
-            stmt.execute("SET CONSTRAINTS ALL DEFERRED");
+            // En H2, las constraints se pueden deshabilitar temporalmente
+            // pero la sintaxis es diferente. Usamos un enfoque tolerante.
+            stmt.execute("SET REFERENTIAL_INTEGRITY FALSE");
         } catch (SQLException e) {
             log.debug("No se pudieron deshabilitar constraints (puede ser normal): {}", e.getMessage());
         }
@@ -268,7 +274,7 @@ public class TenantBackupService {
 
     private void enableConstraints(Connection conn) throws SQLException {
         try (var stmt = conn.createStatement()) {
-            stmt.execute("SET CONSTRAINTS ALL IMMEDIATE");
+            stmt.execute("SET REFERENTIAL_INTEGRITY TRUE");
         } catch (SQLException e) {
             log.debug("No se pudieron habilitar constraints: {}", e.getMessage());
         }
