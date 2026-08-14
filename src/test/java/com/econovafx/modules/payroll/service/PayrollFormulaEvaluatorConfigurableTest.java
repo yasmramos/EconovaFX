@@ -173,7 +173,6 @@ class PayrollFormulaEvaluatorConfigurableTest {
         PayrollPeriod period = new PayrollPeriod();
         period.setStartDate(LocalDate.of(2024, 1, 1));
         period.setEndDate(LocalDate.of(2024, 1, 31));
-        period.setDaysInPeriod(31);
         period.setFrequency(PayrollPeriod.FrequencyType.MONTHLY);
         return period;
     }
