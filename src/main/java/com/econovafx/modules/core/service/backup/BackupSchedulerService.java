@@ -61,7 +61,7 @@ public class BackupSchedulerService {
         try {
             SystemConfiguration config = systemConfigService.getCurrentConfig();
             
-            if (config == null || !config.getAutoBackupEnabled()) {
+            if (config == null || !Boolean.TRUE.equals(config.getAutoBackupEnabled())) {
                 log.info("Backups automáticos deshabilitados en la configuración");
                 isScheduled = false;
                 return;
@@ -80,18 +80,18 @@ public class BackupSchedulerService {
             });
             
             // Programar la tarea inicial con un delay de 1 minuto para permitir que la app termine de iniciar
-            long initialDelay = 1;
-            long period = frequencyDays;
+            long initialDelayMinutes = 1;
+            long periodMinutes = TimeUnit.DAYS.toMinutes(frequencyDays);
             
             scheduler.scheduleAtFixedRate(
                 this::executeScheduledBackup,
-                initialDelay,
-                period,
+                initialDelayMinutes,
+                periodMinutes,
                 TimeUnit.MINUTES
             );
             
             isScheduled = true;
-            log.info("Scheduler de backups iniciado: frecuencia = {} minutos", period);
+            log.info("Scheduler de backups iniciado: frecuencia = {} días", frequencyDays);
             
         } catch (Exception e) {
             log.error("Error al iniciar el scheduler de backups: {}", e.getMessage(), e);
