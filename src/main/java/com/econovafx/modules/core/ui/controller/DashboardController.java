@@ -3,8 +3,13 @@ package com.econovafx.modules.core.ui.controller;
 import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.model.AccountType;
 import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.TransactionEntry;
+import com.econovafx.modules.accounting.model.TransactionEntryData;
 import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.exception.ValidationException;
+import com.econovafx.modules.core.model.SystemConfiguration;
+import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -41,6 +46,7 @@ public class DashboardController implements Initializable {
 
     private final AccountService accountService;
     private final TransactionService transactionService;
+    private final SystemConfigService systemConfigService;
     private ViewFactory viewFactory;
 
     // Summary Labels
@@ -147,9 +153,11 @@ public class DashboardController implements Initializable {
     private ObservableList<Transaction> transactionObservableList;
 
     public DashboardController(AccountService accountService,
-                               TransactionService transactionService) {
+                               TransactionService transactionService,
+                               SystemConfigService systemConfigService) {
         this.accountService = accountService;
         this.transactionService = transactionService;
+        this.systemConfigService = systemConfigService;
     }
 
     /**
@@ -623,8 +631,8 @@ public class DashboardController implements Initializable {
 
         if (type == null || description.isEmpty() || amountText.isEmpty() || 
             accountSelection == null || accountSelection.equals("Seleccione una cuenta...")) {
-            showAlert(Alert.AlertType.WARNING, "Campos requeridos",
-                    "Por favor complete todos los campos incluyendo la cuenta");
+            showAlert(Alert.AlertType.WARNING, "Required Fields",
+                    "Please complete all fields including the account");
             return;
         }
 
@@ -632,9 +640,57 @@ public class DashboardController implements Initializable {
             BigDecimal amount = new BigDecimal(amountText);
             String accountCode = accountSelection.split(" - ")[0];
             
-            showAlert(Alert.AlertType.INFORMATION, "Transacción Creada",
-                    "Transacción rápida creada: " + type + " - " + amount + 
-                    " en cuenta " + accountCode);
+            // Find the selected account
+            Account selectedAccount = accountService.getAccountByCode(accountCode)
+                    .orElseThrow(() -> new NoSuchElementException("Account not found: " + accountCode));
+            
+            // Get system configuration for counterparty account
+            SystemConfiguration config = systemConfigService.getCurrentConfig();
+            String counterpartyAccountCode = getCounterpartyAccountCode(type, config);
+            
+            Account counterpartyAccount = accountService.getAccountByCode(counterpartyAccountCode)
+                    .orElseThrow(() -> new NoSuchElementException("Counterparty account not found: " + counterpartyAccountCode));
+            
+            // Create transaction with double-entry bookkeeping
+            Transaction transaction = new Transaction();
+            transaction.setDate(LocalDate.now());
+            transaction.setType(type);
+            transaction.setDescription("Quick Transaction: " + description);
+            
+            // Determine debit/credit based on transaction type
+            List<TransactionEntryData> entries = new ArrayList<>();
+            
+            if ("INGRESO".equals(type) || "GASTO".equals(type)) {
+                // For INGRESO (Income): Debit Cash/Bank, Credit Revenue
+                // For GASTO (Expense): Debit Expense, Credit Cash/Bank
+                if ("INGRESO".equals(type)) {
+                    // Debit: Selected account (asset/revenue), Credit: Counterparty (revenue)
+                    entries.add(new TransactionEntryData(selectedAccount.getId(), amount, BigDecimal.ZERO, description));
+                    entries.add(new TransactionEntryData(counterpartyAccount.getId(), BigDecimal.ZERO, amount, description));
+                } else {
+                    // GASTO: Debit Expense, Credit Cash/Bank
+                    entries.add(new TransactionEntryData(selectedAccount.getId(), amount, BigDecimal.ZERO, description));
+                    entries.add(new TransactionEntryData(counterpartyAccount.getId(), BigDecimal.ZERO, amount, description));
+                }
+            } else if ("TRANSFERENCIA".equals(type)) {
+                // Transfer between accounts: Debit destination, Credit source
+                entries.add(new TransactionEntryData(selectedAccount.getId(), amount, BigDecimal.ZERO, "Transfer to " + selectedAccount.getCode()));
+                entries.add(new TransactionEntryData(counterpartyAccount.getId(), BigDecimal.ZERO, amount, "Transfer from " + counterpartyAccount.getCode()));
+            } else {
+                // ASIENTO (Journal Entry): Use selected account as debit, counterparty as credit
+                entries.add(new TransactionEntryData(selectedAccount.getId(), amount, BigDecimal.ZERO, description));
+                entries.add(new TransactionEntryData(counterpartyAccount.getId(), BigDecimal.ZERO, amount, description));
+            }
+            
+            // Create and persist the transaction
+            Transaction createdTransaction = transactionService.createTransaction(transaction, entries);
+            
+            // Post the transaction immediately for quick transactions
+            transactionService.postTransaction(createdTransaction.getId());
+            
+            showAlert(Alert.AlertType.INFORMATION, "Transaction Created",
+                    "Quick transaction created successfully: " + type + " - " + amount + 
+                    " in account " + accountCode);
 
             quickDescription.clear();
             quickAmount.clear();
@@ -642,9 +698,40 @@ public class DashboardController implements Initializable {
             
             loadDashboardData();
 
-        } catch (NumberFormatException e) {
+        } catch (NoSuchElementException e) {
+            logger.error("Account not found", e);
             showAlert(Alert.AlertType.ERROR, "Error",
-                    "Monto inválido. Use formato numérico decimal (ej: 100.50)");
+                    "Account not found: " + e.getMessage());
+        } catch (ValidationException e) {
+            logger.error("Validation error creating transaction", e);
+            showAlert(Alert.AlertType.ERROR, "Validation Error",
+                    e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error creating quick transaction", e);
+            showAlert(Alert.AlertType.ERROR, "Error",
+                    "Error creating transaction: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Determines the counterparty account code based on transaction type and system configuration.
+     * @param type The transaction type (INGRESO, GASTO, TRANSFERENCIA, ASIENTO)
+     * @param config The system configuration
+     * @return The account code for the counterparty entry
+     */
+    private String getCounterpartyAccountCode(String type, SystemConfiguration config) {
+        if ("INGRESO".equals(type)) {
+            // For income, credit revenue account
+            return config.getRevenueAccountCode() != null ? config.getRevenueAccountCode() : "401-001";
+        } else if ("GASTO".equals(type)) {
+            // For expense, credit cash/bank account
+            return config.getCashAccountCode() != null ? config.getCashAccountCode() : "101-001";
+        } else if ("TRANSFERENCIA".equals(type)) {
+            // For transfers, use cash account as default counterparty
+            return config.getCashAccountCode() != null ? config.getCashAccountCode() : "101-001";
+        } else {
+            // For journal entries (ASIENTO), use cash account as default
+            return config.getCashAccountCode() != null ? config.getCashAccountCode() : "101-001";
         }
     }
 
