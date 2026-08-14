@@ -4,6 +4,7 @@ import com.econovafx.modules.accounting.model.*;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.repository.FinancialStatementModelRepository;
 import com.econovafx.modules.accounting.repository.FinancialStatementRowRepository;
+import com.econovafx.modules.accounting.repository.TransactionRepository;
 import io.avaje.inject.Component;
 import com.econovafx.modules.core.security.RequiresTenant;
 import jakarta.inject.Inject;
@@ -29,14 +30,17 @@ public class FinancialStatementService {
     private final FinancialStatementModelRepository modelRepository;
     private final FinancialStatementRowRepository rowRepository;
     private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
     @Inject
     public FinancialStatementService(FinancialStatementModelRepository modelRepository,
                                      FinancialStatementRowRepository rowRepository,
-                                     AccountRepository accountRepository) {
+                                     AccountRepository accountRepository,
+                                     TransactionRepository transactionRepository) {
         this.modelRepository = modelRepository;
         this.rowRepository = rowRepository;
         this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     /**
@@ -74,17 +78,62 @@ public class FinancialStatementService {
 
     /**
      * Calculate account balances for a given period
+     * Resolution 340/2004: Filters transactions by date range for accurate period reporting
      */
     private Map<String, BigDecimal> calculateAccountBalances(List<Account> accounts, 
                                                              LocalDate startDate, 
                                                              LocalDate endDate) {
-        // This should integrate with TransactionService to get real balances
-        // For now, returning account current balance
-        return accounts.stream()
+        // Get all posted transactions within the date range
+        List<Transaction> transactions = transactionRepository.findByDateRange(startDate, endDate);
+        
+        // Filter only POSTED transactions (Resolution 340/2004 compliance)
+        List<Transaction> postedTransactions = transactions.stream()
+                .filter(tx -> TransactionStatus.POSTED.equals(tx.getStatus()))
+                .toList();
+        
+        // Initialize balance map with zero for all accounts
+        Map<String, BigDecimal> accountBalances = accounts.stream()
                 .collect(Collectors.toMap(
                         Account::getCode,
-                        Account::getBalance
+                        account -> BigDecimal.ZERO
                 ));
+        
+        // Calculate balances from transactions within the period
+        for (Transaction transaction : postedTransactions) {
+            for (TransactionEntry entry : transaction.getEntries()) {
+                Account account = entry.getAccount();
+                String accountCode = account.getCode();
+                
+                if (accountBalances.containsKey(accountCode)) {
+                    BigDecimal currentBalance = accountBalances.get(accountCode);
+                    AccountType type = account.getType();
+                    
+                    // Apply debit amounts
+                    if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) > 0) {
+                        if (type == AccountType.ASSET || type == AccountType.EXPENSE) {
+                            accountBalances.put(accountCode, currentBalance.add(entry.getDebitAmount()));
+                        } else {
+                            accountBalances.put(accountCode, currentBalance.subtract(entry.getDebitAmount()));
+                        }
+                    }
+                    
+                    // Apply credit amounts
+                    if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+                        if (type == AccountType.LIABILITY || type == AccountType.EQUITY || 
+                            type == AccountType.REVENUE) {
+                            accountBalances.put(accountCode, currentBalance.add(entry.getCreditAmount()));
+                        } else {
+                            accountBalances.put(accountCode, currentBalance.subtract(entry.getCreditAmount()));
+                        }
+                    }
+                }
+            }
+        }
+        
+        logger.debug("Calculated balances for {} accounts from {} transactions in period {} to {}", 
+                     accountBalances.size(), postedTransactions.size(), startDate, endDate);
+        
+        return accountBalances;
     }
 
     /**

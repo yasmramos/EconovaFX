@@ -95,4 +95,7 @@ module econonovafx {
     opens com.econovafx.modules.core.config to org.junit.platform.commons, org.junit.jupiter.api;
     opens com.econovafx.modules.core.ui.controller to org.junit.platform.commons, org.junit.jupiter.api;
     opens com.econovafx.modules.core.ui.util to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.reporting.service to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.reporting.service.consolidation to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.reporting.controller to org.junit.platform.commons, org.junit.jupiter.api;
 }
