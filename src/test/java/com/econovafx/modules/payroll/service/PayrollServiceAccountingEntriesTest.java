@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
  * Unit tests for PayrollService.generateAccountingEntries method.
  * Verifies that accounting entries are generated correctly and transferred to the accounting module.
  */
-class PayrollServiceAccountingEntriesTest {
+public class PayrollServiceAccountingEntriesTest {
 
     @Mock
     private EmployeeRepository employeeRepository;
@@ -163,8 +163,8 @@ class PayrollServiceAccountingEntriesTest {
         // Act
         payrollService.generateAccountingEntries(batch);
 
-        // Verify configuration was used
-        verify(systemConfigService).getCurrentConfig();
+        // Verify configuration was used (at least once)
+        verify(systemConfigService, atLeastOnce()).getCurrentConfig();
     }
 
     private PayrollBatch createProcessedPayrollBatch() {

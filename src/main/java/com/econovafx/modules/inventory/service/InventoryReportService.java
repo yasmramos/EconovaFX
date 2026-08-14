@@ -8,6 +8,7 @@ import com.econovafx.modules.inventory.repository.InventoryMovementRepository;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -84,7 +85,7 @@ public class InventoryReportService {
                 .count();
 
             BigDecimal avgDailyOutput = BigDecimal.valueOf(outputCount)
-                .divide(BigDecimal.valueOf(periodDays), 4, BigDecimal.ROUND_HALF_UP);
+                .divide(BigDecimal.valueOf(periodDays), 4, RoundingMode.HALF_UP);
 
             Map<String, Object> productData = new HashMap<>();
             productData.put("item", item);
@@ -92,7 +93,7 @@ public class InventoryReportService {
             productData.put("avgDailyOutput", avgDailyOutput);
             productData.put("currentStock", item.getCurrentStock());
             productData.put("daysOfStockRemaining", avgDailyOutput.compareTo(BigDecimal.ZERO) > 0 
-                ? item.getCurrentStock().divide(avgDailyOutput, 0, BigDecimal.ROUND_HALF_UP) 
+                ? item.getCurrentStock().divide(avgDailyOutput, 0, RoundingMode.HALF_UP) 
                 : BigDecimal.valueOf(-1));
 
             report.add(productData);
@@ -228,7 +229,6 @@ public class InventoryReportService {
 
         // Mark period as closed in configuration
         // This would integrate with AccountingPeriodService
-        System.out.println("Inventory period " + periodCode + " closed successfully. " +
-                          "Annual closure: " + isAnnual);
+        // Logging handled by caller
     }
 }

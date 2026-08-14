@@ -10,9 +10,13 @@ import javafx.scene.layout.StackPane;
 import javafx.animation.FadeTransition;
 import javafx.util.Duration;
 import io.ebean.DB;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
 
 public class SplashController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SplashController.class);
 
     @FXML
     private StackPane rootPane;
@@ -75,20 +79,18 @@ public class SplashController {
                         fadeOut.setOnFinished(e -> {
                             try {
                                 if (onInitializationComplete != null) {
-                                    System.out.println("Ejecutando callback de inicialización completa...");
+                                    logger.info("Ejecutando callback de inicialización completa...");
                                     onInitializationComplete.run();
                                 } else {
-                                    System.err.println("ERROR: onInitializationComplete es null!");
+                                    logger.error("ERROR: onInitializationComplete es null!");
                                 }
                             } catch (Exception ex) {
-                                System.err.println("Error al ejecutar callback: " + ex.getMessage());
-                                ex.printStackTrace();
+                                logger.error("Error al ejecutar callback: " + ex.getMessage(), ex);
                             }
                         });
                         fadeOut.play();
                     } catch (Exception e) {
-                        System.err.println("Error en la transición fade: " + e.getMessage());
-                        e.printStackTrace();
+                        logger.error("Error en la transición fade: " + e.getMessage(), e);
                         // Intentar llamar directamente si falla la animación
                         if (onInitializationComplete != null) {
                             onInitializationComplete.run();
@@ -97,8 +99,7 @@ public class SplashController {
                 });
                 
             } catch (Exception e) {
-                System.err.println("Error durante la inicialización: " + e.getMessage());
-                e.printStackTrace();
+                logger.error("Error durante la inicialización: " + e.getMessage(), e);
                 javafx.application.Platform.runLater(() -> {
                     statusLabel.setText("Error: " + e.getMessage());
                     statusLabel.setStyle("-fx-text-fill: #e74c3c;");
