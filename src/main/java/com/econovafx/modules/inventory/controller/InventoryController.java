@@ -2,17 +2,23 @@ package com.econovafx.modules.inventory.controller;
 
 import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.core.config.UserContext;
+import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.inventory.model.InventoryItem;
 import com.econovafx.modules.inventory.model.InventoryMovement;
 import com.econovafx.modules.inventory.model.Warehouse;
 import com.econovafx.modules.inventory.service.InventoryService;
+import com.econovafx.modules.inventory.ui.InventoryItemDialogController;
+import com.econovafx.modules.inventory.ui.InventoryMovementDialogController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
@@ -23,6 +29,7 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -201,8 +208,29 @@ public class InventoryController {
     @FXML
     private void handleNuevo() {
         logger.debug("Creating new product");
-        // TODO: Open dialog to create new product
-        showAlert("Info", "New product dialog - To be implemented");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/modules/inventory/ui/inventory-item-form.fxml"));
+            Node content = loader.load();
+            
+            InventoryItemDialogController controller = loader.getController();
+            controller.initNew();
+            
+            Stage stage = new Stage();
+            controller.setStage(stage);
+            
+            ModernDialog.showAndWait((Stage) productsTable.getScene().getWindow(), content, "New Product");
+            
+            if (controller.isSaved()) {
+                loadProducts();
+                showAlert("Success", "Product created successfully");
+            }
+        } catch (IOException e) {
+            logger.error("Error loading new product dialog", e);
+            showAlert("Error", "Failed to open new product dialog: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error creating product", e);
+            showAlert("Error", "Failed to create product: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -213,8 +241,30 @@ public class InventoryController {
             return;
         }
         logger.debug("Editing product: {}", selectedItem.getName());
-        // TODO: Open dialog to edit product
-        showAlert("Info", "Edit product dialog - To be implemented for: " + selectedItem.getName());
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/modules/inventory/ui/inventory-item-form.fxml"));
+            Node content = loader.load();
+            
+            InventoryItemDialogController controller = loader.getController();
+            controller.initEdit(selectedItem);
+            
+            Stage stage = new Stage();
+            controller.setStage(stage);
+            
+            ModernDialog.showAndWait((Stage) productsTable.getScene().getWindow(), content, "Edit Product");
+            
+            if (controller.isSaved()) {
+                loadProducts();
+                showAlert("Success", "Product updated successfully");
+            }
+        } catch (IOException e) {
+            logger.error("Error loading edit product dialog", e);
+            showAlert("Error", "Failed to open edit product dialog: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error updating product", e);
+            showAlert("Error", "Failed to update product: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -254,8 +304,30 @@ public class InventoryController {
             return;
         }
         logger.debug("Registering output for product: {}", selectedItem.getName());
-        // TODO: Open dialog to register output
-        showAlert("Info", "Register output dialog - To be implemented for: " + selectedItem.getName());
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/modules/inventory/ui/inventory-movement-form.fxml"));
+            Node content = loader.load();
+            
+            InventoryMovementDialogController controller = loader.getController();
+            controller.initOutput(selectedItem);
+            
+            Stage stage = new Stage();
+            controller.setStage(stage);
+            
+            ModernDialog.showAndWait((Stage) productsTable.getScene().getWindow(), content, "Register Output");
+            
+            if (controller.isSaved()) {
+                loadProducts();
+                showAlert("Success", "Output registered successfully");
+            }
+        } catch (IOException e) {
+            logger.error("Error loading output dialog", e);
+            showAlert("Error", "Failed to open output dialog: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error registering output", e);
+            showAlert("Error", "Failed to register output: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -266,8 +338,30 @@ public class InventoryController {
             return;
         }
         logger.debug("Adjusting inventory for product: {}", selectedItem.getName());
-        // TODO: Open dialog to register adjustment
-        showAlert("Info", "Adjustment dialog - To be implemented for: " + selectedItem.getName());
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/modules/inventory/ui/inventory-movement-form.fxml"));
+            Node content = loader.load();
+            
+            InventoryMovementDialogController controller = loader.getController();
+            controller.initAdjustment(selectedItem);
+            
+            Stage stage = new Stage();
+            controller.setStage(stage);
+            
+            ModernDialog.showAndWait((Stage) productsTable.getScene().getWindow(), content, "Register Adjustment");
+            
+            if (controller.isSaved()) {
+                loadProducts();
+                showAlert("Success", "Adjustment registered successfully");
+            }
+        } catch (IOException e) {
+            logger.error("Error loading adjustment dialog", e);
+            showAlert("Error", "Failed to open adjustment dialog: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error registering adjustment", e);
+            showAlert("Error", "Failed to register adjustment: " + e.getMessage());
+        }
     }
 
     private void showAlert(String title, String message) {
