@@ -52,9 +52,20 @@ public class Company extends BaseEntity {
     private String databaseUrl;
 
     /**
+     * Database driver for this company (optional, inferred from URL if not set).
+     * Example: "org.postgresql.Driver" or "org.h2.Driver"
+     */
+    private String databaseDriver;
+
+    /**
      * Database user (if applicable)
      */
     private String databaseUser;
+
+    /**
+     * Database password (encrypted at rest in production)
+     */
+    private String databasePassword;
 
     /**
      * Company status: ACTIVE, INACTIVE, SUSPENDED
@@ -129,12 +140,28 @@ public class Company extends BaseEntity {
         this.databaseUrl = databaseUrl;
     }
 
+    public String getDatabaseDriver() {
+        return databaseDriver;
+    }
+
+    public void setDatabaseDriver(String databaseDriver) {
+        this.databaseDriver = databaseDriver;
+    }
+
     public String getDatabaseUser() {
         return databaseUser;
     }
 
     public void setDatabaseUser(String databaseUser) {
         this.databaseUser = databaseUser;
+    }
+
+    public String getDatabasePassword() {
+        return databasePassword;
+    }
+
+    public void setDatabasePassword(String databasePassword) {
+        this.databasePassword = databasePassword;
     }
 
     public String getStatus() {
