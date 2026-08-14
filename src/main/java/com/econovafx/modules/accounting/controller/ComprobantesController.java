@@ -16,7 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesign2;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignE;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -203,8 +204,8 @@ public class ComprobantesController implements Initializable {
             private final Button btnEdit = new Button();
 
             {
-                btnView.setGraphic(new FontIcon(MaterialDesign2.EYE));
-                btnEdit.setGraphic(new FontIcon(MaterialDesign2.PENCIL));
+                btnView.setGraphic(new FontIcon(MaterialDesignE.EYE));
+                btnEdit.setGraphic(new FontIcon(MaterialDesignP.PENCIL));
                 btnView.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 4px 8px; -fx-cursor: hand;");
                 btnEdit.setStyle("-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 4px 8px; -fx-cursor: hand;");
                 btnView.setOnAction(e -> {
