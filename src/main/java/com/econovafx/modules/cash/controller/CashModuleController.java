@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -632,19 +633,28 @@ public class CashModuleController {
         }
         
         try {
-            // TODO: Implement PDF export for bank reconciliation using ExportService
-            // For now, show a message that the feature will be available
-            showAlert("Info", "Bank reconciliation report generation will be available soon.\n" +
-                "Reconciliation ID: " + currentReconciliation.getId() + "\n" +
-                "Status: " + currentReconciliation.getStatus() + "\n" +
-                "Reconciled Balance: " + (currentReconciliation.getReconciledBalance() != null ? 
-                    currentReconciliation.getReconciledBalance().toPlainString() : "N/A"));
+            // Export reconciliation to PDF using ExportService
+            byte[] pdfContent = exportService.exportBankReconciliationToPdf(currentReconciliation);
             
-            logger.info("Print reconciliation requested for ID: {}", currentReconciliation.getId());
+            // Show save dialog to user
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Bank Reconciliation Report");
+            fileChooser.setInitialFileName("BankReconciliation_" + 
+                currentReconciliation.getReconciliationNumber() + ".pdf");
+            fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
             
-            // Future implementation: Use ExportService to generate PDF
-            // byte[] pdfContent = exportService.exportBankReconciliationToPdf(currentReconciliation);
-            // Then show save dialog or send to printer
+            Stage stage = (Stage) btnPrintReconciliation.getScene().getWindow();
+            java.io.File file = fileChooser.showSaveDialog(stage);
+            
+            if (file != null) {
+                try (java.io.FileOutputStream fos = new java.io.FileOutputStream(file)) {
+                    fos.write(pdfContent);
+                    logger.info("Saved bank reconciliation report to: {}", file.getAbsolutePath());
+                    showAlert("Success", "Bank reconciliation report saved successfully.\n" +
+                        "File: " + file.getAbsolutePath());
+                }
+            }
             
         } catch (Exception e) {
             logger.error("Error generating reconciliation report", e);
