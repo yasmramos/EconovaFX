@@ -2,6 +2,7 @@ package com.econovafx.modules.core.service;
 
 import com.econovafx.modules.bank.model.BankReconciliation;
 import com.econovafx.modules.bank.model.ReconciliationItem;
+import com.econovafx.modules.bank.repository.BankReconciliationRepository;
 import com.econovafx.modules.bank.service.BankReconciliationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,10 +19,12 @@ public class BankReconciliationServiceTest {
     
     private BankReconciliationService service;
     private BankReconciliation reconciliation;
+    private BankReconciliationRepository repository;
 
     @BeforeEach
     public void setUp() {
-        service = new BankReconciliationService();
+        repository = new BankReconciliationRepository();
+        service = new BankReconciliationService(repository);
         reconciliation = new BankReconciliation();
         reconciliation.setBankAccountId(1L);
         reconciliation.setStatementDate(LocalDate.now().minusMonths(1));
@@ -117,6 +120,7 @@ public class BankReconciliationServiceTest {
         assertEquals(BankReconciliation.Status.COMPLETED, completed.getStatus());
         assertEquals("testUser", completed.getCompletedBy());
         assertNotNull(completed.getCompletedAt());
+        assertNotNull(completed.getReconciledBalance());
     }
 
     @Test
@@ -126,5 +130,33 @@ public class BankReconciliationServiceTest {
         assertThrows(IllegalStateException.class, () -> {
             service.completeReconciliation(created.getId(), "testUser");
         });
+    }
+
+    @Test
+    public void testGetReconciliationById() {
+        BankReconciliation created = service.createReconciliation(reconciliation);
+        
+        var found = service.getReconciliation(created.getId());
+        
+        assertTrue(found.isPresent());
+        assertEquals(created.getId(), found.get().getId());
+    }
+
+    @Test
+    public void testGetAllReconciliations() {
+        service.createReconciliation(reconciliation);
+        
+        var all = service.getAllReconciliations();
+        
+        assertTrue(all.size() >= 1);
+    }
+
+    @Test
+    public void testGetReconciliationsByBankAccount() {
+        BankReconciliation created = service.createReconciliation(reconciliation);
+        
+        var byBank = service.getByBankAccount(1L);
+        
+        assertTrue(byBank.stream().anyMatch(r -> r.getId().equals(created.getId())));
     }
 }

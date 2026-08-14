@@ -4,12 +4,15 @@ import com.econovafx.modules.cash.model.CashBox;
 import com.econovafx.modules.cash.model.CashMovement;
 import com.econovafx.modules.bank.model.BankAccount;
 import com.econovafx.modules.bank.model.BankReconciliation;
+import com.econovafx.modules.bank.model.ReconciliationItem;
 import com.econovafx.modules.bank.repository.BankAccountRepository;
 import com.econovafx.modules.bank.repository.BankReconciliationRepository;
 import com.econovafx.modules.cash.repository.CashBoxRepository;
 import com.econovafx.modules.cash.repository.CashMovementRepository;
 import com.econovafx.modules.cash.service.CashMovementService;
 import com.econovafx.modules.bank.service.BankReconciliationService;
+import com.econovafx.modules.core.service.ExportService;
+import com.econovafx.modules.core.security.SecurityUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller for Cash Module - Bank & Cash Management.
@@ -134,33 +138,35 @@ public class CashModuleController {
     @FXML
     private DatePicker dpReconciliationTo;
     @FXML
-    private TableView<?> systemItemsTable;
+    private TableView<ReconciliationItem> systemItemsTable;
     @FXML
-    private TableColumn<?, ?> colSysItemDate;
+    private TableColumn<ReconciliationItem, LocalDate> colSysItemDate;
     @FXML
-    private TableColumn<?, ?> colSysItemDesc;
+    private TableColumn<ReconciliationItem, String> colSysItemDesc;
     @FXML
-    private TableColumn<?, ?> colSysItemAmount;
+    private TableColumn<ReconciliationItem, BigDecimal> colSysItemAmount;
     @FXML
-    private TableColumn<?, ?> colSysItemReconciled;
+    private TableColumn<ReconciliationItem, Boolean> colSysItemReconciled;
     @FXML
-    private TableView<?> bankItemsTable;
+    private TableView<ReconciliationItem> bankItemsTable;
     @FXML
-    private TableColumn<?, ?> colBankItemDate;
+    private TableColumn<ReconciliationItem, LocalDate> colBankItemDate;
     @FXML
-    private TableColumn<?, ?> colBankItemRef;
+    private TableColumn<ReconciliationItem, String> colBankItemRef;
     @FXML
-    private TableColumn<?, ?> colBankItemDesc;
+    private TableColumn<ReconciliationItem, String> colBankItemDesc;
     @FXML
-    private TableColumn<?, ?> colBankItemAmount;
+    private TableColumn<ReconciliationItem, BigDecimal> colBankItemAmount;
     @FXML
-    private TableColumn<?, ?> colBankItemReconciled;
+    private TableColumn<ReconciliationItem, Boolean> colBankItemReconciled;
     @FXML
     private TextField txtBankBalance;
     @FXML
     private TextField txtSystemBalance;
     @FXML
     private TextField txtDifference;
+    @FXML
+    private Label lblReconciliationStatus;
 
     private BankAccountRepository bankAccountRepository;
     private CashBoxRepository cashBoxRepository;
@@ -168,7 +174,11 @@ public class CashModuleController {
     private BankReconciliationRepository bankReconciliationRepository;
     private CashMovementService cashMovementService;
     private BankReconciliationService bankReconciliationService;
+    private ExportService exportService;
     private Stage stage;
+    
+    // Current reconciliation being worked on
+    private BankReconciliation currentReconciliation;
 
     /**
      * Initializes the controller.
@@ -180,7 +190,8 @@ public class CashModuleController {
         this.cashMovementRepository = new CashMovementRepository();
         this.bankReconciliationRepository = new BankReconciliationRepository();
         this.cashMovementService = new CashMovementService();
-        this.bankReconciliationService = new BankReconciliationService();
+        this.bankReconciliationService = new BankReconciliationService(bankReconciliationRepository);
+        this.exportService = new ExportService();
 
         setupBankAccountsTable();
         setupCashBoxesTable();
@@ -264,6 +275,44 @@ public class CashModuleController {
     private void setupReconciliationTables() {
         cbReconciliationBank.setItems(FXCollections.observableArrayList());
         cbMovementFilter.setItems(FXCollections.observableArrayList("ALL", "PENDING", "POSTED", "CANCELLED"));
+        
+        // Setup system items table columns
+        colSysItemDate.setCellValueFactory(cellData -> 
+            new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getDate()));
+        colSysItemDesc.setCellValueFactory(cellData -> 
+            javafx.beans.binding.Bindings.createObjectBinding(() -> 
+                cellData.getValue().getDescription()));
+        colSysItemAmount.setCellValueFactory(cellData -> 
+            new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getAmount()));
+        colSysItemReconciled.setCellValueFactory(cellData -> 
+            new javafx.beans.property.SimpleBooleanProperty(cellData.getValue().getReconciled()));
+        
+        // Setup bank items table columns
+        colBankItemDate.setCellValueFactory(cellData -> 
+            new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getDate()));
+        colBankItemRef.setCellValueFactory(cellData -> 
+            javafx.beans.binding.Bindings.createObjectBinding(() -> 
+                cellData.getValue().getBankReference() != null ? cellData.getValue().getBankReference() : ""));
+        colBankItemDesc.setCellValueFactory(cellData -> 
+            javafx.beans.binding.Bindings.createObjectBinding(() -> 
+                cellData.getValue().getDescription()));
+        colBankItemAmount.setCellValueFactory(cellData -> 
+            new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getAmount()));
+        colBankItemReconciled.setCellValueFactory(cellData -> 
+            new javafx.beans.property.SimpleBooleanProperty(cellData.getValue().getReconciled()));
+        
+        // Add selection listeners to update difference in real-time
+        systemItemsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                updateDifference();
+            }
+        });
+        
+        bankItemsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                updateDifference();
+            }
+        });
     }
 
     private void loadAllData() {
@@ -486,8 +535,16 @@ public class CashModuleController {
             reconciliation.setStatus(BankReconciliation.Status.IN_PROGRESS);
             
             BankReconciliation saved = bankReconciliationService.createReconciliation(reconciliation);
-            showAlert("Success", "Reconciliation process started.");
+            
+            // Set as current reconciliation and update UI
+            currentReconciliation = saved;
+            updateReconciliationUI();
+            
+            showAlert("Success", "Reconciliation process started.\n" +
+                "Reconciliation ID: " + saved.getId() + "\n" +
+                "System Balance: " + saved.getSystemBalance().toPlainString());
             logger.info("Created reconciliation: {}", saved.getId());
+            
         } catch (Exception e) {
             logger.error("Error creating reconciliation", e);
             showAlert("Error", "Failed to start reconciliation: " + e.getMessage());
@@ -496,13 +553,141 @@ public class CashModuleController {
 
     @FXML
     private void handleCompleteReconciliation() {
-        // TODO: Get current reconciliation from context
-        showAlert("Info", "Complete reconciliation logic to be implemented.");
+        if (currentReconciliation == null) {
+            showAlert("Warning", "No reconciliation in progress. Please create a new reconciliation first.");
+            return;
+        }
+        
+        if (currentReconciliation.getStatus() != BankReconciliation.Status.IN_PROGRESS) {
+            showAlert("Warning", "This reconciliation is already " + currentReconciliation.getStatus());
+            return;
+        }
+        
+        try {
+            // Get current user from security context
+            String currentUser = SecurityUtil.getCurrentUserUsername();
+            if (currentUser == null || currentUser.isEmpty()) {
+                currentUser = "system";
+            }
+            
+            // Validate and complete the reconciliation
+            BankReconciliation completed = bankReconciliationService.completeReconciliation(
+                currentReconciliation.getId(), 
+                currentUser
+            );
+            
+            showAlert("Success", "Reconciliation completed successfully.\n" +
+                "Reconciled Balance: " + completed.getReconciledBalance().toPlainString());
+            
+            // Update UI
+            currentReconciliation = completed;
+            updateReconciliationUI();
+            loadAllData();
+            
+        } catch (IllegalStateException e) {
+            // Reconciliation doesn't balance - show the difference
+            BigDecimal difference = calculateDifference(currentReconciliation);
+            showAlert("Error", "Reconciliation does not balance.\n" +
+                "Difference: " + difference.toPlainString() + "\n\n" +
+                "Please adjust items until the difference is zero.");
+            logger.warn("Reconciliation balance validation failed: {}", e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error completing reconciliation", e);
+            showAlert("Error", "Failed to complete reconciliation: " + e.getMessage());
+        }
     }
 
     @FXML
     private void handlePrintReconciliation() {
-        showAlert("Info", "Reconciliation report would be printed here.");
+        if (currentReconciliation == null) {
+            showAlert("Warning", "No reconciliation selected to print.");
+            return;
+        }
+        
+        try {
+            // TODO: Implement PDF export for bank reconciliation using ExportService
+            // For now, show a message that the feature will be available
+            showAlert("Info", "Bank reconciliation report generation will be available soon.\n" +
+                "Reconciliation ID: " + currentReconciliation.getId() + "\n" +
+                "Status: " + currentReconciliation.getStatus() + "\n" +
+                "Reconciled Balance: " + (currentReconciliation.getReconciledBalance() != null ? 
+                    currentReconciliation.getReconciledBalance().toPlainString() : "N/A"));
+            
+            logger.info("Print reconciliation requested for ID: {}", currentReconciliation.getId());
+            
+            // Future implementation: Use ExportService to generate PDF
+            // byte[] pdfContent = exportService.exportBankReconciliationToPdf(currentReconciliation);
+            // Then show save dialog or send to printer
+            
+        } catch (Exception e) {
+            logger.error("Error generating reconciliation report", e);
+            showAlert("Error", "Failed to generate report: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Calculates the difference between adjusted bank balance and adjusted system balance.
+     * @param reconciliation the reconciliation to calculate difference for
+     * @return the difference amount (positive if bank > system, negative if system > bank)
+     */
+    private BigDecimal calculateDifference(BankReconciliation reconciliation) {
+        BigDecimal adjustedBankBalance = reconciliation.getBankBalance();
+        for (ReconciliationItem item : reconciliation.getBankItems()) {
+            adjustedBankBalance = adjustedBankBalance.add(item.getAmount());
+        }
+        
+        BigDecimal adjustedSystemBalance = reconciliation.getSystemBalance();
+        for (ReconciliationItem item : reconciliation.getSystemItems()) {
+            adjustedSystemBalance = adjustedSystemBalance.subtract(item.getAmount());
+        }
+        
+        return adjustedBankBalance.subtract(adjustedSystemBalance);
+    }
+    
+    /**
+     * Updates the difference display based on current reconciliation items.
+     */
+    private void updateDifference() {
+        if (currentReconciliation == null) {
+            return;
+        }
+        
+        BigDecimal difference = calculateDifference(currentReconciliation);
+        txtDifference.setText(difference.toPlainString());
+        
+        // Color code the difference
+        if (difference.compareTo(BigDecimal.ZERO) == 0) {
+            txtDifference.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+        } else {
+            txtDifference.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+        }
+    }
+    
+    /**
+     * Updates the reconciliation UI with current reconciliation data.
+     */
+    private void updateReconciliationUI() {
+        if (currentReconciliation == null) {
+            return;
+        }
+        
+        txtBankBalance.setText(currentReconciliation.getBankBalance().toPlainString());
+        txtSystemBalance.setText(currentReconciliation.getSystemBalance().toPlainString());
+        
+        // Populate tables
+        ObservableList<ReconciliationItem> systemItems = 
+            FXCollections.observableArrayList(currentReconciliation.getSystemItems());
+        systemItemsTable.setItems(systemItems);
+        
+        ObservableList<ReconciliationItem> bankItems = 
+            FXCollections.observableArrayList(currentReconciliation.getBankItems());
+        bankItemsTable.setItems(bankItems);
+        
+        // Update status label
+        lblReconciliationStatus.setText("Status: " + currentReconciliation.getStatus());
+        
+        // Update difference
+        updateDifference();
     }
 
     /**

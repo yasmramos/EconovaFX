@@ -6,6 +6,7 @@ import io.avaje.inject.Component;
 import com.econovafx.modules.bank.model.BankReconciliation;
 import com.econovafx.modules.bank.model.ReconciliationItem;
 import com.econovafx.modules.bank.repository.BankReconciliationRepository;
+import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,7 +20,12 @@ import java.util.Optional;
 @RequiresTenant
 public class BankReconciliationService {
     
-    private final BankReconciliationRepository repository = new BankReconciliationRepository();
+    private final BankReconciliationRepository repository;
+
+    @Inject
+    public BankReconciliationService(BankReconciliationRepository repository) {
+        this.repository = repository;
+    }
 
     public BankReconciliation createReconciliation(BankReconciliation reconciliation) {
         if (reconciliation.getBankAccountId() == null) {

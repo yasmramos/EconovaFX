@@ -1,47 +1,54 @@
 package com.econovafx.modules.bank.repository;
 
 import com.econovafx.modules.bank.model.BankReconciliation;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import io.avaje.inject.Component;
+import io.ebean.DB;
+import io.ebean.Database;
+import jakarta.inject.Singleton;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Repository for Bank Reconciliation data access.
+ * Repository for Bank Reconciliation data access using Ebean ORM.
  */
+@Singleton
 public class BankReconciliationRepository {
     
-    private final Map<Long, BankReconciliation> database = new ConcurrentHashMap<>();
-    private Long currentId = 1L;
+    private final Database database;
 
-    public synchronized BankReconciliation save(BankReconciliation reconciliation) {
-        if (reconciliation.getId() == null) {
-            reconciliation.setId(currentId++);
-        }
-        database.put(reconciliation.getId(), reconciliation);
+    public BankReconciliationRepository() {
+        this.database = DB.getDefault();
+    }
+
+    public BankReconciliation save(BankReconciliation reconciliation) {
+        database.save(reconciliation);
         return reconciliation;
     }
 
     public Optional<BankReconciliation> findById(Long id) {
-        return Optional.ofNullable(database.get(id));
+        return database.find(BankReconciliation.class).setId(id).findOneOrEmpty();
     }
 
     public List<BankReconciliation> findAll() {
-        return new ArrayList<>(database.values());
+        return database.find(BankReconciliation.class).findList();
     }
 
     public List<BankReconciliation> findByBankAccountId(Long bankAccountId) {
-        return database.values().stream()
-                .filter(r -> r.getBankAccountId().equals(bankAccountId))
-                .collect(Collectors.toList());
+        return database.find(BankReconciliation.class)
+                .where().eq("bankAccountId", bankAccountId)
+                .orderBy().desc("statementDate")
+                .findList();
     }
 
     public List<BankReconciliation> findByStatus(BankReconciliation.Status status) {
-        return database.values().stream()
-                .filter(r -> r.getStatus() == status)
-                .collect(Collectors.toList());
+        return database.find(BankReconciliation.class)
+                .where().eq("status", status)
+                .findList();
     }
 
     public boolean deleteById(Long id) {
-        return database.remove(id) != null;
+        int rowsDeleted = database.delete(BankReconciliation.class, id);
+        return rowsDeleted > 0;
     }
 }
