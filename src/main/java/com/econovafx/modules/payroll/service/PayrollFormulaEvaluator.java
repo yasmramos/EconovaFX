@@ -3,6 +3,8 @@ package com.econovafx.modules.payroll.service;
 import com.econovafx.modules.payroll.model.Employee;
 import com.econovafx.modules.payroll.model.PayrollConcept;
 import com.econovafx.modules.payroll.model.PayrollPeriod;
+import com.econovafx.modules.core.model.SystemConfiguration;
+import com.econovafx.modules.core.service.SystemConfigService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,6 +18,23 @@ import java.util.regex.Pattern;
  * Supports basic arithmetic operations and variables.
  */
 public class PayrollFormulaEvaluator {
+
+    private final SystemConfigService systemConfigService;
+
+    /**
+     * Constructor with SystemConfigService injection.
+     */
+    public PayrollFormulaEvaluator(SystemConfigService systemConfigService) {
+        this.systemConfigService = systemConfigService;
+    }
+
+    /**
+     * Default constructor for backward compatibility.
+     * Note: This will use default values if SystemConfigService is not available.
+     */
+    public PayrollFormulaEvaluator() {
+        this.systemConfigService = null;
+    }
 
     /**
      * Evaluate a formula expression and return the result.
@@ -106,10 +125,30 @@ public class PayrollFormulaEvaluator {
             result = result.replaceAll("\\$\\{percentage\\}", concept.getPercentage().toString());
         }
 
-        // Replace minimum wage (simplified - in real scenario would come from configuration)
-        result = result.replaceAll("\\$\\{minimumWage\\}", "450.00");
+        // Replace minimum wage from system configuration (Cuban standard: 2100.00 CUP as of 2024)
+        BigDecimal minimumWage = getMinimumWageFromConfig();
+        result = result.replaceAll("\\$\\{minimumWage\\}", minimumWage.toString());
 
         return result;
+    }
+
+    /**
+     * Get the minimum wage from system configuration.
+     * Falls back to default value if configuration is not available.
+     */
+    private BigDecimal getMinimumWageFromConfig() {
+        if (systemConfigService != null) {
+            try {
+                SystemConfiguration config = systemConfigService.getCurrentConfig();
+                if (config != null && config.getMinimumWage() != null) {
+                    return config.getMinimumWage();
+                }
+            } catch (Exception e) {
+                // Fall back to default if config is not available
+            }
+        }
+        // Default Cuban minimum wage as of 2024: 2100.00 CUP
+        return new BigDecimal("2100.00");
     }
 
     /**
@@ -179,7 +218,7 @@ public class PayrollFormulaEvaluator {
                         if (right.compareTo(BigDecimal.ZERO) == 0) {
                             throw new ArithmeticException("Division by zero");
                         }
-                        left = left.divide(right, 10, BigDecimal.ROUND_HALF_UP);
+                        left = left.divide(right, 10, RoundingMode.HALF_UP);
                     }
                 } else {
                     break;
