@@ -84,6 +84,19 @@ module econonovafx {
     provides io.avaje.inject.spi.InjectExtension with com.econovafx.EconovafxModule;
     provides io.ebean.config.EntityClassRegister with com.econovafx.EbeanEntityRegister;
     
+    // Open entity model packages to Ebean for reflective access (e.g. @DbEnumValue
+    // enum introspection in io.ebean.core). Without these, io.ebean.core throws
+    // IllegalAccessException when the model packages are not opened.
+    opens com.econovafx.modules.core.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.accounting.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.billing.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.payroll.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.inventory.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.receivables.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.payables.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.bank.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.cash.model to io.ebean.core, io.ebean;
+
     // Open packages for reflection-based testing
     opens com.econovafx to org.junit.platform.commons, org.junit.jupiter.api;
     opens com.econovafx.modules.accounting.repository to org.junit.platform.commons, org.junit.jupiter.api;

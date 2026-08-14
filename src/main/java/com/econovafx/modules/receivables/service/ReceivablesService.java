@@ -7,11 +7,15 @@ import com.econovafx.modules.receivables.repository.CustomerPaymentRepository;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.config.UserContext;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
 import com.econovafx.modules.core.exception.ValidationException;
 import com.econovafx.modules.core.security.RequiresTenant;
+import com.econovafx.modules.core.service.SystemConfigService;
+import com.econovafx.modules.core.model.SystemConfiguration;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -49,6 +53,8 @@ public class ReceivablesService {
     private final ThirdPartyService thirdPartyService;
     private final TransactionService transactionService;
     private final UserContext userContext;
+    private final AccountRepository accountRepository;
+    private final SystemConfigService systemConfigService;
 
     @Inject
     public ReceivablesService(
@@ -56,12 +62,16 @@ public class ReceivablesService {
             CustomerPaymentRepository paymentRepository,
             ThirdPartyService thirdPartyService,
             TransactionService transactionService,
-            UserContext userContext) {
+            UserContext userContext,
+            AccountRepository accountRepository,
+            SystemConfigService systemConfigService) {
         this.invoiceRepository = invoiceRepository;
         this.paymentRepository = paymentRepository;
         this.thirdPartyService = thirdPartyService;
         this.transactionService = transactionService;
         this.userContext = userContext;
+        this.accountRepository = accountRepository;
+        this.systemConfigService = systemConfigService;
     }
 
     // ==================== Invoice Operations ====================
@@ -235,9 +245,12 @@ public class ReceivablesService {
     }
 
     /**
-     * Create accounting entry for invoice
+     * Create accounting entry for invoice.
+     * Automatically generates double-entry bookkeeping based on configured accounts:
+     * - Debit: Accounts Receivable (from system configuration)
+     * - Credit: Revenue/Sales (from system configuration)
      */
-    public CustomerInvoice createTransactionForInvoice(Long invoiceId, Transaction entry) {
+    public CustomerInvoice createTransactionForInvoice(Long invoiceId, Transaction baseTransaction) {
         final CustomerInvoice invoice = invoiceRepository.findById(invoiceId)
             .orElseThrow(() -> new EntityNotFoundException(CustomerInvoice.class, invoiceId));
 
@@ -246,27 +259,52 @@ public class ReceivablesService {
                 "Invoice already has an accounting entry");
         }
 
+        // Validate invoice amount > 0
+        if (invoice.getTotalAmount() == null || invoice.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ValidationException("totalAmount", 
+                "Invoice total amount must be greater than zero");
+        }
+
+        // Get system configuration for account codes
+        SystemConfiguration config = systemConfigService.getCurrentConfig();
+        
+        // Get account codes from configuration
+        String receivableCode = config.getAccountsReceivableCode();
+        String revenueCode = config.getRevenueAccountCode();
+        
+        // Resolve accounts from repository
+        Account receivableAccount = accountRepository.findByCode(receivableCode)
+            .orElseThrow(() -> new EntityNotFoundException(
+                "Account not found with code: " + receivableCode + ". Please configure the Accounts Receivable account in system settings."));
+        
+        Account revenueAccount = accountRepository.findByCode(revenueCode)
+            .orElseThrow(() -> new EntityNotFoundException(
+                "Account not found with code: " + revenueCode + ". Please configure the Revenue account in system settings."));
+        
         List<TransactionService.TransactionEntryData> entries = new java.util.ArrayList<>();
-        // Create accounting entries for invoice (Accounts Receivable and Revenue)
-        // Debit: Accounts Receivable, Credit: Revenue/Sales
+        
+        // Create double-entry: Debit Accounts Receivable, Credit Revenue
         entries.add(new TransactionService.TransactionEntryData(
-            entry.getEntries().get(0).getAccount().getId(),
-            entry.getEntries().get(0).getDebitAmount(),
+            receivableAccount.getId(),
+            invoice.getTotalAmount(),  // Debit amount
             BigDecimal.ZERO,
             "Invoice: " + invoice.getInvoiceNumber()
         ));
         entries.add(new TransactionService.TransactionEntryData(
-            entry.getEntries().get(1).getAccount().getId(),
+            revenueAccount.getId(),
             BigDecimal.ZERO,
-            entry.getEntries().get(1).getCreditAmount(),
+            invoice.getTotalAmount(),  // Credit amount
             "Invoice: " + invoice.getInvoiceNumber()
         ));
         
-        Transaction savedEntry = transactionService.createTransaction(entry, entries);
+        Transaction savedEntry = transactionService.createTransaction(baseTransaction, entries);
         invoice.setAccountingTransaction(savedEntry);
         invoiceRepository.update(invoice);
 
-        logger.info("Accounting entry created for invoice: {}", invoice.getInvoiceNumber());
+        logger.info("Accounting entry created for invoice: {} - Debit: {} ({}), Credit: {} ({})", 
+            invoice.getInvoiceNumber(), 
+            receivableAccount.getCode(), receivableAccount.getName(),
+            revenueAccount.getCode(), revenueAccount.getName());
         return invoice;
     }
 
@@ -403,9 +441,12 @@ public class ReceivablesService {
     }
 
     /**
-     * Create accounting entry for payment
+     * Create accounting entry for payment.
+     * Automatically generates double-entry bookkeeping based on configured accounts:
+     * - Debit: Cash/Bank (from system configuration)
+     * - Credit: Accounts Receivable (from system configuration)
      */
-    public CustomerPayment createTransactionForPayment(Long paymentId, Transaction entry) {
+    public CustomerPayment createTransactionForPayment(Long paymentId, Transaction baseTransaction) {
         final CustomerPayment payment = paymentRepository.findById(paymentId)
             .orElseThrow(() -> new EntityNotFoundException(CustomerPayment.class, paymentId));
 
@@ -414,27 +455,52 @@ public class ReceivablesService {
                 "Payment already has an accounting entry");
         }
 
+        // Validate payment amount > 0
+        if (payment.getTotalAmount() == null || payment.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ValidationException("totalAmount", 
+                "Payment total amount must be greater than zero");
+        }
+
+        // Get system configuration for account codes
+        SystemConfiguration config = systemConfigService.getCurrentConfig();
+        
+        // Get account codes from configuration
+        String cashCode = config.getCashAccountCode();
+        String receivableCode = config.getAccountsReceivableCode();
+        
+        // Resolve accounts from repository
+        Account cashAccount = accountRepository.findByCode(cashCode)
+            .orElseThrow(() -> new EntityNotFoundException(
+                "Account not found with code: " + cashCode + ". Please configure the Cash/Bank account in system settings."));
+        
+        Account receivableAccount = accountRepository.findByCode(receivableCode)
+            .orElseThrow(() -> new EntityNotFoundException(
+                "Account not found with code: " + receivableCode + ". Please configure the Accounts Receivable account in system settings."));
+        
         List<TransactionService.TransactionEntryData> entries = new java.util.ArrayList<>();
-        // Create accounting entries for payment (Cash/Bank and Accounts Receivable)
-        // Debit: Cash/Bank, Credit: Accounts Receivable
+        
+        // Create double-entry: Debit Cash/Bank, Credit Accounts Receivable
         entries.add(new TransactionService.TransactionEntryData(
-            entry.getEntries().get(0).getAccount().getId(),
-            entry.getEntries().get(0).getDebitAmount(),
+            cashAccount.getId(),
+            payment.getTotalAmount(),  // Debit amount
             BigDecimal.ZERO,
             "Payment: " + payment.getPaymentNumber()
         ));
         entries.add(new TransactionService.TransactionEntryData(
-            entry.getEntries().get(1).getAccount().getId(),
+            receivableAccount.getId(),
             BigDecimal.ZERO,
-            entry.getEntries().get(1).getCreditAmount(),
+            payment.getTotalAmount(),  // Credit amount
             "Payment: " + payment.getPaymentNumber()
         ));
         
-        Transaction savedEntry = transactionService.createTransaction(entry, entries);
+        Transaction savedEntry = transactionService.createTransaction(baseTransaction, entries);
         payment.setAccountingTransaction(savedEntry);
         paymentRepository.update(payment);
 
-        logger.info("Accounting entry created for payment: {}", payment.getPaymentNumber());
+        logger.info("Accounting entry created for payment: {} - Debit: {} ({}), Credit: {} ({})", 
+            payment.getPaymentNumber(),
+            cashAccount.getCode(), cashAccount.getName(),
+            receivableAccount.getCode(), receivableAccount.getName());
         return payment;
     }
 

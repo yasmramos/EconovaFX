@@ -2,6 +2,8 @@ package com.econovafx.modules.core.service;
 
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.model.TransactionEntry;
+import com.econovafx.modules.bank.model.BankReconciliation;
+import com.econovafx.modules.bank.model.ReconciliationItem;
 import com.econovafx.modules.billing.model.ThirdParty;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -367,6 +369,194 @@ public class ExportService {
             
             logger.info("Exported {} transactions to Excel for third party {}: {}", 
                 transactions.size(), thirdParty.getName(), file.getAbsolutePath());
+        }
+    }
+
+    /**
+     * Export bank reconciliation to PDF format.
+     * @param reconciliation the bank reconciliation to export
+     * @return byte array containing the PDF content
+     * @throws IOException if an error occurs during PDF generation
+     */
+    public byte[] exportBankReconciliationToPdf(BankReconciliation reconciliation) throws IOException {
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+            
+            // Title
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+            contentStream.newLineAtOffset(50, 750);
+            contentStream.showText("Bank Reconciliation Report");
+            contentStream.endText();
+
+            // Reconciliation details
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+            contentStream.newLineAtOffset(50, 710);
+            contentStream.showText("Reconciliation Number: " + reconciliation.getReconciliationNumber());
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Bank Account ID: " + reconciliation.getBankAccountId());
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Statement Date: " + reconciliation.getStatementDate().format(DATE_FORMATTER));
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("Status: " + reconciliation.getStatus());
+            contentStream.newLineAtOffset(0, -20);
+            if (reconciliation.getCompletedBy() != null) {
+                contentStream.showText("Completed By: " + reconciliation.getCompletedBy());
+                contentStream.newLineAtOffset(0, -20);
+            }
+            if (reconciliation.getCompletedAt() != null) {
+                contentStream.showText("Completed At: " + reconciliation.getCompletedAt().format(DATETIME_FORMATTER));
+                contentStream.newLineAtOffset(0, -30);
+            } else {
+                contentStream.newLineAtOffset(0, -30);
+            }
+
+            // Balances summary
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.showText("Balance Summary:");
+            contentStream.endText();
+            
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 10);
+            contentStream.newLineAtOffset(0, -20);
+            contentStream.showText("System Balance: " + reconciliation.getSystemBalance().toPlainString());
+            contentStream.newLineAtOffset(0, -15);
+            contentStream.showText("Bank Balance: " + reconciliation.getBankBalance().toPlainString());
+            contentStream.newLineAtOffset(0, -15);
+            if (reconciliation.getReconciledBalance() != null) {
+                contentStream.showText("Reconciled Balance: " + reconciliation.getReconciledBalance().toPlainString());
+            }
+            contentStream.endText();
+
+            // System Items Table Header
+            float yPosition = 450;
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 11);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText("System Items:");
+            contentStream.endText();
+            
+            yPosition -= 25;
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 9);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText("Date");
+            contentStream.newLineAtOffset(80, 0);
+            contentStream.showText("Description");
+            contentStream.newLineAtOffset(200, 0);
+            contentStream.showText("Amount");
+            contentStream.newLineAtOffset(80, 0);
+            contentStream.showText("Reconciled");
+            contentStream.endText();
+            
+            yPosition -= 20;
+            contentStream.setFont(PDType1Font.HELVETICA, 9);
+            
+            for (ReconciliationItem item : reconciliation.getSystemItems()) {
+                if (yPosition < 250) {
+                    // Add new page if needed
+                    page = new PDPage();
+                    document.addPage(page);
+                    contentStream.close();
+                    contentStream = new PDPageContentStream(document, page);
+                    yPosition = 700;
+                }
+                
+                contentStream.beginText();
+                contentStream.newLineAtOffset(50, yPosition);
+                contentStream.showText(item.getDate().format(DATE_FORMATTER));
+                contentStream.newLineAtOffset(80, 0);
+                String desc = item.getDescription() != null ? item.getDescription() : "";
+                if (desc.length() > 25) {
+                    desc = desc.substring(0, 22) + "...";
+                }
+                contentStream.showText(desc);
+                contentStream.newLineAtOffset(200, 0);
+                contentStream.showText(item.getAmount().toPlainString());
+                contentStream.newLineAtOffset(80, 0);
+                contentStream.showText(item.getReconciled() ? "Yes" : "No");
+                contentStream.endText();
+                
+                yPosition -= 15;
+            }
+
+            // Bank Items Table Header
+            yPosition -= 30;
+            if (yPosition < 200) {
+                page = new PDPage();
+                document.addPage(page);
+                contentStream.close();
+                contentStream = new PDPageContentStream(document, page);
+                yPosition = 700;
+            }
+            
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 11);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText("Bank Items:");
+            contentStream.endText();
+            
+            yPosition -= 25;
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 9);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText("Date");
+            contentStream.newLineAtOffset(80, 0);
+            contentStream.showText("Reference");
+            contentStream.newLineAtOffset(100, 0);
+            contentStream.showText("Description");
+            contentStream.newLineAtOffset(150, 0);
+            contentStream.showText("Amount");
+            contentStream.newLineAtOffset(80, 0);
+            contentStream.showText("Reconciled");
+            contentStream.endText();
+            
+            yPosition -= 20;
+            contentStream.setFont(PDType1Font.HELVETICA, 9);
+            
+            for (ReconciliationItem item : reconciliation.getBankItems()) {
+                if (yPosition < 250) {
+                    // Add new page if needed
+                    page = new PDPage();
+                    document.addPage(page);
+                    contentStream.close();
+                    contentStream = new PDPageContentStream(document, page);
+                    yPosition = 700;
+                }
+                
+                contentStream.beginText();
+                contentStream.newLineAtOffset(50, yPosition);
+                contentStream.showText(item.getDate().format(DATE_FORMATTER));
+                contentStream.newLineAtOffset(80, 0);
+                String ref = item.getBankReference() != null ? item.getBankReference() : "";
+                contentStream.showText(ref);
+                contentStream.newLineAtOffset(100, 0);
+                String desc = item.getDescription() != null ? item.getDescription() : "";
+                if (desc.length() > 18) {
+                    desc = desc.substring(0, 15) + "...";
+                }
+                contentStream.showText(desc);
+                contentStream.newLineAtOffset(150, 0);
+                contentStream.showText(item.getAmount().toPlainString());
+                contentStream.newLineAtOffset(80, 0);
+                contentStream.showText(item.getReconciled() ? "Yes" : "No");
+                contentStream.endText();
+                
+                yPosition -= 15;
+            }
+
+            contentStream.close();
+            
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            document.save(baos);
+            
+            logger.info("Exported bank reconciliation {} to PDF", reconciliation.getReconciliationNumber());
+            return baos.toByteArray();
         }
     }
 }

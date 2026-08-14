@@ -2,6 +2,7 @@ package com.econovafx.modules.bank.model;
 
 import com.econovafx.modules.core.model.BaseEntity;
 import io.ebean.annotation.DbEnumValue;
+import io.ebean.annotation.Where;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -50,9 +51,11 @@ public class BankReconciliation extends BaseEntity {
     private String completedBy;
 
     @OneToMany(mappedBy = "reconciliation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "origin_type = 'BANK'")
     private List<ReconciliationItem> bankItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "reconciliation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "origin_type = 'SYSTEM'")
     private List<ReconciliationItem> systemItems = new ArrayList<>();
 
     public BankReconciliation() {
