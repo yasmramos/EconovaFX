@@ -13,6 +13,8 @@ import javafx.scene.text.Font;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesign2;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -86,7 +88,9 @@ public class ExchangeRateView extends VBox {
         lastUpdateLabel = new Label("Última act.: --");
         lastUpdateLabel.setStyle("-fx-font-style: italic;");
 
-        refreshButton = new Button("🔄 Actualizar desde BC");
+        refreshButton = new Button();
+        refreshButton.setGraphic(new FontIcon(MaterialDesign2.REFRESH));
+        refreshButton.setText(" Actualizar desde BC");
         refreshButton.setOnAction(e -> handleRefreshFromBC());
         refreshButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white; -fx-padding: 5 15;");
 
@@ -146,10 +150,14 @@ public class ExchangeRateView extends VBox {
         currencyFilterCombo.getItems().addAll("TODOS", "USD", "EUR", "GBP", "CHF", "CAD", "JPY");
         currencyFilterCombo.setValue("TODOS");
 
-        searchButton = new Button("🔍 Buscar");
+        searchButton = new Button();
+        searchButton.setGraphic(new FontIcon(MaterialDesign2.SEARCH));
+        searchButton.setText(" Buscar");
         searchButton.setOnAction(e -> handleSearchHistory());
 
-        exportButton = new Button("📥 Exportar CSV");
+        exportButton = new Button();
+        exportButton.setGraphic(new FontIcon(MaterialDesign2.DOWNLOAD));
+        exportButton.setText(" Exportar CSV");
         exportButton.setOnAction(e -> handleExportCSV());
         exportButton.setDisable(true);
 
