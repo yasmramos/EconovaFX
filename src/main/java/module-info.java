@@ -46,6 +46,7 @@ module econonovafx {
     requires io.avaje.applog;
     requires io.ebean.platform.h2;
     requires com.h2database;
+    requires org.postgresql.jdbc;
     requires org.slf4j;
     requires ch.qos.logback.classic;
     requires ch.qos.logback.core;

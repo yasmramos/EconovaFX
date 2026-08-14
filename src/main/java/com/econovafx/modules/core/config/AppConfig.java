@@ -21,11 +21,20 @@ public class AppConfig {
     public final String appVersion;
     
     // Database Configuration
+    public final String dbType;
     public final String dbDriver;
     public final String dbUrl;
     public final String dbUsername;
     public final String dbPassword;
     public final String dbPath;
+    
+    // PostgreSQL Configuration
+    public final String postgresHost;
+    public final int postgresPort;
+    public final String postgresDatabase;
+    public final String postgresUsername;
+    public final String postgresPassword;
+    public final String postgresSslMode;
     
     // Master Database Configuration
     public final String masterDbDriver;
@@ -63,11 +72,18 @@ public class AppConfig {
     // Static fields for backward compatibility
     public static final String APP_NAME;
     public static final String APP_VERSION;
+    public static final String DB_TYPE;
     public static final String DB_DRIVER;
     public static final String DB_URL;
     public static final String DB_USERNAME;
     public static final String DB_PASSWORD;
     public static final String DB_PATH;
+    public static final String POSTGRES_HOST;
+    public static final int POSTGRES_PORT;
+    public static final String POSTGRES_DATABASE;
+    public static final String POSTGRES_USERNAME;
+    public static final String POSTGRES_PASSWORD;
+    public static final String POSTGRES_SSLMODE;
     public static final String MASTER_DB_DRIVER;
     public static final String MASTER_DB_URL;
     public static final String MASTER_DB_USERNAME;
@@ -97,12 +113,21 @@ public class AppConfig {
         APP_NAME = Config.get("app.name", "EconoNova FX");
         APP_VERSION = Config.get("app.version", "1.0.0");
         
-        // Database
+        // Database Type and Configuration
+        DB_TYPE = Config.get("database.type", "h2");
         DB_DRIVER = Config.get("database.driver", "org.h2.Driver");
         DB_URL = Config.get("database.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
         DB_USERNAME = Config.get("database.username", "sa");
         DB_PASSWORD = Config.get("database.password", "");
         DB_PATH = Config.get("app.database.path", "./db/master");
+        
+        // PostgreSQL Configuration
+        POSTGRES_HOST = Config.get("database.postgres.host", "localhost");
+        POSTGRES_PORT = Config.getInt("database.postgres.port", 5432);
+        POSTGRES_DATABASE = Config.get("database.postgres.database", "econovafx_master");
+        POSTGRES_USERNAME = Config.get("database.postgres.username", "postgres");
+        POSTGRES_PASSWORD = Config.get("database.postgres.password", "changeme");
+        POSTGRES_SSLMODE = Config.get("database.postgres.sslmode", "prefer");
         
         // Master Database
         MASTER_DB_DRIVER = Config.get("ebean.datasource.master.driver", "org.h2.Driver");
@@ -149,11 +174,18 @@ public class AppConfig {
     public AppConfig() {
         this.appName = APP_NAME;
         this.appVersion = APP_VERSION;
+        this.dbType = DB_TYPE;
         this.dbDriver = DB_DRIVER;
         this.dbUrl = DB_URL;
         this.dbUsername = DB_USERNAME;
         this.dbPassword = DB_PASSWORD;
         this.dbPath = DB_PATH;
+        this.postgresHost = POSTGRES_HOST;
+        this.postgresPort = POSTGRES_PORT;
+        this.postgresDatabase = POSTGRES_DATABASE;
+        this.postgresUsername = POSTGRES_USERNAME;
+        this.postgresPassword = POSTGRES_PASSWORD;
+        this.postgresSslMode = POSTGRES_SSLMODE;
         this.masterDbDriver = MASTER_DB_DRIVER;
         this.masterDbUrl = MASTER_DB_URL;
         this.masterDbUsername = MASTER_DB_USERNAME;

@@ -7,10 +7,12 @@ import io.ebean.config.ClassLoadConfig;
 import io.ebean.config.CurrentTenantProvider;
 import io.ebean.config.TenantDataSourceProvider;
 import io.ebean.config.TenantMode;
+import io.ebean.config.dbplatform.DatabasePlatform;
 import io.ebean.datasource.DataSourceConfig;
 import io.ebean.datasource.DataSourceFactory;
 import io.ebean.datasource.DataSourcePool;
 import io.ebean.platform.h2.H2Platform;
+import io.ebean.platform.postgres.PostgresPlatform;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,12 +80,27 @@ public class DatabaseConfig {
                 .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                 .ddlGenerate(true)
                 .ddlRun(true)
-                .databasePlatform(new H2Platform())
+                .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
                 .defaultDatabase(true);
 
         Database masterDb = builder.build();
         masterDatabase = masterDb;
-        logger.info("Master database initialized successfully");
+        logger.info("Master database initialized successfully with platform: {}", AppConfig.DB_TYPE);
+    }
+    
+    /**
+     * Selects the appropriate database platform based on configuration.
+     * @param dbType The database type ("h2" or "postgres")
+     * @return The appropriate DatabasePlatform instance
+     */
+    private static DatabasePlatform selectDatabasePlatform(String dbType) {
+        if ("postgres".equalsIgnoreCase(dbType)) {
+            logger.info("Using PostgreSQL database platform");
+            return new PostgresPlatform();
+        } else {
+            logger.info("Using H2 database platform");
+            return new H2Platform();
+        }
     }
 
     /**
@@ -114,14 +131,14 @@ public class DatabaseConfig {
                     .tenantMode(TenantMode.DB)
                     .currentTenantProvider(tenantProvider)
                     .tenantDataSourceProvider(dataSourceProvider)
-                    .databasePlatform(new H2Platform())
+                    .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
                     .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                     .ddlGenerate(true)
                     .ddlRun(true);
 
             tenantDatabase = builder.build();
 
-            logger.info("Multi-tenant database initialized successfully with TenantMode.DB");
+            logger.info("Multi-tenant database initialized successfully with TenantMode.DB and platform: {}", AppConfig.DB_TYPE);
 
         } catch (Exception e) {
             logger.error("Failed to initialize multi-tenant database", e);
@@ -146,23 +163,60 @@ public class DatabaseConfig {
 
             try {
                 DataSourceConfig dsConfig = new DataSourceConfig();
-                dsConfig.setDriver("org.h2.Driver");
-                dsConfig.setUrl(company.getDatabaseUrl());
+                
+                // Determine driver and URL based on database type from config or company
+                String dbType = AppConfig.DB_TYPE;
+                String driver, url, username, password;
+                
+                // If company has explicit database URL, use it; otherwise build from config
+                if (company.getDatabaseUrl() != null && !company.getDatabaseUrl().isEmpty()) {
+                    url = company.getDatabaseUrl();
+                    // Infer driver from URL if not explicitly set
+                    if (url.startsWith("jdbc:postgresql:")) {
+                        driver = "org.postgresql.Driver";
+                    } else if (url.startsWith("jdbc:h2:")) {
+                        driver = "org.h2.Driver";
+                    } else {
+                        driver = company.getDatabaseDriver() != null ? company.getDatabaseDriver() : dbType.equals("postgres") ? "org.postgresql.Driver" : "org.h2.Driver";
+                    }
+                } else {
+                    // Build URL from configuration
+                    if ("postgres".equalsIgnoreCase(dbType)) {
+                        driver = "org.postgresql.Driver";
+                        url = String.format("jdbc:postgresql://%s:%d/%s?sslmode=%s",
+                                AppConfig.POSTGRES_HOST,
+                                AppConfig.POSTGRES_PORT,
+                                AppConfig.POSTGRES_DATABASE,
+                                AppConfig.POSTGRES_SSLMODE);
+                    } else {
+                        driver = "org.h2.Driver";
+                        url = String.format("jdbc:h2:./db/tenant-%s;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE", company.getCode());
+                    }
+                }
+                
+                dsConfig.setDriver(driver);
+                dsConfig.setUrl(url);
 
                 if (company.getDatabaseUser() != null && !company.getDatabaseUser().isEmpty()) {
-                    dsConfig.setUsername(company.getDatabaseUser());
-                    dsConfig.setPassword("");
+                    username = company.getDatabaseUser();
+                    // Use company password if available, otherwise use config default
+                    password = company.getDatabasePassword() != null && !company.getDatabasePassword().isEmpty() 
+                            ? company.getDatabasePassword() 
+                            : (driver.contains("postgresql") ? AppConfig.POSTGRES_PASSWORD : "");
                 } else {
-                    dsConfig.setUsername("sa");
-                    dsConfig.setPassword("");
+                    username = driver.contains("postgresql") ? AppConfig.POSTGRES_USERNAME : "sa";
+                    password = driver.contains("postgresql") ? AppConfig.POSTGRES_PASSWORD : "";
                 }
+                
+                dsConfig.setUsername(username);
+                dsConfig.setPassword(password);
 
                 dsConfig.setMinConnections(1);
                 dsConfig.setMaxConnections(10);
 
                 String dbName = "econova-tenant-" + company.getCode();
                 DataSource dataSource = DataSourceFactory.create(dbName, dsConfig);
-                logger.info("DataSource created successfully for: {}", company.getCode());
+                logger.info("DataSource created successfully for: {} with driver: {}", company.getCode(), driver);
 
                 return dataSource;
 
