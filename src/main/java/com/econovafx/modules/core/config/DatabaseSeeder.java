@@ -110,7 +110,8 @@ public class DatabaseSeeder {
             companyRepository.findByCode("DEMO").ifPresent(adminUser::setCompany);
             
             userRepository.save(adminUser);
-            logger.info("Created admin user: admin (email: admin@econovafx.com, password: admin123)");
+            logger.info("Created default admin user: admin (email: admin@econovafx.com). "
+                + "Please change the default password immediately after first login.");
         } else {
             logger.debug("Users already exist, skipping seeding");
         }
