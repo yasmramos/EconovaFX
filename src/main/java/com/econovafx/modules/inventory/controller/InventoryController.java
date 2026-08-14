@@ -1,7 +1,6 @@
 package com.econovafx.modules.inventory.controller;
 
 import com.econovafx.modules.core.model.User;
-import com.econovafx.modules.core.config.TenantContext;
 import com.econovafx.modules.core.config.UserContext;
 import com.econovafx.modules.inventory.model.InventoryItem;
 import com.econovafx.modules.inventory.model.InventoryMovement;
@@ -88,13 +87,11 @@ public class InventoryController {
     private Label lblStockBajo;
 
     private final InventoryService inventoryService;
-    private final TenantContext tenantContext;
     private final UserContext userContext;
     private ObservableList<InventoryItem> productList;
 
-    public InventoryController(InventoryService inventoryService, TenantContext tenantContext, UserContext userContext) {
+    public InventoryController(InventoryService inventoryService, UserContext userContext) {
         this.inventoryService = inventoryService;
-        this.tenantContext = tenantContext;
         this.userContext = userContext;
         this.productList = FXCollections.observableArrayList();
     }
@@ -132,7 +129,7 @@ public class InventoryController {
         txtBuscar.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null && newVal.length() >= 2) {
                 searchProducts(newVal);
-            } else if (newVal != null && newVal.isEmpty()) {
+            } else {
                 loadProducts();
             }
         });
