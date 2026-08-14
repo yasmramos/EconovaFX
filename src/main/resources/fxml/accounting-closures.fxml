@@ -22,9 +22,9 @@
                styleClass="text-slate-600" wrapText="true"/>
         
         <HBox spacing="15" alignment="CENTER_LEFT">
-            <Button text="📊 Ver Periodos Abiertos" styleClass="btn, btn-primary"/>
-            <Button text="🔒 Ejecutar Cierre Mensual" styleClass="btn, btn-warning"/>
-            <Button text="📅 Ejecutar Cierre Anual" styleClass="btn, btn-danger"/>
+            <Button fx:id="btnVerPeriodos" text="📊 Ver Periodos Abiertos" styleClass="btn, btn-primary" onAction="#handleVerPeriodos"/>
+            <Button fx:id="btnCierreMensual" text="🔒 Ejecutar Cierre Mensual" styleClass="btn, btn-warning" onAction="#handleCierreMensual"/>
+            <Button fx:id="btnCierreAnual" text="📅 Ejecutar Cierre Anual" styleClass="btn, btn-danger" onAction="#handleCierreAnual"/>
         </HBox>
     </VBox>
 
@@ -32,14 +32,14 @@
     <VBox styleClass="card, bg-white, p-6" spacing="15" VBox.vgrow="ALWAYS">
         <Label text="Historial de Cierres" styleClass="text-lg, font-semibold, text-slate-700"/>
         
-        <TableView prefHeight="300">
+        <TableView fx:id="closuresTable" prefHeight="300">
             <columns>
-                <TableColumn text="Tipo" prefWidth="150"/>
-                <TableColumn text="Periodo" prefWidth="200"/>
-                <TableColumn text="Fecha Cierre" prefWidth="150"/>
-                <TableColumn text="Usuario" prefWidth="200"/>
-                <TableColumn text="Estado" prefWidth="150"/>
-                <TableColumn text="Acciones" prefWidth="150"/>
+                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="150"/>
+                <TableColumn fx:id="colPeriodo" text="Periodo" prefWidth="200"/>
+                <TableColumn fx:id="colFechaCierre" text="Fecha Cierre" prefWidth="150"/>
+                <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="200"/>
+                <TableColumn fx:id="colEstado" text="Estado" prefWidth="150"/>
+                <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="150"/>
             </columns>
         </TableView>
     </VBox>
