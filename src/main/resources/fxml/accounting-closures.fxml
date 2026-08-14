@@ -11,35 +11,35 @@
       spacing="20"
       styleClass="bg-gray-50, p-6">
 
-    <Label text="🔒 Cierres Contables" styleClass="text-2xl, font-bold, text-slate-800"/>
+    <Label text="🔒 Accounting Closures" styleClass="text-2xl, font-bold, text-slate-800"/>
     
     <Separator/>
 
     <!-- Info Panel -->
     <VBox styleClass="card, bg-white, p-6" spacing="15">
-        <Label text="Gestión de Cierres Contables" styleClass="text-lg, font-semibold, text-slate-700"/>
-        <Label text="Administre los cierres mensuales y anuales del sistema contable. Esta funcionalidad permite cerrar periodos contables de forma segura, generando los asientos de cierre correspondientes y bloqueando movimientos en periodos ya cerrados." 
+        <Label text="Accounting Closures Management" styleClass="text-lg, font-semibold, text-slate-700"/>
+        <Label text="Manage monthly and annual closings of the accounting system. This functionality allows closing accounting periods securely, generating corresponding closing entries and blocking movements in already closed periods." 
                styleClass="text-slate-600" wrapText="true"/>
         
         <HBox spacing="15" alignment="CENTER_LEFT">
-            <Button fx:id="btnVerPeriodos" text="📊 Ver Periodos Abiertos" styleClass="btn, btn-primary" onAction="#handleVerPeriodos"/>
-            <Button fx:id="btnCierreMensual" text="🔒 Ejecutar Cierre Mensual" styleClass="btn, btn-warning" onAction="#handleCierreMensual"/>
-            <Button fx:id="btnCierreAnual" text="📅 Ejecutar Cierre Anual" styleClass="btn, btn-danger" onAction="#handleCierreAnual"/>
+            <Button fx:id="btnVerPeriodos" text="📊 View Open Periods" styleClass="btn, btn-primary" onAction="#handleVerPeriodos"/>
+            <Button fx:id="btnCierreMensual" text="🔒 Execute Monthly Close" styleClass="btn, btn-warning" onAction="#handleCierreMensual"/>
+            <Button fx:id="btnCierreAnual" text="📅 Execute Annual Close" styleClass="btn, btn-danger" onAction="#handleCierreAnual"/>
         </HBox>
     </VBox>
 
     <!-- Closures List Placeholder -->
     <VBox styleClass="card, bg-white, p-6" spacing="15" VBox.vgrow="ALWAYS">
-        <Label text="Historial de Cierres" styleClass="text-lg, font-semibold, text-slate-700"/>
+        <Label text="Closures History" styleClass="text-lg, font-semibold, text-slate-700"/>
         
         <TableView fx:id="closuresTable" prefHeight="300">
             <columns>
-                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="150"/>
-                <TableColumn fx:id="colPeriodo" text="Periodo" prefWidth="200"/>
-                <TableColumn fx:id="colFechaCierre" text="Fecha Cierre" prefWidth="150"/>
-                <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="200"/>
-                <TableColumn fx:id="colEstado" text="Estado" prefWidth="150"/>
-                <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="150"/>
+                <TableColumn fx:id="colTipo" text="Type" prefWidth="150"/>
+                <TableColumn fx:id="colPeriodo" text="Period" prefWidth="200"/>
+                <TableColumn fx:id="colFechaCierre" text="Close Date" prefWidth="150"/>
+                <TableColumn fx:id="colUsuario" text="User" prefWidth="200"/>
+                <TableColumn fx:id="colEstado" text="Status" prefWidth="150"/>
+                <TableColumn fx:id="colAcciones" text="Actions" prefWidth="150"/>
             </columns>
         </TableView>
     </VBox>
