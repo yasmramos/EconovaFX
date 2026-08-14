@@ -1,11 +1,15 @@
 package com.econovafx.modules.core.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Global exception handler for UI layer
  * Centralizes error handling and display logic
  */
 public class GlobalExceptionHandler {
     
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     private static final String DEFAULT_ERROR_TITLE = "System Error";
     private static final String DEFAULT_ERROR_MESSAGE = "An unexpected error occurred. Please try again.";
     
@@ -23,8 +27,7 @@ public class GlobalExceptionHandler {
             return formatNotFoundException(notFoundException);
         } else {
             // Log the full stack trace for debugging
-            System.err.println("Unexpected error: " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("Unexpected error: " + exception.getMessage(), exception);
             return DEFAULT_ERROR_MESSAGE;
         }
     }
