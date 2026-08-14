@@ -9,6 +9,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesign2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -189,7 +191,10 @@ public class AccountingClosuresController implements Initializable {
         // Show backup warning as per Resolution 340/2004 requirements
         Alert backupWarning = new Alert(Alert.AlertType.WARNING);
         backupWarning.setTitle("Backup Warning");
-        backupWarning.setHeaderText("⚠️ Important: Backup Required");
+        FontIcon warningIcon = new FontIcon(MaterialDesign2.ALERT);
+        warningIcon.setIconSize(24);
+        warningIcon.setIconColor(javafx.scene.paint.Color.ORANGE);
+        backupWarning.setGraphic(new Label("Important: Backup Required", warningIcon));
         backupWarning.setContentText("Before executing a monthly closure, ensure you have created a backup of the database. " +
                                    "Resolution 340/2004 requires data integrity preservation.\n\n" +
                                    "Do you want to proceed?");
@@ -267,7 +272,10 @@ public class AccountingClosuresController implements Initializable {
         // Show backup warning as per Resolution 340/2004 requirements
         Alert backupWarning = new Alert(Alert.AlertType.WARNING);
         backupWarning.setTitle("Backup Warning");
-        backupWarning.setHeaderText("⚠️ Important: Backup Required");
+        FontIcon warningIconAnnual = new FontIcon(MaterialDesign2.ALERT);
+        warningIconAnnual.setIconSize(24);
+        warningIconAnnual.setIconColor(javafx.scene.paint.Color.ORANGE);
+        backupWarning.setGraphic(new Label("Important: Backup Required", warningIconAnnual));
         backupWarning.setContentText("Before executing an annual closure, ensure you have created a backup of the database. " +
                                    "Resolution 340/2004 requires data integrity preservation.\n\n" +
                                    "Do you want to proceed?");
