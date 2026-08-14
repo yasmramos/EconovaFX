@@ -82,6 +82,7 @@ module econonovafx {
     requires java.desktop;
     
     provides io.avaje.inject.spi.InjectExtension with com.econovafx.EconovafxModule;
+    provides io.ebean.config.EntityClassRegister with com.econovafx.EbeanEntityRegister;
     
     // Open packages for reflection-based testing
     opens com.econovafx to org.junit.platform.commons, org.junit.jupiter.api;

@@ -6,6 +6,7 @@ import io.avaje.inject.Component;
 import com.econovafx.modules.bank.model.BankReconciliation;
 import com.econovafx.modules.bank.model.ReconciliationItem;
 import com.econovafx.modules.bank.repository.BankReconciliationRepository;
+import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,7 +20,12 @@ import java.util.Optional;
 @RequiresTenant
 public class BankReconciliationService {
     
-    private final BankReconciliationRepository repository = new BankReconciliationRepository();
+    private final BankReconciliationRepository repository;
+
+    @Inject
+    public BankReconciliationService(BankReconciliationRepository repository) {
+        this.repository = repository;
+    }
 
     public BankReconciliation createReconciliation(BankReconciliation reconciliation) {
         if (reconciliation.getBankAccountId() == null) {
@@ -27,6 +33,10 @@ public class BankReconciliationService {
         }
         if (reconciliation.getStatementDate() == null) {
             throw new IllegalArgumentException("Statement date is required");
+        }
+        if (reconciliation.getReconciliationNumber() == null
+                || reconciliation.getReconciliationNumber().isBlank()) {
+            reconciliation.setReconciliationNumber(generateReconciliationNumber(reconciliation));
         }
         return repository.save(reconciliation);
     }
@@ -96,6 +106,18 @@ public class BankReconciliationService {
         rec.setReconciledBalance(rec.getSystemBalance());
         
         return repository.save(rec);
+    }
+
+    /**
+     * Generates a unique reconciliation number derived from the bank account,
+     * statement date and current timestamp to satisfy the NOT NULL / UNIQUE
+     * constraint on the entity.
+     */
+    private String generateReconciliationNumber(BankReconciliation reconciliation) {
+        return String.format("REC-%d-%s-%d",
+                reconciliation.getBankAccountId(),
+                reconciliation.getStatementDate(),
+                System.currentTimeMillis());
     }
 
     public Optional<BankReconciliation> getReconciliation(Long id) {
