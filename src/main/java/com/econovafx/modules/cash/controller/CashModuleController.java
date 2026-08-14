@@ -313,6 +313,27 @@ public class CashModuleController {
                 updateDifference();
             }
         });
+
+        // Parse the user-entered bank balance back into the current reconciliation
+        // so the difference reflects the value typed from the bank statement.
+        txtBankBalance.textProperty().addListener((obs, oldVal, newVal) -> applyBankBalance(newVal));
+    }
+
+    /**
+     * Parses the value typed in {@link #txtBankBalance} into the current
+     * reconciliation and recomputes the difference. Invalid input is ignored.
+     */
+    private void applyBankBalance(String value) {
+        if (currentReconciliation == null) {
+            return;
+        }
+        try {
+            currentReconciliation.setBankBalance(new BigDecimal(value.trim()));
+        } catch (NumberFormatException | NullPointerException e) {
+            // Ignore invalid/partial input; keep previous balance.
+            return;
+        }
+        updateDifference();
     }
 
     private void loadAllData() {
@@ -564,6 +585,11 @@ public class CashModuleController {
         }
         
         try {
+            // Persist the user-entered bank balance before validation, since the
+            // service re-fetches the reconciliation from the repository.
+            applyBankBalance(txtBankBalance.getText());
+            bankReconciliationService.createReconciliation(currentReconciliation);
+
             // Get current user from security context
             com.econovafx.modules.core.model.User currentUserObj = SecurityUtil.getCurrentUser();
             String currentUser = (currentUserObj != null) ? currentUserObj.getUsername() : "system";

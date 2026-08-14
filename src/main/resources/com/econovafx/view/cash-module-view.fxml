@@ -186,6 +186,8 @@
                                         </SplitPane>
                                         <HBox spacing="10.0" alignment="CENTER_RIGHT">
                                             <children>
+                                                <Label fx:id="lblReconciliationStatus" text="Status: -" />
+                                                <Region HBox.hgrow="ALWAYS" />
                                                 <Label text="Bank Balance:" />
                                                 <TextField fx:id="txtBankBalance" prefWidth="120.0" />
                                                 <Label text="System Balance:" />

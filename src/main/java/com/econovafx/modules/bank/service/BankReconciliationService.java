@@ -34,6 +34,10 @@ public class BankReconciliationService {
         if (reconciliation.getStatementDate() == null) {
             throw new IllegalArgumentException("Statement date is required");
         }
+        if (reconciliation.getReconciliationNumber() == null
+                || reconciliation.getReconciliationNumber().isBlank()) {
+            reconciliation.setReconciliationNumber(generateReconciliationNumber(reconciliation));
+        }
         return repository.save(reconciliation);
     }
 
@@ -102,6 +106,18 @@ public class BankReconciliationService {
         rec.setReconciledBalance(rec.getSystemBalance());
         
         return repository.save(rec);
+    }
+
+    /**
+     * Generates a unique reconciliation number derived from the bank account,
+     * statement date and current timestamp to satisfy the NOT NULL / UNIQUE
+     * constraint on the entity.
+     */
+    private String generateReconciliationNumber(BankReconciliation reconciliation) {
+        return String.format("REC-%d-%s-%d",
+                reconciliation.getBankAccountId(),
+                reconciliation.getStatementDate(),
+                System.currentTimeMillis());
     }
 
     public Optional<BankReconciliation> getReconciliation(Long id) {
