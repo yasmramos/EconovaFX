@@ -5,6 +5,7 @@ import com.econovafx.modules.core.config.DatabaseConfig;
 import com.econovafx.modules.core.config.TenantContext;
 import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.core.service.BusinessUnitService;
+import com.econovafx.modules.core.service.backup.BackupSchedulerService;
 import com.econovafx.modules.core.ui.controller.MainViewController;
 import com.econovafx.modules.core.ui.controller.CompanySelectionController;
 import com.econovafx.modules.core.ui.controller.UnitSelectionController;
@@ -37,6 +38,7 @@ public class App extends Application {
     private Stage loginStage;
     private SplashController splashController;
     private LoginController loginController;
+    private BackupSchedulerService backupSchedulerService;
 
     @Override
     public void init() throws Exception {
@@ -280,16 +282,44 @@ public class App extends Application {
             
             logger.info("Main application window displayed successfully");
             logger.info("Application started successfully");
+            
+            // Start backup scheduler after main app is loaded
+            startBackupScheduler();
 
         } catch (IOException e) {
             logger.error("Failed to load main view", e);
             throw new RuntimeException("Failed to load main view", e);
         }
     }
+    
+    /**
+     * Starts the backup scheduler service if auto-backup is enabled.
+     */
+    private void startBackupScheduler() {
+        try {
+            // Get the BackupSchedulerService from the DI container
+            backupSchedulerService = context.getBeanScope().get(BackupSchedulerService.class);
+            if (backupSchedulerService != null) {
+                backupSchedulerService.startScheduler();
+                logger.info("Backup scheduler service started");
+            } else {
+                logger.warn("BackupSchedulerService not available in DI container");
+            }
+        } catch (Exception e) {
+            logger.error("Error starting backup scheduler: {}", e.getMessage(), e);
+        }
+    }
 
     @Override
     public void stop() throws Exception {
         logger.info("Shutting down application...");
+        
+        // Stop backup scheduler
+        if (backupSchedulerService != null) {
+            backupSchedulerService.stopScheduler();
+            logger.info("Backup scheduler service stopped");
+        }
+        
         if (context != null) {
             context.close();
         }
