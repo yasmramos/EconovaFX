@@ -123,6 +123,20 @@ public class SystemConfiguration extends BaseEntity {
     @Column(length = 20)
     private String exchangePayableAccountCode = "201-001"; // Cuentas por pagar proveedores (compras)
     
+    // ==================== CONFIGURACIÓN DE CUENTAS POR COBRAR Y PAGAR ====================
+    
+    @Column(length = 20)
+    private String accountsReceivableCode = "106-001"; // Cuentas por cobrar clientes
+    
+    @Column(length = 20)
+    private String accountsPayableCode = "201-001"; // Cuentas por pagar proveedores
+    
+    @Column(length = 20)
+    private String revenueAccountCode = "401-001"; // Ingresos por ventas
+    
+    @Column(length = 20)
+    private String cashAccountCode = "101-001"; // Efectivo/Banco
+    
     // ==================== CONFIGURACIÓN DE NÓMINA ====================
     
     private BigDecimal socialSecurityRateEmployee = new BigDecimal("0.05"); // Tasa de seguridad social a cargo del empleado (5%)
@@ -519,5 +533,39 @@ public class SystemConfiguration extends BaseEntity {
     
     public void setEmployerSocialSecurityExpenseAccountCode(String employerSocialSecurityExpenseAccountCode) {
         this.employerSocialSecurityExpenseAccountCode = employerSocialSecurityExpenseAccountCode;
+    }
+    
+    // ==================== GETTERS Y SETTERS - CUENTAS POR COBRAR Y PAGAR ====================
+    
+    public String getAccountsReceivableCode() {
+        return accountsReceivableCode;
+    }
+    
+    public void setAccountsReceivableCode(String accountsReceivableCode) {
+        this.accountsReceivableCode = accountsReceivableCode;
+    }
+    
+    public String getAccountsPayableCode() {
+        return accountsPayableCode;
+    }
+    
+    public void setAccountsPayableCode(String accountsPayableCode) {
+        this.accountsPayableCode = accountsPayableCode;
+    }
+    
+    public String getRevenueAccountCode() {
+        return revenueAccountCode;
+    }
+    
+    public void setRevenueAccountCode(String revenueAccountCode) {
+        this.revenueAccountCode = revenueAccountCode;
+    }
+    
+    public String getCashAccountCode() {
+        return cashAccountCode;
+    }
+    
+    public void setCashAccountCode(String cashAccountCode) {
+        this.cashAccountCode = cashAccountCode;
     }
 }
