@@ -76,11 +76,18 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- H2 Database -->
+        <!-- H2 Database (for development and tests) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
+        </dependency>
+
+        <!-- PostgreSQL Database Driver (for production) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
         </dependency>
 
         <!-- Logging -->
