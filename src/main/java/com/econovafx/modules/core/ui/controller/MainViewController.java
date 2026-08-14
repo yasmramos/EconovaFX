@@ -238,7 +238,7 @@ public class MainViewController implements Initializable {
     /**
      * Helper method to animate submenu expansion/collapse with accordion effect
      */
-    private void animateSubmenu(VBox submenu, Label chevron, Button triggerButton) {
+    private void animateSubmenu(VBox submenu, FontIcon chevron, Button triggerButton) {
         if (submenu == null || triggerButton == null) {
             return;
         }
