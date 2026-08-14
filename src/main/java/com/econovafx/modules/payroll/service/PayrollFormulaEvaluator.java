@@ -107,7 +107,7 @@ public class PayrollFormulaEvaluator {
         }
 
         // Replace minimum wage (simplified - in real scenario would come from configuration)
-        result = result.replaceAll("\\$\\{minimumWage\\}", "450.00");
+        result = result.replaceAll("\\$\\{minimumWage\\}", "2100.00");
 
         return result;
     }
