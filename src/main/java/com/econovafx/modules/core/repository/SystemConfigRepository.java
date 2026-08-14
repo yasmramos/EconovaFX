@@ -76,6 +76,12 @@ public class SystemConfigRepository {
         defaults.setDecimalPrecision(2);
         defaults.setTimeZone("America/Havana");
         defaults.setLocale("es_CU");
+        
+        // Configuración de diferencias cambiarias
+        defaults.setExchangeGainAccountCode("499-001");
+        defaults.setExchangeLossAccountCode("599-001");
+        defaults.setExchangeReceivableAccountCode("106-001");
+        defaults.setExchangePayableAccountCode("201-001");
 
         database.save(defaults);
         return defaults;

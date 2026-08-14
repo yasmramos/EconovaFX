@@ -260,11 +260,42 @@ This document provides a detailed requirement-by-requirement analysis of the Eco
 
 *Requirement:* Option for financial statement consolidation.
 
-**Status:** ⚠️ PARTIALLY IMPLEMENTED
+**Status:** ✅ RESOLVED - COMPLETE IMPLEMENTATION WITH DATE FILTERING AND REPORTING SERVICE FIX
 
 *Evidence:*
-- `FinancialStatementService.java` exists
-- **Gap:** Consolidation across multiple entities needs verification
+- `ConsolidationService.java` - Full implementation with multi-tenant orchestration
+- `ConsolidatedStatementResult.java` - Result object with consolidated data and breakdown
+- `ConsolidatedRow.java` - Row-level aggregation with per-company traceability
+- `FinancialReportingController.consolidate()` - Controller endpoint exposed
+- `FinancialStatementService.java` - Enhanced with Resolution 340/2004 compliant date-filtered balance calculation
+- `FinancialReportingService.java` - Fixed placeholder methods `calculateAccountBalance()` and `calculateAccountBalancePeriod()` to use real transaction-based calculation
+
+*Implementation Details:*
+- Saves and restores original tenant context in finally block
+- Validates all companies are ACTIVE before processing
+- Switches tenant context for each company using CompanyService.selectTenant()
+- Aggregates values by row label/concept identity using BigDecimal arithmetic
+- Provides company breakdown for audit traceability
+- Includes protected method hook for future intercompany eliminations
+- **Resolution 340/2004 Compliance:** Financial statements now calculate balances from POSTED transactions within the specified date range, ensuring accurate period-based reporting
+
+*Technical Implementation - Date Filtering:*
+The `FinancialStatementService.calculateAccountBalances()` method was enhanced to:
+1. Query transactions filtered by start/end date range
+2. Filter only POSTED transactions (excludes DRAFT status)
+3. Calculate account balances by applying debit/credit amounts based on account type
+4. Return period-specific balances instead of current account balance
+
+*FinancialReportingService Fix:*
+The placeholder methods in `FinancialReportingService` were replaced with full implementations:
+- `calculateAccountBalance(Account, endDate)` - Calculates cumulative balance from LocalDate.MIN to endDate using posted transactions
+- `calculateAccountBalancePeriod(Account, startDate, endDate)` - Calculates balance for specific period using only transactions within the date range
+- Both methods apply proper sign convention based on AccountType (ASSET/EXPENSE increase with debit, LIABILITY/EQUITY/REVENUE increase with credit)
+
+*Tests:*
+- `ConsolidationServiceTest.java` validates tenant iteration, value summation, and context restoration
+- `FinancialStatementServiceTest.java` verifies date-filtered balance calculation, exclusion of non-posted transactions, and multiple transaction aggregation (4 tests, all passing)
+- `FinancialReportingServiceTest.java` verifies calculateAccountBalance and calculateAccountBalancePeriod methods with various account types and scenarios (6 tests, all passing)
 
 ---
 

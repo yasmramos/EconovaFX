@@ -16,8 +16,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.animation.RotateTransition;
 import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Interpolator;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import javafx.scene.layout.Region;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +70,7 @@ public class MainViewController implements Initializable {
     private VBox contabilidadSubmenu;
 
     @FXML
-    private Label contabilidadChevron;
+    private FontIcon contabilidadChevron;
 
     @FXML
     private Button btnComprobantes;
@@ -104,6 +110,9 @@ public class MainViewController implements Initializable {
 
     @FXML
     private Button btnSettings;
+
+    @FXML
+    private FontIcon settingsChevron;
 
     @FXML
     private VBox settingsSubmenu;
@@ -226,14 +235,113 @@ public class MainViewController implements Initializable {
         updateStatus("Configuración - Próximamente");
     }
 
+    /**
+     * Helper method to animate submenu expansion/collapse with accordion effect
+     */
+    private void animateSubmenu(VBox submenu, FontIcon chevron, Button triggerButton) {
+        if (submenu == null || triggerButton == null) {
+            return;
+        }
+        
+        boolean isNowExpanded = submenu.isVisible();
+        
+        // Stop any ongoing animation to prevent conflicts
+        // (Timeline will be created fresh each time)
+        
+        if (!isNowExpanded) {
+            // OPENING: expand accordion-style
+            submenu.setManaged(true);
+            submenu.setVisible(true);
+            submenu.setOpacity(0);
+            
+            // Apply CSS and layout to get accurate preferred height
+            submenu.applyCss();
+            submenu.layout();
+            double targetHeight = submenu.prefHeight(-1);
+            
+            // Set initial height to 0 for animation
+            submenu.setMinHeight(0);
+            submenu.setPrefHeight(0);
+            
+            // Create timeline to animate height and opacity
+            Timeline timeline = new Timeline();
+            
+            // Animate height from 0 to targetHeight
+            KeyValue heightKV = new KeyValue(submenu.prefHeightProperty(), targetHeight, Interpolator.EASE_BOTH);
+            KeyFrame heightKF = new KeyFrame(Duration.millis(200), heightKV);
+            
+            // Animate opacity from 0 to 1
+            KeyValue opacityKV = new KeyValue(submenu.opacityProperty(), 1, Interpolator.EASE_BOTH);
+            KeyFrame opacityKF = new KeyFrame(Duration.millis(200), opacityKV);
+            
+            timeline.getKeyFrames().addAll(heightKF, opacityKF);
+            
+            // On finish: restore natural sizing
+            timeline.setOnFinished(e -> {
+                submenu.setPrefHeight(Region.USE_COMPUTED_SIZE);
+                submenu.setMinHeight(Region.USE_COMPUTED_SIZE);
+            });
+            
+            timeline.play();
+            
+            // Rotate chevron to 180 degrees (pointing up)
+            if (chevron != null) {
+                RotateTransition rotate = new RotateTransition(Duration.millis(200), chevron);
+                rotate.setAxis(Rotate.Z_AXIS);
+                rotate.setFromAngle(chevron.getRotate());
+                rotate.setToAngle(180);
+                rotate.setCycleCount(1);
+                rotate.setAutoReverse(false);
+                // NO setOnFinished that resets rotation - let it stay at 180
+                rotate.play();
+            }
+            
+            setActiveButton(triggerButton);
+            
+        } else {
+            // CLOSING: collapse accordion-style
+            double currentHeight = submenu.getHeight();
+            
+            // Create timeline to animate height to 0 and opacity to 0
+            Timeline timeline = new Timeline();
+            
+            // Animate height from current to 0
+            KeyValue heightKV = new KeyValue(submenu.prefHeightProperty(), 0, Interpolator.EASE_BOTH);
+            KeyFrame heightKF = new KeyFrame(Duration.millis(200), heightKV);
+            
+            // Animate opacity from 1 to 0
+            KeyValue opacityKV = new KeyValue(submenu.opacityProperty(), 0, Interpolator.EASE_BOTH);
+            KeyFrame opacityKF = new KeyFrame(Duration.millis(200), opacityKV);
+            
+            timeline.getKeyFrames().addAll(heightKF, opacityKF);
+            
+            // On finish: hide and restore natural sizing
+            timeline.setOnFinished(e -> {
+                submenu.setVisible(false);
+                submenu.setManaged(false);
+                submenu.setPrefHeight(Region.USE_COMPUTED_SIZE);
+                submenu.setMinHeight(Region.USE_COMPUTED_SIZE);
+            });
+            
+            timeline.play();
+            
+            // Rotate chevron to 0 degrees (pointing down)
+            if (chevron != null) {
+                RotateTransition rotate = new RotateTransition(Duration.millis(200), chevron);
+                rotate.setAxis(Rotate.Z_AXIS);
+                rotate.setFromAngle(chevron.getRotate());
+                rotate.setToAngle(0);
+                rotate.setCycleCount(1);
+                rotate.setAutoReverse(false);
+                // NO setOnFinished that resets rotation - let it stay at 0
+                rotate.play();
+            }
+        }
+    }
+
     @FXML
     private void toggleSettingsMenu() {
-        boolean isNowExpanded = settingsSubmenu.isVisible();
-        settingsSubmenu.setVisible(!isNowExpanded);
-        settingsSubmenu.setManaged(!isNowExpanded);
-        if (!isNowExpanded) {
-            setActiveButton(btnSettings);
-        }
+        animateSubmenu(settingsSubmenu, settingsChevron, btnSettings);
     }
 
     @FXML
@@ -279,48 +387,7 @@ public class MainViewController implements Initializable {
 
     @FXML
     private void toggleContabilidadMenu() {
-        boolean isNowExpanded = contabilidadSubmenu.isVisible();
-        
-        if (!isNowExpanded) {
-            // Opening: show with fade in
-            contabilidadSubmenu.setManaged(true);
-            contabilidadSubmenu.setOpacity(0);
-            contabilidadSubmenu.setVisible(true);
-            
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(150), contabilidadSubmenu);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.play();
-        } else {
-            // Closing: fade out then hide
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(150), contabilidadSubmenu);
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-            fadeOut.setOnFinished(e -> {
-                contabilidadSubmenu.setVisible(false);
-                contabilidadSubmenu.setManaged(false);
-            });
-            fadeOut.play();
-        }
-        
-        if (contabilidadChevron != null) {
-            // Rotate animation for chevron
-            RotateTransition rotate = new RotateTransition(Duration.millis(200), contabilidadChevron);
-            rotate.setAxis(Rotate.Z_AXIS);
-            rotate.setFromAngle(isNowExpanded ? 180 : 0);
-            rotate.setToAngle(isNowExpanded ? 0 : 180);
-            rotate.setCycleCount(1);
-            rotate.setAutoReverse(false);
-            rotate.setOnFinished(e -> {
-                contabilidadChevron.setText("▼");
-                contabilidadChevron.setRotate(0);
-            });
-            rotate.play();
-        }
-        
-        if (!isNowExpanded) {
-            setActiveButton(btnContabilidad);
-        }
+        animateSubmenu(contabilidadSubmenu, contabilidadChevron, btnContabilidad);
     }
 
     @FXML

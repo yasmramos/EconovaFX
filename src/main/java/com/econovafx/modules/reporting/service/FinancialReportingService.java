@@ -318,27 +318,88 @@ public class FinancialReportingService {
 
     /**
      * Calculate account balance up to a specific date.
+     * Resolution 340/2004 compliance: Calculates real balance from posted transactions.
      * @param account the account
      * @param endDate end date for calculation
      * @return account balance
      */
     private BigDecimal calculateAccountBalance(Account account, LocalDate endDate) {
-        // Implementation depends on the actual transaction structure
-        // This is a placeholder for the actual balance calculation logic
-        return account.getBalance() != null ? account.getBalance() : BigDecimal.ZERO;
+        // Get all posted transactions up to endDate
+        List<Transaction> transactions = transactionRepository.findPostedByDateRange(
+            LocalDate.MIN, endDate);
+        
+        BigDecimal balance = BigDecimal.ZERO;
+        AccountType type = account.getType();
+        
+        for (Transaction transaction : transactions) {
+            for (TransactionEntry entry : transaction.getEntries()) {
+                if (entry.getAccount().getId().equals(account.getId())) {
+                    // Apply debit amounts
+                    if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) > 0) {
+                        if (type == AccountType.ASSET || type == AccountType.EXPENSE) {
+                            balance = balance.add(entry.getDebitAmount());
+                        } else {
+                            balance = balance.subtract(entry.getDebitAmount());
+                        }
+                    }
+                    
+                    // Apply credit amounts
+                    if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+                        if (type == AccountType.LIABILITY || type == AccountType.EQUITY || 
+                            type == AccountType.REVENUE) {
+                            balance = balance.add(entry.getCreditAmount());
+                        } else {
+                            balance = balance.subtract(entry.getCreditAmount());
+                        }
+                    }
+                }
+            }
+        }
+        
+        return balance;
     }
 
     /**
      * Calculate account balance for a specific period.
+     * Resolution 340/2004 compliance: Calculates balance from posted transactions within period.
      * @param account the account
      * @param startDate start date of the period
      * @param endDate end date of the period
      * @return account balance for the period
      */
     private BigDecimal calculateAccountBalancePeriod(Account account, LocalDate startDate, LocalDate endDate) {
-        // Implementation depends on the actual transaction structure
-        // This is a placeholder for the actual period balance calculation logic
-        return BigDecimal.ZERO;
+        // Get all posted transactions within the period
+        List<Transaction> transactions = transactionRepository.findPostedByDateRange(startDate, endDate);
+        
+        BigDecimal balance = BigDecimal.ZERO;
+        AccountType type = account.getType();
+        
+        for (Transaction transaction : transactions) {
+            for (TransactionEntry entry : transaction.getEntries()) {
+                if (entry.getAccount().getId().equals(account.getId())) {
+                    // Apply debit amounts
+                    if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) > 0) {
+                        if (type == AccountType.ASSET || type == AccountType.EXPENSE) {
+                            balance = balance.add(entry.getDebitAmount());
+                        } else {
+                            balance = balance.subtract(entry.getDebitAmount());
+                        }
+                    }
+                    
+                    // Apply credit amounts
+                    if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+                        if (type == AccountType.LIABILITY || type == AccountType.EQUITY || 
+                            type == AccountType.REVENUE) {
+                            balance = balance.add(entry.getCreditAmount());
+                        } else {
+                            balance = balance.subtract(entry.getCreditAmount());
+                        }
+                    }
+                }
+            }
+        }
+        
+        return balance;
     }
 
     /**
