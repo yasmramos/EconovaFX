@@ -1,7 +1,6 @@
 package com.econovafx.modules.inventory.controller;
 
 import com.econovafx.modules.core.model.User;
-import com.econovafx.modules.core.config.TenantContext;
 import com.econovafx.modules.core.config.UserContext;
 import com.econovafx.modules.inventory.model.InventoryItem;
 import com.econovafx.modules.inventory.model.InventoryMovement;
@@ -88,13 +87,11 @@ public class InventoryController {
     private Label lblStockBajo;
 
     private final InventoryService inventoryService;
-    private final TenantContext tenantContext;
     private final UserContext userContext;
     private ObservableList<InventoryItem> productList;
 
-    public InventoryController(InventoryService inventoryService, TenantContext tenantContext, UserContext userContext) {
+    public InventoryController(InventoryService inventoryService, UserContext userContext) {
         this.inventoryService = inventoryService;
-        this.tenantContext = tenantContext;
         this.userContext = userContext;
         this.productList = FXCollections.observableArrayList();
     }
@@ -113,9 +110,11 @@ public class InventoryController {
         // Configure table columns
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("code"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colCategoria.setCellValueFactory(cellData -> 
-            new javafx.beans.property.SimpleStringProperty(
-                cellData.getValue().getCategory().getName()));
+        colCategoria.setCellValueFactory(cellData -> {
+            InventoryItem item = cellData.getValue();
+            String categoryName = item.getCategory() != null ? item.getCategory().getName() : "";
+            return new javafx.beans.property.SimpleStringProperty(categoryName);
+        });
         colAlmacen.setCellValueFactory(cellData -> {
             // InventoryItem doesn't have a warehouse field in this version
             return new javafx.beans.property.SimpleStringProperty("Main Warehouse");
@@ -132,7 +131,7 @@ public class InventoryController {
         txtBuscar.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null && newVal.length() >= 2) {
                 searchProducts(newVal);
-            } else if (newVal != null && newVal.isEmpty()) {
+            } else {
                 loadProducts();
             }
         });

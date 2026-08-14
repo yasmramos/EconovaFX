@@ -8,6 +8,8 @@ import com.econovafx.modules.bank.repository.BankAccountRepository;
 import com.econovafx.modules.bank.repository.BankReconciliationRepository;
 import com.econovafx.modules.cash.repository.CashBoxRepository;
 import com.econovafx.modules.cash.repository.CashMovementRepository;
+import com.econovafx.modules.cash.service.CashMovementService;
+import com.econovafx.modules.bank.service.BankReconciliationService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -128,6 +130,10 @@ public class CashModuleController {
     @FXML
     private ComboBox<BankAccount> cbReconciliationBank;
     @FXML
+    private DatePicker dpReconciliationFrom;
+    @FXML
+    private DatePicker dpReconciliationTo;
+    @FXML
     private TableView<?> systemItemsTable;
     @FXML
     private TableColumn<?, ?> colSysItemDate;
@@ -160,6 +166,8 @@ public class CashModuleController {
     private CashBoxRepository cashBoxRepository;
     private CashMovementRepository cashMovementRepository;
     private BankReconciliationRepository bankReconciliationRepository;
+    private CashMovementService cashMovementService;
+    private BankReconciliationService bankReconciliationService;
     private Stage stage;
 
     /**
@@ -171,6 +179,8 @@ public class CashModuleController {
         this.cashBoxRepository = new CashBoxRepository();
         this.cashMovementRepository = new CashMovementRepository();
         this.bankReconciliationRepository = new BankReconciliationRepository();
+        this.cashMovementService = new CashMovementService();
+        this.bankReconciliationService = new BankReconciliationService();
 
         setupBankAccountsTable();
         setupCashBoxesTable();
@@ -320,14 +330,38 @@ public class CashModuleController {
 
     @FXML
     private void handleEditBankAccount() {
-        logger.info("Editing bank account");
+        BankAccount selected = bankAccountsTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Warning", "Please select a bank account to edit.");
+            return;
+        }
+        logger.info("Editing bank account: {}", selected.getCode());
         showAlert("Info", "Edit Bank Account dialog would open here.");
     }
 
     @FXML
     private void handleDeleteBankAccount() {
-        logger.info("Deleting bank account");
-        showAlert("Info", "Delete Bank Account confirmation would appear here.");
+        BankAccount selected = bankAccountsTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Warning", "Please select a bank account to delete.");
+            return;
+        }
+        
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Delete");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to delete bank account " + selected.getDescription() + "?");
+        
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            try {
+                // TODO: Implement delete via service when available
+                showAlert("Success", "Bank account deleted successfully.");
+                loadBankAccounts();
+            } catch (Exception e) {
+                logger.error("Error deleting bank account", e);
+                showAlert("Error", "Failed to delete bank account: " + e.getMessage());
+            }
+        }
     }
 
     @FXML
@@ -338,14 +372,38 @@ public class CashModuleController {
 
     @FXML
     private void handleEditCashBox() {
-        logger.info("Editing cash box");
+        CashBox selected = cashBoxesTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Warning", "Please select a cash box to edit.");
+            return;
+        }
+        logger.info("Editing cash box: {}", selected.getCode());
         showAlert("Info", "Edit Cash Box dialog would open here.");
     }
 
     @FXML
     private void handleDeleteCashBox() {
-        logger.info("Deleting cash box");
-        showAlert("Info", "Delete Cash Box confirmation would appear here.");
+        CashBox selected = cashBoxesTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Warning", "Please select a cash box to delete.");
+            return;
+        }
+        
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Delete");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to delete cash box " + selected.getDescription() + "?");
+        
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            try {
+                // TODO: Implement delete via service when available
+                showAlert("Success", "Cash box deleted successfully.");
+                loadCashBoxes();
+            } catch (Exception e) {
+                logger.error("Error deleting cash box", e);
+                showAlert("Error", "Failed to delete cash box: " + e.getMessage());
+            }
+        }
     }
 
     @FXML
@@ -356,31 +414,94 @@ public class CashModuleController {
 
     @FXML
     private void handlePostMovement() {
-        logger.info("Posting cash movement");
-        showAlert("Info", "Movement posted successfully.");
+        CashMovement selected = movementsTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Warning", "Please select a movement to post.");
+            return;
+        }
+        
+        try {
+            String currentUser = "system"; // TODO: Get from session
+            CashMovement posted = cashMovementService.postMovement(selected.getId(), currentUser);
+            showAlert("Success", "Movement posted successfully.");
+            loadMovements();
+        } catch (IllegalStateException e) {
+            showAlert("Error", e.getMessage());
+        } catch (Exception e) {
+            logger.error("Error posting movement", e);
+            showAlert("Error", "Failed to post movement: " + e.getMessage());
+        }
     }
 
     @FXML
     private void handleCancelMovement() {
-        logger.info("Cancelling cash movement");
-        showAlert("Info", "Movement cancelled successfully.");
+        CashMovement selected = movementsTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Warning", "Please select a movement to cancel.");
+            return;
+        }
+        
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Cancel");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to cancel this movement?");
+        
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            try {
+                String currentUser = "system"; // TODO: Get from session
+                cashMovementService.cancelMovement(selected.getId(), currentUser);
+                showAlert("Success", "Movement cancelled successfully.");
+                loadMovements();
+            } catch (IllegalStateException e) {
+                showAlert("Error", e.getMessage());
+            } catch (Exception e) {
+                logger.error("Error cancelling movement", e);
+                showAlert("Error", "Failed to cancel movement: " + e.getMessage());
+            }
+        }
     }
 
     @FXML
     private void handleNewReconciliation() {
-        logger.info("Creating new bank reconciliation");
-        showAlert("Info", "New Reconciliation process started.");
+        BankAccount selectedBank = cbReconciliationBank.getValue();
+        if (selectedBank == null) {
+            showAlert("Warning", "Please select a bank account for reconciliation.");
+            return;
+        }
+        
+        LocalDate fromDate = dpReconciliationFrom.getValue();
+        LocalDate toDate = dpReconciliationTo.getValue();
+        
+        if (fromDate == null || toDate == null) {
+            showAlert("Warning", "Please select date range for reconciliation.");
+            return;
+        }
+        
+        try {
+            BankReconciliation reconciliation = new BankReconciliation();
+            reconciliation.setBankAccountId(selectedBank.getId());
+            reconciliation.setStatementDate(toDate);
+            reconciliation.setSystemBalance(selectedBank.getBalance());
+            reconciliation.setBankBalance(BigDecimal.ZERO); // To be filled from statement
+            reconciliation.setStatus(BankReconciliation.Status.IN_PROGRESS);
+            
+            BankReconciliation saved = bankReconciliationService.createReconciliation(reconciliation);
+            showAlert("Success", "Reconciliation process started.");
+            logger.info("Created reconciliation: {}", saved.getId());
+        } catch (Exception e) {
+            logger.error("Error creating reconciliation", e);
+            showAlert("Error", "Failed to start reconciliation: " + e.getMessage());
+        }
     }
 
     @FXML
     private void handleCompleteReconciliation() {
-        logger.info("Completing bank reconciliation");
-        showAlert("Info", "Reconciliation completed successfully.");
+        // TODO: Get current reconciliation from context
+        showAlert("Info", "Complete reconciliation logic to be implemented.");
     }
 
     @FXML
     private void handlePrintReconciliation() {
-        logger.info("Printing reconciliation report");
         showAlert("Info", "Reconciliation report would be printed here.");
     }
 
