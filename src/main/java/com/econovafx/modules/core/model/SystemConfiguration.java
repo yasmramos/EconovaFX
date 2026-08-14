@@ -2,6 +2,7 @@ package com.econovafx.modules.core.model;
 
 import io.ebean.annotation.*;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -121,6 +122,30 @@ public class SystemConfiguration extends BaseEntity {
     
     @Column(length = 20)
     private String exchangePayableAccountCode = "201-001"; // Cuentas por pagar proveedores (compras)
+    
+    // ==================== CONFIGURACIÓN DE NÓMINA ====================
+    
+    private BigDecimal socialSecurityRateEmployee = new BigDecimal("0.05"); // Tasa de seguridad social a cargo del empleado (5%)
+    
+    private BigDecimal socialSecurityRateEmployer = new BigDecimal("0.125"); // Tasa de seguridad social a cargo del empleador (12.5%)
+    
+    private BigDecimal minimumWage = new BigDecimal("2100.00"); // Salario mínimo mensual en CUP según normativa cubana vigente
+    
+    private BigDecimal incomeTaxRate = new BigDecimal("0.05"); // Tasa de impuesto sobre ingresos personales (5%)
+    
+    private BigDecimal laborForceUtilizationTax = new BigDecimal("0.10"); // Impuesto por utilización de fuerza de trabajo (10%)
+    
+    @Column(length = 20)
+    private String payrollExpenseAccountCode = "501-001"; // Cuenta de gastos de salarios
+    
+    @Column(length = 20)
+    private String payrollPayableAccountCode = "203-001"; // Cuentas por pagar a trabajadores
+    
+    @Column(length = 20)
+    private String socialSecurityPayableAccountCode = "205-001"; // Cuentas por pagar a la seguridad social
+    
+    @Column(length = 20)
+    private String employerSocialSecurityExpenseAccountCode = "503-001"; // Gastos de seguridad social a cargo del empleador
     
     // ==================== GETTERS Y SETTERS ====================
     
@@ -420,5 +445,79 @@ public class SystemConfiguration extends BaseEntity {
     
     public void setExchangePayableAccountCode(String exchangePayableAccountCode) {
         this.exchangePayableAccountCode = exchangePayableAccountCode;
+    }
+    
+    // ==================== GETTERS Y SETTERS - NÓMINA ====================
+    
+    public BigDecimal getSocialSecurityRateEmployee() {
+        return socialSecurityRateEmployee;
+    }
+    
+    public void setSocialSecurityRateEmployee(BigDecimal socialSecurityRateEmployee) {
+        this.socialSecurityRateEmployee = socialSecurityRateEmployee;
+    }
+    
+    public BigDecimal getSocialSecurityRateEmployer() {
+        return socialSecurityRateEmployer;
+    }
+    
+    public void setSocialSecurityRateEmployer(BigDecimal socialSecurityRateEmployer) {
+        this.socialSecurityRateEmployer = socialSecurityRateEmployer;
+    }
+    
+    public BigDecimal getMinimumWage() {
+        return minimumWage;
+    }
+    
+    public void setMinimumWage(BigDecimal minimumWage) {
+        this.minimumWage = minimumWage;
+    }
+    
+    public BigDecimal getIncomeTaxRate() {
+        return incomeTaxRate;
+    }
+    
+    public void setIncomeTaxRate(BigDecimal incomeTaxRate) {
+        this.incomeTaxRate = incomeTaxRate;
+    }
+    
+    public BigDecimal getLaborForceUtilizationTax() {
+        return laborForceUtilizationTax;
+    }
+    
+    public void setLaborForceUtilizationTax(BigDecimal laborForceUtilizationTax) {
+        this.laborForceUtilizationTax = laborForceUtilizationTax;
+    }
+    
+    public String getPayrollExpenseAccountCode() {
+        return payrollExpenseAccountCode;
+    }
+    
+    public void setPayrollExpenseAccountCode(String payrollExpenseAccountCode) {
+        this.payrollExpenseAccountCode = payrollExpenseAccountCode;
+    }
+    
+    public String getPayrollPayableAccountCode() {
+        return payrollPayableAccountCode;
+    }
+    
+    public void setPayrollPayableAccountCode(String payrollPayableAccountCode) {
+        this.payrollPayableAccountCode = payrollPayableAccountCode;
+    }
+    
+    public String getSocialSecurityPayableAccountCode() {
+        return socialSecurityPayableAccountCode;
+    }
+    
+    public void setSocialSecurityPayableAccountCode(String socialSecurityPayableAccountCode) {
+        this.socialSecurityPayableAccountCode = socialSecurityPayableAccountCode;
+    }
+    
+    public String getEmployerSocialSecurityExpenseAccountCode() {
+        return employerSocialSecurityExpenseAccountCode;
+    }
+    
+    public void setEmployerSocialSecurityExpenseAccountCode(String employerSocialSecurityExpenseAccountCode) {
+        this.employerSocialSecurityExpenseAccountCode = employerSocialSecurityExpenseAccountCode;
     }
 }
