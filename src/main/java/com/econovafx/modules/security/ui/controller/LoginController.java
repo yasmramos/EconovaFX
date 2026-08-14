@@ -1,15 +1,15 @@
 package com.econovafx.modules.security.ui.controller;
 
-import com.econovafx.modules.security.model.User;
-import com.econovafx.modules.security.service.AuthService;
+import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.core.security.AuthService;
+import com.econovafx.modules.core.security.SecurityUtil;
+import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Optional;
 
 /**
  * Controller for the login dialog with modern web-style design
@@ -35,11 +35,12 @@ public class LoginController {
     @FXML
     private ProgressBar progressBar;
 
-    private AuthService authService;
+    private final AuthService authService;
     private Runnable onLoginSuccess;
 
-    public LoginController() {
-        this.authService = new AuthService();
+    @Inject
+    public LoginController(AuthService authService) {
+        this.authService = authService;
     }
 
     @FXML
@@ -82,7 +83,7 @@ public class LoginController {
 
         // Validate input
         if (username.isEmpty()) {
-            showError("Please enter your username");
+            showError("Please enter your email address");
             usernameField.requestFocus();
             return;
         }
@@ -96,16 +97,17 @@ public class LoginController {
         // Show loading state
         setLoading(true);
 
-        // Simulate async authentication (in real app, this would be a database call)
+        // Authenticate asynchronously against the database
         new Thread(() -> {
             try {
                 Thread.sleep(500); // Simulate network delay
                 
-                Optional<User> userOpt = authService.authenticate(username, password);
+                User user = authService.authenticate(username, password);
                 
                 javafx.application.Platform.runLater(() -> {
-                    if (userOpt.isPresent()) {
-                        User user = userOpt.get();
+                    if (user != null) {
+                        // Set the current user in the security context
+                        SecurityUtil.setCurrentUser(user);
                         logger.info("Login successful for user: {}", user.getUsername());
                         hideError();
                         
@@ -113,7 +115,7 @@ public class LoginController {
                             onLoginSuccess.run();
                         }
                     } else {
-                        showError("Invalid username or password. Please try again.\n\nDemo credentials:\n- admin / admin123\n- user / user123");
+                        showError("Invalid email or password. Please try again.");
                         setLoading(false);
                         passwordField.clear();
                         passwordField.requestFocus();

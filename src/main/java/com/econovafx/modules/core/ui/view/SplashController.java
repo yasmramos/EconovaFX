@@ -1,8 +1,10 @@
 package com.econovafx.modules.core.ui.view;
 
 import com.econovafx.modules.core.config.DatabaseConfig;
+import com.econovafx.modules.core.config.DatabaseSeeder;
 import com.econovafx.modules.core.security.AuthService;
 import com.econovafx.modules.core.service.CompanyService;
+import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -31,6 +33,9 @@ public class SplashController {
     private Label versionLabel;
 
     private Runnable onInitializationComplete;
+    
+    @Inject
+    private DatabaseSeeder databaseSeeder;
 
     public void setOnInitializationComplete(Runnable callback) {
         this.onInitializationComplete = callback;
@@ -49,28 +54,34 @@ public class SplashController {
     private void startInitialization() {
         CompletableFuture.runAsync(() -> {
             try {
-                updateProgress(0.1, "Cargando configuración de base de datos...");
+                updateProgress(0.1, "Loading database configuration...");
                 DatabaseConfig.initialize();
                 
-                updateProgress(0.3, "Verificando conexión a la base de datos...");
-                DB.getDefault();
+                updateProgress(0.3, "Verifying database connection...");
+                io.ebean.DB.getDefault();
                 
-                updateProgress(0.5, "Inicializando servicios del sistema...");
-                // Forzar inicialización de servicios
-                CompanyService companyService = new CompanyService();
+                updateProgress(0.5, "Seeding initial data...");
+                // Seed database with default data (company, currencies, admin user)
+                if (databaseSeeder != null) {
+                    databaseSeeder.seed();
+                } else {
+                    logger.warn("DatabaseSeeder not injected, using fallback");
+                    DatabaseSeeder seeder = new DatabaseSeeder();
+                    seeder.seed();
+                }
                 
-                updateProgress(0.7, "Cargando módulos principales...");
-                Thread.sleep(500); // Pequeña pausa para permitir renderizado
+                updateProgress(0.7, "Loading core modules...");
+                Thread.sleep(500); // Small pause to allow rendering
                 
-                updateProgress(0.9, "Preparando interfaz de usuario...");
+                updateProgress(0.9, "Preparing user interface...");
                 Thread.sleep(300);
                 
-                updateProgress(1.0, "Aplicación lista!");
+                updateProgress(1.0, "Application ready!");
                 
-                // Pequeña pausa antes de mostrar la ventana principal
+                // Small pause before showing the main window
                 Thread.sleep(500);
                 
-                // Transición suave hacia la app principal
+                // Smooth transition to the main app
                 javafx.application.Platform.runLater(() -> {
                     try {
                         FadeTransition fadeOut = new FadeTransition(Duration.millis(800), rootPane);
@@ -79,19 +90,19 @@ public class SplashController {
                         fadeOut.setOnFinished(e -> {
                             try {
                                 if (onInitializationComplete != null) {
-                                    logger.info("Ejecutando callback de inicialización completa...");
+                                    logger.info("Executing initialization complete callback...");
                                     onInitializationComplete.run();
                                 } else {
-                                    logger.error("ERROR: onInitializationComplete es null!");
+                                    logger.error("ERROR: onInitializationComplete is null!");
                                 }
                             } catch (Exception ex) {
-                                logger.error("Error al ejecutar callback: " + ex.getMessage(), ex);
+                                logger.error("Error executing callback: " + ex.getMessage(), ex);
                             }
                         });
                         fadeOut.play();
                     } catch (Exception e) {
-                        logger.error("Error en la transición fade: " + e.getMessage(), e);
-                        // Intentar llamar directamente si falla la animación
+                        logger.error("Error in fade transition: " + e.getMessage(), e);
+                        // Try calling directly if animation fails
                         if (onInitializationComplete != null) {
                             onInitializationComplete.run();
                         }
@@ -99,7 +110,7 @@ public class SplashController {
                 });
                 
             } catch (Exception e) {
-                logger.error("Error durante la inicialización: " + e.getMessage(), e);
+                logger.error("Error during initialization: " + e.getMessage(), e);
                 javafx.application.Platform.runLater(() -> {
                     statusLabel.setText("Error: " + e.getMessage());
                     statusLabel.setStyle("-fx-text-fill: #e74c3c;");

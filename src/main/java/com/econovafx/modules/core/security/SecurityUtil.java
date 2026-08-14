@@ -1,10 +1,14 @@
 package com.econovafx.modules.core.security;
 
+import com.econovafx.modules.core.config.AppConfig;
 import com.econovafx.modules.core.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -23,12 +27,47 @@ public class SecurityUtil {
     private static final ThreadLocal<User> currentUserHolder = new ThreadLocal<>();
     
     /**
+     * Map to track last activity time per user for session timeout.
+     * Username -> last activity timestamp
+     */
+    private static final ConcurrentHashMap<String, Instant> lastActivityMap = new ConcurrentHashMap<>();
+    
+    /**
+     * Parsed session timeout duration from configuration.
+     */
+    private static final Duration SESSION_TIMEOUT_DURATION;
+    
+    static {
+        // Parse SESSION_TIMEOUT from AppConfig (format: "30m", "1h", etc.)
+        String timeoutStr = AppConfig.SESSION_TIMEOUT;
+        Duration parsedDuration;
+        try {
+            parsedDuration = Duration.parse("PT" + timeoutStr.toUpperCase().replace("M", "M").replace("H", "H"));
+        } catch (Exception e) {
+            // Fallback: try to parse as minutes if format is just a number
+            try {
+                int minutes = Integer.parseInt(timeoutStr.replaceAll("\\D+", ""));
+                parsedDuration = Duration.ofMinutes(minutes);
+            } catch (NumberFormatException ex) {
+                logger.warn("Invalid SESSION_TIMEOUT format: {}, defaulting to 30 minutes", timeoutStr);
+                parsedDuration = Duration.ofMinutes(30);
+            }
+        }
+        SESSION_TIMEOUT_DURATION = parsedDuration;
+        logger.info("Session timeout configured to {} minutes", SESSION_TIMEOUT_DURATION.toMinutes());
+    }
+    
+    /**
      * Sets the current authenticated user in the thread context.
      * Call this after successful login.
      * @param user The authenticated user
      */
     public static void setCurrentUser(User user) {
         currentUserHolder.set(user);
+        if (user != null) {
+            // Update last activity time
+            lastActivityMap.put(user.getUsername(), Instant.now());
+        }
         logger.debug("Current user set: {}", user != null ? user.getUsername() : "null");
     }
     
@@ -45,8 +84,71 @@ public class SecurityUtil {
      * Call this on logout or at the end of a request.
      */
     public static void clearCurrentUser() {
+        User user = currentUserHolder.get();
+        if (user != null) {
+            lastActivityMap.remove(user.getUsername());
+        }
         currentUserHolder.remove();
         logger.debug("Current user cleared");
+    }
+    
+    /**
+     * Updates the last activity timestamp for the current user.
+     * Call this on each user interaction to prevent session timeout.
+     */
+    public static void updateLastActivity() {
+        User user = getCurrentUser();
+        if (user != null) {
+            lastActivityMap.put(user.getUsername(), Instant.now());
+        }
+    }
+    
+    /**
+     * Checks if the current user's session has expired due to inactivity.
+     * @return true if session has expired, false otherwise
+     */
+    public static boolean isSessionExpired() {
+        User user = getCurrentUser();
+        if (user == null) {
+            return true; // No user logged in
+        }
+        
+        Instant lastActivity = lastActivityMap.get(user.getUsername());
+        if (lastActivity == null) {
+            logger.warn("No last activity recorded for user {}, considering session expired", user.getUsername());
+            return true;
+        }
+        
+        Duration inactiveDuration = Duration.between(lastActivity, Instant.now());
+        boolean expired = inactiveDuration.compareTo(SESSION_TIMEOUT_DURATION) > 0;
+        
+        if (expired) {
+            logger.warn("Session expired for user {}. Inactive for {} minutes (timeout: {} minutes)", 
+                       user.getUsername(), inactiveDuration.toMinutes(), SESSION_TIMEOUT_DURATION.toMinutes());
+        }
+        
+        return expired;
+    }
+    
+    /**
+     * Gets the remaining session time in minutes.
+     * @return Remaining minutes before session expires, or 0 if expired/not authenticated
+     */
+    public static long getRemainingSessionTimeMinutes() {
+        User user = getCurrentUser();
+        if (user == null) {
+            return 0;
+        }
+        
+        Instant lastActivity = lastActivityMap.get(user.getUsername());
+        if (lastActivity == null) {
+            return 0;
+        }
+        
+        Duration inactiveDuration = Duration.between(lastActivity, Instant.now());
+        Duration remaining = SESSION_TIMEOUT_DURATION.minus(inactiveDuration);
+        
+        return Math.max(0, remaining.toMinutes());
     }
     
     /**
