@@ -89,7 +89,7 @@ public class PayrollService {
             return concept.getFixedAmount() != null ? concept.getFixedAmount() : BigDecimal.ZERO;
         }
         
-        PayrollFormulaEvaluator evaluator = new PayrollFormulaEvaluator();
+        PayrollFormulaEvaluator evaluator = new PayrollFormulaEvaluator(systemConfigService);
         return evaluator.evaluate(concept.getFormula(), employee, period, concept);
     }
 
