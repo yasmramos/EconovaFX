@@ -88,6 +88,58 @@ public class ExportServicePdfTest {
         System.out.println("Bank reconciliation PDF generated: " + pdfFile.getAbsolutePath());
     }
 
+    @Test
+    public void testExportBalanceSheetToPdf_GeneratesValidPdf() throws IOException {
+        // Arrange: Create sample accounts
+        List<Account> accounts = createSampleAccountsForFinancialStatements();
+        LocalDate startDate = LocalDate.now().withDayOfMonth(1);
+        LocalDate endDate = LocalDate.now();
+        
+        // Act: Generate PDF
+        byte[] pdfContent = exportService.exportBalanceSheetToPdf(accounts, startDate, endDate);
+        
+        // Assert: PDF is not null and has content
+        assertNotNull(pdfContent);
+        assertTrue(pdfContent.length > 0, "PDF should have content");
+        
+        // Export PDF to file for visual verification
+        String fileName = EXPORT_DIR + "/balance_sheet.pdf";
+        savePdfToFile(pdfContent, fileName);
+        
+        // Verify file was created
+        File pdfFile = new File(fileName);
+        assertTrue(pdfFile.exists(), "PDF file should be created in " + EXPORT_DIR);
+        assertTrue(pdfFile.length() > 0, "PDF file should not be empty");
+        
+        System.out.println("Balance Sheet PDF generated: " + pdfFile.getAbsolutePath());
+    }
+
+    @Test
+    public void testExportIncomeStatementToPdf_GeneratesValidPdf() throws IOException {
+        // Arrange: Create sample accounts
+        List<Account> accounts = createSampleAccountsForFinancialStatements();
+        LocalDate startDate = LocalDate.now().withDayOfMonth(1);
+        LocalDate endDate = LocalDate.now();
+        
+        // Act: Generate PDF
+        byte[] pdfContent = exportService.exportIncomeStatementToPdf(accounts, startDate, endDate);
+        
+        // Assert: PDF is not null and has content
+        assertNotNull(pdfContent);
+        assertTrue(pdfContent.length > 0, "PDF should have content");
+        
+        // Export PDF to file for visual verification
+        String fileName = EXPORT_DIR + "/income_statement.pdf";
+        savePdfToFile(pdfContent, fileName);
+        
+        // Verify file was created
+        File pdfFile = new File(fileName);
+        assertTrue(pdfFile.exists(), "PDF file should be created in " + EXPORT_DIR);
+        assertTrue(pdfFile.length() > 0, "PDF file should not be empty");
+        
+        System.out.println("Income Statement PDF generated: " + pdfFile.getAbsolutePath());
+    }
+
     /**
      * Helper method to save PDF content to a file
      */
@@ -192,5 +244,54 @@ public class ExportServicePdfTest {
         reconciliation.setBankItems(bankItems);
         
         return reconciliation;
+    }
+
+    /**
+     * Creates sample accounts for financial statement tests
+     */
+    private List<Account> createSampleAccountsForFinancialStatements() {
+        List<Account> accounts = new ArrayList<>();
+        
+        // Asset account
+        Account assetAccount = new Account();
+        assetAccount.setId(1L);
+        assetAccount.setCode("101.001");
+        assetAccount.setName("Caja - Moneda Nacional");
+        assetAccount.setType(com.econovafx.modules.accounting.model.AccountType.ASSET);
+        accounts.add(assetAccount);
+        
+        // Liability account
+        Account liabilityAccount = new Account();
+        liabilityAccount.setId(2L);
+        liabilityAccount.setCode("201.001");
+        liabilityAccount.setName("Cuentas por Pagar");
+        liabilityAccount.setType(com.econovafx.modules.accounting.model.AccountType.LIABILITY);
+        accounts.add(liabilityAccount);
+        
+        // Equity account
+        Account equityAccount = new Account();
+        equityAccount.setId(3L);
+        equityAccount.setCode("301.001");
+        equityAccount.setName("Capital Social");
+        equityAccount.setType(com.econovafx.modules.accounting.model.AccountType.EQUITY);
+        accounts.add(equityAccount);
+        
+        // Revenue account
+        Account revenueAccount = new Account();
+        revenueAccount.setId(4L);
+        revenueAccount.setCode("401.001");
+        revenueAccount.setName("Ventas de Mercancías");
+        revenueAccount.setType(com.econovafx.modules.accounting.model.AccountType.REVENUE);
+        accounts.add(revenueAccount);
+        
+        // Expense account
+        Account expenseAccount = new Account();
+        expenseAccount.setId(5L);
+        expenseAccount.setCode("501.001");
+        expenseAccount.setName("Gastos de Personal");
+        expenseAccount.setType(com.econovafx.modules.accounting.model.AccountType.EXPENSE);
+        accounts.add(expenseAccount);
+        
+        return accounts;
     }
 }
