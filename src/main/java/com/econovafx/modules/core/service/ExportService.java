@@ -1,6 +1,8 @@
 package com.econovafx.modules.core.service;
 
 import com.econovafx.core.i18n.I18nManager;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.model.TransactionEntry;
 import com.econovafx.modules.bank.model.BankReconciliation;
@@ -21,9 +23,12 @@ import jakarta.inject.Singleton;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * Service for exporting transactions to PDF and Excel formats
@@ -616,5 +621,319 @@ public class ExportService {
             logger.info("Exported bank reconciliation {} to PDF", reconciliation.getReconciliationNumber());
             return baos.toByteArray();
         }
+    }
+
+    /**
+     * Export Balance Sheet (Balance General) to PDF
+     * @param accounts list of all accounts
+     * @param startDate start date of the period
+     * @param endDate end date of the period
+     * @return byte array containing the PDF content
+     * @throws IOException if an error occurs during PDF generation
+     */
+    public byte[] exportBalanceSheetToPdf(List<Account> accounts, LocalDate startDate, LocalDate endDate) throws IOException {
+        ResourceBundle bundle = getBundle();
+        
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+            
+            // Title - Balance General
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+            contentStream.newLineAtOffset(50, 750);
+            contentStream.showText(bundle.getString("report.balance_sheet.title"));
+            contentStream.endText();
+            
+            // Date range
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+            contentStream.newLineAtOffset(50, 720);
+            String dateRange = String.format(bundle.getString("report.period"), 
+                startDate.format(DATE_FORMATTER), endDate.format(DATE_FORMATTER));
+            contentStream.showText(dateRange);
+            contentStream.endText();
+            
+            float yPosition = 680;
+            
+            // Calculate balances by account type
+            BigDecimal totalAssets = BigDecimal.ZERO;
+            BigDecimal totalLiabilities = BigDecimal.ZERO;
+            BigDecimal totalEquity = BigDecimal.ZERO;
+            
+            // Assets section
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText(bundle.getString("account.type.ASSET"));
+            contentStream.endText();
+            yPosition -= 25;
+            
+            List<Account> assetAccounts = accounts.stream()
+                .filter(a -> a.getType() == AccountType.ASSET)
+                .collect(Collectors.toList());
+            
+            for (Account account : assetAccounts) {
+                BigDecimal balance = calculateAccountBalance(account, startDate, endDate);
+                if (balance.compareTo(BigDecimal.ZERO) != 0) {
+                    contentStream.beginText();
+                    contentStream.setFont(PDType1Font.HELVETICA, 11);
+                    contentStream.newLineAtOffset(60, yPosition);
+                    contentStream.showText(account.getCode() + " - " + account.getName());
+                    contentStream.newLineAtOffset(350, 0);
+                    contentStream.showText(balance.setScale(2, RoundingMode.HALF_UP).toPlainString());
+                    contentStream.endText();
+                    yPosition -= 18;
+                    totalAssets = totalAssets.add(balance);
+                }
+            }
+            
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(60, yPosition);
+            contentStream.showText(bundle.getString("report.balance_sheet.total_assets"));
+            contentStream.newLineAtOffset(350, 0);
+            contentStream.showText(totalAssets.setScale(2, RoundingMode.HALF_UP).toPlainString());
+            contentStream.endText();
+            yPosition -= 30;
+            
+            // Liabilities section
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText(bundle.getString("account.type.LIABILITY"));
+            contentStream.endText();
+            yPosition -= 25;
+            
+            List<Account> liabilityAccounts = accounts.stream()
+                .filter(a -> a.getType() == AccountType.LIABILITY)
+                .collect(Collectors.toList());
+            
+            for (Account account : liabilityAccounts) {
+                BigDecimal balance = calculateAccountBalance(account, startDate, endDate);
+                if (balance.compareTo(BigDecimal.ZERO) != 0) {
+                    contentStream.beginText();
+                    contentStream.setFont(PDType1Font.HELVETICA, 11);
+                    contentStream.newLineAtOffset(60, yPosition);
+                    contentStream.showText(account.getCode() + " - " + account.getName());
+                    contentStream.newLineAtOffset(350, 0);
+                    contentStream.showText(balance.setScale(2, RoundingMode.HALF_UP).toPlainString());
+                    contentStream.endText();
+                    yPosition -= 18;
+                    totalLiabilities = totalLiabilities.add(balance);
+                }
+            }
+            
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(60, yPosition);
+            contentStream.showText(bundle.getString("report.balance_sheet.total_liabilities"));
+            contentStream.newLineAtOffset(350, 0);
+            contentStream.showText(totalLiabilities.setScale(2, RoundingMode.HALF_UP).toPlainString());
+            contentStream.endText();
+            yPosition -= 30;
+            
+            // Equity section
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText(bundle.getString("account.type.EQUITY"));
+            contentStream.endText();
+            yPosition -= 25;
+            
+            List<Account> equityAccounts = accounts.stream()
+                .filter(a -> a.getType() == AccountType.EQUITY)
+                .collect(Collectors.toList());
+            
+            for (Account account : equityAccounts) {
+                BigDecimal balance = calculateAccountBalance(account, startDate, endDate);
+                if (balance.compareTo(BigDecimal.ZERO) != 0) {
+                    contentStream.beginText();
+                    contentStream.setFont(PDType1Font.HELVETICA, 11);
+                    contentStream.newLineAtOffset(60, yPosition);
+                    contentStream.showText(account.getCode() + " - " + account.getName());
+                    contentStream.newLineAtOffset(350, 0);
+                    contentStream.showText(balance.setScale(2, RoundingMode.HALF_UP).toPlainString());
+                    contentStream.endText();
+                    yPosition -= 18;
+                    totalEquity = totalEquity.add(balance);
+                }
+            }
+            
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(60, yPosition);
+            contentStream.showText(bundle.getString("report.balance_sheet.total_equity"));
+            contentStream.newLineAtOffset(350, 0);
+            contentStream.showText(totalEquity.setScale(2, RoundingMode.HALF_UP).toPlainString());
+            contentStream.endText();
+            yPosition -= 30;
+            
+            // Accounting equation verification
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText(bundle.getString("report.balance_sheet.equation_check"));
+            contentStream.newLineAtOffset(200, 0);
+            BigDecimal liabilitiesAndEquity = totalLiabilities.add(totalEquity);
+            String equationStatus = totalAssets.compareTo(liabilitiesAndEquity) == 0 ? 
+                bundle.getString("report.balance_sheet.balanced") : bundle.getString("report.balance_sheet.not_balanced");
+            contentStream.showText(equationStatus);
+            contentStream.endText();
+            
+            contentStream.close();
+            
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            document.save(baos);
+            
+            logger.info("Exported Balance Sheet to PDF for period {} to {}", startDate, endDate);
+            return baos.toByteArray();
+        }
+    }
+
+    /**
+     * Export Income Statement (Estado de Resultados) to PDF
+     * @param accounts list of all accounts
+     * @param startDate start date of the period
+     * @param endDate end date of the period
+     * @return byte array containing the PDF content
+     * @throws IOException if an error occurs during PDF generation
+     */
+    public byte[] exportIncomeStatementToPdf(List<Account> accounts, LocalDate startDate, LocalDate endDate) throws IOException {
+        ResourceBundle bundle = getBundle();
+        
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+            
+            // Title - Estado de Resultados
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+            contentStream.newLineAtOffset(50, 750);
+            contentStream.showText(bundle.getString("report.income_statement.title"));
+            contentStream.endText();
+            
+            // Date range
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+            contentStream.newLineAtOffset(50, 720);
+            String dateRange = String.format(bundle.getString("report.period"), 
+                startDate.format(DATE_FORMATTER), endDate.format(DATE_FORMATTER));
+            contentStream.showText(dateRange);
+            contentStream.endText();
+            
+            float yPosition = 680;
+            
+            // Calculate balances
+            BigDecimal totalRevenue = BigDecimal.ZERO;
+            BigDecimal totalExpenses = BigDecimal.ZERO;
+            
+            // Revenue section
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText(bundle.getString("account.type.REVENUE"));
+            contentStream.endText();
+            yPosition -= 25;
+            
+            List<Account> revenueAccounts = accounts.stream()
+                .filter(a -> a.getType() == AccountType.REVENUE)
+                .collect(Collectors.toList());
+            
+            for (Account account : revenueAccounts) {
+                BigDecimal balance = calculateAccountBalance(account, startDate, endDate);
+                if (balance.compareTo(BigDecimal.ZERO) != 0) {
+                    contentStream.beginText();
+                    contentStream.setFont(PDType1Font.HELVETICA, 11);
+                    contentStream.newLineAtOffset(60, yPosition);
+                    contentStream.showText(account.getCode() + " - " + account.getName());
+                    contentStream.newLineAtOffset(350, 0);
+                    contentStream.showText(balance.setScale(2, RoundingMode.HALF_UP).toPlainString());
+                    contentStream.endText();
+                    yPosition -= 18;
+                    totalRevenue = totalRevenue.add(balance);
+                }
+            }
+            
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(60, yPosition);
+            contentStream.showText(bundle.getString("report.income_statement.total_revenue"));
+            contentStream.newLineAtOffset(350, 0);
+            contentStream.showText(totalRevenue.setScale(2, RoundingMode.HALF_UP).toPlainString());
+            contentStream.endText();
+            yPosition -= 30;
+            
+            // Expenses section
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText(bundle.getString("account.type.EXPENSE"));
+            contentStream.endText();
+            yPosition -= 25;
+            
+            List<Account> expenseAccounts = accounts.stream()
+                .filter(a -> a.getType() == AccountType.EXPENSE)
+                .collect(Collectors.toList());
+            
+            for (Account account : expenseAccounts) {
+                BigDecimal balance = calculateAccountBalance(account, startDate, endDate);
+                if (balance.compareTo(BigDecimal.ZERO) != 0) {
+                    contentStream.beginText();
+                    contentStream.setFont(PDType1Font.HELVETICA, 11);
+                    contentStream.newLineAtOffset(60, yPosition);
+                    contentStream.showText(account.getCode() + " - " + account.getName());
+                    contentStream.newLineAtOffset(350, 0);
+                    contentStream.showText(balance.setScale(2, RoundingMode.HALF_UP).toPlainString());
+                    contentStream.endText();
+                    yPosition -= 18;
+                    totalExpenses = totalExpenses.add(balance);
+                }
+            }
+            
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(60, yPosition);
+            contentStream.showText(bundle.getString("report.income_statement.total_expenses"));
+            contentStream.newLineAtOffset(350, 0);
+            contentStream.showText(totalExpenses.setScale(2, RoundingMode.HALF_UP).toPlainString());
+            contentStream.endText();
+            yPosition -= 30;
+            
+            // Net Income/Loss
+            BigDecimal netIncome = totalRevenue.subtract(totalExpenses);
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText(bundle.getString("report.income_statement.net_income"));
+            contentStream.newLineAtOffset(350, 0);
+            String resultText = netIncome.compareTo(BigDecimal.ZERO) >= 0 ? 
+                bundle.getString("report.income_statement.profit") : bundle.getString("report.income_statement.loss");
+            contentStream.showText(resultText + ": " + netIncome.abs().setScale(2, RoundingMode.HALF_UP).toPlainString());
+            contentStream.endText();
+            
+            contentStream.close();
+            
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            document.save(baos);
+            
+            logger.info("Exported Income Statement to PDF for period {} to {}", startDate, endDate);
+            return baos.toByteArray();
+        }
+    }
+
+    /**
+     * Calculate the balance of an account for a given period.
+     * This is a helper method that should be replaced with actual service calls.
+     * For now, it returns a placeholder value.
+     */
+    private BigDecimal calculateAccountBalance(Account account, LocalDate startDate, LocalDate endDate) {
+        // TODO: Implement actual balance calculation using TransactionService
+        // This is a placeholder that returns zero
+        return BigDecimal.ZERO;
     }
 }
