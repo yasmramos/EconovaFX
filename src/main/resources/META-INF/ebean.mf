@@ -1,1 +1,1 @@
-com.econovafx.domain
+packages: com.econovafx.modules.core.model,com.econovafx.modules.accounting.model,com.econovafx.modules.billing.model,com.econovafx.modules.payroll.model,com.econovafx.modules.inventory.model,com.econovafx.modules.receivables.model,com.econovafx.modules.payables.model,com.econovafx.modules.bank.model,com.econovafx.modules.cash.model,com.econovafx.modules.assets.model,com.econovafx.modules.fixedassets.model,com.econovafx.modules.reporting.model,com.econovafx.modules.security.model
