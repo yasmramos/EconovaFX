@@ -1,4 +1,3 @@
-```
 # PDF export files
 export_pdf/*.pdf
 
@@ -56,4 +55,3 @@ target/
 
 # Test reports
 test-results/
-```
