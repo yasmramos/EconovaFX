@@ -227,9 +227,6 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>META-INF/ebean.mf</exclude>
-                </excludes>
             </resource>
         </resources>
         <plugins>
