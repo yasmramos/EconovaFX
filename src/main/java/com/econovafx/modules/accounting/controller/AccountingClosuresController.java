@@ -2,6 +2,8 @@ package com.econovafx.modules.accounting.controller;
 
 import com.econovafx.modules.accounting.model.AccountingPeriod;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
+import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.core.security.SecurityUtil;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
@@ -241,10 +243,14 @@ public class AccountingClosuresController implements Initializable {
         }
 
         try {
-            // Execute monthly closure
-            accountingPeriodService.closeMonthlyPeriod(period.getId(), "Current User", "Monthly closure executed from UI");
+            // Get authenticated user from security context
+            User currentUser = SecurityUtil.getCurrentUser();
+            String username = (currentUser != null) ? currentUser.getUsername() : "system";
             
-            logger.info("Monthly period closed successfully: {}", period.getName());
+            // Execute monthly closure
+            accountingPeriodService.closeMonthlyPeriod(period.getId(), username, "Monthly closure executed from UI");
+            
+            logger.info("Monthly period closed successfully: {} by {}", period.getName(), username);
             showAlert("Success", "Monthly period '" + period.getName() + "' has been closed successfully.", Alert.AlertType.INFORMATION);
             
             // Refresh data
@@ -325,10 +331,14 @@ public class AccountingClosuresController implements Initializable {
         }
 
         try {
-            // Execute annual closure with auto-close of related months
-            accountingPeriodService.closeAnnualPeriod(period.getId(), "Current User", "Annual closure executed from UI", true);
+            // Get authenticated user from security context
+            User currentUser = SecurityUtil.getCurrentUser();
+            String username = (currentUser != null) ? currentUser.getUsername() : "system";
             
-            logger.info("Annual period closed successfully: {}", period.getName());
+            // Execute annual closure with auto-close of related months
+            accountingPeriodService.closeAnnualPeriod(period.getId(), username, "Annual closure executed from UI", true);
+            
+            logger.info("Annual period closed successfully: {} by {}", period.getName(), username);
             showAlert("Success", "Annual period '" + period.getName() + "' has been closed successfully.", Alert.AlertType.INFORMATION);
             
             // Refresh data
