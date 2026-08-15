@@ -4,9 +4,9 @@ import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.model.AccountType;
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.model.TransactionEntry;
-import com.econovafx.modules.accounting.model.TransactionEntryData;
 import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.accounting.service.TransactionService.TransactionEntryData;
 import com.econovafx.modules.core.exception.ValidationException;
 import com.econovafx.modules.core.model.SystemConfiguration;
 import com.econovafx.modules.core.service.SystemConfigService;
@@ -26,7 +26,12 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,11 +68,19 @@ public class DashboardController implements Initializable {
     @FXML
     private Label assetsTrendLabel;
     @FXML
+    private HBox assetsTrendIconContainer;
+    @FXML
     private Label liabilitiesTrendLabel;
+    @FXML
+    private HBox liabilitiesTrendIconContainer;
     @FXML
     private Label equityTrendLabel;
     @FXML
+    private HBox equityTrendIconContainer;
+    @FXML
     private Label balanceTrendLabel;
+    @FXML
+    private HBox balanceTrendIconContainer;
 
     // Charts
     @FXML
@@ -291,55 +304,203 @@ public class DashboardController implements Initializable {
     }
 
     private void loadFinancialSummary() {
-        List<Account> allAccounts = accountService.getAllAccounts();
-
-        BigDecimal totalAssets = BigDecimal.ZERO;
-        BigDecimal totalLiabilities = BigDecimal.ZERO;
-        BigDecimal totalEquity = BigDecimal.ZERO;
-
-        for (Account account : allAccounts) {
-            switch (account.getType()) {
-                case ASSET -> totalAssets = totalAssets.add(account.getBalance());
-                case LIABILITY -> totalLiabilities = totalLiabilities.add(account.getBalance());
-                case EQUITY -> totalEquity = totalEquity.add(account.getBalance());
-                case REVENUE, EXPENSE -> {
-                    if (account.getType() == AccountType.REVENUE) {
-                        totalEquity = totalEquity.add(account.getBalance());
-                    } else {
-                        totalEquity = totalEquity.subtract(account.getBalance());
-                    }
-                }
-            }
+        LocalDate endDate = filterEndDate.getValue() != null ? filterEndDate.getValue() : LocalDate.now();
+        LocalDate startDate = filterStartDate.getValue() != null ? filterStartDate.getValue() : endDate.minusDays(30);
+        
+        // Calculate current period balances
+        Map<AccountType, BigDecimal> currentBalances = calculateBalancesByAccountType(startDate, endDate);
+        
+        // Calculate previous period balances (same duration before current period)
+        LocalDate prevEndDate = startDate.minusDays(1);
+        LocalDate prevStartDate = prevEndDate.minusDays(startDate.toEpochDay() - endDate.toEpochDay());
+        if (prevStartDate.isBefore(LocalDate.of(1900, 1, 1))) {
+            prevStartDate = LocalDate.of(1900, 1, 1);
         }
+        Map<AccountType, BigDecimal> previousBalances = calculateBalancesByAccountType(prevStartDate, prevEndDate);
 
-        final BigDecimal finalAssets = totalAssets;
-        final BigDecimal finalLiabilities = totalLiabilities;
-        final BigDecimal finalEquity = totalEquity;
+        final BigDecimal totalAssets = currentBalances.getOrDefault(AccountType.ASSET, BigDecimal.ZERO);
+        final BigDecimal totalLiabilities = currentBalances.getOrDefault(AccountType.LIABILITY, BigDecimal.ZERO);
+        final BigDecimal totalEquity = currentBalances.getOrDefault(AccountType.EQUITY, BigDecimal.ZERO);
         
         Platform.runLater(() -> {
-            totalAssetsLabel.setText(formatCurrency(finalAssets));
-            totalLiabilitiesLabel.setText(formatCurrency(finalLiabilities));
-            totalEquityLabel.setText(formatCurrency(finalEquity));
+            totalAssetsLabel.setText(formatCurrency(totalAssets));
+            totalLiabilitiesLabel.setText(formatCurrency(totalLiabilities));
+            totalEquityLabel.setText(formatCurrency(totalEquity));
             
-            BigDecimal balance = finalAssets.subtract(finalLiabilities);
+            BigDecimal balance = totalAssets.subtract(totalLiabilities);
             balanceLabel.setText(formatCurrency(balance));
             
-            updateTrendLabels();
+            updateTrendLabels(currentBalances, previousBalances);
         });
     }
 
-    private void updateTrendLabels() {
-        assetsTrendLabel.setText("▼ 0%");
-        assetsTrendLabel.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 12px;");
+    /**
+     * Calculate total balances by account type for a given date range
+     */
+    private Map<AccountType, BigDecimal> calculateBalancesByAccountType(LocalDate startDate, LocalDate endDate) {
+        Map<AccountType, BigDecimal> balances = new EnumMap<>(AccountType.class);
+        balances.put(AccountType.ASSET, BigDecimal.ZERO);
+        balances.put(AccountType.LIABILITY, BigDecimal.ZERO);
+        balances.put(AccountType.EQUITY, BigDecimal.ZERO);
+        balances.put(AccountType.REVENUE, BigDecimal.ZERO);
+        balances.put(AccountType.EXPENSE, BigDecimal.ZERO);
+
+        List<Transaction> transactions = transactionService.getTransactionsByDateRange(startDate, endDate);
         
-        liabilitiesTrendLabel.setText("▼ 0%");
-        liabilitiesTrendLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px;");
+        for (Transaction t : transactions) {
+            if (!t.getIsPosted() || t.getDate() == null) {
+                continue;
+            }
+            
+            for (TransactionEntry entry : t.getEntries()) {
+                Account account = entry.getAccount();
+                AccountType type = account.getType();
+                
+                if (type == null) continue;
+                
+                BigDecimal debit = entry.getDebitAmount() != null ? entry.getDebitAmount() : BigDecimal.ZERO;
+                BigDecimal credit = entry.getCreditAmount() != null ? entry.getCreditAmount() : BigDecimal.ZERO;
+                
+                // For assets and expenses: debit increases, credit decreases
+                if (type == AccountType.ASSET || type == AccountType.EXPENSE) {
+                    balances.put(type, balances.get(type).add(debit).subtract(credit));
+                }
+                // For liabilities, equity, and revenue: credit increases, debit decreases
+                else if (type == AccountType.LIABILITY || type == AccountType.EQUITY || type == AccountType.REVENUE) {
+                    balances.put(type, balances.get(type).add(credit).subtract(debit));
+                }
+            }
+        }
         
-        equityTrendLabel.setText("▬ 0%");
-        equityTrendLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 12px;");
+        return balances;
+    }
+
+    /**
+     * Update trend labels with real percentage variations between periods
+     */
+    private void updateTrendLabels(Map<AccountType, BigDecimal> currentBalances, 
+                                    Map<AccountType, BigDecimal> previousBalances) {
+        BigDecimal currentAssets = currentBalances.getOrDefault(AccountType.ASSET, BigDecimal.ZERO);
+        BigDecimal previousAssets = previousBalances.getOrDefault(AccountType.ASSET, BigDecimal.ZERO);
+        updateTrendLabel(assetsTrendLabel, assetsTrendIconContainer, currentAssets, previousAssets, true);
         
-        balanceTrendLabel.setText("Estable");
-        balanceTrendLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px;");
+        BigDecimal currentLiabilities = currentBalances.getOrDefault(AccountType.LIABILITY, BigDecimal.ZERO);
+        BigDecimal previousLiabilities = previousBalances.getOrDefault(AccountType.LIABILITY, BigDecimal.ZERO);
+        updateTrendLabel(liabilitiesTrendLabel, liabilitiesTrendIconContainer, currentLiabilities, previousLiabilities, false);
+        
+        BigDecimal currentEquity = currentBalances.getOrDefault(AccountType.EQUITY, BigDecimal.ZERO);
+        BigDecimal previousEquity = previousBalances.getOrDefault(AccountType.EQUITY, BigDecimal.ZERO);
+        updateTrendLabel(equityTrendLabel, equityTrendIconContainer, currentEquity, previousEquity, true);
+        
+        BigDecimal currentBalance = currentAssets.subtract(currentLiabilities);
+        BigDecimal previousBalance = previousAssets.subtract(previousLiabilities);
+        updateTrendLabel(balanceTrendLabel, balanceTrendIconContainer, currentBalance, previousBalance, true);
+    }
+
+    /**
+     * Update a single trend label with icon and text based on percentage variation
+     * @param label The label to display the percentage text
+     * @param iconContainer The container to hold the trend icon
+     * @param current Current period value
+     * @param previous Previous period value
+     * @param favorableIncrease true if increase is favorable (assets, equity, balance), 
+     *                          false if increase is unfavorable (liabilities)
+     */
+    private void updateTrendLabel(Label label, HBox iconContainer, BigDecimal current, BigDecimal previous, boolean favorableIncrease) {
+        TrendData trendData = calculateTrendData(current, previous, favorableIncrease);
+        
+        // Update label text with percentage
+        label.setText(trendData.percentageText);
+        label.setStyle("-fx-text-fill: " + trendData.colorHex + ";");
+        
+        // Update icon container with FontIcon
+        if (iconContainer != null) {
+            iconContainer.getChildren().clear();
+            
+            if (!"mdi2l-minus".equals(trendData.iconCode)) {
+                FontIcon trendIcon = new FontIcon(getMaterialDesignIcon(trendData.iconCode));
+                trendIcon.setIconSize(16);
+                trendIcon.setIconColor(Color.web(trendData.colorHex));
+                iconContainer.getChildren().add(trendIcon);
+            }
+        }
+    }
+
+    /**
+     * Calculate trend data including icon code, percentage text and color
+     * @param current Current period value
+     * @param previous Previous period value
+     * @param favorableIncrease true if increase is favorable
+     * @return TrendData object with icon code, percentage text and color
+     */
+    private TrendData calculateTrendData(BigDecimal current, BigDecimal previous, boolean favorableIncrease) {
+        String iconCode;
+        String percentageText;
+        String colorHex;
+        
+        if (previous.compareTo(BigDecimal.ZERO) == 0) {
+            if (current.compareTo(BigDecimal.ZERO) == 0) {
+                return new TrendData("mdi2l-minus", "0.0%", "#6b7280");
+            } else {
+                return new TrendData("mdi2l-minus", "N/D", "#6b7280");
+            }
+        }
+        
+        BigDecimal variation = current.subtract(previous);
+        BigDecimal percentage = variation.multiply(new BigDecimal("100"))
+                .divide(previous.abs(), 1, java.math.RoundingMode.HALF_UP);
+        
+        if (variation.compareTo(BigDecimal.ZERO) > 0) {
+            iconCode = favorableIncrease ? "mdi2a-arrow-up-bold" : "mdi2a-arrow-down-bold";
+            boolean isFavorable = favorableIncrease;
+            colorHex = isFavorable ? "#10b981" : "#ef4444";
+        } else if (variation.compareTo(BigDecimal.ZERO) < 0) {
+            iconCode = favorableIncrease ? "mdi2a-arrow-down-bold" : "mdi2a-arrow-up-bold";
+            boolean isFavorable = !favorableIncrease;
+            colorHex = isFavorable ? "#10b981" : "#ef4444";
+        } else {
+            iconCode = "mdi2l-minus";
+            colorHex = "#6b7280";
+        }
+        
+        percentageText = percentage.abs().setScale(1, java.math.RoundingMode.HALF_UP) + "%";
+        return new TrendData(iconCode, percentageText, colorHex);
+    }
+    
+    /**
+     * Helper class to hold trend data
+     */
+    private static class TrendData {
+        String iconCode;
+        String percentageText;
+        String colorHex;
+        
+        TrendData(String iconCode, String percentageText, String colorHex) {
+            this.iconCode = iconCode;
+            this.percentageText = percentageText;
+            this.colorHex = colorHex;
+        }
+    }
+    
+    /**
+     * Get the appropriate MaterialDesign icon based on the icon code string
+     * @param iconCode The icon code (e.g., "mdi2a-arrow-up-bold")
+     * @return The corresponding Ikonli icon
+     */
+    private org.kordamp.ikonli.Ikon getMaterialDesignIcon(String iconCode) {
+        if (iconCode == null) {
+            return MaterialDesignM.MINUS;
+        }
+        
+        switch (iconCode) {
+            case "mdi2a-arrow-up-bold":
+                return MaterialDesignA.ARROW_UP_BOLD;
+            case "mdi2a-arrow-down-bold":
+                return MaterialDesignA.ARROW_DOWN_BOLD;
+            case "mdi2l-minus":
+            default:
+                return MaterialDesignM.MINUS;
+        }
     }
     
     private void loadKPIs() {
@@ -619,7 +780,32 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void viewAllTransactions() {
-        logger.debug("View all transactions clicked");
+        logger.info("View all transactions clicked - navigating to transactions view");
+        if (viewFactory != null) {
+            // Navigate to the transactions view using the ViewFactory
+            // This will replace the current content area with the transactions view
+            try {
+                // Get the main view controller's content area through the view factory
+                // The viewFactory has access to switch views in the main application
+                viewFactory.showTransactions();
+                logger.debug("Successfully navigated to transactions view");
+            } catch (Exception e) {
+                logger.error("Error navigating to transactions view", e);
+                // Fallback: try to get the stage and show transactions in a new window
+                try {
+                    javafx.stage.Stage stage = new javafx.stage.Stage();
+                    stage.setTitle("All Transactions");
+                    javafx.scene.Parent root = (javafx.scene.Parent) viewFactory.createTransactionsView();
+                    stage.setScene(new javafx.scene.Scene(root, 1024, 600));
+                    stage.show();
+                    logger.debug("Opened transactions view in new window");
+                } catch (Exception ex) {
+                    logger.error("Failed to open transactions view", ex);
+                }
+            }
+        } else {
+            logger.warn("ViewFactory is not initialized, cannot navigate to transactions view");
+        }
     }
 
     @FXML

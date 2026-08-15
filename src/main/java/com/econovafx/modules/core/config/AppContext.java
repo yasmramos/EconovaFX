@@ -143,7 +143,8 @@ public final class AppContext {
                 exportService,
                 accountingPeriodService,
                 notificationService,
-                inventoryService
+                inventoryService,
+                null // viewSwitcher - will be set later
         );
 
         // Now create controllers that need ViewFactory and initialize them
@@ -187,7 +188,8 @@ public final class AppContext {
                 exportService,
                 accountingPeriodService,
                 notificationService,
-                inventoryService
+                inventoryService,
+                null // viewSwitcher - not used in AppContext initialization
         );
 
         // Final initialization pass for controllers that need the complete ViewFactory
