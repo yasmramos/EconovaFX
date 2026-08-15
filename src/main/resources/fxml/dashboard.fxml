@@ -58,7 +58,10 @@
                 <VBox>
                     <Label styleClass="card-label" text="Total Activos" />
                     <Label fx:id="totalAssetsLabel" styleClass="value-positive" text="\$ 0.00" />
-                    <Label fx:id="assetsTrendLabel" styleClass="trend-positive" text="+0%" />
+                    <HBox fx:id="assetsTrendIconContainer" spacing="4" alignment="CENTER_LEFT">
+                        <!-- Trend icon will be inserted here dynamically -->
+                    </HBox>
+                    <Label fx:id="assetsTrendLabel" styleClass="trend-positive" text="0.0%" />
                 </VBox>
             </HBox>
         </VBox>
@@ -72,7 +75,10 @@
                 <VBox>
                     <Label styleClass="card-label" text="Total Pasivos" />
                     <Label fx:id="totalLiabilitiesLabel" styleClass="value-negative" text="\$ 0.00" />
-                    <Label fx:id="liabilitiesTrendLabel" styleClass="trend-positive" text="-0%" />
+                    <HBox fx:id="liabilitiesTrendIconContainer" spacing="4" alignment="CENTER_LEFT">
+                        <!-- Trend icon will be inserted here dynamically -->
+                    </HBox>
+                    <Label fx:id="liabilitiesTrendLabel" styleClass="trend-positive" text="0.0%" />
                 </VBox>
             </HBox>
         </VBox>
@@ -86,7 +92,10 @@
                 <VBox>
                     <Label styleClass="card-label" text="Total Patrimonio" />
                     <Label fx:id="totalEquityLabel" styleClass="value-info" text="\$ 0.00" />
-                    <Label fx:id="equityTrendLabel" styleClass="trend-neutral" text="▬ 0%" />
+                    <HBox fx:id="equityTrendIconContainer" spacing="4" alignment="CENTER_LEFT">
+                        <!-- Trend icon will be inserted here dynamically -->
+                    </HBox>
+                    <Label fx:id="equityTrendLabel" styleClass="trend-neutral" text="0.0%" />
                 </VBox>
             </HBox>
         </VBox>
@@ -100,7 +109,10 @@
                 <VBox>
                     <Label styleClass="card-label" text="Balance General" />
                     <Label fx:id="balanceLabel" styleClass="value-warning" text="\$ 0.00" />
-                    <Label fx:id="balanceTrendLabel" styleClass="trend-positive" text="Estable" />
+                    <HBox fx:id="balanceTrendIconContainer" spacing="4" alignment="CENTER_LEFT">
+                        <!-- Trend icon will be inserted here dynamically -->
+                    </HBox>
+                    <Label fx:id="balanceTrendLabel" styleClass="trend-positive" text="0.0%" />
                 </VBox>
             </HBox>
         </VBox>
