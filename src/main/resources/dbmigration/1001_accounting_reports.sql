@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS accounting_period_archive (
     final_balance DECIMAL(18,2) DEFAULT 0,
     currency_code VARCHAR(3) DEFAULT 'CUP',
     archived_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY unique_period_account (period_year, period_month, account_code)
+    CONSTRAINT unique_period_account UNIQUE (period_year, period_month, account_code)
 );
 
 -- Add columns to accounting_period for module closure validation
@@ -72,19 +72,17 @@ ADD COLUMN IF NOT EXISTS payables_receivables_closed BOOLEAN DEFAULT FALSE,
 ADD COLUMN IF NOT EXISTS fixed_assets_closed BOOLEAN DEFAULT FALSE,
 ADD COLUMN IF NOT EXISTS payroll_closed BOOLEAN DEFAULT FALSE;
 
--- Insert default financial statement models (idempotent using INSERT IGNORE or conditional logic)
-INSERT INTO financial_statement_model (code, name, model_type, description) VALUES
+-- Insert default financial statement models (idempotent upsert on unique code)
+MERGE INTO financial_statement_model (code, name, model_type, description) KEY(code) VALUES
 ('BS-001', 'Balance General Estándar', 'BALANCE_SHEET', 'Modelo estándar según normas contables cubanas'),
 ('IS-001', 'Estado de Resultados', 'INCOME_STATEMENT', 'Modelo estándar de ganancias y pérdidas'),
-('CF-001', 'Estado de Flujos de Efectivo', 'CASH_FLOW', 'Flujo de efectivo método directo')
-ON DUPLICATE KEY UPDATE name=name;
+('CF-001', 'Estado de Flujos de Efectivo', 'CASH_FLOW', 'Flujo de efectivo método directo');
 
 -- Insert default report definitions
-INSERT INTO report_definition (code, name, report_type, default_filters_json) VALUES
+MERGE INTO report_definition (code, name, report_type, default_filters_json) KEY(code) VALUES
 ('TB-001', 'Balance de Comprobación', 'TRIAL_BALANCE', '{"includeZeroBalances": false, "showSubaccounts": true}'),
 ('GL-001', 'Libro Mayor', 'GENERAL_LEDGER', '{"showDetails": true, "groupByAccount": true}'),
-('VH-001', 'Fichero Histórico de Comprobantes', 'VOUCHER_HISTORY', '{"includeReversed": false, "yearsBack": 3}')
-ON DUPLICATE KEY UPDATE name=name;
+('VH-001', 'Fichero Histórico de Comprobantes', 'VOUCHER_HISTORY', '{"includeReversed": false, "yearsBack": 3}');
 
 -- Create indexes for performance
 CREATE INDEX IF NOT EXISTS idx_financial_statement_row_model ON financial_statement_row(model_id);
