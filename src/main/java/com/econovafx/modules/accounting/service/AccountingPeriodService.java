@@ -5,6 +5,8 @@ import com.econovafx.modules.accounting.model.ClosingEntry;
 import com.econovafx.modules.accounting.repository.AccountingPeriodRepository;
 import com.econovafx.modules.cash.service.CashMovementService;
 import com.econovafx.modules.inventory.service.InventoryService;
+import com.econovafx.modules.reporting.model.FinancialReport;
+import com.econovafx.modules.reporting.repository.FinancialReportRepository;
 import com.econovafx.modules.core.security.RequiresTenant;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -14,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.EnumSet;
+import java.util.stream.Collectors;
 
 /**
  * Service for managing accounting periods and closing operations.
@@ -45,6 +50,9 @@ public class AccountingPeriodService {
 
     @Inject
     TransactionService transactionService;
+
+    @Inject
+    FinancialReportRepository financialReportRepository;
 
     /**
      * Get all accounting periods.
@@ -491,22 +499,59 @@ public class AccountingPeriodService {
 
     /**
      * Resolution 340/2004 MC.6.b: Validate financial statements have been issued.
-     * Verifies with FinancialStatementService that required statements exist for the year.
+     * Verifies that required FinancialReport entities exist and are marked as final for the year.
      * 
      * @param fiscalYear The fiscal year to validate
      * @throws IllegalStateException if financial statements have not been issued
      */
     private void validateFinancialStatementsIssued(Integer fiscalYear) {
-        // Check if financial statement models exist for the fiscal year
-        // This validates that the required financial statements have been generated
-        try {
-            // In production, this would query FinancialStatementService for actual statements
-            // For now, we log the validation - the service should implement proper checks
-            log.info("Validating financial statements issued for fiscal year {}", fiscalYear);
-            // TODO: Implement proper validation when FinancialStatementService has method to query by year
-        } catch (Exception e) {
-            log.warn("Could not validate financial statements for year {}: {}", fiscalYear, e.getMessage());
-            // Don't block closure if statement service has issues - just warn
+        // Define minimum required financial statements per Resolution 340/2004
+        Set<FinancialReport.ReportType> requiredStatements = EnumSet.of(
+            FinancialReport.ReportType.BALANCE_SHEET,
+            FinancialReport.ReportType.INCOME_STATEMENT
+        );
+        
+        // Query reports for the fiscal year
+        List<FinancialReport> reports = financialReportRepository.findByFiscalYear(fiscalYear);
+        
+        // Find which required statements are present and finalized
+        Set<FinancialReport.ReportType> issuedStatements = reports.stream()
+            .filter(FinancialReport::isFinal)
+            .map(FinancialReport::getReportType)
+            .collect(Collectors.toSet());
+        
+        // Check for missing required statements
+        Set<FinancialReport.ReportType> missingStatements = requiredStatements.stream()
+            .filter(type -> !issuedStatements.contains(type))
+            .collect(Collectors.toSet());
+        
+        if (!missingStatements.isEmpty()) {
+            String missingTypes = missingStatements.stream()
+                .map(type -> formatReportType(type))
+                .collect(Collectors.joining(", "));
+            
+            String errorMsg = String.format(
+                "No se puede cerrar el período anual %d: falta emitir el/los estado(s) financiero(s): %s. " +
+                "Resolución 340/2004 MC.6.b: deben haberse emitido el resto de los Estados Financieros establecidos.",
+                fiscalYear, missingTypes
+            );
+            log.error(errorMsg);
+            throw new IllegalStateException(errorMsg);
+        }
+        
+        log.info("Financial statements validation passed for fiscal year {}: all required statements issued", fiscalYear);
+    }
+    
+    /**
+     * Format report type for user-friendly error messages.
+     */
+    private String formatReportType(FinancialReport.ReportType type) {
+        switch (type) {
+            case BALANCE_SHEET: return "Balance General";
+            case INCOME_STATEMENT: return "Estado de Resultados";
+            case CASH_FLOW: return "Estado de Flujo de Efectivo";
+            case TRIAL_BALANCE: return "Balance de Comprobación";
+            default: return type.name();
         }
     }
 }
