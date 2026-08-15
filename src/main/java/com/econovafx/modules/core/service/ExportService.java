@@ -1,5 +1,6 @@
 package com.econovafx.modules.core.service;
 
+import com.econovafx.core.i18n.I18nManager;
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.model.TransactionEntry;
 import com.econovafx.modules.bank.model.BankReconciliation;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Service for exporting transactions to PDF and Excel formats
@@ -32,6 +34,19 @@ public class ExportService {
     private static final Logger logger = LoggerFactory.getLogger(ExportService.class);
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    
+    // Resource bundle for internationalization
+    private static ResourceBundle bundle;
+    
+    /**
+     * Gets the resource bundle, initializing it if necessary.
+     */
+    private static ResourceBundle getBundle() {
+        if (bundle == null) {
+            bundle = I18nManager.getBundle();
+        }
+        return bundle;
+    }
 
     /**
      * Export a single transaction to PDF
@@ -40,38 +55,42 @@ public class ExportService {
      * @throws IOException if an error occurs during PDF generation
      */
     public byte[] exportTransactionToPdf(Transaction transaction) throws IOException {
+        ResourceBundle bundle = getBundle();
+        
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
             document.addPage(page);
 
             PDPageContentStream contentStream = new PDPageContentStream(document, page);
             
-            // Title
+            // Title - Comprobante Contable
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
             contentStream.newLineAtOffset(50, 750);
-            contentStream.showText("Accounting Voucher - " + transaction.getNumber());
+            String voucherTitle = String.format(bundle.getString("report.voucher.title"), transaction.getNumber());
+            contentStream.showText(voucherTitle);
             contentStream.endText();
 
             // Transaction details
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA, 12);
             contentStream.newLineAtOffset(50, 700);
-            contentStream.showText("Date: " + transaction.getDate().format(DATE_FORMATTER));
+            contentStream.showText(bundle.getString("report.voucher.date") + ": " + transaction.getDate().format(DATE_FORMATTER));
             contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("Type: " + transaction.getType());
+            contentStream.showText(bundle.getString("report.voucher.type") + ": " + transaction.getType());
             contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("Status: " + (transaction.getIsPosted() ? "Posted" : "Draft"));
+            String status = transaction.getIsPosted() ? bundle.getString("report.voucher.status.posted") : bundle.getString("report.voucher.status.draft");
+            contentStream.showText(bundle.getString("report.voucher.status") + ": " + status);
             contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("Description: " + transaction.getDescription());
+            contentStream.showText(bundle.getString("report.voucher.description") + ": " + transaction.getDescription());
             
             // Third party info if exists
             if (transaction.getThirdParty() != null) {
                 ThirdParty tp = transaction.getThirdParty();
                 contentStream.newLineAtOffset(0, -30);
-                contentStream.showText("Third Party: " + tp.getName() + " (" + tp.getIdentificationNumber() + ")");
+                contentStream.showText(bundle.getString("report.voucher.third.party") + ": " + tp.getName() + " (" + tp.getIdentificationNumber() + ")");
                 contentStream.newLineAtOffset(0, -20);
-                contentStream.showText("Third Party Type: " + tp.getType());
+                contentStream.showText(bundle.getString("report.voucher.third.party.type") + ": " + tp.getType());
             }
             
             contentStream.endText();
@@ -81,13 +100,13 @@ public class ExportService {
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 11);
             contentStream.newLineAtOffset(50, yPosition);
-            contentStream.showText("Account Code");
+            contentStream.showText(bundle.getString("report.voucher.account.code"));
             contentStream.newLineAtOffset(150, 0);
-            contentStream.showText("Account Name");
+            contentStream.showText(bundle.getString("report.voucher.account.name"));
             contentStream.newLineAtOffset(200, 0);
-            contentStream.showText("Debit");
+            contentStream.showText(bundle.getString("report.voucher.debit"));
             contentStream.newLineAtOffset(100, 0);
-            contentStream.showText("Credit");
+            contentStream.showText(bundle.getString("report.voucher.credit"));
             contentStream.endText();
 
             // Table lines
@@ -127,9 +146,9 @@ public class ExportService {
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
             contentStream.newLineAtOffset(50, yPosition);
-            contentStream.showText("Total Debit: " + transaction.getTotalDebit().toPlainString());
+            contentStream.showText(bundle.getString("report.voucher.total.debit") + ": " + transaction.getTotalDebit().toPlainString());
             contentStream.newLineAtOffset(200, 0);
-            contentStream.showText("Total Credit: " + transaction.getTotalCredit().toPlainString());
+            contentStream.showText(bundle.getString("report.voucher.total.credit") + ": " + transaction.getTotalCredit().toPlainString());
             contentStream.endText();
 
             contentStream.close();
@@ -147,14 +166,26 @@ public class ExportService {
      * @throws IOException if an error occurs during Excel generation
      */
     public byte[] exportTransactionsToExcel(List<Transaction> transactions) throws IOException {
+        ResourceBundle bundle = getBundle();
+        
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Transactions");
 
             // Create header row
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"Number", "Date", "Type", "Status", "Description", 
-                               "Third Party", "Third Party ID", "Account Code", 
-                               "Account Name", "Debit", "Credit"};
+            String[] headers = {
+                bundle.getString("report.voucher.type"),
+                bundle.getString("report.voucher.date"),
+                bundle.getString("report.voucher.type"),
+                bundle.getString("report.voucher.status"),
+                bundle.getString("report.voucher.description"), 
+                bundle.getString("report.voucher.third.party"),
+                bundle.getString("report.thirdparty.id.number"),
+                bundle.getString("report.voucher.account.code"), 
+                bundle.getString("report.voucher.account.name"),
+                bundle.getString("report.voucher.debit"),
+                bundle.getString("report.voucher.credit")
+            };
             
             CellStyle headerStyle = workbook.createCellStyle();
             Font headerFont = workbook.createFont();
@@ -178,7 +209,8 @@ public class ExportService {
                     row.createCell(0).setCellValue(transaction.getNumber());
                     row.createCell(1).setCellValue(transaction.getDate().format(DATE_FORMATTER));
                     row.createCell(2).setCellValue(transaction.getType());
-                    row.createCell(3).setCellValue(transaction.getIsPosted() ? "Posted" : "Draft");
+                    String status = transaction.getIsPosted() ? bundle.getString("report.voucher.status.posted") : bundle.getString("report.voucher.status.draft");
+                    row.createCell(3).setCellValue(status);
                     row.createCell(4).setCellValue(transaction.getDescription());
                     
                     // Third party info
@@ -225,14 +257,28 @@ public class ExportService {
      * @throws IOException if an error occurs during Excel generation
      */
     public void exportThirdPartiesToExcel(List<ThirdParty> thirdParties, java.io.File file) throws IOException {
+        ResourceBundle bundle = getBundle();
+        
         try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("Third Parties");
+            Sheet sheet = workbook.createSheet(bundle.getString("report.thirdparty.title"));
 
             // Create header row
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"Name", "ID Number", "Type", "Email", "Phone", "Address", 
-                               "City", "Country", "Tax ID", "Credit Limit", "Payment Days", 
-                               "Balance", "Active"};
+            String[] headers = {
+                bundle.getString("report.thirdparty.name"),
+                bundle.getString("report.thirdparty.id.number"),
+                bundle.getString("report.thirdparty.type"),
+                bundle.getString("report.thirdparty.email"),
+                bundle.getString("report.thirdparty.phone"),
+                bundle.getString("report.thirdparty.address"), 
+                bundle.getString("report.thirdparty.city"),
+                bundle.getString("report.thirdparty.country"),
+                bundle.getString("report.thirdparty.tax.id"),
+                bundle.getString("report.thirdparty.credit.limit"),
+                bundle.getString("report.thirdparty.payment.days"), 
+                bundle.getString("report.thirdparty.balance"),
+                bundle.getString("report.thirdparty.active")
+            };
             
             CellStyle headerStyle = workbook.createCellStyle();
             Font headerFont = workbook.createFont();
@@ -264,7 +310,9 @@ public class ExportService {
                 row.createCell(9).setCellValue(tp.getCreditLimit() != null ? tp.getCreditLimit().doubleValue() : 0.0);
                 row.createCell(10).setCellValue(tp.getPaymentDays() != null ? tp.getPaymentDays() : 30);
                 row.createCell(11).setCellValue(tp.getCurrentBalance() != null ? tp.getCurrentBalance().doubleValue() : 0.0);
-                row.createCell(12).setCellValue(tp.getIsActive() != null && tp.getIsActive() ? "Active" : "Inactive");
+                row.createCell(12).setCellValue(tp.getIsActive() != null && tp.getIsActive() 
+                    ? bundle.getString("report.thirdparty.active") 
+                    : bundle.getString("report.thirdparty.inactive"));
             }
 
             // Auto-size columns
@@ -289,8 +337,10 @@ public class ExportService {
      * @throws IOException if an error occurs during Excel generation
      */
     public void exportThirdPartyTransactionsToExcel(ThirdParty thirdParty, List<Transaction> transactions, Stage stage) throws IOException {
+        ResourceBundle bundle = getBundle();
+        
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Transactions Excel Report");
+        fileChooser.setTitle(bundle.getString("report.transaction.save.title"));
         fileChooser.setInitialFileName("transactions_" + thirdParty.getIdentificationNumber() + "_" + 
             java.time.LocalDate.now().toString() + ".xlsx");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
@@ -305,7 +355,15 @@ public class ExportService {
             
             // Create header row
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"Date", "Voucher Type", "Voucher Number", "Description", "Debit", "Credit", "Balance"};
+            String[] headers = {
+                bundle.getString("report.transaction.date"),
+                bundle.getString("report.transaction.voucher.type"),
+                bundle.getString("report.transaction.voucher.number"),
+                bundle.getString("report.voucher.description"),
+                bundle.getString("report.voucher.debit"),
+                bundle.getString("report.voucher.credit"),
+                bundle.getString("report.transaction.balance")
+            };
             
             CellStyle headerStyle = workbook.createCellStyle();
             Font headerFont = workbook.createFont();
@@ -328,9 +386,10 @@ public class ExportService {
             anchor.setCol2(3);
             anchor.setRow2(3);
             Drawing<?> drawing = sheet.createDrawingPatriarch();
-            RichTextString richText = createHelper.createRichTextString("Third Party: " + thirdParty.getName() + 
-                "\nID: " + thirdParty.getIdentificationNumber() + 
-                "\nType: " + thirdParty.getType());
+            RichTextString richText = createHelper.createRichTextString(
+                bundle.getString("report.voucher.third.party") + ": " + thirdParty.getName() + 
+                "\n" + bundle.getString("report.thirdparty.id.number") + ": " + thirdParty.getIdentificationNumber() + 
+                "\n" + bundle.getString("report.voucher.third.party.type") + ": " + thirdParty.getType());
             Comment comment = drawing.createCellComment(anchor);
             comment.setString(richText);
             comment.setAuthor("EconoNova FX");
@@ -379,37 +438,39 @@ public class ExportService {
      * @throws IOException if an error occurs during PDF generation
      */
     public byte[] exportBankReconciliationToPdf(BankReconciliation reconciliation) throws IOException {
+        ResourceBundle bundle = getBundle();
+        
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage();
             document.addPage(page);
 
             PDPageContentStream contentStream = new PDPageContentStream(document, page);
             
-            // Title
+            // Title - Informe de Conciliación Bancaria
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
             contentStream.newLineAtOffset(50, 750);
-            contentStream.showText("Bank Reconciliation Report");
+            contentStream.showText(bundle.getString("report.reconciliation.title"));
             contentStream.endText();
 
             // Reconciliation details
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA, 12);
             contentStream.newLineAtOffset(50, 710);
-            contentStream.showText("Reconciliation Number: " + reconciliation.getReconciliationNumber());
+            contentStream.showText(bundle.getString("report.reconciliation.number") + ": " + reconciliation.getReconciliationNumber());
             contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("Bank Account ID: " + reconciliation.getBankAccountId());
+            contentStream.showText(bundle.getString("report.reconciliation.bank.account.id") + ": " + reconciliation.getBankAccountId());
             contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("Statement Date: " + reconciliation.getStatementDate().format(DATE_FORMATTER));
+            contentStream.showText(bundle.getString("report.reconciliation.statement.date") + ": " + reconciliation.getStatementDate().format(DATE_FORMATTER));
             contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("Status: " + reconciliation.getStatus());
+            contentStream.showText(bundle.getString("report.reconciliation.status") + ": " + reconciliation.getStatus());
             contentStream.newLineAtOffset(0, -20);
             if (reconciliation.getCompletedBy() != null) {
-                contentStream.showText("Completed By: " + reconciliation.getCompletedBy());
+                contentStream.showText(bundle.getString("report.reconciliation.completed.by") + ": " + reconciliation.getCompletedBy());
                 contentStream.newLineAtOffset(0, -20);
             }
             if (reconciliation.getCompletedAt() != null) {
-                contentStream.showText("Completed At: " + reconciliation.getCompletedAt().format(DATETIME_FORMATTER));
+                contentStream.showText(bundle.getString("report.reconciliation.completed.at") + ": " + reconciliation.getCompletedAt().format(DATETIME_FORMATTER));
                 contentStream.newLineAtOffset(0, -30);
             } else {
                 contentStream.newLineAtOffset(0, -30);
@@ -418,18 +479,18 @@ public class ExportService {
             // Balances summary
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
-            contentStream.showText("Balance Summary:");
+            contentStream.showText(bundle.getString("report.reconciliation.balance.summary"));
             contentStream.endText();
             
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA, 10);
             contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("System Balance: " + reconciliation.getSystemBalance().toPlainString());
+            contentStream.showText(bundle.getString("report.reconciliation.system.balance") + ": " + reconciliation.getSystemBalance().toPlainString());
             contentStream.newLineAtOffset(0, -15);
-            contentStream.showText("Bank Balance: " + reconciliation.getBankBalance().toPlainString());
+            contentStream.showText(bundle.getString("report.reconciliation.bank.balance") + ": " + reconciliation.getBankBalance().toPlainString());
             contentStream.newLineAtOffset(0, -15);
             if (reconciliation.getReconciledBalance() != null) {
-                contentStream.showText("Reconciled Balance: " + reconciliation.getReconciledBalance().toPlainString());
+                contentStream.showText(bundle.getString("report.reconciliation.reconciled.balance") + ": " + reconciliation.getReconciledBalance().toPlainString());
             }
             contentStream.endText();
 
@@ -438,20 +499,20 @@ public class ExportService {
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 11);
             contentStream.newLineAtOffset(50, yPosition);
-            contentStream.showText("System Items:");
+            contentStream.showText(bundle.getString("report.reconciliation.system.items"));
             contentStream.endText();
             
             yPosition -= 25;
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 9);
             contentStream.newLineAtOffset(50, yPosition);
-            contentStream.showText("Date");
+            contentStream.showText(bundle.getString("report.voucher.date"));
             contentStream.newLineAtOffset(80, 0);
-            contentStream.showText("Description");
+            contentStream.showText(bundle.getString("report.voucher.description"));
             contentStream.newLineAtOffset(200, 0);
-            contentStream.showText("Amount");
+            contentStream.showText(bundle.getString("report.transaction.balance"));
             contentStream.newLineAtOffset(80, 0);
-            contentStream.showText("Reconciled");
+            contentStream.showText(bundle.getString("report.reconciliation.reconciled"));
             contentStream.endText();
             
             yPosition -= 20;
@@ -479,7 +540,7 @@ public class ExportService {
                 contentStream.newLineAtOffset(200, 0);
                 contentStream.showText(item.getAmount().toPlainString());
                 contentStream.newLineAtOffset(80, 0);
-                contentStream.showText(item.getReconciled() ? "Yes" : "No");
+                contentStream.showText(item.getReconciled() ? bundle.getString("report.reconciliation.yes") : bundle.getString("report.reconciliation.no"));
                 contentStream.endText();
                 
                 yPosition -= 15;
@@ -498,22 +559,22 @@ public class ExportService {
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 11);
             contentStream.newLineAtOffset(50, yPosition);
-            contentStream.showText("Bank Items:");
+            contentStream.showText(bundle.getString("report.reconciliation.bank.items"));
             contentStream.endText();
             
             yPosition -= 25;
             contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 9);
             contentStream.newLineAtOffset(50, yPosition);
-            contentStream.showText("Date");
+            contentStream.showText(bundle.getString("report.voucher.date"));
             contentStream.newLineAtOffset(80, 0);
-            contentStream.showText("Reference");
+            contentStream.showText(bundle.getString("report.reconciliation.reference"));
             contentStream.newLineAtOffset(100, 0);
-            contentStream.showText("Description");
+            contentStream.showText(bundle.getString("report.voucher.description"));
             contentStream.newLineAtOffset(150, 0);
-            contentStream.showText("Amount");
+            contentStream.showText(bundle.getString("report.transaction.balance"));
             contentStream.newLineAtOffset(80, 0);
-            contentStream.showText("Reconciled");
+            contentStream.showText(bundle.getString("report.reconciliation.reconciled"));
             contentStream.endText();
             
             yPosition -= 20;
@@ -544,7 +605,7 @@ public class ExportService {
                 contentStream.newLineAtOffset(150, 0);
                 contentStream.showText(item.getAmount().toPlainString());
                 contentStream.newLineAtOffset(80, 0);
-                contentStream.showText(item.getReconciled() ? "Yes" : "No");
+                contentStream.showText(item.getReconciled() ? bundle.getString("report.reconciliation.yes") : bundle.getString("report.reconciliation.no"));
                 contentStream.endText();
                 
                 yPosition -= 15;
