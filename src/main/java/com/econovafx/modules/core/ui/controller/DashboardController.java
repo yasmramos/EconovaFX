@@ -312,7 +312,8 @@ public class DashboardController implements Initializable {
         
         // Calculate previous period balances (same duration before current period)
         LocalDate prevEndDate = startDate.minusDays(1);
-        LocalDate prevStartDate = prevEndDate.minusDays(startDate.toEpochDay() - endDate.toEpochDay());
+        long periodDays = endDate.toEpochDay() - startDate.toEpochDay();
+        LocalDate prevStartDate = prevEndDate.minusDays(periodDays);
         if (prevStartDate.isBefore(LocalDate.of(1900, 1, 1))) {
             prevStartDate = LocalDate.of(1900, 1, 1);
         }

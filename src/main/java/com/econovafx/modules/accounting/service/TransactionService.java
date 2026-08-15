@@ -453,28 +453,28 @@ public class TransactionService {
                 // Net income: debit income summary, credit retained earnings
                 entries.add(new TransactionEntryData(
                         incomeSummaryAccount.getId(),
-                        BigDecimal.ZERO,
                         netIncome.abs(),
+                        BigDecimal.ZERO,
                         "Transfer net income to retained earnings"
                 ));
                 entries.add(new TransactionEntryData(
                         retainedEarningsAccount.getId(),
-                        netIncome.abs(),
                         BigDecimal.ZERO,
+                        netIncome.abs(),
                         "Net income for fiscal year " + fiscalYear
                 ));
             } else {
                 // Net loss: credit income summary, debit retained earnings
                 entries.add(new TransactionEntryData(
                         incomeSummaryAccount.getId(),
-                        netIncome.abs(),
                         BigDecimal.ZERO,
+                        netIncome.abs(),
                         "Transfer net loss to retained earnings"
                 ));
                 entries.add(new TransactionEntryData(
                         retainedEarningsAccount.getId(),
-                        BigDecimal.ZERO,
                         netIncome.abs(),
+                        BigDecimal.ZERO,
                         "Net loss for fiscal year " + fiscalYear
                 ));
             }

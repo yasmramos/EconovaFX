@@ -203,11 +203,14 @@ public class AccountingPeriodService {
             throw new IllegalStateException("This operation is only for annual periods: " + period.getName());
         }
 
+        // Resolution 340/2004 MC.6.b: Validate nominal accounts have been closed.
+        // Must run before validateLastMonthClosed, because closing the nominal
+        // accounts posts entries dated December 31 which require the December
+        // monthly period to still be open.
+        validateNominalAccountsClosed(period.getStartDate().getYear());
+
         // Resolution 340/2004 MC.6.b: Validate last month of period is closed
         validateLastMonthClosed(period);
-
-        // Resolution 340/2004 MC.6.b: Validate nominal accounts have been closed
-        validateNominalAccountsClosed(period.getStartDate().getYear());
 
         // Resolution 340/2004 MC.6.b: Validate financial statements have been issued
         validateFinancialStatementsIssued(period.getStartDate().getYear());
@@ -472,6 +475,15 @@ public class AccountingPeriodService {
                         String.format("Cannot close annual period: Failed to close nominal accounts (revenue/expense) for fiscal year %d. " +
                                       "Resolution 340/2004 MC.6.b: Haberse efectuado el cierre contable de las cuentas nominales. Error: %s",
                                       fiscalYear, e.getMessage()));
+            }
+
+            // Re-verify that the automatic closure actually registered the required entries
+            if (!closingEntryRepository.areNominalAccountsClosed(fiscalYear)) {
+                throw new IllegalStateException(
+                        String.format("Cannot close annual period: Nominal accounts (revenue/expense) are still not closed for fiscal year %d " +
+                                      "after attempting automatic closure. " +
+                                      "Resolution 340/2004 MC.6.b: Haberse efectuado el cierre contable de las cuentas nominales.",
+                                      fiscalYear));
             }
         }
         log.info("Nominal accounts validated as closed for fiscal year {}", fiscalYear);

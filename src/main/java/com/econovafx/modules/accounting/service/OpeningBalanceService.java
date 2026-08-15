@@ -158,7 +158,8 @@ public class OpeningBalanceService {
         List<TransactionService.TransactionEntryData> entryDataList = new ArrayList<>();
         
         for (OpeningBalanceEntry entry : entries) {
-            Account account = accountRepository.findById(entry.getAccountId())
+            // Validate that the account exists before building the entry
+            accountRepository.findById(entry.getAccountId())
                     .orElseThrow(() -> new ValidationException(
                             "Account not found with ID: " + entry.getAccountId()));
 
@@ -171,10 +172,8 @@ public class OpeningBalanceService {
                     );
             entryDataList.add(entryData);
 
-            // Update account balance directly for opening
-            BigDecimal netBalance = entry.getDebitAmount().subtract(entry.getCreditAmount());
-            account.setBalance(account.getBalance().add(netBalance));
-            accountRepository.update(account);
+            // Balance is applied when the opening transaction is posted below;
+            // do not modify the account balance directly here to avoid double-counting.
         }
 
         // Create the transaction

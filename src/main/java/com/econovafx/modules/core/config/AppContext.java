@@ -118,10 +118,6 @@ public final class AppContext {
         UserContext userContext = beanScope.get(UserContext.class);
         inventoryController = new InventoryController(inventoryService, userContext);
 
-        // Get BackupSchedulerService for SystemSettingsController
-        com.econovafx.modules.core.service.backup.BackupSchedulerService backupSchedulerService = 
-            beanScope.get(com.econovafx.modules.core.service.backup.BackupSchedulerService.class);
-
         // Create ViewFactory with controllers that don't need it back
         viewFactory = new ViewFactory(
                 null, // dashboardController - will be set later
