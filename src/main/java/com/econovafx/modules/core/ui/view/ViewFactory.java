@@ -1,5 +1,6 @@
 package com.econovafx.modules.core.ui.view;
 
+import com.econovafx.core.i18n.I18nManager;
 import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.accounting.model.Transaction;
@@ -38,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Factory for creating UI views and dialogs
@@ -65,6 +67,7 @@ public class ViewFactory {
     private final ExportService exportService;
     private final AccountingPeriodService accountingPeriodService;
     private final InventoryService inventoryService;
+    private final Consumer<Runnable> viewSwitcher;
 
     public ViewFactory(DashboardController dashboardController,
                       AccountsController accountsController,
@@ -85,7 +88,8 @@ public class ViewFactory {
                       ExportService exportService,
                       AccountingPeriodService accountingPeriodService,
                       NotificationService notificationService,
-                      InventoryService inventoryService) {
+                      InventoryService inventoryService,
+                      Consumer<Runnable> viewSwitcher) {
         this.dashboardController = dashboardController;
         this.accountsController = accountsController;
         this.transactionsController = transactionsController;
@@ -105,6 +109,7 @@ public class ViewFactory {
         this.exportService = exportService;
         this.accountingPeriodService = accountingPeriodService;
         this.inventoryService = inventoryService;
+        this.viewSwitcher = viewSwitcher;
     }
 
     public TransactionService getTransactionService() {
@@ -122,6 +127,7 @@ public class ViewFactory {
     public Node createDashboardView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> dashboardController);
             return loader.load();
         } catch (IOException e) {
@@ -133,6 +139,7 @@ public class ViewFactory {
     public Node createAccountsView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounts.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> accountsController);
             return loader.load();
         } catch (IOException e) {
@@ -144,6 +151,7 @@ public class ViewFactory {
     public Node loadFXML(String url , Class<?> clazz){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> clazz);
             return loader.load();
         } catch (IOException e) {
@@ -155,6 +163,7 @@ public class ViewFactory {
     public Node createTransactionsView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transactions.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> transactionsController);
             return loader.load();
         } catch (IOException e) {
@@ -166,6 +175,7 @@ public class ViewFactory {
     public Node createComprobantesView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/comprobantes.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> comprobantesController);
             return loader.load();
         } catch (IOException e) {
@@ -177,6 +187,7 @@ public class ViewFactory {
     public Node createThirdPartiesView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/third-parties.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> thirdPartiesController);
             Node view = loader.load();
             // Store reference for dialog owner lookup
@@ -193,6 +204,7 @@ public class ViewFactory {
     public Node createAccountingPeriodsView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounting-periods.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> accountingPeriodsController);
             return loader.load();
         } catch (IOException e) {
@@ -204,6 +216,7 @@ public class ViewFactory {
     public Node createAccountingClosuresView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounting-closures.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> accountingClosuresController);
             return loader.load();
         } catch (IOException e) {
@@ -215,6 +228,7 @@ public class ViewFactory {
     public Node createInventoryView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/inventory.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> inventoryController);
             return loader.load();
         } catch (IOException e) {
@@ -226,6 +240,7 @@ public class ViewFactory {
     public Optional<Account> showAccountFormDialog(Account account) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/account-form.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> accountFormController);
             Parent root = loader.load();
 
@@ -260,6 +275,7 @@ public class ViewFactory {
     public Optional<Transaction> showTransactionEntryDialog(Transaction transaction) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction-entry.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> transactionEntryController);
             Parent root = loader.load();
 
@@ -293,6 +309,7 @@ public class ViewFactory {
         try {
             ComprobanteFormController controller = new ComprobanteFormController(accountService, transactionService, thirdPartyService);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/comprobante-form.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> controller);
             Parent root = loader.load();
 
@@ -319,6 +336,7 @@ public class ViewFactory {
     public Optional<ThirdParty> showThirdPartyFormDialog(ThirdParty thirdParty) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/third-party-form.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> thirdPartyFormController);
             Parent root = loader.load();
 
@@ -365,6 +383,7 @@ public class ViewFactory {
     public void loadSystemSettings() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/ui/view/system-settings.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> systemSettingsController);
             Parent root = loader.load();
 
@@ -388,11 +407,26 @@ public class ViewFactory {
     public Node createExchangeRatesView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/exchange-rates.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> exchangeRatesController);
             return loader.load();
         } catch (IOException e) {
             logger.error("Error loading exchange rates view", e);
             throw new RuntimeException("Failed to load exchange rates view", e);
+        }
+    }
+
+    /**
+     * Switch to transactions view via the main view controller
+     */
+    public void showTransactions() {
+        if (viewSwitcher != null) {
+            viewSwitcher.accept(() -> {
+                // This will be executed by MainViewController to switch to transactions view
+                logger.debug("Switching to transactions view");
+            });
+        } else {
+            logger.warn("ViewSwitcher is not configured, cannot switch to transactions view");
         }
     }
 }
