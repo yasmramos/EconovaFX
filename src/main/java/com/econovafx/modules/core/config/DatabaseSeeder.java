@@ -1,5 +1,9 @@
 package com.econovafx.modules.core.config;
 
+import com.econovafx.modules.accounting.model.FinancialStatementModel;
+import com.econovafx.modules.accounting.model.FinancialStatementRow;
+import com.econovafx.modules.accounting.repository.FinancialStatementModelRepository;
+import com.econovafx.modules.accounting.repository.FinancialStatementRowRepository;
 import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.core.model.Currency;
 import com.econovafx.modules.core.model.User;
@@ -13,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Database seeder for initializing default data on first application startup.
- * Creates default company, currencies, and admin user if they don't exist.
+ * Creates default company, currencies, admin user, and financial statement rows if they don't exist.
  */
 @Singleton
 public class DatabaseSeeder {
@@ -24,12 +28,16 @@ public class DatabaseSeeder {
     private final CompanyRepository companyRepository;
     private final CurrencyRepository currencyRepository;
     private final PasswordService passwordService;
+    private final FinancialStatementModelRepository financialStatementModelRepository;
+    private final FinancialStatementRowRepository financialStatementRowRepository;
 
     public DatabaseSeeder() {
         this.userRepository = new UserRepository(io.ebean.DB.getDefault());
         this.companyRepository = new CompanyRepository(io.ebean.DB.getDefault());
         this.currencyRepository = new CurrencyRepository(io.ebean.DB.getDefault());
         this.passwordService = new PasswordService();
+        this.financialStatementModelRepository = new FinancialStatementModelRepository(io.ebean.DB.getDefault());
+        this.financialStatementRowRepository = new FinancialStatementRowRepository(io.ebean.DB.getDefault());
     }
 
     /**
@@ -41,6 +49,7 @@ public class DatabaseSeeder {
         seedCurrencies();
         seedDefaultCompany();
         seedAdminUser();
+        seedFinancialStatementRows();
         
         logger.info("Database seeding completed successfully");
     }
@@ -115,5 +124,246 @@ public class DatabaseSeeder {
         } else {
             logger.debug("Users already exist, skipping seeding");
         }
+    }
+
+    /**
+     * Seeds financial statement rows for Cuban financial statement models if they don't exist.
+     * This ensures that the financial statement models (BS-001, IS-001, CF-001) have their
+     * row structures defined even if migrations were run separately or in different environments.
+     * Idempotent: will not duplicate rows if they already exist.
+     */
+    private void seedFinancialStatementRows() {
+        logger.info("Checking if financial statement rows need seeding...");
+        
+        // Seed Balance Sheet (BS-001) rows
+        seedBalanceSheetRows();
+        
+        // Seed Income Statement (IS-001) rows
+        seedIncomeStatementRows();
+        
+        // Seed Cash Flow Statement (CF-001) rows
+        seedCashFlowStatementRows();
+        
+        logger.info("Financial statement rows seeding completed");
+    }
+
+    /**
+     * Seeds rows for Balance General (BS-001) model.
+     */
+    private void seedBalanceSheetRows() {
+        FinancialStatementModel model = financialStatementModelRepository.findByCode("BS-001").orElse(null);
+        if (model == null) {
+            logger.warn("Balance Sheet model BS-001 not found, skipping row seeding");
+            return;
+        }
+        
+        long existingCount = financialStatementRowRepository.countByModelId(model.getId());
+        if (existingCount > 0) {
+            logger.debug("Balance Sheet rows already exist ({} rows), skipping seeding", existingCount);
+            return;
+        }
+        
+        logger.info("Seeding Balance Sheet rows for model BS-001...");
+        
+        int rowNum = 0;
+        // Activo Circulante
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "ACTIVO CIRCULANTE", null, 
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Efectivo y Equivalentes", null,
+            FinancialStatementRow.RowType.DATA, "1.01.*,1.02.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Cuentas por Cobrar", null,
+            FinancialStatementRow.RowType.DATA, "1.03.*,1.04.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Inventarios", null,
+            FinancialStatementRow.RowType.DATA, "1.05.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Total Activo Circulante", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, 1, true, false, 0));
+        
+        // Activo No Circulante
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "ACTIVO NO CIRCULANTE", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Propiedades, Planta y Equipo", null,
+            FinancialStatementRow.RowType.DATA, "1.06.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Activos Intangibles", null,
+            FinancialStatementRow.RowType.DATA, "1.07.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Total Activo No Circulante", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, 1, true, false, 0));
+        
+        // Total Activo
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "TOTAL ACTIVO", null,
+            FinancialStatementRow.RowType.TOTAL, null, 1, true, true, 0));
+        
+        // Pasivo Circulante
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "PASIVO CIRCULANTE", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Cuentas por Pagar", null,
+            FinancialStatementRow.RowType.DATA, "2.01.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Obligaciones a Corto Plazo", null,
+            FinancialStatementRow.RowType.DATA, "2.02.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Total Pasivo Circulante", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, -1, true, false, 0));
+        
+        // Pasivo No Circulante
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "PASIVO NO CIRCULANTE", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Obligaciones a Largo Plazo", null,
+            FinancialStatementRow.RowType.DATA, "2.03.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Total Pasivo No Circulante", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, -1, true, false, 0));
+        
+        // Total Pasivo
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "TOTAL PASIVO", null,
+            FinancialStatementRow.RowType.TOTAL, null, -1, true, true, 0));
+        
+        // Patrimonio
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "PATRIMONIO", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Capital Social", null,
+            FinancialStatementRow.RowType.DATA, "3.01.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Resultados Acumulados", null,
+            FinancialStatementRow.RowType.DATA, "3.02.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Total Patrimonio", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, -1, true, false, 0));
+        
+        // Total Pasivo + Patrimonio
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "TOTAL PASIVO Y PATRIMONIO", null,
+            FinancialStatementRow.RowType.TOTAL, null, -1, true, true, 0));
+        
+        logger.info("Created {} Balance Sheet rows", rowNum);
+    }
+
+    /**
+     * Seeds rows for Estado de Resultados (IS-001) model.
+     */
+    private void seedIncomeStatementRows() {
+        FinancialStatementModel model = financialStatementModelRepository.findByCode("IS-001").orElse(null);
+        if (model == null) {
+            logger.warn("Income Statement model IS-001 not found, skipping row seeding");
+            return;
+        }
+        
+        long existingCount = financialStatementRowRepository.countByModelId(model.getId());
+        if (existingCount > 0) {
+            logger.debug("Income Statement rows already exist ({} rows), skipping seeding", existingCount);
+            return;
+        }
+        
+        logger.info("Seeding Income Statement rows for model IS-001...");
+        
+        int rowNum = 0;
+        // Ingresos
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "INGRESOS DE ACTIVIDADES ORDINARIAS", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Ventas de Bienes", null,
+            FinancialStatementRow.RowType.DATA, "4.01.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Prestación de Servicios", null,
+            FinancialStatementRow.RowType.DATA, "4.02.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Total Ingresos", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, -1, true, false, 0));
+        
+        // Costo de Ventas
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "COSTO DE VENTAS", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Costo de Mercancías Vendidas", null,
+            FinancialStatementRow.RowType.DATA, "5.01.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Utilidad Bruta", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, 1, true, false, 0));
+        
+        // Gastos de Operación
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "GASTOS DE OPERACIÓN", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Gastos de Administración", null,
+            FinancialStatementRow.RowType.DATA, "5.02.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Gastos de Ventas", null,
+            FinancialStatementRow.RowType.DATA, "5.03.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Utilidad en Operaciones", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, 1, true, false, 0));
+        
+        // Resultado Neto
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "RESULTADO NETO DEL EJERCICIO", null,
+            FinancialStatementRow.RowType.TOTAL, null, 1, true, true, 0));
+        
+        logger.info("Created {} Income Statement rows", rowNum);
+    }
+
+    /**
+     * Seeds rows for Estado de Flujos de Efectivo (CF-001) model.
+     * Note: Full cash flow classification requires transaction-level tagging.
+     * This provides the basic structure; actual implementation may need enhancement.
+     */
+    private void seedCashFlowStatementRows() {
+        FinancialStatementModel model = financialStatementModelRepository.findByCode("CF-001").orElse(null);
+        if (model == null) {
+            logger.warn("Cash Flow Statement model CF-001 not found, skipping row seeding");
+            return;
+        }
+        
+        long existingCount = financialStatementRowRepository.countByModelId(model.getId());
+        if (existingCount > 0) {
+            logger.debug("Cash Flow Statement rows already exist ({} rows), skipping seeding", existingCount);
+            return;
+        }
+        
+        logger.info("Seeding Cash Flow Statement rows for model CF-001...");
+        
+        int rowNum = 0;
+        // Actividades de Operación
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "FLUJOS DE EFECTIVO DE ACTIVIDADES DE OPERACIÓN", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Cobros de Clientes", null,
+            FinancialStatementRow.RowType.DATA, "1.01.*,4.01.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Pagos a Proveedores", null,
+            FinancialStatementRow.RowType.DATA, "2.01.*,5.01.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Pago de Gastos de Operación", null,
+            FinancialStatementRow.RowType.DATA, "5.02.*,5.03.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Flujo Neto de Actividades de Operación", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, 1, true, false, 0));
+        
+        // Actividades de Inversión
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "FLUJOS DE EFECTIVO DE ACTIVIDADES DE INVERSIÓN", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Compra de Propiedades, Planta y Equipo", null,
+            FinancialStatementRow.RowType.DATA, "1.06.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Venta de Activos Fijos", null,
+            FinancialStatementRow.RowType.DATA, "1.06.*,4.03.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Flujo Neto de Actividades de Inversión", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, 1, true, false, 0));
+        
+        // Actividades de Financiamiento
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "FLUJOS DE EFECTIVO DE ACTIVIDADES DE FINANCIAMIENTO", null,
+            FinancialStatementRow.RowType.HEADER, null, 1, true, false, 0));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Préstamos Recibidos", null,
+            FinancialStatementRow.RowType.DATA, "2.03.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Pago de Préstamos", null,
+            FinancialStatementRow.RowType.DATA, "2.03.*", -1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Aportes de Capital", null,
+            FinancialStatementRow.RowType.DATA, "3.01.*", 1, false, false, 1));
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "Flujo Neto de Actividades de Financiamiento", null,
+            FinancialStatementRow.RowType.SUBTOTAL, null, 1, true, false, 0));
+        
+        // Incremento Neto
+        financialStatementRowRepository.save(createRow(model, ++rowNum, "INCREMENTO NETO EN EFECTIVO Y EQUIVALENTES", null,
+            FinancialStatementRow.RowType.TOTAL, null, 1, true, true, 0));
+        
+        logger.info("Created {} Cash Flow Statement rows", rowNum);
+    }
+
+    /**
+     * Helper method to create a FinancialStatementRow.
+     */
+    private FinancialStatementRow createRow(FinancialStatementModel model, int rowNumber, String label,
+                                            Long parentRowId, FinancialStatementRow.RowType rowType,
+                                            String accountCodesPattern, int signMultiplier,
+                                            boolean isBold, boolean isItalic, int indentLevel) {
+        FinancialStatementRow row = new FinancialStatementRow();
+        row.setModel(model);
+        row.setRowNumber(rowNumber);
+        row.setLabel(label);
+        row.setRowType(rowType);
+        row.setAccountCodesPattern(accountCodesPattern);
+        row.setSignMultiplier(signMultiplier);
+        row.setIsBold(isBold);
+        row.setIsItalic(isItalic);
+        row.setIndentLevel(indentLevel);
+        return row;
     }
 }
