@@ -1,4 +1,3 @@
-```
 # Compiled and build artifacts
 *.class
 *.o
@@ -38,6 +37,7 @@ Thumbs.db
 
 # Logs and coverage
 *.log
+*.tmp
 coverage/
 htmlcov/
 .coverage
@@ -65,4 +65,3 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-```
