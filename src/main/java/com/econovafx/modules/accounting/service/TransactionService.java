@@ -2,6 +2,7 @@ package com.econovafx.modules.accounting.service;
 
 import com.econovafx.modules.accounting.model.*;
 import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.accounting.repository.ClosingEntryRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
@@ -33,16 +34,19 @@ public class TransactionService {
     private final AccountRepository accountRepository;
     private final AuditService auditService;
     private final AccountingPeriodService accountingPeriodService;
+    private final ClosingEntryRepository closingEntryRepository;
     
     @Inject
     public TransactionService(TransactionRepository transactionRepository,
                              AccountRepository accountRepository,
                              AuditService auditService,
-                             AccountingPeriodService accountingPeriodService) {
+                             AccountingPeriodService accountingPeriodService,
+                             ClosingEntryRepository closingEntryRepository) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
         this.auditService = auditService;
         this.accountingPeriodService = accountingPeriodService;
+        this.closingEntryRepository = closingEntryRepository;
     }
     
     public Optional<Transaction> getTransactionById(Long id) {
@@ -307,6 +311,242 @@ public class TransactionService {
                String.format("%06d", count);
     }
     
+    /**
+     * Generate closing entries for nominal accounts (revenue and expense).
+     * Resolution 340/2004: Required before annual closure.
+     * 
+     * @param fiscalYear The fiscal year to close nominal accounts for
+     * @param username The user executing the closure
+     * @return List of closing entries created
+     */
+    public List<ClosingEntry> closeNominalAccounts(Integer fiscalYear, String username) {
+        logger.info("Closing nominal accounts for fiscal year {}", fiscalYear);
+        
+        List<ClosingEntry> closingEntries = new ArrayList<>();
+        LocalDate closingDate = LocalDate.of(fiscalYear, 12, 31);
+        
+        // Find all revenue accounts (credit balance accounts that need to be debited to zero)
+        List<Account> revenueAccounts = accountRepository.findByType(AccountType.REVENUE);
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+        
+        // Create closing transaction for revenue accounts
+        if (!revenueAccounts.isEmpty()) {
+            Transaction revenueClosure = new Transaction();
+            revenueClosure.setDate(closingDate);
+            revenueClosure.setType("CLOSING_ENTRY");
+            revenueClosure.setDescription("Close revenue accounts for fiscal year " + fiscalYear);
+            revenueClosure.setReference("CLOSE-REV-" + fiscalYear);
+            
+            List<TransactionEntryData> entries = new ArrayList<>();
+            
+            // Debit each revenue account to zero it out
+            for (Account revenueAccount : revenueAccounts) {
+                if (revenueAccount.getBalance().compareTo(BigDecimal.ZERO) != 0) {
+                    // Revenue accounts have credit balance, so we debit to close
+                    entries.add(new TransactionEntryData(
+                            revenueAccount.getId(),
+                            revenueAccount.getBalance(), // Debit amount
+                            BigDecimal.ZERO,
+                            "Close revenue account: " + revenueAccount.getName()
+                    ));
+                    totalRevenue = totalRevenue.add(revenueAccount.getBalance());
+                }
+            }
+            
+            // Credit the income summary/result account with total revenue
+            if (totalRevenue.compareTo(BigDecimal.ZERO) > 0) {
+                Account incomeSummaryAccount = getOrCreateIncomeSummaryAccount();
+                entries.add(new TransactionEntryData(
+                        incomeSummaryAccount.getId(),
+                        BigDecimal.ZERO,
+                        totalRevenue,
+                        "Transfer revenue to income summary"
+                ));
+                
+                Transaction createdTransaction = createTransaction(revenueClosure, entries, username);
+                postTransaction(createdTransaction.getId(), username);
+                
+                // Create closing entry record
+                ClosingEntry entry = new ClosingEntry();
+                entry.setClosingType(ClosingEntry.ClosingType.INCOME);
+                entry.setClosingDate(closingDate);
+                entry.setFiscalYear(fiscalYear);
+                entry.setRelatedTransaction(createdTransaction);
+                entry.setPosted(true);
+                closingEntryRepository.save(entry);
+                closingEntries.add(entry);
+                
+                logger.info("Created revenue closing entry for {} amount: {}", fiscalYear, totalRevenue);
+            }
+        }
+        
+        // Find all expense accounts (debit balance accounts that need to be credited to zero)
+        List<Account> expenseAccounts = accountRepository.findByType(AccountType.EXPENSE);
+        BigDecimal totalExpenses = BigDecimal.ZERO;
+        
+        // Create closing transaction for expense accounts
+        if (!expenseAccounts.isEmpty()) {
+            Transaction expenseClosure = new Transaction();
+            expenseClosure.setDate(closingDate);
+            expenseClosure.setType("CLOSING_ENTRY");
+            expenseClosure.setDescription("Close expense accounts for fiscal year " + fiscalYear);
+            expenseClosure.setReference("CLOSE-EXP-" + fiscalYear);
+            
+            List<TransactionEntryData> entries = new ArrayList<>();
+            
+            // Credit each expense account to zero it out
+            for (Account expenseAccount : expenseAccounts) {
+                if (expenseAccount.getBalance().compareTo(BigDecimal.ZERO) != 0) {
+                    // Expense accounts have debit balance, so we credit to close
+                    entries.add(new TransactionEntryData(
+                            expenseAccount.getId(),
+                            BigDecimal.ZERO,
+                            expenseAccount.getBalance(), // Credit amount
+                            "Close expense account: " + expenseAccount.getName()
+                    ));
+                    totalExpenses = totalExpenses.add(expenseAccount.getBalance());
+                }
+            }
+            
+            // Debit the income summary/result account with total expenses
+            if (totalExpenses.compareTo(BigDecimal.ZERO) > 0) {
+                Account incomeSummaryAccount = getOrCreateIncomeSummaryAccount();
+                entries.add(new TransactionEntryData(
+                        incomeSummaryAccount.getId(),
+                        totalExpenses,
+                        BigDecimal.ZERO,
+                        "Transfer expenses to income summary"
+                ));
+                
+                Transaction createdTransaction = createTransaction(expenseClosure, entries, username);
+                postTransaction(createdTransaction.getId(), username);
+                
+                // Create closing entry record
+                ClosingEntry entry = new ClosingEntry();
+                entry.setClosingType(ClosingEntry.ClosingType.EXPENSE);
+                entry.setClosingDate(closingDate);
+                entry.setFiscalYear(fiscalYear);
+                entry.setRelatedTransaction(createdTransaction);
+                entry.setPosted(true);
+                closingEntryRepository.save(entry);
+                closingEntries.add(entry);
+                
+                logger.info("Created expense closing entry for {} amount: {}", fiscalYear, totalExpenses);
+            }
+        }
+        
+        // Close income summary to retained earnings (result closure)
+        Account incomeSummaryAccount = getOrCreateIncomeSummaryAccount();
+        BigDecimal netIncome = totalRevenue.subtract(totalExpenses);
+        
+        if (netIncome.compareTo(BigDecimal.ZERO) != 0) {
+            Transaction resultClosure = new Transaction();
+            resultClosure.setDate(closingDate);
+            resultClosure.setType("CLOSING_ENTRY");
+            resultClosure.setDescription("Close income summary to retained earnings for fiscal year " + fiscalYear);
+            resultClosure.setReference("CLOSE-RES-" + fiscalYear);
+            
+            List<TransactionEntryData> entries = new ArrayList<>();
+            Account retainedEarningsAccount = getOrCreateRetainedEarningsAccount();
+            
+            if (netIncome.compareTo(BigDecimal.ZERO) > 0) {
+                // Net income: debit income summary, credit retained earnings
+                entries.add(new TransactionEntryData(
+                        incomeSummaryAccount.getId(),
+                        BigDecimal.ZERO,
+                        netIncome.abs(),
+                        "Transfer net income to retained earnings"
+                ));
+                entries.add(new TransactionEntryData(
+                        retainedEarningsAccount.getId(),
+                        netIncome.abs(),
+                        BigDecimal.ZERO,
+                        "Net income for fiscal year " + fiscalYear
+                ));
+            } else {
+                // Net loss: credit income summary, debit retained earnings
+                entries.add(new TransactionEntryData(
+                        incomeSummaryAccount.getId(),
+                        netIncome.abs(),
+                        BigDecimal.ZERO,
+                        "Transfer net loss to retained earnings"
+                ));
+                entries.add(new TransactionEntryData(
+                        retainedEarningsAccount.getId(),
+                        BigDecimal.ZERO,
+                        netIncome.abs(),
+                        "Net loss for fiscal year " + fiscalYear
+                ));
+            }
+            
+            Transaction createdTransaction = createTransaction(resultClosure, entries, username);
+            postTransaction(createdTransaction.getId(), username);
+            
+            // Create closing entry record
+            ClosingEntry entry = new ClosingEntry();
+            entry.setClosingType(ClosingEntry.ClosingType.RESULT);
+            entry.setClosingDate(closingDate);
+            entry.setFiscalYear(fiscalYear);
+            entry.setRelatedTransaction(createdTransaction);
+            entry.setPosted(true);
+            closingEntryRepository.save(entry);
+            closingEntries.add(entry);
+            
+            logger.info("Created result closing entry for {} - Net Income: {}", fiscalYear, netIncome);
+        }
+        
+        logger.info("Completed closing nominal accounts for fiscal year {} - Created {} entries", fiscalYear, closingEntries.size());
+        return closingEntries;
+    }
+    
+    /**
+     * Get or create the income summary account used for closing nominal accounts.
+     * 
+     * @return The income summary account
+     */
+    private Account getOrCreateIncomeSummaryAccount() {
+        // Try to find existing income summary account by code pattern
+        Optional<Account> existing = accountRepository.findByCode("4.99");
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+        
+        // Create new income summary account
+        Account incomeSummary = new Account();
+        incomeSummary.setCode("4.99");
+        incomeSummary.setName("Income Summary");
+        incomeSummary.setDescription("Temporary account for closing revenues and expenses");
+        incomeSummary.setType(AccountType.EQUITY);
+        incomeSummary.setBalance(BigDecimal.ZERO);
+        incomeSummary.setParentAccount(null);
+        
+        return accountRepository.save(incomeSummary);
+    }
+    
+    /**
+     * Get or create the retained earnings account.
+     * 
+     * @return The retained earnings account
+     */
+    private Account getOrCreateRetainedEarningsAccount() {
+        // Try to find existing retained earnings account by code pattern
+        Optional<Account> existing = accountRepository.findByCode("3.1");
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+        
+        // Create new retained earnings account
+        Account retainedEarnings = new Account();
+        retainedEarnings.setCode("3.1");
+        retainedEarnings.setName("Retained Earnings");
+        retainedEarnings.setDescription("Accumulated earnings from previous periods");
+        retainedEarnings.setType(AccountType.EQUITY);
+        retainedEarnings.setBalance(BigDecimal.ZERO);
+        retainedEarnings.setParentAccount(null);
+        
+        return accountRepository.save(retainedEarnings);
+    }
+
     /**
      * Build JSON representation of transaction for audit logging
      */
