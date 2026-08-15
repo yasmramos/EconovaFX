@@ -28,16 +28,16 @@ public class SystemSettingsController {
     private ViewFactory viewFactory;
 
     @Inject
-    private SystemConfigService systemConfigService;
+    SystemConfigService systemConfigService;
 
     @Inject
-    private NotificationService notificationService;
+    NotificationService notificationService;
 
     @Inject
-    private AuditService auditService;
+    AuditService auditService;
     
     @Inject
-    private BackupSchedulerService backupSchedulerService;
+    BackupSchedulerService backupSchedulerService;
 
     @FXML
     private VBox sidebarContainer;
