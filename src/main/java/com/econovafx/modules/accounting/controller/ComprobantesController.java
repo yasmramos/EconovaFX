@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -260,7 +261,53 @@ public class ComprobantesController implements Initializable {
         javafx.application.Platform.runLater(() -> {
             try {
                 comprobantesData.clear();
-                var transactions = transactionService.getAllTransactions();
+                
+                // Get filter values - make them effectively final for lambda
+                LocalDate startDate = filterStartDate.getValue();
+                LocalDate endDate = filterEndDate.getValue();
+                String statusFilter = filterStatusCombo.getValue();
+                String searchText = searchField.getText();
+                
+                // Validate date range
+                if (startDate == null || endDate == null) {
+                    startDate = LocalDate.now().withDayOfMonth(1);
+                    endDate = LocalDate.now();
+                }
+                
+                final LocalDate finalStartDate = startDate;
+                final LocalDate finalEndDate = endDate;
+                
+                // Query transactions with filters - Resolution 340/2004 MC.4.h: Access to 3+ fiscal years
+                List<Transaction> transactions;
+                
+                if ("Todos".equals(statusFilter)) {
+                    transactions = transactionService.getTransactionsByDateRange(finalStartDate, finalEndDate);
+                } else {
+                    // Filter by status
+                    if ("Publicado".equals(statusFilter)) {
+                        transactions = transactionService.getPostedTransactions().stream()
+                                .filter(t -> !t.getDate().isBefore(finalStartDate) && !t.getDate().isAfter(finalEndDate))
+                                .toList();
+                    } else if ("Borrador".equals(statusFilter)) {
+                        transactions = transactionService.getUnpostedTransactions().stream()
+                                .filter(t -> !t.getDate().isBefore(finalStartDate) && !t.getDate().isAfter(finalEndDate))
+                                .toList();
+                    } else {
+                        // Anulado or other status
+                        transactions = transactionService.getTransactionsByDateRange(finalStartDate, finalEndDate);
+                    }
+                }
+                
+                // Apply text search filter
+                if (searchText != null && !searchText.trim().isEmpty()) {
+                    String searchLower = searchText.toLowerCase();
+                    transactions = transactions.stream()
+                            .filter(t -> (t.getDescription() != null && t.getDescription().toLowerCase().contains(searchLower)) ||
+                                        (t.getNumber() != null && t.getNumber().toLowerCase().contains(searchLower)) ||
+                                        (t.getType() != null && t.getType().toLowerCase().contains(searchLower)))
+                            .toList();
+                }
+                
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
                 for (Transaction txn : transactions) {

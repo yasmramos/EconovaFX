@@ -2,6 +2,7 @@ package com.econovafx.modules.accounting.service;
 
 import com.econovafx.modules.accounting.model.IntercompanyElimination;
 import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.model.TransactionEntry;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.core.model.Company;
 import io.avaje.inject.Component;
@@ -38,10 +39,13 @@ public class IntercompanyEliminationService {
     private static final Logger logger = LoggerFactory.getLogger(IntercompanyEliminationService.class);
 
     private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
 
     @Inject
-    public IntercompanyEliminationService(TransactionRepository transactionRepository) {
+    public IntercompanyEliminationService(TransactionRepository transactionRepository,
+                                          TransactionService transactionService) {
         this.transactionRepository = transactionRepository;
+        this.transactionService = transactionService;
     }
 
     /**
