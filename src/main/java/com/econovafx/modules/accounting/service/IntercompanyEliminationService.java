@@ -109,14 +109,9 @@ public class IntercompanyEliminationService {
                                                                 Long companyId2,
                                                                 LocalDate startDate,
                                                                 LocalDate endDate) {
-        // TODO: Implement proper filtering when company relationship is added to Transaction entity
-        // For now, return all posted transactions in the period
-        // The actual intercompany identification will require:
-        // 1. Tracking which third parties belong to which companies
-        // 2. Adding company_id to Transaction for cross-company queries
-        // 3. Implementing account code patterns for intercompany accounts
-        
-        return transactionRepository.findPostedByDateRange(startDate, endDate);
+        // Use the repository method to find intercompany transactions
+        // This delegates to TransactionRepository.findIntercompanyTransactions() which filters by company/counterparty
+        return transactionRepository.findIntercompanyTransactions(companyId1, companyId2, startDate, endDate);
     }
 
     /**

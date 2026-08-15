@@ -1,5 +1,6 @@
 package com.econovafx;
 
+import com.econovafx.core.i18n.I18nManager;
 import com.econovafx.modules.core.config.AppContext;
 import com.econovafx.modules.core.config.DatabaseConfig;
 import com.econovafx.modules.core.config.TenantContext;
@@ -13,6 +14,7 @@ import com.econovafx.modules.core.ui.view.SplashController;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.security.ui.controller.LoginController;
 import java.io.IOException;
+import java.util.Locale;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -43,6 +45,11 @@ public class App extends Application {
     @Override
     public void init() throws Exception {
         logger.info("Initializing EconoNova FX Application v{}", VERSION);
+        
+        // Initialize internationalization with default locale (Spanish - Cuba)
+        I18nManager.init(new Locale("es", "CU"));
+        logger.info("I18n initialized with locale: {}", I18nManager.getCurrentLocale());
+        
         context = AppContext.getInstance();
         logger.info("Application context initialized");
     }
@@ -67,6 +74,7 @@ public class App extends Application {
             splashStage = new Stage();
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/splash.fxml"));
+            loader.setResources(I18nManager.getBundle());
             StackPane root = loader.load();
             splashController = loader.getController();
             
@@ -92,6 +100,7 @@ public class App extends Application {
             logger.info("Showing login screen...");
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login-view.fxml"));
+            loader.setResources(I18nManager.getBundle());
             // LoginController requires constructor injection (AuthService), so resolve it
             // from the DI container instead of letting FXMLLoader use the no-arg constructor.
             loader.setControllerFactory(cls -> context.getBeanScope().get(cls));
@@ -134,6 +143,7 @@ public class App extends Application {
             logger.info("Showing company selection dialog...");
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/company-selection.fxml"));
+            loader.setResources(I18nManager.getBundle());
             VBox root = loader.load();
             CompanySelectionController controller = loader.getController();
             
@@ -199,6 +209,7 @@ public class App extends Application {
             logger.info("Showing business unit selection dialog...");
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/unit-selection.fxml"));
+            loader.setResources(I18nManager.getBundle());
             VBox root = loader.load();
             UnitSelectionController controller = loader.getController();
             
@@ -264,6 +275,7 @@ public class App extends Application {
             mainController.initializeViewFactory(viewFactory);
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main-view.fxml"));
+            loader.setResources(I18nManager.getBundle());
             loader.setControllerFactory(cls -> mainController);
 
             Scene scene = new Scene(loader.load(), 1200, 800);

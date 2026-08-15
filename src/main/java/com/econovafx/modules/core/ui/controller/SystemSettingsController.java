@@ -6,6 +6,7 @@ import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.core.service.backup.BackupSchedulerService;
 import com.econovafx.modules.core.ui.view.ViewFactory;
+import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -21,6 +22,7 @@ import java.util.ResourceBundle;
  * Controlador para la Configuración General del Sistema.
  * Diseño inspirado en preferencesFx con navegación lateral.
  */
+@Component
 public class SystemSettingsController {
     
     private ViewFactory viewFactory;
@@ -230,15 +232,38 @@ public class SystemSettingsController {
 
     private void setupListeners() {
         // Listener para reconfigurar el scheduler cuando cambia la configuración de backups
+        // Usamos un debounce simple para evitar múltiples llamadas rápidas
+        java.util.concurrent.atomic.AtomicBoolean isProcessing = new java.util.concurrent.atomic.AtomicBoolean(false);
+        
         autoBackupCheck.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
-            if (backupSchedulerService != null) {
-                backupSchedulerService.reconfigureScheduler();
+            if (isProcessing.compareAndSet(false, true)) {
+                try {
+                    if (backupSchedulerService != null) {
+                        backupSchedulerService.reconfigureScheduler();
+                    }
+                } finally {
+                    // Reset after a short delay to prevent rapid re-triggering
+                    javafx.animation.PauseTransition delay = new javafx.animation.PauseTransition(
+                        javafx.util.Duration.millis(500));
+                    delay.setOnFinished(e -> isProcessing.set(false));
+                    delay.play();
+                }
             }
         });
         
         backupPathField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (backupSchedulerService != null && autoBackupCheck.isSelected()) {
-                backupSchedulerService.reconfigureScheduler();
+            // Only trigger on significant changes (avoid firing on every keystroke)
+            if (backupSchedulerService != null && autoBackupCheck.isSelected() 
+                && !isProcessing.get()) {
+                // Schedule reconfiguration after user stops typing for 1 second
+                javafx.animation.PauseTransition delay = new javafx.animation.PauseTransition(
+                    javafx.util.Duration.seconds(1));
+                delay.setOnFinished(e -> {
+                    if (!isProcessing.get()) {
+                        backupSchedulerService.reconfigureScheduler();
+                    }
+                });
+                delay.play();
             }
         });
     }

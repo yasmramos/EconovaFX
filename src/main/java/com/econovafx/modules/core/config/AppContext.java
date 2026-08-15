@@ -12,6 +12,7 @@ import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.core.service.ExchangeRateService;
+import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.core.ui.controller.*;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.accounting.controller.AccountsController;
@@ -72,6 +73,7 @@ public final class AppContext {
     private final TransactionEntryController transactionEntryController;
     private ComprobantesController comprobantesController;
     private SystemSettingsController systemSettingsController;
+    private InventoryController inventoryController;
 
     // View Factory
     private ViewFactory viewFactory;
@@ -98,6 +100,7 @@ public final class AppContext {
         ExportService exportService = beanScope.get(ExportService.class);
         AccountingPeriodService accountingPeriodService = beanScope.get(AccountingPeriodService.class);
         NotificationService notificationService = beanScope.get(NotificationService.class);
+        SystemConfigService systemConfigService = beanScope.get(SystemConfigService.class);
         
         ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
 
@@ -113,7 +116,7 @@ public final class AppContext {
         // Get InventoryService and UserContext for InventoryController
         InventoryService inventoryService = beanScope.get(InventoryService.class);
         UserContext userContext = beanScope.get(UserContext.class);
-        InventoryController inventoryController = new InventoryController(inventoryService, userContext);
+        inventoryController = new InventoryController(inventoryService, userContext);
 
         // Create ViewFactory with controllers that don't need it back
         viewFactory = new ViewFactory(
@@ -136,11 +139,12 @@ public final class AppContext {
                 exportService,
                 accountingPeriodService,
                 notificationService,
-                inventoryService
+                inventoryService,
+                null // viewSwitcher - will be set later
         );
 
         // Now create controllers that need ViewFactory and initialize them
-        dashboardController = new DashboardController(accountService, transactionService);
+        dashboardController = new DashboardController(accountService, transactionService, systemConfigService);
         dashboardController.initializeViewFactory(viewFactory);
 
         accountsController = new AccountsController(accountService);
@@ -155,7 +159,8 @@ public final class AppContext {
         comprobantesController = new ComprobantesController(transactionService, accountService, exportService);
         comprobantesController.initializeViewFactory(viewFactory);
 
-        systemSettingsController = new SystemSettingsController();
+        // Create SystemSettingsController using DI to inject BackupSchedulerService
+        systemSettingsController = beanScope.get(SystemSettingsController.class);
         systemSettingsController.initializeViewFactory(viewFactory);
 
         // Re-create ViewFactory with all controllers properly initialized
@@ -179,7 +184,8 @@ public final class AppContext {
                 exportService,
                 accountingPeriodService,
                 notificationService,
-                inventoryService
+                inventoryService,
+                null // viewSwitcher - not used in AppContext initialization
         );
 
         // Final initialization pass for controllers that need the complete ViewFactory
@@ -189,7 +195,7 @@ public final class AppContext {
         thirdPartiesController.completeInitialization(viewFactory);
         comprobantesController.completeInitialization(viewFactory);
         systemSettingsController.completeInitialization(viewFactory);
-
+        
         logger.info("Application context initialized successfully with Avaje Inject");
     }
 
