@@ -356,7 +356,7 @@ class ConsolidationServiceTest {
     // Stub implementation of IntercompanyEliminationService
     private static class StubIntercompanyEliminationService extends IntercompanyEliminationService {
         public StubIntercompanyEliminationService() {
-            super(null);
+            super(null, null);
         }
 
         @Override

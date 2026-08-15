@@ -12,6 +12,7 @@ import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
+import com.econovafx.modules.accounting.repository.ClosingEntryRepository;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
 import com.econovafx.modules.core.exception.BusinessException;
 import com.econovafx.modules.core.exception.ValidationException;
@@ -36,6 +37,7 @@ class TransactionServiceTest {
     private StubAccountRepositoryForTransaction accountRepository;
     private AuditService auditService;
     private AccountingPeriodService accountingPeriodService;
+    private ClosingEntryRepository closingEntryRepository;
     private TransactionService transactionService;
 
     @BeforeEach
@@ -44,7 +46,8 @@ class TransactionServiceTest {
         accountRepository = new StubAccountRepositoryForTransaction();
         auditService = new AuditService(new StubAuditLogRepositoryForTransaction());
         accountingPeriodService = new StubAccountingPeriodService();
-        transactionService = new TransactionService(transactionRepository, accountRepository, auditService, accountingPeriodService);
+        closingEntryRepository = new StubClosingEntryRepository();
+        transactionService = new TransactionService(transactionRepository, accountRepository, auditService, accountingPeriodService, closingEntryRepository);
     }
 
     @Test
@@ -738,17 +741,43 @@ class TransactionServiceTest {
     /**
      * Stub implementation of AccountingPeriodService for testing
      */
-    private static class StubAccountingPeriodService extends AccountingPeriodService {
-        
-        @Override
-        public void validatePeriodOpenForPosting(LocalDate date) {
-            // Allow all dates for testing purposes
-            // In real tests, you can override this to simulate closed periods
+    private static class StubAccountingPeriodService extends com.econovafx.modules.accounting.service.AccountingPeriodService {
+        public StubAccountingPeriodService() {
+            super();
         }
-        
+
         @Override
-        public boolean isValidTransactionDate(LocalDate date) {
-            return true; // Allow all dates for testing
+        public boolean isValidTransactionDate(java.time.LocalDate date) {
+            return true;
+        }
+    }
+
+    /**
+     * Stub implementation of ClosingEntryRepository for testing
+     */
+    private static class StubClosingEntryRepository extends com.econovafx.modules.accounting.repository.ClosingEntryRepository {
+        public StubClosingEntryRepository() {
+            super();
+        }
+
+        @Override
+        public com.econovafx.modules.accounting.model.ClosingEntry findById(Long id) {
+            return null;
+        }
+
+        @Override
+        public List<com.econovafx.modules.accounting.model.ClosingEntry> findAll() {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public List<com.econovafx.modules.accounting.model.ClosingEntry> findByFiscalYear(Integer fiscalYear) {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public void save(com.econovafx.modules.accounting.model.ClosingEntry closingEntry) {
+            // No-op for testing
         }
     }
 }
