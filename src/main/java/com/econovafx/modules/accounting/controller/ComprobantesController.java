@@ -293,8 +293,8 @@ public class ComprobantesController implements Initializable {
                                 .filter(t -> !t.getDate().isBefore(finalStartDate) && !t.getDate().isAfter(finalEndDate))
                                 .toList();
                     } else {
-                        // Anulado or other status
-                        transactions = transactionService.getTransactionsByDateRange(finalStartDate, finalEndDate);
+                        // Anulado or other status: no transaction is currently marked as cancelled
+                        transactions = List.of();
                     }
                 }
                 
