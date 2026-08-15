@@ -477,12 +477,9 @@ public class ExportService {
             }
 
             // Balances summary
-            contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
             contentStream.showText(bundle.getString("report.reconciliation.balance.summary"));
-            contentStream.endText();
             
-            contentStream.beginText();
             contentStream.setFont(PDType1Font.HELVETICA, 10);
             contentStream.newLineAtOffset(0, -20);
             contentStream.showText(bundle.getString("report.reconciliation.system.balance") + ": " + reconciliation.getSystemBalance().toPlainString());
