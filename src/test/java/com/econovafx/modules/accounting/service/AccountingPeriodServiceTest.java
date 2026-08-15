@@ -4,6 +4,8 @@ import com.econovafx.modules.accounting.model.AccountingPeriod;
 import com.econovafx.modules.accounting.repository.AccountingPeriodRepository;
 import com.econovafx.modules.cash.service.CashMovementService;
 import com.econovafx.modules.inventory.service.InventoryService;
+import com.econovafx.modules.reporting.model.FinancialReport;
+import com.econovafx.modules.reporting.repository.FinancialReportRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +32,21 @@ class AccountingPeriodServiceTest {
     @Mock
     private InventoryService inventoryService;
 
+    @Mock
+    private FinancialReportRepository financialReportRepository;
+
+    @Mock
+    private com.econovafx.modules.accounting.repository.TransactionRepository transactionRepository;
+
+    @Mock
+    private com.econovafx.modules.accounting.repository.ClosingEntryRepository closingEntryRepository;
+
+    @Mock
+    private TransactionService transactionService;
+
+    @Mock
+    private FinancialStatementService financialStatementService;
+
     private AccountingPeriodService service;
 
     @BeforeEach
@@ -48,6 +65,26 @@ class AccountingPeriodServiceTest {
             java.lang.reflect.Field invField = AccountingPeriodService.class.getDeclaredField("inventoryService");
             invField.setAccessible(true);
             invField.set(service, inventoryService);
+
+            java.lang.reflect.Field reportRepoField = AccountingPeriodService.class.getDeclaredField("financialReportRepository");
+            reportRepoField.setAccessible(true);
+            reportRepoField.set(service, financialReportRepository);
+
+            java.lang.reflect.Field transRepoField = AccountingPeriodService.class.getDeclaredField("transactionRepository");
+            transRepoField.setAccessible(true);
+            transRepoField.set(service, transactionRepository);
+
+            java.lang.reflect.Field closingEntryRepoField = AccountingPeriodService.class.getDeclaredField("closingEntryRepository");
+            closingEntryRepoField.setAccessible(true);
+            closingEntryRepoField.set(service, closingEntryRepository);
+
+            java.lang.reflect.Field transServiceField = AccountingPeriodService.class.getDeclaredField("transactionService");
+            transServiceField.setAccessible(true);
+            transServiceField.set(service, transactionService);
+
+            java.lang.reflect.Field finStmtServiceField = AccountingPeriodService.class.getDeclaredField("financialStatementService");
+            finStmtServiceField.setAccessible(true);
+            finStmtServiceField.set(service, financialStatementService);
         } catch (Exception e) {
             throw new RuntimeException("Failed to inject mocks", e);
         }
@@ -277,6 +314,26 @@ class AccountingPeriodServiceTest {
         AccountingPeriod period = new AccountingPeriod("Fiscal Year 2024", LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), AccountingPeriod.PeriodType.ANNUAL);
         when(repository.findById(1L)).thenReturn(Optional.of(period));
         when(repository.save(any(AccountingPeriod.class))).thenReturn(period);
+        
+        // Mock nominal accounts as closed
+        when(closingEntryRepository.areNominalAccountsClosed(2024)).thenReturn(true);
+        
+        // Mock December month as closed
+        AccountingPeriod december = new AccountingPeriod("Dec 2024", LocalDate.of(2024, 12, 1), LocalDate.of(2024, 12, 31), AccountingPeriod.PeriodType.MONTHLY);
+        december.setStatus(AccountingPeriod.PeriodStatus.CLOSED);
+        when(repository.findPeriodsByYearAndType(2024, AccountingPeriod.PeriodType.MONTHLY))
+            .thenReturn(List.of(december));
+        
+        // Mock financial statements as issued
+        FinancialReport balanceSheet = new FinancialReport();
+        balanceSheet.setReportType(FinancialReport.ReportType.BALANCE_SHEET);
+        balanceSheet.setFiscalYear(2024);
+        balanceSheet.setFinal(true);
+        FinancialReport incomeStatement = new FinancialReport();
+        incomeStatement.setReportType(FinancialReport.ReportType.INCOME_STATEMENT);
+        incomeStatement.setFiscalYear(2024);
+        incomeStatement.setFinal(true);
+        when(financialReportRepository.findByFiscalYear(2024)).thenReturn(List.of(balanceSheet, incomeStatement));
 
         // Act
         AccountingPeriod result = service.closeAnnualPeriod(1L, "testuser", "Closing notes", false);
@@ -386,5 +443,143 @@ class AccountingPeriodServiceTest {
         // Assert
         assertTrue(result);
         verify(repository, times(1)).hasOpenPeriod();
+    }
+
+    @Test
+    void testValidateFinancialStatementsIssued_Success() {
+        // Arrange - All required statements are present and final
+        FinancialReport balanceSheet = new FinancialReport();
+        balanceSheet.setReportType(FinancialReport.ReportType.BALANCE_SHEET);
+        balanceSheet.setFiscalYear(2024);
+        balanceSheet.setFinal(true);
+
+        FinancialReport incomeStatement = new FinancialReport();
+        incomeStatement.setReportType(FinancialReport.ReportType.INCOME_STATEMENT);
+        incomeStatement.setFiscalYear(2024);
+        incomeStatement.setFinal(true);
+
+        when(financialReportRepository.findByFiscalYear(2024))
+            .thenReturn(List.of(balanceSheet, incomeStatement));
+
+        // Act & Assert - Should not throw
+        assertDoesNotThrow(() -> {
+            try {
+                java.lang.reflect.Method method = AccountingPeriodService.class
+                    .getDeclaredMethod("validateFinancialStatementsIssued", Integer.class);
+                method.setAccessible(true);
+                method.invoke(service, 2024);
+            } catch (java.lang.reflect.InvocationTargetException e) {
+                // Unwrap the actual exception
+                throw e.getCause();
+            }
+        });
+    }
+
+    @Test
+    void testValidateFinancialStatementsIssued_MissingBalanceSheet() {
+        // Arrange - Only income statement is present
+        FinancialReport incomeStatement = new FinancialReport();
+        incomeStatement.setReportType(FinancialReport.ReportType.INCOME_STATEMENT);
+        incomeStatement.setFiscalYear(2024);
+        incomeStatement.setFinal(true);
+
+        when(financialReportRepository.findByFiscalYear(2024))
+            .thenReturn(List.of(incomeStatement));
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            try {
+                java.lang.reflect.Method method = AccountingPeriodService.class
+                    .getDeclaredMethod("validateFinancialStatementsIssued", Integer.class);
+                method.setAccessible(true);
+                method.invoke(service, 2024);
+            } catch (java.lang.reflect.InvocationTargetException e) {
+                // Unwrap the actual exception
+                throw e.getCause();
+            }
+        });
+        assertTrue(exception.getMessage().contains("Balance General"));
+        assertTrue(exception.getMessage().contains("MC.6.b"));
+    }
+
+    @Test
+    void testValidateFinancialStatementsIssued_MissingIncomeStatement() {
+        // Arrange - Only balance sheet is present
+        FinancialReport balanceSheet = new FinancialReport();
+        balanceSheet.setReportType(FinancialReport.ReportType.BALANCE_SHEET);
+        balanceSheet.setFiscalYear(2024);
+        balanceSheet.setFinal(true);
+
+        when(financialReportRepository.findByFiscalYear(2024))
+            .thenReturn(List.of(balanceSheet));
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            try {
+                java.lang.reflect.Method method = AccountingPeriodService.class
+                    .getDeclaredMethod("validateFinancialStatementsIssued", Integer.class);
+                method.setAccessible(true);
+                method.invoke(service, 2024);
+            } catch (java.lang.reflect.InvocationTargetException e) {
+                // Unwrap the actual exception
+                throw e.getCause();
+            }
+        });
+        assertTrue(exception.getMessage().contains("Estado de Resultados"));
+        assertTrue(exception.getMessage().contains("MC.6.b"));
+    }
+
+    @Test
+    void testValidateFinancialStatementsIssued_NotFinalized() {
+        // Arrange - Statements exist but are not finalized
+        FinancialReport balanceSheet = new FinancialReport();
+        balanceSheet.setReportType(FinancialReport.ReportType.BALANCE_SHEET);
+        balanceSheet.setFiscalYear(2024);
+        balanceSheet.setFinal(false); // Not final
+
+        FinancialReport incomeStatement = new FinancialReport();
+        incomeStatement.setReportType(FinancialReport.ReportType.INCOME_STATEMENT);
+        incomeStatement.setFiscalYear(2024);
+        incomeStatement.setFinal(false); // Not final
+
+        when(financialReportRepository.findByFiscalYear(2024))
+            .thenReturn(List.of(balanceSheet, incomeStatement));
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            try {
+                java.lang.reflect.Method method = AccountingPeriodService.class
+                    .getDeclaredMethod("validateFinancialStatementsIssued", Integer.class);
+                method.setAccessible(true);
+                method.invoke(service, 2024);
+            } catch (java.lang.reflect.InvocationTargetException e) {
+                // Unwrap the actual exception
+                throw e.getCause();
+            }
+        });
+        assertTrue(exception.getMessage().contains("falta emitir"));
+        assertTrue(exception.getMessage().contains("MC.6.b"));
+    }
+
+    @Test
+    void testValidateFinancialStatementsIssued_NoReportsAtAll() {
+        // Arrange - No reports for the fiscal year
+        when(financialReportRepository.findByFiscalYear(2024))
+            .thenReturn(List.of());
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            try {
+                java.lang.reflect.Method method = AccountingPeriodService.class
+                    .getDeclaredMethod("validateFinancialStatementsIssued", Integer.class);
+                method.setAccessible(true);
+                method.invoke(service, 2024);
+            } catch (java.lang.reflect.InvocationTargetException e) {
+                // Unwrap the actual exception
+                throw e.getCause();
+            }
+        });
+        assertTrue(exception.getMessage().contains("falta emitir"));
+        assertTrue(exception.getMessage().contains("MC.6.b"));
     }
 }
