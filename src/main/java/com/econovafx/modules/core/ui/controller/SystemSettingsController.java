@@ -6,6 +6,7 @@ import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.core.service.backup.BackupSchedulerService;
 import com.econovafx.modules.core.ui.view.ViewFactory;
+import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -21,6 +22,7 @@ import java.util.ResourceBundle;
  * Controlador para la Configuración General del Sistema.
  * Diseño inspirado en preferencesFx con navegación lateral.
  */
+@Component
 public class SystemSettingsController {
     
     private ViewFactory viewFactory;

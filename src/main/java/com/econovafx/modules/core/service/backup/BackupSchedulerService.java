@@ -106,18 +106,21 @@ public class BackupSchedulerService {
         log.info("Deteniendo scheduler de backups automáticos");
         
         if (scheduler != null && !scheduler.isShutdown()) {
+            // Capturar la referencia actual para no afectar a un scheduler recreado
+            final ScheduledExecutorService current = scheduler;
+            scheduler = null;
             // Ejecutar en un hilo separado para no bloquear el hilo de la UI
             Thread shutdownThread = new Thread(() -> {
-                scheduler.shutdown();
+                current.shutdown();
                 try {
                     // Esperar hasta 30 segundos a que las tareas pendientes terminen
-                    if (!scheduler.awaitTermination(30, TimeUnit.SECONDS)) {
+                    if (!current.awaitTermination(30, TimeUnit.SECONDS)) {
                         log.warn("El scheduler no terminó limpiamente, forzando shutdown");
-                        scheduler.shutdownNow();
+                        current.shutdownNow();
                     }
                 } catch (InterruptedException e) {
                     log.warn("Interrumpido mientras esperaba el shutdown del scheduler");
-                    scheduler.shutdownNow();
+                    current.shutdownNow();
                     Thread.currentThread().interrupt();
                 }
             }, "BackupScheduler-Shutdown");
