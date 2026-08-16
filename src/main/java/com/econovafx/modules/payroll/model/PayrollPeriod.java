@@ -44,13 +44,13 @@ public class PayrollPeriod {
     @Column(name = "is_closed")
     private boolean closed = false;
 
-    @Column(name = "year")
+    @Column(name = "\"year\"", columnDefinition = "INTEGER")
     private Integer year;
 
-    @Column(name = "month")
+    @Column(name = "\"month\"", columnDefinition = "INTEGER")
     private Integer month;
 
-    @Column(name = "week_number")
+    @Column(name = "\"week_number\"", columnDefinition = "INTEGER")
     private Integer weekNumber;
 
     // Getters and Setters
