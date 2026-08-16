@@ -244,7 +244,8 @@
                         <exclude>**/MainViewVisualTest.java</exclude>
                     </excludes>
                     <forkCount>1</forkCount>
-                    <argLine>-Xmx1024m -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Djava.awt.headless=true --add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED --add-opens org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED --add-opens org.junit.platform.commons/org.junit.platform.commons.function=ALL-UNNAMED --add-opens org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED --add-reads econonovafx=org.junit.jupiter.api --add-reads econonovafx=org.junit.jupiter.engine</argLine>
+                    <useModulePath>false</useModulePath>
+                    <argLine>-Xmx1024m -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Djava.awt.headless=true</argLine>
                 </configuration>
             </plugin>
             <!-- JaCoCo Plugin for Code Coverage -->
@@ -322,6 +323,7 @@
                         </goals>
                         <configuration>
                             <transformArgs>debug=1,version=149</transformArgs>
+                            <packages>com.econovafx.modules.core.model,com.econovafx.modules.accounting.model,com.econovafx.modules.billing.model,com.econovafx.modules.payroll.model,com.econovafx.modules.inventory.model,com.econovafx.modules.receivables.model,com.econovafx.modules.payables.model,com.econovafx.modules.bank.model,com.econovafx.modules.cash.model,com.econovafx.modules.assets.model,com.econovafx.modules.fixedassets.model,com.econovafx.modules.reporting.model,com.econovafx.modules.security.model</packages>
                         </configuration>
                     </execution>
                 </executions>

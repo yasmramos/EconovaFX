@@ -7,15 +7,18 @@ import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.core.service.AuditService;
 import io.ebean.DB;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for AuthService with login attempt tracking and session management
+ * Unit tests for AuthService with login attempt tracking and session management.
+ * Uses ebean-test with H2 in-memory database for real database operations.
  */
 class AuthServiceTest {
 
@@ -28,199 +31,171 @@ class AuthServiceTest {
         passwordService = new PasswordService();
         auditService = mock(AuditService.class);
         authService = new AuthService(passwordService, auditService);
+        
+        // Clean up any existing data before each test
+        DB.deleteAll(User.class, DB.find(User.class).findList());
+        DB.deleteAll(Company.class, DB.find(Company.class).findList());
+        TenantContext.clear();
+        SecurityUtil.clearCurrentUser();
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Clean up after each test
+        DB.deleteAll(User.class, DB.find(User.class).findList());
+        DB.deleteAll(Company.class, DB.find(Company.class).findList());
+        TenantContext.clear();
+        SecurityUtil.clearCurrentUser();
     }
 
     @Test
     void testAuthenticateSuccess() {
+        // Create and save a company
+        Company company = new Company("Test Company", "TEST", "123456789");
+        DB.save(company);
+        
         // Create a user with hashed password
         User user = new User();
-        user.setId(1L);
         user.setEmail("test@example.com");
         user.setUsername("testuser");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("ACTIVE");
-        Company company = new Company("Test Company", "TEST", "123456789");
         user.setCompany(company);
+        DB.save(user);
 
-        try (MockedStatic<DB> mockedDB = mockStatic(DB.class)) {
-            io.ebean.Query<User> mockQuery = mock(io.ebean.Query.class);
-            io.ebean.ExpressionList<User> mockExpressionList = mock(io.ebean.ExpressionList.class);
+        // Authenticate
+        User result = authService.authenticate("test@example.com", "password123");
 
-            when(DB.find(User.class)).thenReturn(mockQuery);
-            when(mockQuery.where()).thenReturn(mockExpressionList);
-            when(mockExpressionList.eq("email", "test@example.com")).thenReturn(mockExpressionList);
-            when(mockExpressionList.query()).thenReturn(mockQuery);
-            when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.of(user));
-
-            // Authenticate
-            User result = authService.authenticate("test@example.com", "password123");
-
-            assertNotNull(result);
-            assertEquals("test@example.com", result.getEmail());
-            assertNotNull(TenantContext.getCurrentTenant());
-            
-            // Verify audit log was called
-            verify(auditService).logSuccess(eq("test@example.com"), eq(AuditLog.OperationType.LOGIN), 
-                                           eq("User"), eq(1L), anyString());
-        }
+        assertNotNull(result);
+        assertEquals("test@example.com", result.getEmail());
+        assertNotNull(TenantContext.getCurrentTenant());
+        
+        // Verify audit log was called
+        verify(auditService).logSuccess(eq("test@example.com"), eq(AuditLog.OperationType.LOGIN), 
+                                       eq("User"), eq(user.getId()), anyString());
     }
 
     @Test
     void testAuthenticateInvalidPassword() {
+        // Create and save a company
+        Company company = new Company("Test Company", "TEST", "123456789");
+        DB.save(company);
+        
         // Create a user with hashed password
         User user = new User();
-        user.setId(1L);
         user.setEmail("test@example.com");
         user.setUsername("testuser");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("ACTIVE");
+        user.setCompany(company);
+        DB.save(user);
 
-        try (MockedStatic<DB> mockedDB = mockStatic(DB.class)) {
-            io.ebean.Query<User> mockQuery = mock(io.ebean.Query.class);
-            io.ebean.ExpressionList<User> mockExpressionList = mock(io.ebean.ExpressionList.class);
+        // Try to authenticate with wrong password
+        User result = authService.authenticate("test@example.com", "wrongpassword");
 
-            when(DB.find(User.class)).thenReturn(mockQuery);
-            when(mockQuery.where()).thenReturn(mockExpressionList);
-            when(mockExpressionList.eq("email", "test@example.com")).thenReturn(mockExpressionList);
-            when(mockExpressionList.query()).thenReturn(mockQuery);
-            when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.of(user));
-
-            // Try to authenticate with wrong password
-            User result = authService.authenticate("test@example.com", "wrongpassword");
-
-            assertNull(result);
-            
-            // Verify audit log was called for failure
-            verify(auditService).logFailure(eq("test@example.com"), eq(AuditLog.OperationType.LOGIN), 
-                                           eq("User"), eq(1L), anyString(), anyString());
-        }
+        assertNull(result);
+        
+        // Verify audit log was called for failure
+        verify(auditService).logFailure(eq("test@example.com"), eq(AuditLog.OperationType.LOGIN), 
+                                       eq("User"), eq(user.getId()), anyString(), anyString());
     }
 
     @Test
     void testAuthenticateUserNotFound() {
-        try (MockedStatic<DB> mockedDB = mockStatic(DB.class)) {
-            io.ebean.Query<User> mockQuery = mock(io.ebean.Query.class);
-            io.ebean.ExpressionList<User> mockExpressionList = mock(io.ebean.ExpressionList.class);
-
-            when(DB.find(User.class)).thenReturn(mockQuery);
-            when(mockQuery.where()).thenReturn(mockExpressionList);
-            when(mockExpressionList.eq("email", "nonexistent@example.com")).thenReturn(mockExpressionList);
-            when(mockExpressionList.query()).thenReturn(mockQuery);
-            when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.empty());
-
-            User result = authService.authenticate("nonexistent@example.com", "password123");
-            assertNull(result);
-            
-            // Verify audit log was called for not found
-            verify(auditService).logFailure(eq("nonexistent@example.com"), eq(AuditLog.OperationType.LOGIN), 
-                                           eq("User"), isNull(), anyString(), anyString());
-        }
+        // Try to authenticate non-existent user
+        User result = authService.authenticate("nonexistent@example.com", "password123");
+        assertNull(result);
+        
+        // Verify audit log was called for not found
+        verify(auditService).logFailure(eq("nonexistent@example.com"), eq(AuditLog.OperationType.LOGIN), 
+                                       eq("User"), isNull(), anyString(), anyString());
     }
 
     @Test
     void testAuthenticateInactiveUser() {
+        // Create and save a company
+        Company company = new Company("Test Company", "TEST", "123456789");
+        DB.save(company);
+        
         // Create an inactive user
         User user = new User();
-        user.setId(1L);
         user.setEmail("test@example.com");
         user.setUsername("testuser");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("INACTIVE");
+        user.setCompany(company);
+        DB.save(user);
 
-        try (MockedStatic<DB> mockedDB = mockStatic(DB.class)) {
-            io.ebean.Query<User> mockQuery = mock(io.ebean.Query.class);
-            io.ebean.ExpressionList<User> mockExpressionList = mock(io.ebean.ExpressionList.class);
-
-            when(DB.find(User.class)).thenReturn(mockQuery);
-            when(mockQuery.where()).thenReturn(mockExpressionList);
-            when(mockExpressionList.eq("email", "test@example.com")).thenReturn(mockExpressionList);
-            when(mockExpressionList.query()).thenReturn(mockQuery);
-            when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.of(user));
-
-            User result = authService.authenticate("test@example.com", "password123");
-            assertNull(result);
-            
-            // Verify audit log was called for inactive user
-            verify(auditService).logFailure(eq("test@example.com"), eq(AuditLog.OperationType.LOGIN), 
-                                           eq("User"), eq(1L), contains("inactive"), anyString());
-        }
+        User result = authService.authenticate("test@example.com", "password123");
+        assertNull(result);
+        
+        // Verify audit log was called for inactive user
+        verify(auditService).logFailure(eq("test@example.com"), eq(AuditLog.OperationType.LOGIN), 
+                                       eq("User"), eq(user.getId()), contains("inactive"), anyString());
     }
 
     @Test
     void testLoginAttemptsLockout() throws InterruptedException {
         String email = "locktest@example.com";
-        Long userId = 1L;
+        
+        // Create and save a company
+        Company company = new Company("Test Company", "TEST", "123456789");
+        DB.save(company);
         
         // Create a user
         User user = new User();
-        user.setId(userId);
         user.setEmail(email);
         user.setUsername("locktest");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("ACTIVE");
+        user.setCompany(company);
+        DB.save(user);
 
-        try (MockedStatic<DB> mockedDB = mockStatic(DB.class)) {
-            io.ebean.Query<User> mockQuery = mock(io.ebean.Query.class);
-            io.ebean.ExpressionList<User> mockExpressionList = mock(io.ebean.ExpressionList.class);
-
-            when(DB.find(User.class)).thenReturn(mockQuery);
-            when(mockQuery.where()).thenReturn(mockExpressionList);
-            when(mockExpressionList.eq("email", email)).thenReturn(mockExpressionList);
-            when(mockExpressionList.query()).thenReturn(mockQuery);
-            when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.of(user));
-
-            // Simulate MAX_LOGIN_ATTEMPTS failed attempts
-            for (int i = 0; i < AppConfig.MAX_LOGIN_ATTEMPTS; i++) {
-                User result = authService.authenticate(email, "wrongpassword");
-                assertNull(result);
-            }
-
-            // Next attempt should be blocked even with correct password
-            User blockedResult = authService.authenticate(email, "password123");
-            assertNull(blockedResult);
-            
-            // Verify lockout was logged
-            verify(auditService, atLeastOnce()).logFailure(eq(email), eq(AuditLog.OperationType.LOGIN), 
-                                                          eq("User"), eq(userId), contains("locked"), anyString());
+        // Simulate MAX_LOGIN_ATTEMPTS failed attempts
+        for (int i = 0; i < AppConfig.MAX_LOGIN_ATTEMPTS; i++) {
+            User result = authService.authenticate(email, "wrongpassword");
+            assertNull(result);
         }
+
+        // Next attempt should be blocked even with correct password
+        User blockedResult = authService.authenticate(email, "password123");
+        assertNull(blockedResult);
+        
+        // Verify lockout was logged
+        verify(auditService, atLeastOnce()).logFailure(eq(email), eq(AuditLog.OperationType.LOGIN), 
+                                                      eq("User"), eq(user.getId()), contains("locked"), anyString());
     }
 
     @Test
     void testSuccessfulLoginResetsAttempts() {
         String email = "reset@example.com";
         
+        // Create and save a company
+        Company company = new Company("Test Company", "TEST", "123456789");
+        DB.save(company);
+        
         // Create a user
         User user = new User();
-        user.setId(1L);
         user.setEmail(email);
         user.setUsername("resetuser");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("ACTIVE");
+        user.setCompany(company);
+        DB.save(user);
 
-        try (MockedStatic<DB> mockedDB = mockStatic(DB.class)) {
-            io.ebean.Query<User> mockQuery = mock(io.ebean.Query.class);
-            io.ebean.ExpressionList<User> mockExpressionList = mock(io.ebean.ExpressionList.class);
-
-            when(DB.find(User.class)).thenReturn(mockQuery);
-            when(mockQuery.where()).thenReturn(mockExpressionList);
-            when(mockExpressionList.eq("email", email)).thenReturn(mockExpressionList);
-            when(mockExpressionList.query()).thenReturn(mockQuery);
-            when(mockQuery.findOneOrEmpty()).thenReturn(java.util.Optional.of(user));
-
-            // Simulate some failed attempts
-            for (int i = 0; i < 3; i++) {
-                authService.authenticate(email, "wrongpassword");
-            }
-
-            // Successful login
-            User result = authService.authenticate(email, "password123");
-            assertNotNull(result);
-
-            // After successful login, user should be able to login again even after more failures
-            // This verifies the counter was reset
-            // Note: In a real scenario, we would need to test this across multiple test methods
-            // or use reflection to check internal state
+        // Simulate some failed attempts
+        for (int i = 0; i < 3; i++) {
+            authService.authenticate(email, "wrongpassword");
         }
+
+        // Successful login
+        User result = authService.authenticate(email, "password123");
+        assertNotNull(result);
+
+        // After successful login, user should be able to login again even after more failures
+        // This verifies the counter was reset
+        // Note: In a real scenario, we would need to test this across multiple test methods
+        // or use reflection to check internal state
     }
 
     @Test
