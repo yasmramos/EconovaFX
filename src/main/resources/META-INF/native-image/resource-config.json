@@ -1,0 +1,46 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "application.properties$"
+      },
+      {
+        "pattern": "logback.xml$"
+      },
+      {
+        "pattern": "i18n/messages.*\\.properties$"
+      },
+      {
+        "pattern": ".*\\.fxml$"
+      },
+      {
+        "pattern": ".*\\.css$"
+      },
+      {
+        "pattern": "dbmigration/.*\\.sql$"
+      },
+      {
+        "pattern": "META-INF/ebean.mf$"
+      },
+      {
+        "pattern": "com/econovafx/.*\\.png$"
+      },
+      {
+        "pattern": "com/econovafx/.*\\.jpg$"
+      },
+      {
+        "pattern": "com/econovafx/.*\\.ico$"
+      }
+    ]
+  },
+  "bundles": [
+    {
+      "name": "i18n.messages",
+      "locales": ["en", "es"]
+    },
+    {
+      "name": "messages",
+      "locales": ["en", "es"]
+    }
+  ]
+}

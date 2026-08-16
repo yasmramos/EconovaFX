@@ -1,5 +1,6 @@
 package com.econovafx.modules.core.config;
 
+import com.econovafx.modules.core.config.AppConfig;
 import com.econovafx.modules.core.model.Company;
 import io.ebean.Database;
 import io.ebean.DatabaseBuilder;
@@ -11,6 +12,8 @@ import io.ebean.config.dbplatform.DatabasePlatform;
 import io.ebean.datasource.DataSourceConfig;
 import io.ebean.datasource.DataSourceFactory;
 import io.ebean.datasource.DataSourcePool;
+import io.ebean.migration.MigrationConfig;
+import io.ebean.migration.MigrationRunner;
 import io.ebean.platform.h2.H2Platform;
 import io.ebean.platform.postgres.PostgresPlatform;
 import jakarta.inject.Singleton;
@@ -78,14 +81,42 @@ public class DatabaseConfig {
         builder.name("master")
                 .dataSource(pool)
                 .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
-                .ddlGenerate(true)
-                .ddlRun(true)
+                .ddlGenerate(false)
+                .ddlRun(false)
                 .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
                 .defaultDatabase(true);
 
         Database masterDb = builder.build();
         masterDatabase = masterDb;
         logger.info("Master database initialized successfully with platform: {}", AppConfig.DB_TYPE);
+        
+        // Run migrations for master database if enabled
+        if (AppConfig.EBEAN_MIGRATION_RUN) {
+            runMasterMigrations(pool);
+        }
+    }
+    
+    /**
+     * Runs database migrations for the master database.
+     * @param dataSource The DataSourcePool for the master database
+     */
+    private static void runMasterMigrations(DataSourcePool dataSource) {
+        try {
+            MigrationConfig migrationConfig = new MigrationConfig();
+            migrationConfig.setMigrationPath("dbmigration/master");
+            migrationConfig.setDbUrl(AppConfig.MASTER_DB_URL);
+            migrationConfig.setDbUsername(AppConfig.MASTER_DB_USERNAME);
+            migrationConfig.setDbPassword(AppConfig.MASTER_DB_PASSWORD);
+            migrationConfig.setDbDriver(AppConfig.MASTER_DB_DRIVER);
+            
+            MigrationRunner runner = new MigrationRunner(migrationConfig);
+            runner.run(dataSource);
+            
+            logger.info("Master database migrations executed successfully");
+        } catch (Exception e) {
+            logger.error("Failed to execute master database migrations", e);
+            throw new RuntimeException("Master database migration failed", e);
+        }
     }
     
     /**
@@ -133,8 +164,8 @@ public class DatabaseConfig {
                     .tenantDataSourceProvider(dataSourceProvider)
                     .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
                     .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
-                    .ddlGenerate(true)
-                    .ddlRun(true);
+                    .ddlGenerate(false)
+                    .ddlRun(false);
 
             tenantDatabase = builder.build();
 
@@ -224,6 +255,11 @@ public class DatabaseConfig {
                 DataSource dataSource = DataSourceFactory.create(dbName, dsConfig);
                 logger.info("DataSource created successfully for: {} with driver: {}", company.getCode(), driver);
 
+                // Run migrations for this tenant database if enabled
+                if (AppConfig.EBEAN_MIGRATION_RUN) {
+                    runTenantMigrations(dataSource, company.getCode());
+                }
+
                 return dataSource;
 
             } catch (Exception e) {
@@ -231,6 +267,45 @@ public class DatabaseConfig {
                 throw new RuntimeException("DataSource creation failed", e);
             }
         });
+    }
+    
+    /**
+     * Runs database migrations for a tenant database.
+     * @param dataSource The DataSource for the tenant database
+     * @param companyCode The company code used to identify migration path
+     */
+    private static void runTenantMigrations(DataSource dataSource, String companyCode) {
+        try {
+            MigrationConfig migrationConfig = new MigrationConfig();
+            migrationConfig.setMigrationPath("dbmigration/tenant");
+            
+            // Extract connection info from DataSource using metadata
+            try (java.sql.Connection conn = dataSource.getConnection()) {
+                java.sql.DatabaseMetaData meta = conn.getMetaData();
+                migrationConfig.setDbUrl(meta.getURL());
+                migrationConfig.setDbUsername(meta.getUserName());
+                
+                // Infer driver from URL
+                String url = meta.getURL();
+                if (url.startsWith("jdbc:postgresql:")) {
+                    migrationConfig.setDbDriver("org.postgresql.Driver");
+                } else if (url.startsWith("jdbc:h2:")) {
+                    migrationConfig.setDbDriver("org.h2.Driver");
+                }
+                
+                // Password needs to be obtained from config or passed separately
+                // For now, we rely on the DataSource already having the password configured
+                conn.close();
+            }
+            
+            MigrationRunner runner = new MigrationRunner(migrationConfig);
+            runner.run(dataSource);
+            
+            logger.info("Tenant database migrations executed successfully for: {}", companyCode);
+        } catch (Exception e) {
+            logger.error("Failed to execute tenant database migrations for {}", companyCode, e);
+            throw new RuntimeException("Tenant database migration failed for " + companyCode, e);
+        }
     }
 
     /**
