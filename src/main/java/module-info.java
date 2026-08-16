@@ -91,12 +91,16 @@ module econonovafx {
     opens com.econovafx.modules.core.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.accounting.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.billing.model to io.ebean.core, io.ebean;
-    opens com.econovafx.modules.payroll.model to io.ebean.core, io.ebean, org.junit.platform.commons, org.junit.jupiter.api;
-    opens com.econovafx.modules.inventory.model to io.ebean.core, io.ebean, org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.payroll.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.inventory.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.receivables.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.payables.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.bank.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.cash.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.assets.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.fixedassets.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.reporting.model to io.ebean.core, io.ebean;
+    opens com.econovafx.modules.security.model to io.ebean.core, io.ebean;
 
     // Open packages for reflection-based testing
     opens com.econovafx to org.junit.platform.commons, org.junit.jupiter.api;
