@@ -43,7 +43,10 @@ class TransactionRepositoryTest {
         // Database is auto-configured by ebean-test using application-test.yaml
         db = io.ebean.DB.getDefault();
         
-        companyRepository = new CompanyRepository();
+        // For tests, we use a single shared database (no multi-tenant)
+        // Use the constructor that accepts a Database parameter instead of the default one
+        // which tries to access the \"master\" datasource that doesn't exist in tests
+        companyRepository = new CompanyRepository(db);
         userRepository = new UserRepository(db);
         accountRepository = new AccountRepository(db);
         transactionRepository = new TransactionRepository(db);
