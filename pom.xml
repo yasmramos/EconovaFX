@@ -71,6 +71,11 @@
         </dependency>
         <dependency>
             <groupId>io.ebean</groupId>
+            <artifactId>ebean-migration</artifactId>
+            <version>14.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
             <artifactId>ebean-test</artifactId>
             <version>${ebean.version}</version>
             <scope>test</scope>
@@ -476,6 +481,161 @@
                                     <version>12.6</version>
                                 </path>
                             </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Profile for native image compilation with GraalVM -->
+        <profile>
+            <id>native</id>
+            <properties>
+                <java.version>17</java.version>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Disable shade plugin for native build -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>shade-jar</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <!-- Disable ebean agent copy for native build -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-ebean-agent</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- GluonFX Maven Plugin for JavaFX native image -->
+                    <plugin>
+                        <groupId>com.gluonhq</groupId>
+                        <artifactId>gluonfx-maven-plugin</artifactId>
+                        <version>1.0.22</version>
+                        <configuration>
+                            <mainClass>com.econovafx.Launcher</mainClass>
+                            <verbose>true</verbose>
+                            <nativeImageArgs>
+                                <arg>--initialize-at-run-time=ch.qos.logback.classic.Logger,ch.qos.logback.classic.LoggerContext,ch.qos.logback.core.util.DynamicClassLoadingVisitor</arg>
+                                <arg>--initialize-at-run-time=com.zaxxer.hikari.HikariConfig</arg>
+                                <arg>-H:+ReportExceptionStackTraces</arg>
+                                <arg>--report-unsupported-elements-at-runtime</arg>
+                                <arg>--no-fallback</arg>
+                            </nativeImageArgs>
+                            <bundlesList>
+                                <bundle>messages</bundle>
+                                <bundle>messages_es</bundle>
+                            </bundlesList>
+                            <reflectionList>
+                                <!-- Ebean Entities - Core -->
+                                <list>com.econovafx.modules.core.model.Company</list>
+                                <list>com.econovafx.modules.core.model.User</list>
+                                <list>com.econovafx.modules.core.model.Currency</list>
+                                <list>com.econovafx.modules.core.model.ExchangeRate</list>
+                                <list>com.econovafx.modules.core.model.BusinessUnit</list>
+                                <list>com.econovafx.modules.core.model.AuditLog</list>
+                                <list>com.econovafx.modules.core.model.SystemConfiguration</list>
+                                <list>com.econovafx.modules.core.model.ReportDefinition</list>
+                                <!-- Ebean Entities - Security -->
+                                <list>com.econovafx.modules.security.model.Role</list>
+                                <!-- Ebean Entities - Accounting -->
+                                <list>com.econovafx.modules.accounting.model.Account</list>
+                                <list>com.econovafx.modules.accounting.model.Transaction</list>
+                                <list>com.econovafx.modules.accounting.model.TransactionEntry</list>
+                                <list>com.econovafx.modules.accounting.model.AccountingPeriod</list>
+                                <list>com.econovafx.modules.accounting.model.ClosingEntry</list>
+                                <list>com.econovafx.modules.accounting.model.ExchangeDifference</list>
+                                <list>com.econovafx.modules.accounting.model.FinancialStatementModel</list>
+                                <list>com.econovafx.modules.accounting.model.FinancialStatementRow</list>
+                                <!-- Ebean Entities - Billing -->
+                                <list>com.econovafx.modules.billing.model.ThirdParty</list>
+                                <list>com.econovafx.modules.billing.model.SalesInvoice</list>
+                                <list>com.econovafx.modules.billing.model.SalesInvoiceLine</list>
+                                <list>com.econovafx.modules.billing.model.BillingSeries</list>
+                                <list>com.econovafx.modules.billing.model.TaxRate</list>
+                                <!-- Ebean Entities - Payroll -->
+                                <list>com.econovafx.modules.payroll.model.Employee</list>
+                                <list>com.econovafx.modules.payroll.model.PayrollBatch</list>
+                                <list>com.econovafx.modules.payroll.model.PayrollDetail</list>
+                                <list>com.econovafx.modules.payroll.model.PayrollConcept</list>
+                                <list>com.econovafx.modules.payroll.model.PayrollPeriod</list>
+                                <!-- Ebean Entities - Inventory -->
+                                <list>com.econovafx.modules.inventory.model.InventoryItem</list>
+                                <list>com.econovafx.modules.inventory.model.InventoryMovement</list>
+                                <list>com.econovafx.modules.inventory.model.InventoryCategory</list>
+                                <list>com.econovafx.modules.inventory.model.Warehouse</list>
+                                <!-- Ebean Entities - Receivables -->
+                                <list>com.econovafx.modules.receivables.model.CustomerInvoice</list>
+                                <list>com.econovafx.modules.receivables.model.CustomerPayment</list>
+                                <!-- Ebean Entities - Payables -->
+                                <list>com.econovafx.modules.payables.model.SupplierInvoice</list>
+                                <list>com.econovafx.modules.payables.model.SupplierPayment</list>
+                                <!-- Ebean Entities - Bank -->
+                                <list>com.econovafx.modules.bank.model.BankAccount</list>
+                                <list>com.econovafx.modules.bank.model.BankReconciliation</list>
+                                <list>com.econovafx.modules.bank.model.ReconciliationItem</list>
+                                <!-- Ebean Entities - Cash -->
+                                <list>com.econovafx.modules.cash.model.CashBox</list>
+                                <list>com.econovafx.modules.cash.model.CashMovement</list>
+                                <!-- Ebean Entities - Assets -->
+                                <list>com.econovafx.modules.assets.model.FixedAsset</list>
+                                <!-- Ebean Entities - Fixed Assets -->
+                                <list>com.econovafx.modules.fixedassets.model.FixedAsset</list>
+                                <list>com.econovafx.modules.fixedassets.model.FixedAssetCategory</list>
+                                <list>com.econovafx.modules.fixedassets.model.DepreciationRecord</list>
+                                <!-- Ebean Entities - Reporting -->
+                                <list>com.econovafx.modules.reporting.model.FinancialReport</list>
+                                <!-- FXML Controllers - Core -->
+                                <list>com.econovafx.modules.core.ui.controller.DashboardController</list>
+                                <list>com.econovafx.modules.core.ui.controller.MainViewController</list>
+                                <list>com.econovafx.modules.core.ui.controller.CompanySelectionController</list>
+                                <list>com.econovafx.modules.core.ui.controller.UnitSelectionController</list>
+                                <list>com.econovafx.modules.core.ui.controller.WarehouseConfigController</list>
+                                <list>com.econovafx.modules.core.ui.controller.ExchangeRatesController</list>
+                                <list>com.econovafx.modules.core.ui.controller.SystemSettingsController</list>
+                                <list>com.econovafx.modules.core.ui.controller.AuditLogsController</list>
+                                <list>com.econovafx.modules.core.ui.view.SplashController</list>
+                                <!-- FXML Controllers - Security -->
+                                <list>com.econovafx.modules.security.ui.controller.LoginController</list>
+                                <!-- FXML Controllers - Accounting -->
+                                <list>com.econovafx.modules.accounting.controller.AccountsController</list>
+                                <list>com.econovafx.modules.accounting.controller.AccountFormController</list>
+                                <list>com.econovafx.modules.accounting.controller.TransactionsController</list>
+                                <list>com.econovafx.modules.accounting.controller.TransactionEntryController</list>
+                                <list>com.econovafx.modules.accounting.controller.AccountingPeriodsController</list>
+                                <list>com.econovafx.modules.accounting.controller.AccountingClosuresController</list>
+                                <list>com.econovafx.modules.accounting.controller.ComprobantesController</list>
+                                <list>com.econovafx.modules.accounting.controller.ComprobanteFormController</list>
+                                <!-- FXML Controllers - Billing -->
+                                <list>com.econovafx.modules.billing.controller.ThirdPartiesController</list>
+                                <list>com.econovafx.modules.billing.controller.ThirdPartyFormController</list>
+                                <list>com.econovafx.modules.billing.controller.ThirdPartyTransactionsController</list>
+                                <!-- FXML Controllers - Inventory -->
+                                <list>com.econovafx.modules.inventory.controller.InventoryController</list>
+                                <list>com.econovafx.modules.inventory.controller.WarehouseConfigController</list>
+                                <list>com.econovafx.modules.inventory.ui.InventoryItemDialogController</list>
+                                <list>com.econovafx.modules.inventory.ui.InventoryMovementDialogController</list>
+                                <!-- FXML Controllers - Fixed Assets -->
+                                <list>com.econovafx.modules.fixedassets.controller.FixedAssetController</list>
+                                <!-- FXML Controllers - Cash -->
+                                <list>com.econovafx.modules.cash.controller.CashBankController</list>
+                                <list>com.econovafx.modules.cash.controller.CashModuleController</list>
+                                <!-- FXML Controllers - Reporting -->
+                                <list>com.econovafx.modules.reporting.controller.FinancialReportingController</list>
+                            </reflectionList>
+                            <appIdentifier>econovafx</appIdentifier>
                         </configuration>
                     </plugin>
                 </plugins>
