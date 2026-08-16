@@ -33,8 +33,8 @@ class AuthServiceTest {
         authService = new AuthService(passwordService, auditService);
         
         // Clean up any existing data before each test
-        DB.deleteAll(User.class, DB.find(User.class).findList());
-        DB.deleteAll(Company.class, DB.find(Company.class).findList());
+        DB.deleteAll(User.class, null);
+        DB.deleteAll(Company.class, null);
         TenantContext.clear();
         SecurityUtil.clearCurrentUser();
     }
@@ -42,8 +42,8 @@ class AuthServiceTest {
     @AfterEach
     void tearDown() {
         // Clean up after each test
-        DB.deleteAll(User.class, DB.find(User.class).findList());
-        DB.deleteAll(Company.class, DB.find(Company.class).findList());
+        DB.deleteAll(User.class, null);
+        DB.deleteAll(Company.class, null);
         TenantContext.clear();
         SecurityUtil.clearCurrentUser();
     }
@@ -51,52 +51,54 @@ class AuthServiceTest {
     @Test
     void testAuthenticateSuccess() {
         // Create and save a company
-        Company company = new Company("Test Company", "TEST", "123456789");
+        Company company = new Company("Test Company", "TEST1", "123456789");
         DB.save(company);
         
         // Create a user with hashed password
         User user = new User();
-        user.setEmail("test@example.com");
-        user.setUsername("testuser");
+        user.setEmail("test1@example.com");
+        user.setUsername("testuser1");
+        user.setFullName("Test User");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("ACTIVE");
         user.setCompany(company);
         DB.save(user);
 
         // Authenticate
-        User result = authService.authenticate("test@example.com", "password123");
+        User result = authService.authenticate("test1@example.com", "password123");
 
         assertNotNull(result);
-        assertEquals("test@example.com", result.getEmail());
+        assertEquals("test1@example.com", result.getEmail());
         assertNotNull(TenantContext.getCurrentTenant());
         
         // Verify audit log was called
-        verify(auditService).logSuccess(eq("test@example.com"), eq(AuditLog.OperationType.LOGIN), 
+        verify(auditService).logSuccess(eq("test1@example.com"), eq(AuditLog.OperationType.LOGIN), 
                                        eq("User"), eq(user.getId()), anyString());
     }
 
     @Test
     void testAuthenticateInvalidPassword() {
         // Create and save a company
-        Company company = new Company("Test Company", "TEST", "123456789");
+        Company company = new Company("Test Company", "TEST2", "123456789");
         DB.save(company);
         
         // Create a user with hashed password
         User user = new User();
-        user.setEmail("test@example.com");
-        user.setUsername("testuser");
+        user.setEmail("test2@example.com");
+        user.setUsername("testuser2");
+        user.setFullName("Test User");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("ACTIVE");
         user.setCompany(company);
         DB.save(user);
 
         // Try to authenticate with wrong password
-        User result = authService.authenticate("test@example.com", "wrongpassword");
+        User result = authService.authenticate("test2@example.com", "wrongpassword");
 
         assertNull(result);
         
         // Verify audit log was called for failure
-        verify(auditService).logFailure(eq("test@example.com"), eq(AuditLog.OperationType.LOGIN), 
+        verify(auditService).logFailure(eq("test2@example.com"), eq(AuditLog.OperationType.LOGIN), 
                                        eq("User"), eq(user.getId()), anyString(), anyString());
     }
 
@@ -114,23 +116,24 @@ class AuthServiceTest {
     @Test
     void testAuthenticateInactiveUser() {
         // Create and save a company
-        Company company = new Company("Test Company", "TEST", "123456789");
+        Company company = new Company("Test Company", "TEST3", "123456789");
         DB.save(company);
         
         // Create an inactive user
         User user = new User();
-        user.setEmail("test@example.com");
-        user.setUsername("testuser");
+        user.setEmail("test3@example.com");
+        user.setUsername("testuser3");
+        user.setFullName("Test User");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("INACTIVE");
         user.setCompany(company);
         DB.save(user);
 
-        User result = authService.authenticate("test@example.com", "password123");
+        User result = authService.authenticate("test3@example.com", "password123");
         assertNull(result);
         
         // Verify audit log was called for inactive user
-        verify(auditService).logFailure(eq("test@example.com"), eq(AuditLog.OperationType.LOGIN), 
+        verify(auditService).logFailure(eq("test3@example.com"), eq(AuditLog.OperationType.LOGIN), 
                                        eq("User"), eq(user.getId()), contains("inactive"), anyString());
     }
 
@@ -139,13 +142,14 @@ class AuthServiceTest {
         String email = "locktest@example.com";
         
         // Create and save a company
-        Company company = new Company("Test Company", "TEST", "123456789");
+        Company company = new Company("Test Company", "TEST4", "123456789");
         DB.save(company);
         
         // Create a user
         User user = new User();
         user.setEmail(email);
         user.setUsername("locktest");
+        user.setFullName("Test User");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("ACTIVE");
         user.setCompany(company);
@@ -171,13 +175,14 @@ class AuthServiceTest {
         String email = "reset@example.com";
         
         // Create and save a company
-        Company company = new Company("Test Company", "TEST", "123456789");
+        Company company = new Company("Test Company", "TEST5", "123456789");
         DB.save(company);
         
         // Create a user
         User user = new User();
         user.setEmail(email);
         user.setUsername("resetuser");
+        user.setFullName("Test User");
         user.setPassword(passwordService.hashPassword("password123"));
         user.setStatus("ACTIVE");
         user.setCompany(company);
