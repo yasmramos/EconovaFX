@@ -16,14 +16,14 @@ This document provides a detailed analysis of the implementation gaps between th
 | Category | Total Requirements | Implemented | Partially Implemented | Not Implemented | Compliance % |
 |----------|------------------|-------------|----------------------|-----------------|--------------|
 | General Requirements | 18 | 14 | 2 | 2 | 78% |
-| Accounting Module | 8 | 6 | 1 | 1 | 75% |
+| Accounting Module | 8 | 8 | 0 | 0 | 100% |
 | Cash & Bank Module | 4 | 3 | 0 | 1 | 75% |
 | Inventory Module | 9 | 2 | 1 | 6 | 22% |
 | Receivables & Payables | 4 | 0 | 0 | 4 | 0% |
 | Billing Module | 3 | 2 | 0 | 1 | 67% |
 | Fixed Assets Module | 10 | 3 | 0 | 7 | 30% |
 | Payroll Module | 6 | 0 | 0 | 6 | 0% |
-| **TOTAL** | **62** | **30** | **4** | **28** | **48%** |
+| **TOTAL** | **62** | **32** | **3** | **27** | **52%** |
 
 ---
 
@@ -231,12 +231,18 @@ This document provides a detailed analysis of the implementation gaps between th
    - [x] MC.7 - Prevent reopening closed periods
      - **Implementation:** `AccountingPeriod` CLOSED/BLOCKED states
 
-6. **Financial Statements** - RESOLVED MC.8
+6. **Financial Statements** - IMPLEMENTED MC.8
    - [x] Parameter configuration
-   - [x] Cuban standard models (Balance Sheet, Income Statement)
+   - [x] Cuban standard models (Balance Sheet, Income Statement, Cash Flow)
    - [x] Row/column concepts per standards
-   - [x] Report structures
+   - [x] Report structures with complete row definitions
      - **Implementation:** `FinancialStatementService`, `AccountingReportService`
+     - **Migration:** V4__cuban_financial_statement_rows.sql seeds 50 rows total:
+       - Balance General (BS-001): 23 rows (Activo Circulante/No Circulante, Pasivo, Patrimonio)
+       - Estado de Resultados (IS-001): 12 rows (Ingresos, Costos, Gastos, Resultado Neto)
+       - Estado de Flujos de Efectivo (CF-001): 15 rows (Operación, Inversión, Financiamiento)
+     - **Seeding:** `DatabaseSeeder.seedFinancialStatementRows()` ensures idempotent population
+     - **Validation:** `validateFinancialStatementsIssued()` enforces MC.6.b requirement
 
 #### ⚠️ PARTIALLY IMPLEMENTED
 

@@ -750,6 +750,25 @@ class TransactionServiceTest {
         public boolean isValidTransactionDate(java.time.LocalDate date) {
             return true;
         }
+
+        @Override
+        public void validatePeriodOpenForPosting(LocalDate date) {
+            // No-op: period is always valid/open for testing
+        }
+
+        @Override
+        public Optional<com.econovafx.modules.accounting.model.AccountingPeriod> getPeriodByDate(LocalDate date) {
+            // Return a mock open period for testing
+            var period = new com.econovafx.modules.accounting.model.AccountingPeriod(
+                "Test Period",
+                date.withDayOfMonth(1),
+                date.withDayOfMonth(1).plusMonths(1).minusDays(1),
+                com.econovafx.modules.accounting.model.AccountingPeriod.PeriodType.MONTHLY
+            );
+            period.setId(1L);
+            period.setStatus(com.econovafx.modules.accounting.model.AccountingPeriod.PeriodStatus.OPEN);
+            return Optional.of(period);
+        }
     }
 
     /**
