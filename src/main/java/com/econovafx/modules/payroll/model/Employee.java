@@ -30,10 +30,10 @@ public class Employee {
     @Column(name = "department")
     private String department;
 
-    @Column(name = "hire_date")
+    @Column(name = "hire_date", columnDefinition = "DATE")
     private LocalDate hireDate;
 
-    @Column(name = "termination_date")
+    @Column(name = "termination_date", columnDefinition = "DATE")
     private LocalDate terminationDate;
 
     @Column(name = "employment_status")

@@ -31,10 +31,10 @@ public class PayrollDetail {
     @Column(name = "worked_days")
     private Integer workedDays = 0;
 
-    @Column(name = "overtime_hours")
+    @Column(name = "overtime_hours", columnDefinition = "DOUBLE")
     private Double overtimeHours = 0.0;
 
-    @Column(name = "leave_days")
+    @Column(name = "leave_days", columnDefinition = "DOUBLE")
     private Double leaveDays = 0.0;
 
     @Column(name = "gross_salary", precision = 12, scale = 2)
@@ -76,7 +76,7 @@ public class PayrollDetail {
     @Column(name = "is_paid")
     private boolean paid = false;
 
-    @Column(name = "payment_date")
+    @Column(name = "payment_date", columnDefinition = "DATE")
     private java.time.LocalDate paymentDate;
 
     // Constructors
@@ -349,7 +349,7 @@ public class PayrollDetail {
         @Column(name = "amount", precision = 12, scale = 2)
         private BigDecimal amount = BigDecimal.ZERO;
 
-        @Column(name = "quantity")
+        @Column(name = "quantity", columnDefinition = "DOUBLE")
         private Double quantity;
 
         @Column(name = "rate", precision = 12, scale = 4)

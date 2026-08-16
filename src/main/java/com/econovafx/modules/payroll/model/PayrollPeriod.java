@@ -29,13 +29,13 @@ public class PayrollPeriod {
     @Enumerated(EnumType.STRING)
     private FrequencyType frequency = FrequencyType.MONTHLY;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date", nullable = false, columnDefinition = "DATE")
     private LocalDate startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date", nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
 
-    @Column(name = "payment_date", nullable = false)
+    @Column(name = "payment_date", nullable = false, columnDefinition = "DATE")
     private LocalDate paymentDate;
 
     @Column(name = "is_active")
@@ -44,13 +44,13 @@ public class PayrollPeriod {
     @Column(name = "is_closed")
     private boolean closed = false;
 
-    @Column(name = "year")
+    @Column(name = "\"year\"", columnDefinition = "INTEGER")
     private Integer year;
 
-    @Column(name = "month")
+    @Column(name = "\"month\"", columnDefinition = "INTEGER")
     private Integer month;
 
-    @Column(name = "week_number")
+    @Column(name = "\"week_number\"", columnDefinition = "INTEGER")
     private Integer weekNumber;
 
     // Getters and Setters
