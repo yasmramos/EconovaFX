@@ -1,6 +1,5 @@
 package com.econovafx.modules.core.model;
 
-import io.ebean.annotation.TenantId;
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
 import jakarta.persistence.*;
@@ -8,8 +7,9 @@ import jakarta.persistence.*;
 import java.time.Instant;
 
 /**
- * Base entity class with common fields including native Ebean multi-tenant support.
- * Uses @TenantId for native multi-tenancy support in Ebean 17+.
+ * Base entity class with common fields for multi-tenant architecture.
+ * Multi-tenancy is implemented using TenantMode.DB (separate database per tenant),
+ * not via a discriminator column. Each company has its own isolated database.
  * Includes audit fields for tracking user actions.
  */
 @MappedSuperclass
@@ -18,15 +18,6 @@ public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-
-    /**
-     * Tenant ID for data isolation using native Ebean support.
-     * All transactional entities must have this field.
-     * Ebean automatically filters by this value in all queries.
-     */
-    @TenantId
-    @Column(name = "tenant_id", nullable = false, updatable = false, columnDefinition = "BIGINT")
-    private Long tenantId;
 
     @Version
     protected Long version;
@@ -62,14 +53,6 @@ public abstract class BaseEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
     }
 
     public Instant getCreatedAt() {
