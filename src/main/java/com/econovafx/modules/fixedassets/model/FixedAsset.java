@@ -84,7 +84,7 @@ public class FixedAsset extends BaseEntity {
     @Column(name = "revaluation_reason", length = 255)
     private String revaluationReason; // Razón de la última revaluación
     
-    @Column(name = "last_revaluation_date")
+    @Column(name = "last_revaluation_date", columnDefinition = "DATE")
     private LocalDate lastRevaluationDate; // Fecha de la última revaluación
     
     @Column(name = "is_active")

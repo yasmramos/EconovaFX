@@ -76,7 +76,7 @@ public class PayrollDetail {
     @Column(name = "is_paid")
     private boolean paid = false;
 
-    @Column(name = "payment_date")
+    @Column(name = "payment_date", columnDefinition = "DATE")
     private java.time.LocalDate paymentDate;
 
     // Constructors

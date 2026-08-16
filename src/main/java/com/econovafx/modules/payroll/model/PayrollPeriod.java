@@ -29,13 +29,13 @@ public class PayrollPeriod {
     @Enumerated(EnumType.STRING)
     private FrequencyType frequency = FrequencyType.MONTHLY;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date", nullable = false, columnDefinition = "DATE")
     private LocalDate startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date", nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
 
-    @Column(name = "payment_date", nullable = false)
+    @Column(name = "payment_date", nullable = false, columnDefinition = "DATE")
     private LocalDate paymentDate;
 
     @Column(name = "is_active")

@@ -49,13 +49,13 @@ public class SupplierInvoice extends BaseEntity {
     /**
      * Invoice receipt date
      */
-    @Column(name = "invoice_date", nullable = false)
+    @Column(name = "invoice_date", nullable = false, columnDefinition = "DATE")
     private LocalDate invoiceDate;
 
     /**
      * Payment due date to supplier
      */
-    @Column(name = "due_date", nullable = false)
+    @Column(name = "due_date", nullable = false, columnDefinition = "DATE")
     private LocalDate dueDate;
 
     /**
@@ -118,7 +118,7 @@ public class SupplierInvoice extends BaseEntity {
     /**
      * Cancellation date (if applicable)
      */
-    @Column(name = "cancellation_date")
+    @Column(name = "cancellation_date", columnDefinition = "DATE")
     private LocalDate cancellationDate;
 
     /**
