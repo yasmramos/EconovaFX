@@ -35,13 +35,13 @@ public class PayrollBatch {
     @Enumerated(EnumType.STRING)
     private BatchStatus status = BatchStatus.DRAFT;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false, columnDefinition = "DATE")
     private LocalDate creationDate = LocalDate.now();
 
-    @Column(name = "processed_date")
+    @Column(name = "processed_date", columnDefinition = "DATE")
     private LocalDate processedDate;
 
-    @Column(name = "payment_date")
+    @Column(name = "payment_date", columnDefinition = "DATE")
     private LocalDate paymentDate;
 
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)

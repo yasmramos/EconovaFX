@@ -42,7 +42,7 @@ public class CustomerPayment extends BaseEntity {
     /**
      * Payment date
      */
-    @Column(name = "payment_date", nullable = false)
+    @Column(name = "payment_date", nullable = false, columnDefinition = "DATE")
     private LocalDate paymentDate;
 
     /**
