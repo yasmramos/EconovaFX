@@ -111,4 +111,17 @@ public class SupplierInvoiceRepository {
     public boolean existsById(Long id) {
         return findById(id).isPresent();
     }
+
+    /**
+     * Find all open supplier invoices in foreign currency (not in base currency CUP).
+     * Used for exchange rate revaluation at period end.
+     */
+    public List<SupplierInvoice> findOpenForeignCurrencyInvoices() {
+        return database.find(SupplierInvoice.class)
+            .where()
+            .ne("currency.code", "CUP")  // Only foreign currency invoices
+            .gt("pendingAmount", java.math.BigDecimal.ZERO)  // Still pending
+            .ne("status", InvoiceStatus.CANCELLED)  // Not cancelled
+            .findList();
+    }
 }
