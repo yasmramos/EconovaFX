@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Balance General</title>
+    <link rel="stylesheet" type="text/css" href="report.css"/>
+</head>
+<body>
+    <div class="header">
+        <h1>BALANCE GENERAL</h1>
+        <div class="report-info">
+            <p><strong>Empresa:</strong> ${COMPANY_NAME}</p>
+            <p><strong>Fecha de Corte:</strong> ${REPORT_DATE}</p>
+            <p><strong>Período:</strong> ${PERIOD_START} - ${PERIOD_END}</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-account-code">Código</th>
+                    <th class="col-account-name">Cuenta</th>
+                    <th class="col-debit">Débito</th>
+                    <th class="col-credit">Crédito</th>
+                    <th class="col-balance">Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${TABLE_ROWS}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="totals">
+        <p><strong>Total Activos:</strong> ${TOTAL_ASSETS}</p>
+        <p><strong>Total Pasivos:</strong> ${TOTAL_LIABILITIES}</p>
+        <p><strong>Total Patrimonio:</strong> ${TOTAL_EQUITY}</p>
+    </div>
+
+    <div class="footer">
+        <p>Generado el: ${GENERATION_DATE}</p>
+    </div>
+</body>
+</html>

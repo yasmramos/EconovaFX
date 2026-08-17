@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Comprobante Contable</title>
+    <link rel="stylesheet" type="text/css" href="report.css"/>
+</head>
+<body>
+    <div class="header">
+        <h1>COMPROBANTE CONTABLE</h1>
+        <div class="voucher-info">
+            <p><strong>Número:</strong> ${VOUCHER_NUMBER}</p>
+            <p><strong>Fecha:</strong> ${VOUCHER_DATE}</p>
+            <p><strong>Tipo:</strong> ${VOUCHER_TYPE}</p>
+            <p><strong>Estado:</strong> ${VOUCHER_STATUS}</p>
+        </div>
+    </div>
+
+    <div class="description">
+        <p><strong>Descripción:</strong> ${VOUCHER_DESCRIPTION}</p>
+    </div>
+
+    <!-- Third party info (optional) -->
+    ${THIRD_PARTY_SECTION}
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-account-code">Cuenta</th>
+                    <th class="col-account-name">Nombre</th>
+                    <th class="col-debit">Débito</th>
+                    <th class="col-credit">Crédito</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${TABLE_ROWS}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="totals">
+        <p><strong>Total Débito:</strong> ${TOTAL_DEBIT}</p>
+        <p><strong>Total Crédito:</strong> ${TOTAL_CREDIT}</p>
+    </div>
+
+    <div class="footer">
+        <p>Generado el: ${GENERATION_DATE}</p>
+    </div>
+</body>
+</html>

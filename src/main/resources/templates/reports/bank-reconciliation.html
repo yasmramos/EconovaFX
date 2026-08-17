@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Conciliación Bancaria</title>
+    <link rel="stylesheet" type="text/css" href="report.css"/>
+</head>
+<body>
+    <div class="header">
+        <h1>CONCILIACIÓN BANCARIA</h1>
+        <div class="reconciliation-info">
+            <p><strong>Número:</strong> ${RECONCILIATION_NUMBER}</p>
+            <p><strong>Cuenta Bancaria:</strong> ${BANK_ACCOUNT}</p>
+            <p><strong>Fecha de Conciliación:</strong> ${RECONCILIATION_DATE}</p>
+            <p><strong>Período:</strong> ${PERIOD_START} - ${PERIOD_END}</p>
+        </div>
+    </div>
+
+    <div class="summary">
+        <h2>Resumen</h2>
+        <p><strong>Saldo según Libros:</strong> ${BOOK_BALANCE}</p>
+        <p><strong>Saldo según Banco:</strong> ${BANK_BALANCE}</p>
+        <p><strong>Diferencia:</strong> ${DIFFERENCE}</p>
+    </div>
+
+    <div class="table-container">
+        <h2>Partidas Conciliadas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-date">Fecha</th>
+                    <th class="col-reference">Referencia</th>
+                    <th class="col-description">Descripción</th>
+                    <th class="col-amount">Monto</th>
+                    <th class="col-type">Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${TABLE_ROWS}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>Generado el: ${GENERATION_DATE}</p>
+    </div>
+</body>
+</html>
