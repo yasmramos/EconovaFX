@@ -27,36 +27,60 @@ The application follows a **Layered Architecture** with clear separation of conc
 └─────────────────────────────────────────┘
 ```
 
-## 🎯 Core Modules
+## 🎯 Modular Architecture
 
-### 1. **Accounting Core** (`com.econovafx.core.accounting`)
-- **Chart of Accounts**: Hierarchical account structure (Asset, Liability, Equity, Revenue, Expense)
-- **Journal Entries**: Double-entry bookkeeping with validation
-- **Period Control**: Monthly/Yearly period management with open/close controls
-- **Transaction Management**: Draft, Validated, Posted, Cancelled states
+The application uses a **modular package structure** organized by business domain:
 
-### 2. **User Management** (`com.econovafx.core.security`)
-- **Authentication**: Local authentication (LDAP/AD ready)
-- **Authorization**: Role-based access control (RBAC)
-- **Roles**: Administrator, Accountant, Auditor, Viewer
-- **Audit Trail**: Complete activity logging
+### Module Structure
 
-### 3. **Third Parties** (`com.econovafx.core.thirdparty`)
-- **Customer Management**: Client registry and tracking
-- **Supplier Management**: Vendor information
-- **Employee Records**: Staff accounting data
-- **Contact Information**: Fiscal and contact details
+Each module follows the pattern: `com.econovafx.modules.<module>.<layer>`
 
-### 4. **Dashboard & Reporting** (`com.econovafx.ui.dashboard`)
-- **KPIs**: Key accounting metrics
-- **Trial Balance**: Account balance reports
-- **Financial Statements**: Basic financial reports
-- **Export**: PDF, Excel, CSV formats
+| Module | Package | Purpose |
+|--------|---------|---------|
+| **Accounting Core** | `com.econovafx.modules.accounting.*` | Chart of accounts, journal entries, periods, transactions |
+| **Security** | `com.econovafx.modules.security.*` | User management, authentication, authorization |
+| **Core Services** | `com.econovafx.modules.core.*` | Company management, backup, configuration |
+| **Billing** | `com.econovafx.modules.billing.*` | Invoice management, billing documents |
+| **Payroll** | `com.econovafx.modules.payroll.*` | Employee payroll processing |
+| **Inventory** | `com.econovafx.modules.inventory.*` | Stock management, warehouses |
+| **Receivables** | `com.econovafx.modules.receivables.*` | Accounts receivable, customer payments |
+| **Payables** | `com.econovafx.modules.payables.*` | Accounts payable, supplier payments |
+| **Bank** | `com.econovafx.modules.bank.*` | Bank accounts, reconciliation |
+| **Cash** | `com.econovafx.modules.cash.*` | Cash management, petty cash |
+| **Assets** | `com.econovafx.modules.assets.*` | Current assets management |
+| **Fixed Assets** | `com.econovafx.modules.fixedassets.*` | Fixed assets, depreciation |
+| **Reporting** | `com.econovafx.modules.reporting.*` | Financial reports, consolidation |
 
-### 5. **Exchange Rates** (`com.econovafx.core.forex`)
-- **Rate Management**: Active exchange rates
-- **Historical Rates**: Rate history tracking
-- **Multi-currency**: Automatic conversion in transactions
+### Layer Structure Within Modules
+
+Each module contains:
+
+- **model** - Entity classes (JPA/Ebean entities)
+- **repository** - Data access layer (Ebean repositories)
+- **service** - Business logic layer
+- **validation** - Business rule validation
+- **ui.controller** - JavaFX controllers (where applicable)
+
+Example:
+```
+com.econovafx.modules.accounting/
+├── model/
+│   ├── Account.java
+│   ├── Transaction.java
+│   └── AccountingPeriod.java
+├── repository/
+│   ├── AccountRepository.java
+│   └── TransactionRepository.java
+├── service/
+│   ├── AccountService.java
+│   ├── TransactionService.java
+│   └── FinancialStatementService.java
+├── validation/
+│   └── AccountingValidator.java
+└── ui/
+    └── controller/
+        └── AccountingController.java
+```
 
 ## 🔧 Technical Stack
 
@@ -65,7 +89,12 @@ The application follows a **Layered Architecture** with clear separation of conc
 | **UI** | JavaFX 17 | Modern desktop interface |
 | **DI** | Avaje Inject 12.6 | Lightweight dependency injection |
 | **ORM** | Ebean 17.11.0 | High-performance object-relational mapping |
-| **Database** | H2 2.2.224 | Embedded database (dev/test) |
+| **Database (Dev/Test)** | H2 2.2.224 | Embedded database |
+| **Database (Production)** | PostgreSQL 42.7.3 | Production database |
+| **PDF Export** | Apache PDFBox 2.0.29 | PDF document generation |
+| **Excel Export** | Apache POI 5.2.5 | Excel spreadsheet export |
+| **Icons** | Ikonli 12.4.0 | Material Design icons |
+| **Security** | jBCrypt 0.4 | Password hashing |
 | **Logging** | Logback 1.4.14 | SLF4J logging framework |
 | **Testing** | JUnit 5 + AssertJ | Unit and integration testing |
 | **Build** | Maven 3.9+ | Dependency management and build |
@@ -76,28 +105,35 @@ The application follows a **Layered Architecture** with clear separation of conc
 src/
 ├── main/
 │   ├── java/com/econovafx/
-│   │   ├── Main.java                    # Application entry point
-│   │   ├── config/                      # Configuration classes
-│   │   ├── core/                        # Core business logic
-│   │   │   ├── accounting/              # Accounting modules
-│   │   │   ├── security/                # User & auth
-│   │   │   ├── thirdparty/              # Customers/Suppliers
-│   │   │   └── forex/                   # Exchange rates
-│   │   ├── repository/                  # Data access layer
-│   │   ├── service/                     # Business services
-│   │   ├── ui/                          # JavaFX UI components
-│   │   │   ├── views/                   # FXML views
-│   │   │   ├── controllers/             # FXML controllers
-│   │   │   ├── components/              # Reusable UI components
-│   │   │   └── dashboard/               # Dashboard views
-│   │   └── util/                        # Utilities and helpers
+│   │   ├── Main.java                        # Application entry point
+│   │   ├── module-info.java                 # Java module descriptor
+│   │   └── modules/                         # Modular architecture
+│   │       ├── accounting/                  # Accounting core module
+│   │       │   ├── model/                   # Entity classes
+│   │       │   ├── repository/              # Data access layer
+│   │       │   ├── service/                 # Business logic
+│   │       │   ├── validation/              # Business validators
+│   │       │   └── ui/
+│   │       │       └── controller/          # JavaFX controllers
+│   │       ├── security/                    # Security module
+│   │       ├── core/                        # Core services module
+│   │       ├── billing/                     # Billing module
+│   │       ├── payroll/                     # Payroll module
+│   │       ├── inventory/                   # Inventory module
+│   │       ├── receivables/                 # Accounts receivable
+│   │       ├── payables/                    # Accounts payable
+│   │       ├── bank/                        # Bank management
+│   │       ├── cash/                        # Cash management
+│   │       ├── assets/                      # Current assets
+│   │       ├── fixedassets/                 # Fixed assets
+│   │       └── reporting/                   # Financial reporting
 │   └── resources/
-│       ├── db/                          # Database scripts
-│       ├── fxml/                        # FXML view files
-│       ├── css/                         # Stylesheets
-│       └── logback.xml                  # Logging configuration
+│       ├── db/                              # Database scripts
+│       ├── fxml/                            # FXML view files
+│       ├── css/                             # Stylesheets
+│       └── logback.xml                      # Logging configuration
 └── test/
-    └── java/com/econovafx/              # Test classes
+    └── java/com/econovafx/                  # Test classes
 ```
 
 ## 🔄 Data Flow
