@@ -1,21 +1,20 @@
 package com.econovafx.modules.core.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for BCCExchangeRateClient with proper HTTP mocking.
- * Uses WireMock or similar to mock the BCC API endpoints.
+ * Unit tests for BCCExchangeRateClient.
+ * These tests exercise DTO behavior, client configuration and the retry
+ * mechanism. Network-dependent methods are pointed at a local address with no
+ * server listening, so they are expected to fail with a connection error after
+ * exhausting retries.
  */
 class BCCExchangeRateClientTest {
 
@@ -29,6 +28,15 @@ class BCCExchangeRateClientTest {
         System.setProperty("bcc.api.retry.max.attempts", "2");
         System.setProperty("bcc.api.retry.delay.ms", "100");
         client = new BCCExchangeRateClient();
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Restore global settings so other tests are not affected
+        System.clearProperty("bcc.api.base.url");
+        System.clearProperty("bcc.api.timeout.seconds");
+        System.clearProperty("bcc.api.retry.max.attempts");
+        System.clearProperty("bcc.api.retry.delay.ms");
     }
 
     @Test
@@ -82,15 +90,10 @@ class BCCExchangeRateClientTest {
     void testFetchRatesByDate_WithNullDate() {
         // Given: Client with default configuration
         // When: Calling fetchRatesByDate with null (should use current date)
-        // Then: Should not throw exception (actual HTTP call will fail without mock server)
-        assertDoesNotThrow(() -> {
-            try {
-                client.fetchRatesByDate(null);
-            } catch (RuntimeException e) {
-                // Expected: Connection failure without mock server
-                assertTrue(e.getMessage().contains("No se pudo conectar"));
-            }
-        });
+        // Then: The HTTP call fails without a mock server and surfaces a connection error
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> client.fetchRatesByDate(null));
+        assertTrue(ex.getMessage().contains("No se pudo conectar"));
     }
 
     @Test
@@ -100,40 +103,32 @@ class BCCExchangeRateClientTest {
         LocalDate end = LocalDate.of(2024, 1, 31);
         String currencyCode = "USD";
 
-        // When/Then: Should build query parameters correctly
-        // Note: This test verifies parameter building logic indirectly
-        assertDoesNotThrow(() -> {
-            try {
-                client.fetchHistoricalRates(start, end, currencyCode);
-            } catch (RuntimeException e) {
-                // Expected: Connection failure without mock server
-                assertTrue(e.getMessage().contains("No se pudo conectar"));
-            }
-        });
+        // When/Then: The HTTP call fails without a mock server and surfaces a connection error
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> client.fetchHistoricalRates(start, end, currencyCode));
+        assertTrue(ex.getMessage().contains("No se pudo conectar"));
     }
 
     @Test
     void testRetryMechanism_Configuration() {
-        // Given: Client with retry configuration
+        // Given: Client with retry configuration (3 attempts => 2 delays of 300ms)
         System.setProperty("bcc.api.retry.max.attempts", "3");
-        System.setProperty("bcc.api.retry.delay.ms", "500");
+        System.setProperty("bcc.api.retry.delay.ms", "300");
         BCCExchangeRateClient retryClient = new BCCExchangeRateClient();
 
         // Then: Client should be created with retry settings
         assertNotNull(retryClient);
-        
+
         // When: Making a call that will fail and trigger retries
-        // Then: Should attempt multiple times before failing
+        // Then: Should attempt multiple times before failing, waiting between attempts
         long startTime = System.currentTimeMillis();
-        assertDoesNotThrow(() -> {
-            try {
-                retryClient.fetchActiveRates();
-            } catch (RuntimeException e) {
-                // Verify that enough time passed for retries (at least 2 * 500ms delay)
-                long elapsed = System.currentTimeMillis() - startTime;
-                assertTrue(elapsed >= 1000, "Retry mechanism should have waited at least 1 second");
-            }
-        });
+        RuntimeException ex = assertThrows(RuntimeException.class, retryClient::fetchActiveRates);
+        long elapsed = System.currentTimeMillis() - startTime;
+
+        assertTrue(ex.getMessage().contains("No se pudo conectar"));
+        // Two 300ms delays are expected; allow slack for scheduling jitter
+        assertTrue(elapsed >= 500,
+                "Retry mechanism should have waited between attempts, elapsed=" + elapsed + "ms");
     }
 
     @Test

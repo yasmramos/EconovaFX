@@ -23,6 +23,8 @@
         <jacoco.version>0.8.13</jacoco.version>
         <testfx.version>4.0.17</testfx.version>
         <monocle.version>3.1.0</monocle.version>
+        <!-- Default so Surefire's @{argLine} resolves even when JaCoCo is skipped -->
+        <argLine></argLine>
     </properties>
 
     <dependencies>
@@ -269,7 +271,7 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
