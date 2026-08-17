@@ -111,4 +111,17 @@ public class CustomerInvoiceRepository {
     public boolean existsById(Long id) {
         return findById(id).isPresent();
     }
+
+    /**
+     * Find all open customer invoices in foreign currency (not in base currency CUP).
+     * Used for exchange rate revaluation at period end.
+     */
+    public List<CustomerInvoice> findOpenForeignCurrencyInvoices() {
+        return database.find(CustomerInvoice.class)
+            .where()
+            .ne("currency.code", "CUP")  // Only foreign currency invoices
+            .gt("pendingAmount", java.math.BigDecimal.ZERO)  // Still pending
+            .ne("status", InvoiceStatus.CANCELLED)  // Not cancelled
+            .findList();
+    }
 }

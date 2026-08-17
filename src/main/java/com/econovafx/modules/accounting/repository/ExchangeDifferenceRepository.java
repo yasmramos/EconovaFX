@@ -105,4 +105,26 @@ public class ExchangeDifferenceRepository {
                 .map(java.math.BigDecimal::abs)
                 .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
     }
+
+    /**
+     * Find exchange differences by document and type (realized or unrealized).
+     */
+    public List<ExchangeDifference> findByDocumentAndType(String documentType, Long documentId, ExchangeDifference.DifferenceType type) {
+        return database.find(ExchangeDifference.class)
+                .where()
+                .eq("documentType", documentType)
+                .eq("documentId", documentId)
+                .eq("differenceType", type)
+                .findList();
+    }
+
+    /**
+     * Find all unrealized exchange differences (pending reversal at period end).
+     */
+    public List<ExchangeDifference> findAllByUnrealizedTrue() {
+        return database.find(ExchangeDifference.class)
+                .where()
+                .eq("unrealized", true)
+                .findList();
+    }
 }

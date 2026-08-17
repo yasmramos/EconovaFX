@@ -3,6 +3,7 @@ package com.econovafx.modules.payables.model;
 import com.econovafx.modules.core.model.BaseEntity;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.core.model.Currency;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import jakarta.persistence.*;
@@ -101,6 +102,13 @@ public class SupplierPayment extends BaseEntity {
      */
     @Column(name = "is_advance_payment", nullable = false)
     private boolean advancePayment;
+
+    /**
+     * Currency of the payment (for foreign currency transactions)
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
 
     // Constructors
     public SupplierPayment() {
@@ -207,6 +215,18 @@ public class SupplierPayment extends BaseEntity {
 
     public boolean isAdvancePayment() {
         return advancePayment;
+    }
+
+    public void setAdvancePayment(boolean advancePayment) {
+        this.advancePayment = advancePayment;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     /**
