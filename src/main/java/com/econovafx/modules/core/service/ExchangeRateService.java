@@ -130,6 +130,12 @@ public class ExchangeRateService {
 
             for (BCCExchangeRateFetcher.BCCRate bccRate : bccRates) {
                 try {
+                    // Skip rates with null or invalid values
+                    if (bccRate.rate() == null || bccRate.rate().compareTo(BigDecimal.ZERO) <= 0) {
+                        log.warn("Tasa inválida omitida para {}: {}", bccRate.currencyCode(), bccRate.rate());
+                        continue;
+                    }
+                    
                     // Buscar o crear la moneda
                     Currency foreignCurrency = currencyRepository.findByCode(bccRate.currencyCode())
                             .orElseGet(() -> {
