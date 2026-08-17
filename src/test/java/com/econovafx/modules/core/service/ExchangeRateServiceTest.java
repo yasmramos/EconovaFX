@@ -80,6 +80,71 @@ class ExchangeRateServiceTest {
     }
 
     @Test
+    void testFetchAndSaveRatesFromBCC_MultipleCurrencies() {
+        // Given: BCC fetcher returns multiple currency rates
+        List<BCCExchangeRateFetcher.BCCRate> mockRates = List.of(
+            new BCCExchangeRateFetcher.BCCRate("USD", "Dólar Estadounidense", java.math.BigDecimal.valueOf(120.0), "$", LocalDate.now(), "BCC"),
+            new BCCExchangeRateFetcher.BCCRate("EUR", "Euro", java.math.BigDecimal.valueOf(130.5), "€", LocalDate.now(), "BCC"),
+            new BCCExchangeRateFetcher.BCCRate("GBP", "Libra Esterlina", java.math.BigDecimal.valueOf(150.25), "£", LocalDate.now(), "BCC")
+        );
+        when(mockBccFetcher.fetchCurrentRates()).thenReturn(mockRates);
+        
+        // Mock currency repository
+        when(mockCurrencyRepository.findByCode(any())).thenReturn(Optional.empty());
+        when(mockCurrencyRepository.save(any())).thenAnswer(invocation -> {
+            com.econovafx.modules.core.model.Currency c = invocation.getArgument(0);
+            c.setId(1L);
+            return c;
+        });
+        
+        // Mock exchange rate repository save
+        when(mockRepository.save(any())).thenAnswer(invocation -> {
+            com.econovafx.modules.core.model.ExchangeRate er = invocation.getArgument(0);
+            er.setId(1L);
+            return er;
+        });
+
+        // When: fetchAndSaveRatesFromBCC is called
+        List<com.econovafx.modules.core.model.ExchangeRate> result = service.fetchAndSaveRatesFromBCC();
+
+        // Then: Should save all 3 rates
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        verify(mockRepository, times(3)).save(any());
+    }
+
+    @Test
+    void testFetchAndSaveRatesFromBCC_InvalidRateSkipped() {
+        // Given: BCC fetcher returns rates with one invalid (null rate)
+        List<BCCExchangeRateFetcher.BCCRate> mockRates = List.of(
+            new BCCExchangeRateFetcher.BCCRate("USD", "Dólar Estadounidense", java.math.BigDecimal.valueOf(120.0), "$", LocalDate.now(), "BCC"),
+            new BCCExchangeRateFetcher.BCCRate("EUR", "Euro", null, "€", LocalDate.now(), "BCC") // Invalid rate
+        );
+        when(mockBccFetcher.fetchCurrentRates()).thenReturn(mockRates);
+        
+        when(mockCurrencyRepository.findByCode(any())).thenReturn(Optional.empty());
+        when(mockCurrencyRepository.save(any())).thenAnswer(invocation -> {
+            com.econovafx.modules.core.model.Currency c = invocation.getArgument(0);
+            c.setId(1L);
+            return c;
+        });
+        
+        when(mockRepository.save(any())).thenAnswer(invocation -> {
+            com.econovafx.modules.core.model.ExchangeRate er = invocation.getArgument(0);
+            er.setId(1L);
+            return er;
+        });
+
+        // When: fetchAndSaveRatesFromBCC is called
+        List<com.econovafx.modules.core.model.ExchangeRate> result = service.fetchAndSaveRatesFromBCC();
+
+        // Then: Should only save the valid rate (USD), skipping EUR with null rate
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        verify(mockRepository, times(1)).save(any());
+    }
+
+    @Test
     void testFetchAndSaveRatesFromBCC_EmptyResponse() {
         // Given: BCC fetcher returns empty list
         when(mockBccFetcher.fetchCurrentRates()).thenReturn(List.of());
