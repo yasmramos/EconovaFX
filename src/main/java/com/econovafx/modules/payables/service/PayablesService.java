@@ -8,9 +8,11 @@ import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.accounting.service.ExchangeDifferenceService;
 import com.econovafx.modules.core.config.UserContext;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
 import com.econovafx.modules.core.exception.ValidationException;
+import com.econovafx.modules.core.model.Currency;
 import com.econovafx.modules.core.security.RequiresTenant;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -49,6 +51,7 @@ public class PayablesService {
     private final ThirdPartyService thirdPartyService;
     private final TransactionService transactionService;
     private final UserContext userContext;
+    private final ExchangeDifferenceService exchangeDifferenceService;
 
     @Inject
     public PayablesService(
@@ -56,12 +59,14 @@ public class PayablesService {
             SupplierPaymentRepository paymentRepository,
             ThirdPartyService thirdPartyService,
             TransactionService transactionService,
-            UserContext userContext) {
+            UserContext userContext,
+            ExchangeDifferenceService exchangeDifferenceService) {
         this.invoiceRepository = invoiceRepository;
         this.paymentRepository = paymentRepository;
         this.thirdPartyService = thirdPartyService;
         this.transactionService = transactionService;
         this.userContext = userContext;
+        this.exchangeDifferenceService = exchangeDifferenceService;
     }
 
     // ==================== Invoice Operations ====================
@@ -435,6 +440,51 @@ public class PayablesService {
         paymentRepository.update(payment);
 
         logger.info("Accounting entry created for payment: {}", payment.getPaymentNumber());
+        return payment;
+    }
+
+    /**
+     * Allocate payment to an invoice and calculate exchange difference if applicable
+     */
+    public SupplierPayment allocatePaymentToInvoiceWithExchangeDifference(
+            Long paymentId, Long invoiceId, BigDecimal amount, String username) {
+        
+        final SupplierPayment payment = paymentRepository.findById(paymentId)
+            .orElseThrow(() -> new EntityNotFoundException(SupplierPayment.class, paymentId));
+        
+        final SupplierInvoice invoice = invoiceRepository.findById(invoiceId)
+            .orElseThrow(() -> new EntityNotFoundException(SupplierInvoice.class, invoiceId));
+
+        payment.allocateToInvoice(invoice, amount);
+        paymentRepository.update(payment);
+
+        // Calculate exchange difference if currencies differ
+        Currency invoiceCurrency = invoice.getCurrency();
+        Currency baseCurrency = null; // Assuming CUP is base, would need to get from config
+        
+        // Only calculate if invoice has a foreign currency
+        if (invoiceCurrency != null && !"CUP".equals(invoiceCurrency.getCode())) {
+            try {
+                exchangeDifferenceService.calculateAndRecordDifference(
+                    "PURCHASE_INVOICE",
+                    invoice.getId(),
+                    invoice.getInvoiceNumber(),
+                    invoice.getSupplier(),
+                    invoiceCurrency,
+                    amount,
+                    invoice.getInvoiceDate(),
+                    payment.getPaymentDate(),
+                    username
+                );
+                logger.info("Exchange difference calculated for invoice: {}", invoice.getInvoiceNumber());
+            } catch (Exception e) {
+                logger.error("Error calculating exchange difference: {}", e.getMessage());
+                // Don't fail the allocation, just log the error
+            }
+        }
+
+        logger.info("Payment {} allocated {} to invoice {}", 
+            payment.getPaymentNumber(), amount, invoice.getInvoiceNumber());
         return payment;
     }
 

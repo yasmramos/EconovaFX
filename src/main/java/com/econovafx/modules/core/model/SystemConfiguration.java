@@ -112,10 +112,16 @@ public class SystemConfiguration extends BaseEntity {
     // ==================== CONFIGURACIÓN DE DIFERENCIAS CAMBIARIAS ====================
     
     @Column(length = 20)
-    private String exchangeGainAccountCode = "499-001"; // Ingresos por diferencia cambiaria
+    private String exchangeGainAccountCode = "499-001"; // Ingresos por diferencia cambiaria realizada
     
     @Column(length = 20)
-    private String exchangeLossAccountCode = "599-001"; // Gastos por diferencia cambiaria
+    private String exchangeLossAccountCode = "599-001"; // Gastos por diferencia cambiaria realizada
+    
+    @Column(length = 20)
+    private String unrealizedExchangeGainAccountCode = "499-002"; // Ingresos por diferencia cambiaria no realizada
+    
+    @Column(length = 20)
+    private String unrealizedExchangeLossAccountCode = "599-002"; // Gastos por diferencia cambiaria no realizada
     
     @Column(length = 20)
     private String exchangeReceivableAccountCode = "106-001"; // Cuentas por cobrar clientes (ventas)
@@ -459,6 +465,22 @@ public class SystemConfiguration extends BaseEntity {
     
     public void setExchangePayableAccountCode(String exchangePayableAccountCode) {
         this.exchangePayableAccountCode = exchangePayableAccountCode;
+    }
+    
+    public String getUnrealizedExchangeGainAccountCode() {
+        return unrealizedExchangeGainAccountCode;
+    }
+    
+    public void setUnrealizedExchangeGainAccountCode(String unrealizedExchangeGainAccountCode) {
+        this.unrealizedExchangeGainAccountCode = unrealizedExchangeGainAccountCode;
+    }
+    
+    public String getUnrealizedExchangeLossAccountCode() {
+        return unrealizedExchangeLossAccountCode;
+    }
+    
+    public void setUnrealizedExchangeLossAccountCode(String unrealizedExchangeLossAccountCode) {
+        this.unrealizedExchangeLossAccountCode = unrealizedExchangeLossAccountCode;
     }
     
     // ==================== GETTERS Y SETTERS - NÓMINA ====================
