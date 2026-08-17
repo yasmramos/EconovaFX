@@ -209,16 +209,22 @@ Errores: 0
 
 ## 📚 Documentación
 
-La documentación detallada se encuentra en el directorio [`docs/`](docs/):
+La documentación completa está indexada en [`docs/README.md`](docs/README.md):
 
+### Documentación Principal
+- [Índice de Documentación](docs/README.md) - Vista general de toda la documentación
 - [Guía de Usuario](docs/USER_GUIDE.md) - Manual para usuarios finales
-- [Arquitectura](docs/ARCHITECTURE.md) - Diseño técnico y patrones
+- [Arquitectura](docs/ARCHITECTURE.md) - Diseño técnico y estructura modular
+- [Reportes Financieros](docs/FINANCIAL_REPORTING.md) - Consolidación multi-empresa y filtrado por fechas
 - [Especificación Fase 1](docs/PHASE-1-SPECIFICATION.md) - Especificación funcional
 - [Análisis GAP Resolución 340/2004](docs/RESOLUTION-340-2004-GAP-ANALYSIS.md) - Análisis de cumplimiento
-- [Análisis Detallado Resolución 340/2004](docs/RESOLUTION_340_2004_DETAILED_ANALYSIS.md) - Normativa contable cubana
+- [Análisis Detallado Resolución 340/2004](docs/RESOLUTION_340_2004_DETAILED_ANALYSIS.md) - Evidencia de implementación
 - [Roadmap Resolución 340/2004](docs/ROADMAP-RESOLUCION-340-2004-CUBA.md) - Hoja de ruta de implementación
 - [Docker](docs/DOCKER.md) - Guía de despliegue con Docker
-- [Changelog](CHANGELOG.md) - Historial de cambios
+
+### Documentación del Proyecto
+- [Changelog](CHANGELOG.md) - Historial de cambios por versión
+- [Commit Guidelines](COMMIT_GUIDELINES.md) - Convenciones para mensajes de commit
 
 ---
 
