@@ -61,6 +61,9 @@ module econonovafx {
     requires org.apache.pdfbox;
     requires org.apache.fontbox;
     requires commons.logging;
+    requires openhtmltopdf.core;
+    requires openhtmltopdf.pdfbox;
+    requires openhtmltopdf.slf4j;
     requires org.apache.poi.ooxml;
     requires org.apache.poi.poi;
     requires org.apache.commons.codec;
