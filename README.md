@@ -4,8 +4,9 @@
 [![JavaFX](https://img.shields.io/badge/JavaFX-17-blue.svg?logo=javafx)](https://openjfx.io/)
 [![Ebean ORM](https://img.shields.io/badge/Ebean-17.11.0-green.svg)](https://ebean.io/)
 [![H2 Database](https://img.shields.io/badge/H2-2.2.224-red.svg)](https://h2database.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-42.7.3-blue.svg?logo=postgresql)](https://www.postgresql.org/)
 [![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg?logo=apache-maven)](https://maven.apache.org/)
-[![Tests](https://img.shields.io/badge/tests-268%20passing-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-385%20passing-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/yasmramos/econovafx)
 
@@ -71,6 +72,13 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 - ✅ Histórico de tipos de cambio
 - ✅ Conversión automática en transacciones multicurrency
 
+### Arquitectura Multi-Tenant y Cumplimiento Normativo
+- ✅ Arquitectura modular por paquetes (`com.econovafx.modules.*`)
+- ✅ Diseño preparado para multi-tenant (empresas múltiples)
+- ✅ Cumplimiento de la Resolución 340/2004 (normativa contable cubana)
+- ✅ Exportación a formatos oficiales (PDF, Excel)
+- ✅ Auditoría completa de todas las operaciones
+
 ---
 
 ## 🚀 Tecnologías Utilizadas
@@ -81,11 +89,16 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 | **JavaFX** | 17 | Interfaz gráfica de usuario moderna |
 | **Ebean ORM** | 17.11.0 | Mapeo objeto-relacional de alto rendimiento |
 | **H2 Database** | 2.2.224 | Base de datos embebida para desarrollo/testing |
+| **PostgreSQL** | 42.7.3 | Base de datos de producción |
 | **Maven** | 3.9+ | Gestión de dependencias y build |
 | **Logback** | 1.4.14 | Framework de logging SLF4J |
 | **Avaje Inject** | 12.6 | Inyección de dependencias ligera |
 | **JUnit 5** | 5.11.0 | Testing framework |
 | **AssertJ** | 3.25.x | Assertions fluents para tests |
+| **Apache PDFBox** | 2.0.29 | Exportación a PDF |
+| **Apache POI** | 5.2.5 | Exportación a Excel |
+| **Ikonli** | 12.4.0 | Iconos JavaFX (Material Design) |
+| **jBCrypt** | 0.4 | Hashing de contraseñas |
 
 ---
 
@@ -144,22 +157,26 @@ Al iniciar por primera vez:
 
 | Módulo | Estado | Descripción |
 |--------|--------|-------------|
-| **Contabilidad** | ✅ Completado | Plan de cuentas, transacciones, períodos |
-| **Usuarios** | ✅ Completado | Gestión de usuarios y roles |
-| **Terceros** | ✅ Completado | Clientes, proveedores, empleados |
-| **Inventario** | ✅ Completado | Almacenes e items |
-| **Dashboard** | ✅ Completado | Panel principal con KPIs |
-| **Tipos de Cambio** | ✅ Completado | Gestión de tasas de cambio |
-| **Reportes** | 🔄 En desarrollo | Balances, estados financieros |
+| **Contabilidad (Accounting)** | ✅ Completado | Plan de cuentas, transacciones, períodos contables |
+| **Activos (Assets)** | ✅ Completado | Gestión de activos corrientes |
+| **Banco (Bank)** | ✅ Completado | Cuentas bancarias y conciliación bancaria |
+| **Facturación (Billing)** | ✅ Completado | Emisión y gestión de facturas |
+| **Caja (Cash)** | ✅ Completado | Gestión de efectivo y arqueo de caja |
+| **Core** | ✅ Completado | Configuración, empresa, utilidades |
+| **Activos Fijos (Fixed Assets)** | ✅ Completado | Depreciación y gestión de activos fijos |
+| **Inventario (Inventory)** | ✅ Completado | Almacenes, items y control de stock |
+| **Cuentas por Pagar (Payables)** | ✅ Completado | Gestión de obligaciones a proveedores |
+| **Nómina (Payroll)** | ✅ Completado | Gestión de salarios y empleados |
+| **Cuentas por Cobrar (Receivables)** | ✅ Completado | Gestión de créditos a clientes |
+| **Reportes (Reporting)** | ✅ Completado | Balances, estados financieros y consolidación |
+| **Seguridad (Security)** | ✅ Completado | Usuarios, roles y permisos |
 | **Presupuestos** | ⏳ Pendiente | Control presupuestario |
-| **Activos Fijos** | ⏳ Pendiente | Depreciación y gestión |
-| **Nómina** | ⏳ Pendiente | Gestión de salarios |
 
 ---
 
 ## 🧪 Testing
 
-El proyecto cuenta con **268 tests automatizados** que cubren:
+El proyecto cuenta con **385 tests automatizados** que cubren:
 
 - ✅ Tests unitarios de servicios y validadores
 - ✅ Tests de integración con base de datos H2
@@ -182,8 +199,8 @@ mvn test jacoco:report
 
 ### Estado Actual
 ```
-Tests ejecutados: 268
-Pasados: 268 (100%)
+Tests ejecutados: 385
+Pasados: 385 (100%)
 Fallos: 0
 Errores: 0
 ```
@@ -196,8 +213,11 @@ La documentación detallada se encuentra en el directorio [`docs/`](docs/):
 
 - [Guía de Usuario](docs/USER_GUIDE.md) - Manual para usuarios finales
 - [Arquitectura](docs/ARCHITECTURE.md) - Diseño técnico y patrones
-- [API Reference](docs/API.md) - Documentación de servicios
-- [Normativa 340/2004](docs/NORMATIVA_340_2004.md) - Cumplimiento legal
+- [Especificación Fase 1](docs/PHASE-1-SPECIFICATION.md) - Especificación funcional
+- [Análisis GAP Resolución 340/2004](docs/RESOLUTION-340-2004-GAP-ANALYSIS.md) - Análisis de cumplimiento
+- [Análisis Detallado Resolución 340/2004](docs/RESOLUTION_340_2004_DETAILED_ANALYSIS.md) - Normativa contable cubana
+- [Roadmap Resolución 340/2004](docs/ROADMAP-RESOLUCION-340-2004-CUBA.md) - Hoja de ruta de implementación
+- [Docker](docs/DOCKER.md) - Guía de despliegue con Docker
 - [Changelog](CHANGELOG.md) - Historial de cambios
 
 ---
@@ -255,12 +275,14 @@ mvn versions:display-dependency-updates
 
 ### Agregar Nueva Entidad
 
-1. Crear clase en `domain/` extendiendo `BaseEntity`
+1. Crear clase modelo en `src/main/java/com/econovafx/modules/<módulo>/model/` extendiendo `BaseEntity`
 2. Anotar con `@Entity`, `@Table(name = "tabla")`
 3. Definir campos con anotaciones JPA/Ebean
-4. Crear repositorio en `repository/`
-5. Crear servicio en `service/`
-6. Agregar tests en `test/`
+4. Crear repositorio en `src/main/java/com/econovafx/modules/<módulo>/repository/`
+5. Crear servicio en `src/main/java/com/econovafx/modules/<módulo>/service/`
+6. Crear validador en `src/main/java/com/econovafx/modules/<módulo>/validation/` (si aplica)
+7. Crear controlador UI en `src/main/java/com/econovafx/modules/<módulo>/ui/controller/` (si aplica)
+8. Agregar tests en `src/test/java/com/econovafx/modules/<módulo>/`
 
 ---
 
