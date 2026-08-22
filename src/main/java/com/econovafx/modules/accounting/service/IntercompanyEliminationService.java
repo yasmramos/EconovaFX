@@ -3,7 +3,10 @@ package com.econovafx.modules.accounting.service;
 import com.econovafx.modules.accounting.model.IntercompanyElimination;
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.model.TransactionEntry;
+import com.econovafx.modules.accounting.model.TransactionStatus;
+import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
+import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.core.model.Company;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -40,12 +43,15 @@ public class IntercompanyEliminationService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionService transactionService;
+    private final AccountRepository accountRepository;
 
     @Inject
     public IntercompanyEliminationService(TransactionRepository transactionRepository,
-                                          TransactionService transactionService) {
+                                          TransactionService transactionService,
+                                          AccountRepository accountRepository) {
         this.transactionRepository = transactionRepository;
         this.transactionService = transactionService;
+        this.accountRepository = accountRepository;
     }
 
     /**
@@ -139,6 +145,59 @@ public class IntercompanyEliminationService {
         BigDecimal totalAmount = transaction.getTotalDebit() != null ? 
                                   transaction.getTotalDebit() : BigDecimal.ZERO;
         
+        // Extract account codes from transaction entries
+        String accountCode = null;
+        String counterAccountCode = null;
+        
+        List<TransactionEntry> entries = transaction.getEntries();
+        if (entries == null || entries.isEmpty()) {
+            logger.warn("Transaction {} has no entries - cannot create elimination", transaction.getId());
+            return null;
+        }
+        
+        // Find the first debit entry (account) and first credit entry (counter-account)
+        TransactionEntry debitEntry = null;
+        TransactionEntry creditEntry = null;
+        
+        for (TransactionEntry entry : entries) {
+            if (entry.getDebitAmount() != null && entry.getDebitAmount().compareTo(BigDecimal.ZERO) > 0) {
+                if (debitEntry == null) {
+                    debitEntry = entry;
+                }
+            }
+            if (entry.getCreditAmount() != null && entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+                if (creditEntry == null) {
+                    creditEntry = entry;
+                }
+            }
+        }
+        
+        // Extract account codes
+        if (debitEntry != null && debitEntry.getAccount() != null) {
+            accountCode = debitEntry.getAccount().getCode();
+        } else if (entries.get(0).getAccount() != null) {
+            // Fallback: use first entry's account
+            accountCode = entries.get(0).getAccount().getCode();
+        }
+        
+        if (creditEntry != null && creditEntry.getAccount() != null) {
+            counterAccountCode = creditEntry.getAccount().getCode();
+        } else if (entries.size() > 1 && entries.get(1).getAccount() != null) {
+            // Fallback: use second entry's account
+            counterAccountCode = entries.get(1).getAccount().getCode();
+        } else if (entries.get(0).getAccount() != null) {
+            // Fallback: use first entry's account if only one entry
+            counterAccountCode = entries.get(0).getAccount().getCode();
+        }
+        
+        // Use default values if extraction failed
+        if (accountCode == null) {
+            accountCode = "PENDING_ACCOUNT_CODE";
+        }
+        if (counterAccountCode == null) {
+            counterAccountCode = "PENDING_COUNTER_ACCOUNT";
+        }
+        
         IntercompanyElimination elimination = new IntercompanyElimination(
                 type,
                 "Eliminación intercompañía: " + (transaction.getDescription() != null ? 
@@ -146,15 +205,15 @@ public class IntercompanyEliminationService {
                                                   transaction.getNumber()),
                 sourceCompanyId,
                 targetCompanyId,
-                // TODO: Extract account codes from transaction entries
-                "PENDING_ACCOUNT_CODE",
-                "PENDING_COUNTER_ACCOUNT",
+                accountCode,
+                counterAccountCode,
                 totalAmount,
                 transaction.getDate()
         );
         
         elimination.setOriginalTransactionId(transaction.getId());
-        elimination.setCurrencyCode("CUP"); // Default currency, should be extracted from transaction
+        // Note: Transaction model does not have currency field; using CUP as functional currency per Cuban GAAP
+        elimination.setCurrencyCode("CUP");
         
         return elimination;
     }
@@ -166,17 +225,47 @@ public class IntercompanyEliminationService {
      * @return EliminationType, or null if no elimination needed
      */
     private IntercompanyElimination.EliminationType determineEliminationType(Transaction transaction) {
-        // TODO: Implement logic to determine elimination type based on:
-        // - Account codes involved (intercompany receivable/payable accounts)
-        // - Transaction type (sale, loan, dividend, etc.)
-        // - Third party relationships
+        // Analyze account codes from transaction entries to determine elimination type
+        List<TransactionEntry> entries = transaction.getEntries();
+        if (entries == null || entries.isEmpty()) {
+            return null;
+        }
         
-        // Placeholder: Assume all transactions between companies need elimination
-        // In practice, this should analyze account codes and transaction details
+        // Check account codes to determine the type of elimination
+        for (TransactionEntry entry : entries) {
+            if (entry.getAccount() == null) {
+                continue;
+            }
+            String accountCode = entry.getAccount().getCode();
+            
+            // Revenue accounts (4.1.x) → REVENUE_EXPENSE elimination
+            if (accountCode != null && accountCode.matches("4\\.1\\..*")) {
+                return IntercompanyElimination.EliminationType.REVENUE_EXPENSE;
+            }
+            
+            // Expense accounts (5.1.x) → REVENUE_EXPENSE elimination
+            if (accountCode != null && accountCode.matches("5\\.1\\..*")) {
+                return IntercompanyElimination.EliminationType.REVENUE_EXPENSE;
+            }
+            
+            // Intercompany receivable/payable accounts (1.1.3.x or 2.1.3.x) → RECEIVABLE_PAYABLE elimination
+            if (accountCode != null && (accountCode.matches("1\\.1\\.3\\..*") || accountCode.matches("2\\.1\\.3\\..*"))) {
+                return IntercompanyElimination.EliminationType.RECEIVABLE_PAYABLE;
+            }
+            
+            // Inventory accounts (1.3.x) may indicate unrealized profit elimination
+            if (accountCode != null && accountCode.matches("1\\.3\\..*")) {
+                // Could be unrealized profit, but need more context
+                // Default to RECEIVABLE_PAYABLE for now
+            }
+        }
         
-        if (transaction.getType() != null && 
-            (transaction.getType().contains("SALE") || transaction.getType().contains("INVOICE"))) {
-            return IntercompanyElimination.EliminationType.REVENUE_EXPENSE;
+        // Fallback: use transaction type as secondary indicator
+        if (transaction.getType() != null) {
+            String typeUpper = transaction.getType().toUpperCase();
+            if (typeUpper.contains("SALE") || typeUpper.contains("INVOICE") || typeUpper.contains("REVENUE")) {
+                return IntercompanyElimination.EliminationType.REVENUE_EXPENSE;
+            }
         }
         
         // Default to receivable/payable elimination
@@ -363,16 +452,16 @@ public class IntercompanyEliminationService {
             BigDecimal amount = elimination.getAmount();
             
             // Identify revenue accounts (typically 4.1.x or containing INTERCOMPANY_REVENUE)
-            if (accountCode.contains("INTERCOMPANY_REVENUE") || accountCode.matches("4\\\\.1\\\\..*")) {
+            if (accountCode.contains("INTERCOMPANY_REVENUE") || accountCode.matches("4\\.1\\..*")) {
                 revenueEliminations.merge(accountCode, amount, BigDecimal::add);
-            } else if (counterAccountCode.contains("INTERCOMPANY_REVENUE") || counterAccountCode.matches("4\\\\.1\\\\..*")) {
+            } else if (counterAccountCode.contains("INTERCOMPANY_REVENUE") || counterAccountCode.matches("4\\.1\\..*")) {
                 revenueEliminations.merge(counterAccountCode, amount, BigDecimal::add);
             }
             
             // Identify expense accounts (typically 5.1.x or containing INTERCOMPANY_EXPENSE)
-            if (accountCode.contains("INTERCOMPANY_EXPENSE") || accountCode.matches("5\\\\.1\\\\..*")) {
+            if (accountCode.contains("INTERCOMPANY_EXPENSE") || accountCode.matches("5\\.1\\..*")) {
                 expenseEliminations.merge(accountCode, amount, BigDecimal::add);
-            } else if (counterAccountCode.contains("INTERCOMPANY_EXPENSE") || counterAccountCode.matches("5\\\\.1\\\\..*")) {
+            } else if (counterAccountCode.contains("INTERCOMPANY_EXPENSE") || counterAccountCode.matches("5\\.1\\..*")) {
                 expenseEliminations.merge(counterAccountCode, amount, BigDecimal::add);
             }
         }
@@ -428,19 +517,53 @@ public class IntercompanyEliminationService {
             List<com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow> consolidatedRows,
             List<IntercompanyElimination> eliminations) {
         
-        // TODO: Implement actual elimination logic
-        // This is the most complex elimination type, requiring:
-        // - Tracking inventory cost basis across companies
-        // - Calculating profit margins on intercompany sales
-        // - Determining what percentage remains in ending inventory
+        if (eliminations == null || eliminations.isEmpty()) {
+            return consolidatedRows;
+        }
         
-        logger.debug("Unrealized profit elimination: {} eliminations identified", eliminations.size());
-        // Placeholder: In production, this would:
-        // 1. Calculate unrealized profit = Intercompany profit margin × Remaining inventory %
-        // 2. Reduce inventory value on consolidated balance sheet
-        // 3. Reduce cost of goods sold / increase inventory on consolidated income statement
+        logger.info("Applying {} unrealized profit eliminations", eliminations.size());
         
-        return consolidatedRows;
+        // Create a mutable copy of rows for modification
+        List<com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow> adjustedRows = new ArrayList<>();
+        for (com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow row : consolidatedRows) {
+            adjustedRows.add(createMutableCopy(row));
+        }
+        
+        // Calculate total unrealized profit to eliminate
+        BigDecimal totalUnrealizedProfit = eliminations.stream()
+                .map(IntercompanyElimination::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        
+        if (totalUnrealizedProfit.compareTo(BigDecimal.ZERO) <= 0) {
+            return adjustedRows;
+        }
+        
+        // Apply elimination to inventory and COGS rows
+        // Note: This is a simplified implementation using available data
+        // Full implementation would require tracking inventory cost basis and remaining %
+        for (int i = 0; i < adjustedRows.size(); i++) {
+            com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow row = adjustedRows.get(i);
+            String label = row.getLabel().toUpperCase();
+            
+            // Reduce inventory value on balance sheet
+            if (label.contains("INVENTORY") || label.contains("INVENTARIO") || 
+                label.contains("STOCK") || label.contains("MERCHANDISE")) {
+                BigDecimal newValue = row.getConsolidatedValue().subtract(totalUnrealizedProfit);
+                adjustedRows.set(i, createRowWithNewValue(row, newValue));
+                logger.debug("Reduced inventory by {} for unrealized profit: {}", totalUnrealizedProfit, label);
+            }
+            
+            // Adjust COGS on income statement (increase COGS to reduce profit)
+            if (label.contains("COST OF GOODS SOLD") || label.contains("COSTO DE VENTA") ||
+                label.contains("COGS") || label.contains("COST OF SALES")) {
+                BigDecimal newValue = row.getConsolidatedValue().add(totalUnrealizedProfit);
+                adjustedRows.set(i, createRowWithNewValue(row, newValue));
+                logger.debug("Increased COGS by {} for unrealized profit elimination: {}", totalUnrealizedProfit, label);
+            }
+        }
+        
+        logger.info("Unrealized profit eliminations applied successfully");
+        return adjustedRows;
     }
 
     /**
@@ -451,21 +574,104 @@ public class IntercompanyEliminationService {
      * @param eliminations List of eliminations to record
      * @param consolidationDate Date of the consolidation
      * @return List of transaction IDs for the elimination entries
-     * 
-     * TODO: Implement when Transaction creation service is available
      */
     public List<Long> generateEliminationJournalEntries(List<IntercompanyElimination> eliminations,
                                                          LocalDate consolidationDate) {
         logger.info("Generating elimination journal entries for {} eliminations", eliminations.size());
         
-        // TODO: Implement journal entry generation
-        // This would:
-        // 1. Create a special "Consolidation Adjustments" transaction type
-        // 2. Generate debit/credit entries for each elimination
-        // 3. Link elimination entries to original transactions for audit trail
-        // 4. Store in a separate consolidation adjustment ledger
+        if (eliminations == null || eliminations.isEmpty()) {
+            return new ArrayList<>();
+        }
         
-        return new ArrayList<>(); // Placeholder
+        List<Long> transactionIds = new ArrayList<>();
+        
+        // Group eliminations by original transaction for efficient processing
+        Map<Long, List<IntercompanyElimination>> byOriginalTransaction = eliminations.stream()
+                .filter(e -> e.getOriginalTransactionId() != null)
+                .collect(Collectors.groupingBy(IntercompanyElimination::getOriginalTransactionId));
+        
+        // Create consolidation adjustment transactions
+        int entryCount = 0;
+        for (Map.Entry<Long, List<IntercompanyElimination>> entry : byOriginalTransaction.entrySet()) {
+            Long originalTxnId = entry.getKey();
+            List<IntercompanyElimination> txnEliminations = entry.getValue();
+            
+            // Create a consolidation adjustment transaction
+            Transaction adjustmentTxn = new Transaction();
+            adjustmentTxn.setDate(consolidationDate);
+            adjustmentTxn.setType("CONSOLIDATION_ADJUSTMENT");
+            adjustmentTxn.setDescription("Consolidation elimination entries - batch " + (++entryCount));
+            adjustmentTxn.setReference("CONS-ADJ-" + consolidationDate + "-" + entryCount);
+            adjustmentTxn.setStatus(TransactionStatus.DRAFT);
+            
+            List<TransactionService.TransactionEntryData> adjustmentEntries = new ArrayList<>();
+            
+            // For each elimination, create offsetting debit/credit entries
+            for (IntercompanyElimination elimination : txnEliminations) {
+                String accountCode = elimination.getAccountCode();
+                String counterAccountCode = elimination.getCounterAccountCode();
+                BigDecimal amount = elimination.getAmount();
+                
+                if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+                    continue;
+                }
+                
+                // Find accounts by code
+                Account debitAccount = accountRepository.findByCode(accountCode).orElse(null);
+                Account creditAccount = accountRepository.findByCode(counterAccountCode).orElse(null);
+                
+                if (debitAccount == null || creditAccount == null) {
+                    logger.warn("Could not find accounts for elimination: {} / {}", accountCode, counterAccountCode);
+                    continue;
+                }
+                
+                // Determine which account to debit and which to credit based on elimination type
+                // For revenue/expense eliminations: debit revenue, credit expense
+                // For receivable/payable: debit payable, credit receivable
+                IntercompanyElimination.EliminationType type = elimination.getType();
+                
+                if (type == IntercompanyElimination.EliminationType.REVENUE_EXPENSE) {
+                    // Debit revenue account (reduce revenue), credit expense account (reduce expense)
+                    adjustmentEntries.add(new TransactionService.TransactionEntryData(
+                            debitAccount.getId(), amount, BigDecimal.ZERO, 
+                            "Elimination debit - " + elimination.getDescription()));
+                    adjustmentEntries.add(new TransactionService.TransactionEntryData(
+                            creditAccount.getId(), BigDecimal.ZERO, amount,
+                            "Elimination credit - " + elimination.getDescription()));
+                } else if (type == IntercompanyElimination.EliminationType.RECEIVABLE_PAYABLE) {
+                    // Debit payable (reduce liability), credit receivable (reduce asset)
+                    adjustmentEntries.add(new TransactionService.TransactionEntryData(
+                            debitAccount.getId(), amount, BigDecimal.ZERO,
+                            "Elimination of intercompany payable - " + elimination.getDescription()));
+                    adjustmentEntries.add(new TransactionService.TransactionEntryData(
+                            creditAccount.getId(), BigDecimal.ZERO, amount,
+                            "Elimination of intercompany receivable - " + elimination.getDescription()));
+                } else {
+                    // Default: use account codes as provided
+                    adjustmentEntries.add(new TransactionService.TransactionEntryData(
+                            debitAccount.getId(), amount, BigDecimal.ZERO,
+                            "Elimination debit - " + elimination.getDescription()));
+                    adjustmentEntries.add(new TransactionService.TransactionEntryData(
+                            creditAccount.getId(), BigDecimal.ZERO, amount,
+                            "Elimination credit - " + elimination.getDescription()));
+                }
+            }
+            
+            // Only create transaction if we have valid entries
+            if (!adjustmentEntries.isEmpty()) {
+                try {
+                    Transaction savedTxn = transactionService.createTransaction(adjustmentTxn, adjustmentEntries, "system");
+                    transactionIds.add(savedTxn.getId());
+                    logger.debug("Created consolidation adjustment transaction: {}", savedTxn.getNumber());
+                } catch (Exception e) {
+                    logger.error("Failed to create elimination journal entry for original transaction {}", 
+                                 originalTxnId, e);
+                }
+            }
+        }
+        
+        logger.info("Generated {} elimination journal entries", transactionIds.size());
+        return transactionIds;
     }
 
     /**
