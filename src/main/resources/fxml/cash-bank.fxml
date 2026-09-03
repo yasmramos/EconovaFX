@@ -20,7 +20,7 @@
         <Button fx:id="btnNewMovement" graphicTextGap="8" onAction="#handleNewMovement" 
                 styleClass="btn, btn-primary">
             <text>New Movement</text>
-            <graphic><FontIcon iconLiteral="mdi2a-plus" iconSize="18"/></graphic>
+            <graphic><FontIcon iconLiteral="mdi2p-plus" iconSize="18"/></graphic>
         </Button>
         <Button fx:id="btnReconciliation" graphicTextGap="8" onAction="#handleReconciliation" 
                 styleClass="btn, btn-secondary" layoutX="200" layoutY="10">
@@ -46,7 +46,7 @@
                     </Button>
                     <Button graphicTextGap="8" onAction="#handleAddBank" styleClass="btn, btn-primary">
                         <text>Add Bank</text>
-                        <graphic><FontIcon iconLiteral="mdi2a-plus" iconSize="16"/></graphic>
+                        <graphic><FontIcon iconLiteral="mdi2p-plus" iconSize="16"/></graphic>
                     </Button>
                 </HBox>
                 
@@ -78,7 +78,7 @@
                     </Button>
                     <Button graphicTextGap="8" onAction="#handleAddCashBox" styleClass="btn, btn-primary">
                         <text>Add Cash Box</text>
-                        <graphic><FontIcon iconLiteral="mdi2a-plus" iconSize="16"/></graphic>
+                        <graphic><FontIcon iconLiteral="mdi2p-plus" iconSize="16"/></graphic>
                     </Button>
                 </HBox>
                 
