@@ -59,8 +59,13 @@ public class UnitSelectionController {
     private Runnable onCancel;
     private BusinessUnit selectedUnit;
 
+    @Inject
+    public void setBusinessUnitService(BusinessUnitService businessUnitService) {
+        this.businessUnitService = businessUnitService;
+    }
+
     public UnitSelectionController() {
-        this.businessUnitService = new BusinessUnitService();
+        // Default constructor - BusinessUnitService will be injected via setter
     }
 
     @FXML
