@@ -81,8 +81,8 @@ public class DatabaseConfig {
         builder.name("master")
                 .dataSource(pool)
                 .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
-                .ddlGenerate(false)
-                .ddlRun(false)
+                .ddlGenerate(AppConfig.EBEAN_DDL_GENERATE)
+                .ddlRun(AppConfig.EBEAN_DDL_RUN)
                 .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
                 .defaultDatabase(true);
 
@@ -90,8 +90,8 @@ public class DatabaseConfig {
         masterDatabase = masterDb;
         logger.info("Master database initialized successfully with platform: {}", AppConfig.DB_TYPE);
         
-        // Run migrations for master database if enabled
-        if (AppConfig.EBEAN_MIGRATION_RUN) {
+        // Run migrations for master database if enabled (disabled when using DDL Generation)
+        if (AppConfig.EBEAN_MIGRATION_RUN && !AppConfig.EBEAN_DDL_GENERATE) {
             runMasterMigrations(pool);
         }
     }
@@ -164,8 +164,8 @@ public class DatabaseConfig {
                     .tenantDataSourceProvider(dataSourceProvider)
                     .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
                     .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
-                    .ddlGenerate(false)
-                    .ddlRun(false);
+                    .ddlGenerate(AppConfig.EBEAN_DDL_GENERATE)
+                    .ddlRun(AppConfig.EBEAN_DDL_RUN);
 
             tenantDatabase = builder.build();
 
@@ -255,8 +255,8 @@ public class DatabaseConfig {
                 DataSource dataSource = DataSourceFactory.create(dbName, dsConfig);
                 logger.info("DataSource created successfully for: {} with driver: {}", company.getCode(), driver);
 
-                // Run migrations for this tenant database if enabled
-                if (AppConfig.EBEAN_MIGRATION_RUN) {
+                // Run migrations for this tenant database if enabled (disabled when using DDL Generation)
+                if (AppConfig.EBEAN_MIGRATION_RUN && !AppConfig.EBEAN_DDL_GENERATE) {
                     runTenantMigrations(dataSource, company.getCode());
                 }
 

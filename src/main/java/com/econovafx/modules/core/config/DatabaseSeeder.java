@@ -32,12 +32,17 @@ public class DatabaseSeeder {
     private final FinancialStatementRowRepository financialStatementRowRepository;
 
     public DatabaseSeeder() {
-        this.userRepository = new UserRepository(io.ebean.DB.getDefault());
-        this.companyRepository = new CompanyRepository(io.ebean.DB.getDefault());
-        this.currencyRepository = new CurrencyRepository(io.ebean.DB.getDefault());
+        this(io.ebean.DB.getDefault());
+    }
+    
+    @jakarta.inject.Inject
+    public DatabaseSeeder(io.ebean.Database database) {
+        this.userRepository = new UserRepository(database);
+        this.companyRepository = new CompanyRepository(database);
+        this.currencyRepository = new CurrencyRepository(database);
         this.passwordService = new PasswordService();
-        this.financialStatementModelRepository = new FinancialStatementModelRepository(io.ebean.DB.getDefault());
-        this.financialStatementRowRepository = new FinancialStatementRowRepository(io.ebean.DB.getDefault());
+        this.financialStatementModelRepository = new FinancialStatementModelRepository(database);
+        this.financialStatementRowRepository = new FinancialStatementRowRepository(database);
     }
 
     /**
@@ -46,10 +51,22 @@ public class DatabaseSeeder {
     public void seed() {
         logger.info("Checking if database seeding is required...");
         
-        seedCurrencies();
+        // First, seed default company in master database
         seedDefaultCompany();
-        seedAdminUser();
-        seedFinancialStatementRows();
+        
+        // Switch to tenant context for the DEMO company before seeding tenant-specific data
+        Company demoCompany = companyRepository.findByCode("DEMO").orElse(null);
+        if (demoCompany != null) {
+            DatabaseConfig.switchToTenant(demoCompany);
+            logger.info("Switched to tenant: {} for seeding tenant-specific data", demoCompany.getCode());
+            
+            // Now seed currencies, admin user, and financial statement rows in the tenant database
+            seedCurrencies();
+            seedAdminUser();
+            seedFinancialStatementRows();
+        } else {
+            logger.warn("Demo company not found, skipping tenant-specific seeding");
+        }
         
         logger.info("Database seeding completed successfully");
     }
