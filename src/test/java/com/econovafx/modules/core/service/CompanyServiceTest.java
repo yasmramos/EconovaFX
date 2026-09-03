@@ -23,15 +23,8 @@ class CompanyServiceTest {
     @BeforeEach
     void setUp() {
         companyRepository = new StubCompanyRepository();
-        companyService = new CompanyService();
-        // Use reflection to set the private field for testing
-        try {
-            var field = CompanyService.class.getDeclaredField("companyRepository");
-            field.setAccessible(true);
-            field.set(companyService, companyRepository);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to inject stub repository", e);
-        }
+        // Use constructor-based injection for test instance
+        companyService = new TestableCompanyService(companyRepository);
     }
 
     @Test
@@ -279,6 +272,86 @@ class CompanyServiceTest {
 
         public long count() {
             return companies.size();
+        }
+    }
+
+    // Test-specific subclass that allows constructor injection with stub repository
+    private static class TestableCompanyService extends CompanyService {
+        private final StubCompanyRepository stubRepository;
+
+        public TestableCompanyService(StubCompanyRepository stubRepository) {
+            this.stubRepository = stubRepository;
+        }
+
+        @Override
+        public List<Company> findAllActive() {
+            return stubRepository.findAllActive();
+        }
+
+        @Override
+        public List<Company> findAll() {
+            return stubRepository.findAll();
+        }
+
+        @Override
+        public Optional<Company> findById(Long id) {
+            return stubRepository.findById(id);
+        }
+
+        @Override
+        public Optional<Company> findByCode(String code) {
+            return stubRepository.findByCode(code);
+        }
+
+        @Override
+        public Company save(Company company) {
+            // Replicate the logic from CompanyService.save() for generating database URL
+            if (company.getDatabaseUrl() == null || company.getDatabaseUrl().isEmpty()) {
+                String dbUrl = "jdbc:h2:./db/tenants/econova_" + company.getCode().toLowerCase();
+                company.setDatabaseUrl(dbUrl);
+            }
+            return stubRepository.save(company);
+        }
+
+        @Override
+        public void delete(Long companyId) {
+            stubRepository.deleteById(companyId);
+            DatabaseConfig.closeTenantDataSource(companyId);
+        }
+
+        @Override
+        public void updateStatus(Long companyId, String status) {
+            stubRepository.updateStatus(companyId, status);
+        }
+
+        @Override
+        public void selectTenant(Company company) {
+            if (company == null) {
+                TenantContext.clear();
+                return;
+            }
+            if (!"ACTIVE".equals(company.getStatus())) {
+                throw new IllegalStateException("La empresa '" + company.getName() + "' no está activa");
+            }
+            TenantContext.setCurrentTenant(company);
+        }
+
+        @Override
+        public Optional<Company> getCurrentTenant() {
+            return Optional.ofNullable(TenantContext.getCurrentTenant());
+        }
+
+        @Override
+        public void initializeDefaultCompany() {
+            List<Company> companies = stubRepository.findAll();
+            if (companies.isEmpty()) {
+                Company defaultCompany = new Company("Empresa Demo", "DEMO", "000000000");
+                defaultCompany.setAddress("Dirección Demo, Ciudad");
+                defaultCompany.setPhone("+53 7 1234567");
+                defaultCompany.setEmail("demo@econovafx.com");
+                defaultCompany.setDatabaseUrl("jdbc:h2:./db/tenants/econova_demo");
+                stubRepository.save(defaultCompany);
+            }
         }
     }
 }
