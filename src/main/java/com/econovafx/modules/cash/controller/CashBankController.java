@@ -28,6 +28,7 @@ import java.util.Optional;
  * Controller for Cash & Bank Management module.
  * Handles bank accounts, cash boxes, movements, and bank reconciliation.
  */
+@io.avaje.inject.Component
 public class CashBankController {
 
     private static final Logger logger = LoggerFactory.getLogger(CashBankController.class);

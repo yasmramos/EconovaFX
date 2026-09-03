@@ -144,6 +144,7 @@ public class App extends Application {
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/company-selection.fxml"));
             loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> context.getBeanScope().get(cls));
             VBox root = loader.load();
             CompanySelectionController controller = loader.getController();
             
@@ -210,6 +211,7 @@ public class App extends Application {
             
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/unit-selection.fxml"));
             loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> context.getBeanScope().get(cls));
             VBox root = loader.load();
             UnitSelectionController controller = loader.getController();
             
