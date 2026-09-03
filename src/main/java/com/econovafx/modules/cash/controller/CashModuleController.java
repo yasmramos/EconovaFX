@@ -170,12 +170,19 @@ public class CashModuleController {
     @FXML
     private Label lblReconciliationStatus;
 
+    @Inject
     private BankAccountRepository bankAccountRepository;
+    @Inject
     private CashBoxRepository cashBoxRepository;
+    @Inject
     private CashMovementRepository cashMovementRepository;
+    @Inject
     private BankReconciliationRepository bankReconciliationRepository;
+    @Inject
     private CashMovementService cashMovementService;
+    @Inject
     private BankReconciliationService bankReconciliationService;
+    @Inject
     private ExportService exportService;
     private Stage stage;
     
@@ -216,15 +223,11 @@ public class CashModuleController {
     @FXML
     public void initialize() {
         // Repositories and services are injected via constructor when using DI
-        // For FXML-loaded controllers, initialize manually if not using DI container
+        // For FXML-loaded controllers, Avaje Inject will inject the dependencies automatically
         if (cashMovementService == null) {
-            this.bankAccountRepository = new BankAccountRepository();
-            this.cashBoxRepository = new CashBoxRepository();
-            this.cashMovementRepository = new CashMovementRepository();
-            this.bankReconciliationRepository = new BankReconciliationRepository();
-            this.cashMovementService = new CashMovementService();
-            this.bankReconciliationService = new BankReconciliationService(bankReconciliationRepository);
-            this.exportService = new ExportService();
+            // Fallback for manual instantiation - should not happen with proper DI setup
+            logger.warn("Dependencies not injected. Ensure controller is loaded through DI container.");
+            return;
         }
 
         setupBankAccountsTable();
