@@ -3,6 +3,7 @@ package com.econovafx.modules.core.ui.controller;
 import com.econovafx.modules.core.model.BusinessUnit;
 import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.core.service.BusinessUnitService;
+import io.avaje.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
