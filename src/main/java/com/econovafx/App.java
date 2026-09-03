@@ -115,6 +115,7 @@ public class App extends Application {
             loginStage.setTitle("EconoNova FX - Login");
             loginStage.setResizable(false);
             loginStage.initStyle(StageStyle.UNDECORATED);
+            loginStage.show();
             loginStage.centerOnScreen();
             
             // Set callback for successful login
@@ -124,7 +125,6 @@ public class App extends Application {
             if (splashStage != null) {
                 splashStage.close();
             }
-            loginStage.show();
             
             logger.info("Login screen displayed successfully");
             
