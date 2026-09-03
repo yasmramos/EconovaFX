@@ -93,20 +93,21 @@
     -fx-cursor: default;
 }
 
-.demo-info {
-    -fx-padding: 15 0 0 0;
-    -fx-alignment: center;
+.close-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-padding: 5 15;
 }
 
-.demo-label {
-    -fx-text-fill: #666;
-    -fx-font-size: 11px;
-    -fx-font-style: italic;
+.close-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
 }
 
-.demo-credentials {
-    -fx-text-fill: #888;
-    -fx-font-size: 10px;
+.close-button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
 }
 
 .login-footer {
