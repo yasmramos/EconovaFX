@@ -1,6 +1,7 @@
 package com.econovafx.modules.core.repository;
 
 import com.econovafx.modules.core.model.Company;
+import io.ebean.Database;
 import io.ebean.annotation.Transactional;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -9,30 +10,20 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repositorio para la gestión de empresas (tenants) en el sistema multi-empresa.
+ * Repository for company (tenant) management in the multi-company system.
  */
 @Singleton
 public class CompanyRepository {
 
-    private io.ebean.Database database;
-
-    // Constructor para testing - no inicializa Ebean
-    protected CompanyRepository(boolean initialize) {
-        this.database = null;
-    }
-
-    public CompanyRepository(io.ebean.Database database) {
-        this.database = database != null ? database : io.ebean.DB.getDefault();
-    }
+    private final Database database;
 
     @Inject
-    public CompanyRepository() {
-        // Usamos la base de datos maestra (default) para gestionar las empresas
-        this.database = io.ebean.DB.byName("master");
+    public CompanyRepository(Database database) {
+        this.database = database;
     }
 
     /**
-     * Obtiene todas las empresas activas.
+     * Get all active companies.
      */
     public List<Company> findAllActive() {
         return database.find(Company.class)
@@ -42,7 +33,7 @@ public class CompanyRepository {
     }
 
     /**
-     * Obtiene todas las empresas (incluyendo inactivas).
+     * Get all companies (including inactive).
      */
     public List<Company> findAll() {
         return database.find(Company.class)
@@ -51,14 +42,14 @@ public class CompanyRepository {
     }
 
     /**
-     * Busca una empresa por su ID.
+     * Find a company by its ID.
      */
     public Optional<Company> findById(Long id) {
         return Optional.ofNullable(database.find(Company.class, id));
     }
 
     /**
-     * Busca una empresa por su código.
+     * Find a company by its code.
      */
     public Optional<Company> findByCode(String code) {
         return database.find(Company.class)
@@ -67,7 +58,7 @@ public class CompanyRepository {
     }
 
     /**
-     * Busca una empresa por su NIF.
+     * Find a company by its NIF (tax ID).
      */
     public Optional<Company> findByNif(String nif) {
         return database.find(Company.class)
@@ -76,7 +67,7 @@ public class CompanyRepository {
     }
 
     /**
-     * Guarda una nueva empresa o actualiza una existente.
+     * Save a new company or update an existing one.
      */
     @Transactional
     public Company save(Company company) {
@@ -89,7 +80,7 @@ public class CompanyRepository {
     }
 
     /**
-     * Elimina una empresa por su ID.
+     * Delete a company by its ID.
      */
     @Transactional
     public void deleteById(Long id) {
@@ -97,7 +88,7 @@ public class CompanyRepository {
     }
 
     /**
-     * Cambia el estado de una empresa.
+     * Update the status of a company.
      */
     @Transactional
     public void updateStatus(Long companyId, String status) {

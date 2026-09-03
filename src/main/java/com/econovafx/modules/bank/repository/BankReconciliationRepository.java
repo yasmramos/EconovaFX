@@ -2,8 +2,8 @@ package com.econovafx.modules.bank.repository;
 
 import com.econovafx.modules.bank.model.BankReconciliation;
 import io.avaje.inject.Component;
-import io.ebean.DB;
 import io.ebean.Database;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -17,8 +17,9 @@ public class BankReconciliationRepository {
     
     private final Database database;
 
-    public BankReconciliationRepository() {
-        this.database = DB.getDefault();
+    @Inject
+    public BankReconciliationRepository(Database database) {
+        this.database = database;
     }
 
     public BankReconciliation save(BankReconciliation reconciliation) {
