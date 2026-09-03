@@ -118,7 +118,7 @@ public class LoginController {
 
         // Validate input
         if (username.isEmpty()) {
-            showError("Please enter your email address");
+            showError("Please enter your username or email address");
             usernameField.requestFocus();
             return;
         }
@@ -150,7 +150,7 @@ public class LoginController {
                             onLoginSuccess.run();
                         }
                     } else {
-                        showError("Invalid email or password. Please try again.");
+                        showError("Invalid username or email or password. Please try again.");
                         setLoading(false);
                         passwordField.clear();
                         passwordField.requestFocus();
