@@ -28,6 +28,7 @@ import java.util.Optional;
  * Controller for Cash & Bank Management module.
  * Handles bank accounts, cash boxes, movements, and bank reconciliation.
  */
+@io.avaje.inject.Component
 public class CashBankController {
 
     private static final Logger logger = LoggerFactory.getLogger(CashBankController.class);
@@ -158,15 +159,15 @@ public class CashBankController {
     private Label lblReconciliationStatus;
 
     @Inject
-    private CashMovementService cashMovementService;
+    CashMovementService cashMovementService;
     @Inject
-    private BankAccountRepository bankAccountRepository;
+    BankAccountRepository bankAccountRepository;
     @Inject
-    private CashBoxRepository cashBoxRepository;
+    CashBoxRepository cashBoxRepository;
     @Inject
-    private CashMovementRepository cashMovementRepository;
+    CashMovementRepository cashMovementRepository;
     @Inject
-    private BankReconciliationRepository bankReconciliationRepository;
+    BankReconciliationRepository bankReconciliationRepository;
     private Stage stage;
 
     /**

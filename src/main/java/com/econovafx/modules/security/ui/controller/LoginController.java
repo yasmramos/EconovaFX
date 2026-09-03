@@ -3,6 +3,7 @@ package com.econovafx.modules.security.ui.controller;
 import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.core.security.AuthService;
 import com.econovafx.modules.core.security.SecurityUtil;
+import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Controller for the login dialog with modern web-style design
  */
+@Component
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
