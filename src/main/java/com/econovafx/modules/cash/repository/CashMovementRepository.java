@@ -37,10 +37,7 @@ public class CashMovementRepository {
 
     public List<CashMovement> findByAccountId(Long accountId) {
         return database.find(CashMovement.class)
-                .where().or(
-                        io.ebean.Expression.eq("sourceAccountId", accountId),
-                        io.ebean.Expression.eq("destinationAccountId", accountId)
-                )
+                .where().or().eq("sourceAccountId", accountId).eq("destinationAccountId", accountId).endOr()
                 .findList();
     }
 
