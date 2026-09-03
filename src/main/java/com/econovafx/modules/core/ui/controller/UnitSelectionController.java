@@ -15,6 +15,7 @@ import java.util.List;
  * Controller for the business unit selection dialog.
  * Allows users to select which business unit they want to work with (if company has multiple units).
  */
+@io.avaje.inject.Component
 public class UnitSelectionController {
     private static final Logger logger = LoggerFactory.getLogger(UnitSelectionController.class);
 

@@ -22,12 +22,13 @@ import java.util.Optional;
 /**
  * Controller for Exchange Rates management UI
  */
+@io.avaje.inject.Component
 public class ExchangeRatesController {
 
     private static final Logger logger = LoggerFactory.getLogger(ExchangeRatesController.class);
 
     @Inject
-    private ExchangeRateService exchangeRateService;
+    ExchangeRateService exchangeRateService;
 
     @FXML
     private VBox rootView;
