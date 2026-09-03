@@ -24,7 +24,14 @@ class CompanyServiceTest {
     void setUp() {
         companyRepository = new StubCompanyRepository();
         companyService = new CompanyService();
-        companyService.companyRepository = companyRepository;
+        // Use reflection to set the private field for testing
+        try {
+            var field = CompanyService.class.getDeclaredField("companyRepository");
+            field.setAccessible(true);
+            field.set(companyService, companyRepository);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to inject stub repository", e);
+        }
     }
 
     @Test
@@ -209,7 +216,7 @@ class CompanyServiceTest {
     }
 
     // Stub implementation of CompanyRepository
-    private static class StubCompanyRepository extends CompanyRepository {
+    private static class StubCompanyRepository {
         boolean saveCalled = false;
         boolean deleteByIdCalled = false;
         boolean updateStatusCalled = false;
@@ -221,36 +228,30 @@ class CompanyServiceTest {
         private Long nextId = 1L;
 
         public StubCompanyRepository() {
-            super(false);
         }
 
-        @Override
         public List<Company> findAllActive() {
             return companies.stream()
                 .filter(c -> "ACTIVE".equals(c.getStatus()))
                 .toList();
         }
 
-        @Override
         public List<Company> findAll() {
             return new java.util.ArrayList<>(companies);
         }
 
-        @Override
         public Optional<Company> findById(Long id) {
             return companies.stream()
                 .filter(c -> c.getId() != null && c.getId().equals(id))
                 .findFirst();
         }
 
-        @Override
         public Optional<Company> findByCode(String code) {
             return companies.stream()
                 .filter(c -> code.equals(c.getCode()))
                 .findFirst();
         }
 
-        @Override
         public Company save(Company company) {
             if (company.getId() == null) {
                 company.setId(nextId++);
@@ -261,13 +262,11 @@ class CompanyServiceTest {
             return company;
         }
 
-        @Override
         public void deleteById(Long id) {
             companies.removeIf(c -> c.getId() != null && c.getId().equals(id));
             deleteByIdCalled = true;
         }
 
-        @Override
         public void updateStatus(Long companyId, String status) {
             updatedCompanyId = companyId;
             updatedStatus = status;

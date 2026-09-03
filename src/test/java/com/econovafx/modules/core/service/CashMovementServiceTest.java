@@ -2,13 +2,21 @@ package com.econovafx.modules.core.service;
 
 import com.econovafx.modules.cash.model.CashMovement;
 import com.econovafx.modules.cash.service.CashMovementService;
+import com.econovafx.modules.cash.repository.CashMovementRepository;
+import com.econovafx.modules.bank.repository.BankAccountRepository;
+import com.econovafx.modules.cash.repository.CashBoxRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for CashMovementService.
@@ -17,16 +25,37 @@ public class CashMovementServiceTest {
     
     private CashMovementService service;
     private CashMovement movement;
+    private CashMovementRepository movementRepository;
+    private BankAccountRepository bankAccountRepository;
+    private CashBoxRepository cashBoxRepository;
 
     @BeforeEach
     public void setUp() {
-        service = new CashMovementService();
+        movementRepository = Mockito.mock(CashMovementRepository.class);
+        bankAccountRepository = Mockito.mock(BankAccountRepository.class);
+        cashBoxRepository = Mockito.mock(CashBoxRepository.class);
+        
+        service = new CashMovementService(movementRepository, bankAccountRepository, cashBoxRepository);
+        
         movement = new CashMovement();
         movement.setMovementType(CashMovement.MovementType.INCOME);
         movement.setAmount(new BigDecimal("1000.00"));
         movement.setDate(LocalDate.now());
         movement.setDescription("Test income");
         movement.setDestinationAccountId(1L);
+        
+        // Mock save to return the same object with an ID
+        when(movementRepository.save(any(CashMovement.class))).thenAnswer(invocation -> {
+            CashMovement m = invocation.getArgument(0);
+            if (m.getId() == null) {
+                // Simulate ID generation
+                m.setId(System.nanoTime());
+            }
+            return m;
+        });
+        
+        when(movementRepository.findById(any(Long.class))).thenReturn(Optional.of(movement));
+        when(movementRepository.findByAccountId(any(Long.class))).thenReturn(List.of(movement));
     }
 
     @Test
