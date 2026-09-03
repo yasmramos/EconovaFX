@@ -6,6 +6,8 @@ import io.avaje.inject.Component;
 import com.econovafx.modules.bank.model.BankAccount;
 import com.econovafx.modules.bank.repository.BankAccountRepository;
 
+import jakarta.inject.Inject;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +18,12 @@ import java.util.Optional;
 @RequiresTenant
 public class BankAccountService {
     
-    private final BankAccountRepository repository = new BankAccountRepository();
+    private final BankAccountRepository repository;
+
+    @Inject
+    public BankAccountService(BankAccountRepository repository) {
+        this.repository = repository;
+    }
 
     public BankAccount createAccount(BankAccount account) {
         if (account.getCode() == null || account.getCode().trim().isEmpty()) {

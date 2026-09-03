@@ -21,8 +21,18 @@ public class CompanyService {
 
     private static final Logger logger = LoggerFactory.getLogger(CompanyService.class);
 
+    private final CompanyRepository companyRepository;
+
+    // Constructor for dependency injection
     @Inject
-    public CompanyRepository companyRepository;
+    public CompanyService(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
+    }
+
+    // Default constructor for testing (will be overridden by reflection or mocks)
+    protected CompanyService() {
+        this.companyRepository = null;
+    }
 
     /**
      * Obtiene todas las empresas activas.

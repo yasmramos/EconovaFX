@@ -2,6 +2,7 @@ package com.econovafx.modules.core.ui.controller;
 
 import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.core.service.CompanyService;
+import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -50,7 +51,12 @@ public class CompanySelectionController {
     private Company selectedCompany;
 
     public CompanySelectionController() {
-        this.companyService = new CompanyService();
+        // Default constructor - services will be injected by Avaje Inject
+    }
+
+    @Inject
+    public void setCompanyService(CompanyService companyService) {
+        this.companyService = companyService;
     }
 
     @FXML
