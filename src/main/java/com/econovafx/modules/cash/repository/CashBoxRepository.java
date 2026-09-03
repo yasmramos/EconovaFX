@@ -1,51 +1,56 @@
 package com.econovafx.modules.cash.repository;
 
 import com.econovafx.modules.cash.model.CashBox;
+import io.avaje.inject.Component;
+import io.ebean.Database;
+import jakarta.inject.Inject;
+
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Repository for Cash Box data access.
+ * Repository for Cash Box data access using Ebean ORM.
  */
+@Component
 public class CashBoxRepository {
     
-    private final Map<Long, CashBox> database = new ConcurrentHashMap<>();
-    private Long currentId = 1L;
+    private final Database database;
 
-    public synchronized CashBox save(CashBox cashBox) {
-        if (cashBox.getId() == null) {
-            cashBox.setId(currentId++);
-        }
-        cashBox.setUpdatedAt(java.time.Instant.now());
-        database.put(cashBox.getId(), cashBox);
+    @Inject
+    public CashBoxRepository(Database database) {
+        this.database = database;
+    }
+
+    public CashBox save(CashBox cashBox) {
+        database.save(cashBox);
         return cashBox;
     }
 
     public Optional<CashBox> findById(Long id) {
-        return Optional.ofNullable(database.get(id));
+        return Optional.ofNullable(database.find(CashBox.class, id));
     }
 
     public List<CashBox> findAll() {
-        return new ArrayList<>(database.values());
+        return database.find(CashBox.class).findList();
     }
 
     public List<CashBox> findOpenBoxes() {
-        return database.values().stream()
-                .filter(CashBox::getOpen)
-                .collect(Collectors.toList());
+        return database.find(CashBox.class)
+                .where().eq("open", true)
+                .findList();
     }
 
     public boolean deleteById(Long id) {
-        return database.remove(id) != null;
+        int rowsDeleted = database.delete(CashBox.class, id);
+        return rowsDeleted > 0;
     }
 
     public void updateBalance(Long id, BigDecimal newBalance) {
-        findById(id).ifPresent(box -> {
+        CashBox box = database.find(CashBox.class, id);
+        if (box != null) {
             box.setBalance(newBalance);
-            box.setUpdatedAt(java.time.Instant.now());
-            save(box);
-        });
+            database.update(box);
+        }
     }
 }

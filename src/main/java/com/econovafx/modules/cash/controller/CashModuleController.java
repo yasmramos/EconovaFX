@@ -13,6 +13,7 @@ import com.econovafx.modules.cash.service.CashMovementService;
 import com.econovafx.modules.bank.service.BankReconciliationService;
 import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.core.security.SecurityUtil;
+import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -182,17 +183,49 @@ public class CashModuleController {
     private BankReconciliation currentReconciliation;
 
     /**
+     * Constructor for dependency injection.
+     */
+    @Inject
+    public CashModuleController(
+            BankAccountRepository bankAccountRepository,
+            CashBoxRepository cashBoxRepository,
+            CashMovementRepository cashMovementRepository,
+            BankReconciliationRepository bankReconciliationRepository,
+            CashMovementService cashMovementService,
+            BankReconciliationService bankReconciliationService,
+            ExportService exportService) {
+        this.bankAccountRepository = bankAccountRepository;
+        this.cashBoxRepository = cashBoxRepository;
+        this.cashMovementRepository = cashMovementRepository;
+        this.bankReconciliationRepository = bankReconciliationRepository;
+        this.cashMovementService = cashMovementService;
+        this.bankReconciliationService = bankReconciliationService;
+        this.exportService = exportService;
+    }
+
+    /**
+     * Default constructor required by FXMLLoader.
+     */
+    public CashModuleController() {
+        // Fields will be initialized by FXMLLoader via initialize()
+    }
+
+    /**
      * Initializes the controller.
      */
     @FXML
     public void initialize() {
-        this.bankAccountRepository = new BankAccountRepository();
-        this.cashBoxRepository = new CashBoxRepository();
-        this.cashMovementRepository = new CashMovementRepository();
-        this.bankReconciliationRepository = new BankReconciliationRepository();
-        this.cashMovementService = new CashMovementService();
-        this.bankReconciliationService = new BankReconciliationService(bankReconciliationRepository);
-        this.exportService = new ExportService();
+        // Repositories and services are injected via constructor when using DI
+        // For FXML-loaded controllers, initialize manually if not using DI container
+        if (cashMovementService == null) {
+            this.bankAccountRepository = new BankAccountRepository();
+            this.cashBoxRepository = new CashBoxRepository();
+            this.cashMovementRepository = new CashMovementRepository();
+            this.bankReconciliationRepository = new BankReconciliationRepository();
+            this.cashMovementService = new CashMovementService();
+            this.bankReconciliationService = new BankReconciliationService(bankReconciliationRepository);
+            this.exportService = new ExportService();
+        }
 
         setupBankAccountsTable();
         setupCashBoxesTable();
