@@ -1,58 +1,62 @@
 package com.econovafx.modules.bank.repository;
 
 import com.econovafx.modules.bank.model.BankAccount;
+import io.avaje.inject.Component;
+import io.ebean.Database;
+import jakarta.inject.Inject;
+
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Repository for Bank Account data access.
- * In-memory implementation for desktop application.
+ * Repository for Bank Account data access using Ebean ORM.
  */
+@Component
 public class BankAccountRepository {
     
-    private final Map<Long, BankAccount> database = new ConcurrentHashMap<>();
-    private Long currentId = 1L;
+    private final Database database;
 
-    public synchronized BankAccount save(BankAccount account) {
-        if (account.getId() == null) {
-            account.setId(currentId++);
-        }
-        account.setUpdatedAt(java.time.Instant.now());
-        database.put(account.getId(), account);
+    @Inject
+    public BankAccountRepository(Database database) {
+        this.database = database;
+    }
+
+    public BankAccount save(BankAccount account) {
+        database.save(account);
         return account;
     }
 
     public Optional<BankAccount> findById(Long id) {
-        return Optional.ofNullable(database.get(id));
+        return Optional.ofNullable(database.find(BankAccount.class, id));
     }
 
     public List<BankAccount> findAll() {
-        return new ArrayList<>(database.values());
+        return database.find(BankAccount.class).findList();
     }
 
     public List<BankAccount> findActiveAccounts() {
-        return database.values().stream()
-                .filter(BankAccount::getActive)
-                .collect(Collectors.toList());
+        return database.find(BankAccount.class)
+                .where().eq("active", true)
+                .findList();
     }
 
     public Optional<BankAccount> findByAccountNumber(String accountNumber) {
-        return database.values().stream()
-                .filter(a -> a.getAccountNumber().equals(accountNumber))
-                .findFirst();
+        return Optional.ofNullable(database.find(BankAccount.class)
+                .where().eq("accountNumber", accountNumber)
+                .findOne());
     }
 
     public boolean deleteById(Long id) {
-        return database.remove(id) != null;
+        int rowsDeleted = database.delete(BankAccount.class, id);
+        return rowsDeleted > 0;
     }
 
     public void updateBalance(Long id, BigDecimal newBalance) {
-        findById(id).ifPresent(account -> {
+        BankAccount account = database.find(BankAccount.class, id);
+        if (account != null) {
             account.setBalance(newBalance);
-            account.setUpdatedAt(java.time.Instant.now());
-            save(account);
-        });
+            database.update(account);
+        }
     }
 }

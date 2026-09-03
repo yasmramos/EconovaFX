@@ -2,9 +2,8 @@ package com.econovafx.modules.bank.repository;
 
 import com.econovafx.modules.bank.model.BankReconciliation;
 import io.avaje.inject.Component;
-import io.ebean.DB;
 import io.ebean.Database;
-import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,13 +11,14 @@ import java.util.Optional;
 /**
  * Repository for Bank Reconciliation data access using Ebean ORM.
  */
-@Singleton
+@Component
 public class BankReconciliationRepository {
     
     private final Database database;
 
-    public BankReconciliationRepository() {
-        this.database = DB.getDefault();
+    @Inject
+    public BankReconciliationRepository(Database database) {
+        this.database = database;
     }
 
     public BankReconciliation save(BankReconciliation reconciliation) {

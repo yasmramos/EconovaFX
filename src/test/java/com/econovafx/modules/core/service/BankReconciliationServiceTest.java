@@ -6,11 +6,16 @@ import com.econovafx.modules.bank.repository.BankReconciliationRepository;
 import com.econovafx.modules.bank.service.BankReconciliationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for BankReconciliationService.
@@ -23,13 +28,27 @@ public class BankReconciliationServiceTest {
 
     @BeforeEach
     public void setUp() {
-        repository = new BankReconciliationRepository();
+        repository = Mockito.mock(BankReconciliationRepository.class);
         service = new BankReconciliationService(repository);
+        
         reconciliation = new BankReconciliation();
         reconciliation.setBankAccountId(1L);
         reconciliation.setStatementDate(LocalDate.now().minusMonths(1));
         reconciliation.setBankBalance(new BigDecimal("10000.00"));
         reconciliation.setSystemBalance(new BigDecimal("9500.00"));
+        
+        // Mock save to return the same object with an ID
+        when(repository.save(any(BankReconciliation.class))).thenAnswer(invocation -> {
+            BankReconciliation r = invocation.getArgument(0);
+            if (r.getId() == null) {
+                r.setId(System.nanoTime());
+            }
+            return r;
+        });
+        
+        when(repository.findById(any(Long.class))).thenReturn(Optional.of(reconciliation));
+        when(repository.findAll()).thenReturn(List.of(reconciliation));
+        when(repository.findByBankAccountId(any(Long.class))).thenReturn(List.of(reconciliation));
     }
 
     @Test

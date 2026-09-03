@@ -1,9 +1,9 @@
 package com.econovafx.modules.core.repository;
 
 import com.econovafx.modules.core.model.BusinessUnit;
-import io.ebean.DB;
+import io.avaje.inject.Component;
 import io.ebean.Database;
-import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,13 +11,14 @@ import java.util.Optional;
 /**
  * Repository for BusinessUnit entities.
  */
-@Singleton
+@Component
 public class BusinessUnitRepository {
 
     private final Database database;
 
-    public BusinessUnitRepository() {
-        this.database = DB.getDefault();
+    @Inject
+    public BusinessUnitRepository(Database database) {
+        this.database = database;
     }
 
     /**
