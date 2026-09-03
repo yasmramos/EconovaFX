@@ -190,17 +190,23 @@ public class App extends Application {
     private void checkAndShowUnitSelection() {
         if (selectedCompany == null) {
             logger.error("No company selected");
+            loadMainApp();
             return;
         }
         
-        BusinessUnitService unitService = new BusinessUnitService();
-        boolean hasUnits = unitService.hasUnits(selectedCompany.getId());
-        
-        if (hasUnits) {
-            logger.info("Company {} has business units, showing unit selection", selectedCompany.getName());
-            showUnitSelection();
-        } else {
-            logger.info("Company {} has no business units, proceeding to main app", selectedCompany.getName());
+        try {
+            BusinessUnitService unitService = context.getBeanScope().get(BusinessUnitService.class);
+            boolean hasUnits = unitService.hasUnits(selectedCompany.getId());
+            
+            if (hasUnits) {
+                logger.info("Company {} has business units, showing unit selection", selectedCompany.getName());
+                showUnitSelection();
+            } else {
+                logger.info("Company {} has no business units, proceeding to main app", selectedCompany.getName());
+                loadMainApp();
+            }
+        } catch (Exception e) {
+            logger.error("Error checking business units, proceeding to main app", e);
             loadMainApp();
         }
     }
