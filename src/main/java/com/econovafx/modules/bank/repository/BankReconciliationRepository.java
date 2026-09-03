@@ -1,6 +1,7 @@
 package com.econovafx.modules.bank.repository;
 
 import com.econovafx.modules.bank.model.BankReconciliation;
+import com.econovafx.modules.core.config.DatabaseConfig;
 import io.avaje.inject.Component;
 import io.ebean.Database;
 import jakarta.inject.Inject;
@@ -17,9 +18,20 @@ public class BankReconciliationRepository {
     
     private final Database database;
 
+    /**
+     * Constructor with Database injection for Avaje Inject.
+     */
     @Inject
     public BankReconciliationRepository(Database database) {
         this.database = database;
+    }
+
+    /**
+     * Default constructor that obtains Database from DatabaseConfig.
+     * Used when repository is instantiated manually without dependency injection.
+     */
+    public BankReconciliationRepository() {
+        this(DatabaseConfig.getServer());
     }
 
     public BankReconciliation save(BankReconciliation reconciliation) {
