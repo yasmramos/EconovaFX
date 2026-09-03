@@ -159,15 +159,15 @@ public class CashBankController {
     private Label lblReconciliationStatus;
 
     @Inject
-    private CashMovementService cashMovementService;
+    CashMovementService cashMovementService;
     @Inject
-    private BankAccountRepository bankAccountRepository;
+    BankAccountRepository bankAccountRepository;
     @Inject
-    private CashBoxRepository cashBoxRepository;
+    CashBoxRepository cashBoxRepository;
     @Inject
-    private CashMovementRepository cashMovementRepository;
+    CashMovementRepository cashMovementRepository;
     @Inject
-    private BankReconciliationRepository bankReconciliationRepository;
+    BankReconciliationRepository bankReconciliationRepository;
     private Stage stage;
 
     /**
