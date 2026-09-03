@@ -1,58 +1,67 @@
 package com.econovafx.modules.cash.repository;
 
 import com.econovafx.modules.cash.model.CashMovement;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import io.avaje.inject.Component;
+import io.ebean.Database;
+import jakarta.inject.Inject;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Repository for Cash Movement data access.
+ * Repository for Cash Movement data access using Ebean ORM.
  */
+@Component
 public class CashMovementRepository {
     
-    private final Map<Long, CashMovement> database = new ConcurrentHashMap<>();
-    private Long currentId = 1L;
+    private final Database database;
 
-    public synchronized CashMovement save(CashMovement movement) {
-        if (movement.getId() == null) {
-            movement.setId(currentId++);
-        }
-        movement.setUpdatedAt(java.time.Instant.now());
-        database.put(movement.getId(), movement);
+    @Inject
+    public CashMovementRepository(Database database) {
+        this.database = database;
+    }
+
+    public CashMovement save(CashMovement movement) {
+        database.save(movement);
         return movement;
     }
 
     public Optional<CashMovement> findById(Long id) {
-        return Optional.ofNullable(database.get(id));
+        return Optional.ofNullable(database.find(CashMovement.class, id));
     }
 
     public List<CashMovement> findAll() {
-        return new ArrayList<>(database.values());
+        return database.find(CashMovement.class).findList();
     }
 
     public List<CashMovement> findByAccountId(Long accountId) {
-        return database.values().stream()
-                .filter(m -> accountId.equals(m.getSourceAccountId()) || accountId.equals(m.getDestinationAccountId()))
-                .collect(Collectors.toList());
+        return database.find(CashMovement.class)
+                .where().or(
+                        io.ebean.Expression.eq("sourceAccountId", accountId),
+                        io.ebean.Expression.eq("destinationAccountId", accountId)
+                )
+                .findList();
     }
 
     public List<CashMovement> findByStatus(CashMovement.Status status) {
-        return database.values().stream()
-                .filter(m -> m.getStatus() == status)
-                .collect(Collectors.toList());
+        return database.find(CashMovement.class)
+                .where().eq("status", status)
+                .findList();
     }
 
     public List<CashMovement> findPendingMovements() {
         return findByStatus(CashMovement.Status.PENDING);
     }
 
-    public List<CashMovement> findByDateRange(java.time.LocalDate startDate, java.time.LocalDate endDate) {
-        return database.values().stream()
-                .filter(m -> !m.getDate().isBefore(startDate) && !m.getDate().isAfter(endDate))
-                .collect(Collectors.toList());
+    public List<CashMovement> findByDateRange(LocalDate startDate, LocalDate endDate) {
+        return database.find(CashMovement.class)
+                .where().ge("date", startDate).le("date", endDate)
+                .findList();
     }
 
     public boolean deleteById(Long id) {
-        return database.remove(id) != null;
+        int rowsDeleted = database.delete(CashMovement.class, id);
+        return rowsDeleted > 0;
     }
 }

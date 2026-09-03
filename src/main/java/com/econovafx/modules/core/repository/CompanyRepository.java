@@ -1,10 +1,10 @@
 package com.econovafx.modules.core.repository;
 
 import com.econovafx.modules.core.model.Company;
+import io.avaje.inject.Component;
 import io.ebean.Database;
 import io.ebean.annotation.Transactional;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * Repository for company (tenant) management in the multi-company system.
  */
-@Singleton
+@Component
 public class CompanyRepository {
 
     private final Database database;

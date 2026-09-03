@@ -1,4 +1,5 @@
 package com.econovafx.modules.cash.service;
+
 import io.avaje.inject.Component;
 import com.econovafx.modules.core.security.RequiresTenant;
 import com.econovafx.modules.accounting.model.AccountingPeriod;
@@ -9,6 +10,8 @@ import com.econovafx.modules.cash.model.CashBox;
 import com.econovafx.modules.cash.repository.CashMovementRepository;
 import com.econovafx.modules.bank.repository.BankAccountRepository;
 import com.econovafx.modules.cash.repository.CashBoxRepository;
+
+import jakarta.inject.Inject;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,9 +25,19 @@ import java.util.Optional;
 @RequiresTenant
 public class CashMovementService {
     
-    private final CashMovementRepository movementRepository = new CashMovementRepository();
-    private final BankAccountRepository bankAccountRepository = new BankAccountRepository();
-    private final CashBoxRepository cashBoxRepository = new CashBoxRepository();
+    private final CashMovementRepository movementRepository;
+    private final BankAccountRepository bankAccountRepository;
+    private final CashBoxRepository cashBoxRepository;
+
+    @Inject
+    public CashMovementService(
+            CashMovementRepository movementRepository,
+            BankAccountRepository bankAccountRepository,
+            CashBoxRepository cashBoxRepository) {
+        this.movementRepository = movementRepository;
+        this.bankAccountRepository = bankAccountRepository;
+        this.cashBoxRepository = cashBoxRepository;
+    }
 
     public CashMovement registerMovement(CashMovement movement, String currentUser) {
         validateMovement(movement);
