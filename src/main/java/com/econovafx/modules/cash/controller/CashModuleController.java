@@ -172,19 +172,19 @@ public class CashModuleController {
     private Label lblReconciliationStatus;
 
     @Inject
-    private BankAccountRepository bankAccountRepository;
+    BankAccountRepository bankAccountRepository;
     @Inject
-    private CashBoxRepository cashBoxRepository;
+    CashBoxRepository cashBoxRepository;
     @Inject
-    private CashMovementRepository cashMovementRepository;
+    CashMovementRepository cashMovementRepository;
     @Inject
-    private BankReconciliationRepository bankReconciliationRepository;
+    BankReconciliationRepository bankReconciliationRepository;
     @Inject
-    private CashMovementService cashMovementService;
+    CashMovementService cashMovementService;
     @Inject
-    private BankReconciliationService bankReconciliationService;
+    BankReconciliationService bankReconciliationService;
     @Inject
-    private ExportService exportService;
+    ExportService exportService;
     private Stage stage;
     
     // Current reconciliation being worked on
