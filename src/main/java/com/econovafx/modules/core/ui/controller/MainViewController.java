@@ -33,6 +33,7 @@ import java.util.ResourceBundle;
 /**
  * Main application controller
  */
+@Component
 public class MainViewController implements Initializable {
 
     private static final Logger logger = LoggerFactory.getLogger(MainViewController.class);

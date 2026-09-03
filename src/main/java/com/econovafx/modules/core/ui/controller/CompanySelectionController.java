@@ -2,6 +2,7 @@ package com.econovafx.modules.core.ui.controller;
 
 import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.core.service.CompanyService;
+import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -15,6 +16,7 @@ import java.util.List;
  * Controller for the company selection dialog.
  * Allows users to select which company (tenant) they want to work with.
  */
+@Component
 public class CompanySelectionController {
     private static final Logger logger = LoggerFactory.getLogger(CompanySelectionController.class);
 

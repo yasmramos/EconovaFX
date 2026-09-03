@@ -45,6 +45,7 @@ import java.util.*;
 /**
  * Dashboard controller with TailwindFX styling
  */
+@Component
 public class DashboardController implements Initializable {
 
     private static final Logger logger = LoggerFactory.getLogger(DashboardController.class);
