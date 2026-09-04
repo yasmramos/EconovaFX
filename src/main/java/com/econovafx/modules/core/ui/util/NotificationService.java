@@ -145,7 +145,7 @@ public class NotificationService {
         javafx.scene.Node root = stage.getScene().getRoot();
         
         // Look for toastContainer as a direct child of root (StackPane)
-        if (root instanceof javafx.scene.layout.Parent parent) {
+        if (root instanceof javafx.scene.Parent parent) {
             for (javafx.scene.Node child : parent.getChildrenUnmodifiable()) {
                 if (child instanceof VBox vBox && "toastContainer".equals(vBox.getId())) {
                     return vBox;

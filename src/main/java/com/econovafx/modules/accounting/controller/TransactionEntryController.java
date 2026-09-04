@@ -94,18 +94,7 @@ public class TransactionEntryController implements Initializable {
     @FXML
     private TableColumn<EntryRow, Void> colActions;
     
-    @FXML
-    private Label totalDebitLabel;
-    
-    @FXML
-    private Label totalCreditLabel;
-    
-    @FXML
-    private Label differenceLabel;
-    
     private final ObservableList<EntryRow> entryRows = FXCollections.observableArrayList();
-    private boolean saved = false;
-    private Transaction resultTransaction;
     
     public TransactionEntryController(AccountService accountService,
                                       TransactionService transactionService) {
