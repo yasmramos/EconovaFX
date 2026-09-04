@@ -20,7 +20,7 @@
     <HBox spacing="10" alignment="CENTER_LEFT">
         <Button fx:id="btnNuevo" graphicTextGap="8" onAction="#handleNuevo" styleClass="btn, btn-primary">
             <text>New Product</text>
-            <graphic><FontIcon iconLiteral="mdi2c-plus-circle" iconSize="18"/></graphic>
+            <graphic><FontIcon iconLiteral="mdi2p-plus-circle" iconSize="18"/></graphic>
         </Button>
         <Button fx:id="btnEditar" graphicTextGap="8" onAction="#handleEditar" styleClass="btn, btn-secondary">
             <text>Edit</text>

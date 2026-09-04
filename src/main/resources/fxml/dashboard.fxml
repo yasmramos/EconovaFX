@@ -327,7 +327,7 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
                     <HBox styleClass="stat-icon-amber">
-                        <FontIcon iconLiteral="mdi2h-hourglass-empty" iconSize="24" iconColor="#F59E0B"/>
+                        <FontIcon iconLiteral="mdi2t-timer-sand-empty" iconSize="24" iconColor="#F59E0B"/>
                     </HBox>
                     <VBox HBox.hgrow="ALWAYS">
                         <Label styleClass="stat-label" text="Transacciones Borrador" />

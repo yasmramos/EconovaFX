@@ -3,6 +3,7 @@ package com.econovafx.modules.core.ui.controller;
 import com.econovafx.modules.core.model.BusinessUnit;
 import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.core.service.BusinessUnitService;
+import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -59,8 +60,13 @@ public class UnitSelectionController {
     private Runnable onCancel;
     private BusinessUnit selectedUnit;
 
+    @Inject
+    public void setBusinessUnitService(BusinessUnitService businessUnitService) {
+        this.businessUnitService = businessUnitService;
+    }
+
     public UnitSelectionController() {
-        this.businessUnitService = new BusinessUnitService();
+        // Default constructor - BusinessUnitService will be injected via setter
     }
 
     @FXML
