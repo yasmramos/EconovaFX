@@ -123,6 +123,10 @@ public class ViewFactory {
     public ExportService getExportService() {
         return exportService;
     }
+
+    public DashboardController getDashboardController() {
+        return dashboardController;
+    }
     
     public Node createDashboardView() {
         try {
