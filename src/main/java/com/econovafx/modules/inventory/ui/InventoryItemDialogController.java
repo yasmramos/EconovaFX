@@ -1,5 +1,6 @@
 package com.econovafx.modules.inventory.ui;
 
+import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.inventory.model.InventoryCategory;
 import com.econovafx.modules.inventory.model.InventoryItem;
 import com.econovafx.modules.inventory.model.Warehouse;
@@ -17,6 +18,20 @@ import java.util.List;
  * Controller for inventory item dialog (create/edit).
  */
 public class InventoryItemDialogController {
+
+    private static final Logger logger = LoggerFactory.getLogger(InventoryItemDialogController.class);
+
+    // Reference to dialog handle for proper closure
+    private ModernDialog.DialogHandle dialogHandle;
+
+    /**
+     * Sets the dialog handle for this controller.
+     * Call this after loading the FXML to enable proper dialog closure.
+     * @param handle The dialog handle
+     */
+    public void setDialogHandle(ModernDialog.DialogHandle handle) {
+        this.dialogHandle = handle;
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(InventoryItemDialogController.class);
 
@@ -137,14 +152,31 @@ public class InventoryItemDialogController {
         costCenterField.setText(currentItem.getCostCenterCode());
     }
 
+    private ModernDialog.DialogHandle dialogHandle;
+    private boolean saved = false;
+
+    @FXML
+    public void initialize() {
+        // Initialize logic here
+    }
+
+    public void setDialogHandle(ModernDialog.DialogHandle handle) {
+        this.dialogHandle = handle;
+    }
+
     @FXML
     private void handleCancel() {
         closeDialog();
     }
 
     private void closeDialog() {
-        Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
-        dialogStage.close();
+        if (dialogHandle != null) {
+            dialogHandle.close();
+        } else {
+            // Fallback to old method if handle not set
+            Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
+            dialogStage.close();
+        }
     }
 
     @FXML

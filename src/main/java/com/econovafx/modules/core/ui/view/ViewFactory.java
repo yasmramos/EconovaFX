@@ -26,6 +26,7 @@ import com.econovafx.modules.accounting.controller.TransactionsController;
 import com.econovafx.modules.inventory.controller.InventoryController;
 import com.econovafx.modules.inventory.service.InventoryService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -327,7 +328,17 @@ public class ViewFactory {
                 return Optional.empty();
             }
             
-            ModernDialog.showAndWait(ownerStage, root, transaction == null ? "New Voucher" : "Edit Voucher");
+            // Show dialog using showModal to get handle, then set it on controller
+            ModernDialog.DialogHandle handle = ModernDialog.showModal(ownerStage, root, transaction == null ? "New Voucher" : "Edit Voucher");
+            controller.setDialogHandle(handle);
+            
+            // Wait for closure using showAndWait which uses nested event loop internally
+            // We need to wait on the handle's closeProperty
+            Object nestedLoopKey = new Object();
+            handle.closeProperty.addListener((obs, oldVal, newVal) -> {
+                Platform.exitNestedEventLoop(nestedLoopKey, null);
+            });
+            Platform.enterNestedEventLoop(nestedLoopKey);
 
             return Optional.ofNullable(controller.getResult());
 
@@ -353,7 +364,17 @@ public class ViewFactory {
                 logger.warn("Could not determine owner stage for dialog");
                 return Optional.empty();
             }
-            ModernDialog.showAndWait(ownerStage, root, thirdParty == null ? "New Third Party" : "Edit Third Party");
+            
+            // Show dialog using showModal to get handle, then set it on controller
+            ModernDialog.DialogHandle handle = ModernDialog.showModal(ownerStage, root, thirdParty == null ? "New Third Party" : "Edit Third Party");
+            thirdPartyFormController.setDialogHandle(handle);
+            
+            // Wait for closure using showAndWait which uses nested event loop internally
+            Object nestedLoopKey = new Object();
+            handle.closeProperty.addListener((obs, oldVal, newVal) -> {
+                Platform.exitNestedEventLoop(nestedLoopKey, null);
+            });
+            Platform.enterNestedEventLoop(nestedLoopKey);
 
             return Optional.ofNullable(thirdPartyFormController.getResult());
 

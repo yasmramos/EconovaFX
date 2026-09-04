@@ -1,5 +1,6 @@
 package com.econovafx.modules.accounting.controller;
 
+import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.service.AccountService;
@@ -56,6 +57,27 @@ public class TransactionEntryController implements Initializable {
     
     @FXML
     private TableView<EntryRow> entriesTable;
+    
+    @FXML
+    private Label totalDebitLabel;
+    
+    @FXML
+    private Label totalCreditLabel;
+    
+    @FXML
+    private Label differenceLabel;
+    
+    @FXML
+    private Label validationLabel;
+    
+    private Transaction editingTransaction;
+    private boolean saved = false;
+    private Transaction resultTransaction;
+    private ModernDialog.DialogHandle dialogHandle;
+    
+    public void setDialogHandle(ModernDialog.DialogHandle handle) {
+        this.dialogHandle = handle;
+    }
     
     @FXML
     private TableColumn<EntryRow, Account> colAccount;
@@ -258,8 +280,13 @@ public class TransactionEntryController implements Initializable {
     }
     
     private void closeDialog() {
-        Stage stage = (Stage) titleLabel.getScene().getWindow();
-        stage.close();
+        if (dialogHandle != null) {
+            dialogHandle.close();
+        } else {
+            // Fallback to old method if handle not set
+            Stage stage = (Stage) titleLabel.getScene().getWindow();
+            stage.close();
+        }
     }
     
     public Transaction getResult() {
