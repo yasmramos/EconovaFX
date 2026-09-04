@@ -52,20 +52,20 @@ public class AuthService {
     }
 
     /**
-     * Authenticates a user by email and password.
-     * @param email User email
+     * Authenticates a user by username or email and password.
+     * @param login User username or email
      * @param password User password
      * @return The authenticated user or null if authentication fails
      */
-    public User authenticate(String email, String password) {
+    public User authenticate(String login, String password) {
         // Check if user is locked due to too many failed attempts
-        FailedLoginInfo lockInfo = failedLoginAttempts.get(email);
+        FailedLoginInfo lockInfo = failedLoginAttempts.get(login);
         if (lockInfo != null && lockInfo.lockedUntil != null) {
             if (Instant.now().isBefore(lockInfo.lockedUntil)) {
                 long remainingSeconds = Duration.between(Instant.now(), lockInfo.lockedUntil).getSeconds();
                 logger.warn("Login attempt blocked for user {}: account locked for {} more seconds", 
-                           email, remainingSeconds);
-                auditService.logFailure(email, 
+                           login, remainingSeconds);
+                auditService.logFailure(login, 
                     AuditLog.OperationType.LOGIN, 
                     "User", null, 
                     "Login blocked - too many failed attempts", 
@@ -73,12 +73,19 @@ public class AuthService {
                 return null;
             } else {
                 // Lock expired, reset
-                failedLoginAttempts.remove(email);
-                logger.info("Lock expired for user {}", email);
+                failedLoginAttempts.remove(login);
+                logger.info("Lock expired for user {}", login);
             }
         }
 
-        Query<User> query = DB.find(User.class).where().eq("email", email).query();
+        // Search by username OR email
+        Query<User> query = DB.find(User.class)
+            .where()
+            .or()
+            .eq("username", login)
+            .eq("email", login)
+            .endOr()
+            .query();
         Optional<User> userOpt = query.findOneOrEmpty();
         
         if (userOpt.isPresent()) {
@@ -86,8 +93,8 @@ public class AuthService {
             
             // Check if user account is active
             if (!"ACTIVE".equals(user.getStatus())) {
-                logger.warn("Login attempt for inactive user: {}", email);
-                auditService.logFailure(email, 
+                logger.warn("Login attempt for inactive user: {}", login);
+                auditService.logFailure(login, 
                     AuditLog.OperationType.LOGIN, 
                     "User", user.getId(), 
                     "Login failed - user inactive", 
@@ -97,7 +104,7 @@ public class AuthService {
             
             if (passwordService.checkPassword(password, user.getPassword())) {
                 // Successful login - reset failed attempts
-                failedLoginAttempts.remove(email);
+                failedLoginAttempts.remove(login);
                 
                 // Set the current tenant (user's company)
                 if (user.getCompany() != null) {
@@ -109,7 +116,7 @@ public class AuthService {
                 DB.save(user);
                 
                 // Audit log success
-                auditService.logSuccess(email, 
+                auditService.logSuccess(login, 
                     AuditLog.OperationType.LOGIN, 
                     "User", user.getId(), 
                     "User logged in successfully");
@@ -118,17 +125,17 @@ public class AuthService {
                 return user;
             } else {
                 // Failed login - increment counter
-                recordFailedAttempt(email, user.getId());
+                recordFailedAttempt(login, user.getId());
                 return null;
             }
         } else {
             // User not found - still record as failed attempt to prevent enumeration
-            logger.warn("Login attempt for non-existent user: {}", email);
-            auditService.logFailure(email, 
+            logger.warn("Login attempt for non-existent user: {}", login);
+            auditService.logFailure(login, 
                 AuditLog.OperationType.LOGIN, 
                 "User", null, 
                 "Login failed - user not found", 
-                "No user found with email: " + email);
+                "No user found with username or email: " + login);
             return null;
         }
     }
@@ -136,29 +143,29 @@ public class AuthService {
     /**
      * Records a failed login attempt and locks the account if max attempts reached
      */
-    private void recordFailedAttempt(String email, Long userId) {
-        FailedLoginInfo existing = failedLoginAttempts.get(email);
+    private void recordFailedAttempt(String login, Long userId) {
+        FailedLoginInfo existing = failedLoginAttempts.get(login);
         int newCount = (existing != null) ? existing.count + 1 : 1;
         
-        logger.warn("Failed login attempt {} for user {}", newCount, email);
+        logger.warn("Failed login attempt {} for user {}", newCount, login);
         
         if (newCount >= AppConfig.MAX_LOGIN_ATTEMPTS) {
             // Lock the account for 15 minutes
             Instant lockedUntil = Instant.now().plus(Duration.ofMinutes(15));
-            failedLoginAttempts.put(email, new FailedLoginInfo(newCount, lockedUntil));
+            failedLoginAttempts.put(login, new FailedLoginInfo(newCount, lockedUntil));
             
             logger.warn("Account locked for user {} after {} failed attempts. Locked until {}", 
-                       email, newCount, lockedUntil);
+                       login, newCount, lockedUntil);
             
-            auditService.logFailure(email, 
+            auditService.logFailure(login, 
                 AuditLog.OperationType.LOGIN, 
                 "User", userId, 
                 "Account locked - too many failed attempts", 
                 "Account locked for 15 minutes after " + newCount + " failed attempts");
         } else {
-            failedLoginAttempts.put(email, new FailedLoginInfo(newCount, null));
+            failedLoginAttempts.put(login, new FailedLoginInfo(newCount, null));
             
-            auditService.logFailure(email, 
+            auditService.logFailure(login, 
                 AuditLog.OperationType.LOGIN, 
                 "User", userId, 
                 "Login failed - invalid credentials", 

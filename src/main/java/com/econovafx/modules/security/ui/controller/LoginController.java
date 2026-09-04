@@ -7,8 +7,11 @@ import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +26,9 @@ public class LoginController {
     private VBox loginRoot;
 
     @FXML
+    private ImageView logoImage;
+
+    @FXML
     private TextField usernameField;
 
     @FXML
@@ -35,10 +41,17 @@ public class LoginController {
     private Button loginButton;
 
     @FXML
+    private Button closeButton;
+
+    @FXML
     private ProgressBar progressBar;
 
     private final AuthService authService;
     private Runnable onLoginSuccess;
+    
+    // For drag functionality
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     @Inject
     public LoginController(AuthService authService) {
@@ -54,6 +67,9 @@ public class LoginController {
         errorLabel.setManaged(false);
         progressBar.setVisible(false);
         progressBar.setManaged(false);
+        
+        // Setup drag functionality for undecorated window
+        setupDraggableWindow();
         
         // Add Enter key support for login
         passwordField.setOnKeyPressed(event -> {
@@ -72,6 +88,23 @@ public class LoginController {
         usernameField.requestFocus();
     }
 
+    /**
+     * Setup drag functionality to move the window when dragging the root container
+     */
+    private void setupDraggableWindow() {
+        loginRoot.setOnMousePressed(event -> {
+            Stage stage = (Stage) loginRoot.getScene().getWindow();
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        loginRoot.setOnMouseDragged(event -> {
+            Stage stage = (Stage) loginRoot.getScene().getWindow();
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
+    }
+
     public void setOnLoginSuccess(Runnable onLoginSuccess) {
         this.onLoginSuccess = onLoginSuccess;
     }
@@ -85,7 +118,7 @@ public class LoginController {
 
         // Validate input
         if (username.isEmpty()) {
-            showError("Please enter your email address");
+            showError("Please enter your username or email address");
             usernameField.requestFocus();
             return;
         }
@@ -117,7 +150,7 @@ public class LoginController {
                             onLoginSuccess.run();
                         }
                     } else {
-                        showError("Invalid email or password. Please try again.");
+                        showError("Invalid username or email or password. Please try again.");
                         setLoading(false);
                         passwordField.clear();
                         passwordField.requestFocus();
@@ -131,6 +164,12 @@ public class LoginController {
                 });
             }
         }).start();
+    }
+
+    @FXML
+    private void handleClose() {
+        Stage stage = (Stage) loginRoot.getScene().getWindow();
+        stage.close();
     }
 
     @FXML

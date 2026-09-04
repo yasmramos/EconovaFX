@@ -16,7 +16,7 @@
         <Region HBox.hgrow="ALWAYS" />
         <Button fx:id="btnNewComprobante" onAction="#newComprobante" styleClass="submit-btn" graphicTextGap="8">
             <text>New Voucher</text>
-            <graphic><FontIcon iconLiteral="mdi2a-plus" iconSize="18"/></graphic>
+            <graphic><FontIcon iconLiteral="mdi2p-plus" iconSize="18"/></graphic>
         </Button>
         <Button fx:id="btnRefresh" onAction="#refreshData" styleClass="refresh-btn" graphicTextGap="8">
             <text>Refresh</text>
