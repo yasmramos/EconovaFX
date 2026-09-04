@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -17,6 +17,8 @@ import javafx.util.Duration;
 
 /**
  * Service for displaying toast notifications to the user.
+ * Notifications are displayed in a container anchored to the top-right corner,
+ * stacked vertically without overlapping, and do not push or resize content.
  */
 public class NotificationService {
 
@@ -84,26 +86,34 @@ public class NotificationService {
         VBox notificationBox = new VBox(content);
         notificationBox.setStyle("-fx-background-color: " + toHex(color) + "; -fx-background-radius: 8px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 4);");
         notificationBox.setPickOnBounds(false);
+        notificationBox.setMaxWidth(Region.USE_PREF_SIZE);
 
-        // Find root pane
-        Pane root = getRootPane(stage);
-        if (root == null) return;
+        // Find toast container
+        VBox toastContainer = getToastContainer(stage);
+        if (toastContainer == null) return;
 
-        // Set initial position (top-right, hidden above)
-        notificationBox.setLayoutX(root.getWidth() - WIDTH - 20);
-        notificationBox.setLayoutY(-HEIGHT);
+        // Add to toast container (will be stacked vertically by VBox)
+        toastContainer.getChildren().add(notificationBox);
 
-        root.getChildren().add(notificationBox);
-
-        // Animate
+        // Animate: slide in from right
         TranslateTransition slideIn = new TranslateTransition(SLIDE_DURATION, notificationBox);
-        slideIn.setToY(20);
+        slideIn.setFromX(WIDTH + 20);
+        slideIn.setToX(0);
+        
+        FadeTransition fadeIn = new FadeTransition(FADE_DURATION, notificationBox);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        
+        slideIn.play();
+        fadeIn.play();
         
         slideIn.setOnFinished(e -> {
             PauseTransition pause = new PauseTransition(DISPLAY_DURATION);
             pause.setOnFinished(p -> {
+                // Slide out to right
                 TranslateTransition slideOut = new TranslateTransition(SLIDE_DURATION, notificationBox);
-                slideOut.setToY(-HEIGHT);
+                slideOut.setFromX(0);
+                slideOut.setToX(WIDTH + 20);
                 
                 FadeTransition fadeOut = new FadeTransition(FADE_DURATION, notificationBox);
                 fadeOut.setFromValue(1.0);
@@ -112,22 +122,38 @@ public class NotificationService {
                 slideOut.play();
                 fadeOut.play();
                 
-                slideOut.setOnFinished(f -> root.getChildren().remove(notificationBox));
+                slideOut.setOnFinished(f -> {
+                    if (toastContainer.getChildren().contains(notificationBox)) {
+                        toastContainer.getChildren().remove(notificationBox);
+                    }
+                });
             });
             pause.play();
         });
-        
-        slideIn.play();
     }
 
-    private static Pane getRootPane(Stage stage) {
+    /**
+     * Finds or creates the toast container in the scene.
+     * The container is expected to be a VBox with fx:id="toastContainer" 
+     * as a child of the root StackPane, aligned to TOP_RIGHT.
+     * @param stage The owner stage.
+     * @return The toast container VBox, or null if not found.
+     */
+    private static VBox getToastContainer(Stage stage) {
         if (stage.getScene() == null) return null;
         
         javafx.scene.Node root = stage.getScene().getRoot();
-        if (root instanceof Pane) {
-            return (Pane) root;
+        
+        // Look for toastContainer as a direct child of root (StackPane)
+        if (root instanceof javafx.scene.layout.Parent parent) {
+            for (javafx.scene.Node child : parent.getChildrenUnmodifiable()) {
+                if (child instanceof VBox vBox && "toastContainer".equals(vBox.getId())) {
+                    return vBox;
+                }
+            }
         }
-        // Fallback: return null if root is not a Pane
+        
+        // Fallback: return null if toast container not found
         return null;
     }
 

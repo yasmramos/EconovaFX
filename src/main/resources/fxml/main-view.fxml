@@ -5,180 +5,196 @@
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.econovafx.modules.core.ui.controller.MainViewController"
-      spacing="0"
-      styleClass="bg-gray-50"
-      fx:id="rootVBox">
+<!-- Root StackPane to overlay toast container -->
+<StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.econovafx.modules.core.ui.controller.MainViewController"
+           fx:id="rootStackPane">
 
-    <!-- Top Area: Sidebar + Content -->
-    <HBox VBox.vgrow="ALWAYS" fillHeight="true">
+    <!-- Main VBox layout (sidebar + content + status bar) -->
+    <VBox spacing="0"
+          styleClass="bg-gray-50"
+          fx:id="rootVBox">
 
-        <!-- Sidebar Navigation (Full Height) -->
-        <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" HBox.hgrow="NEVER" minWidth="260" prefWidth="260">
-            <HBox.margin>
-                <Insets top="0" right="0" bottom="0" left="0"/>
-            </HBox.margin>
-            <VBox fx:id="sidebarVBox" styleClass="sidebar-container, bg-slate-800" prefWidth="260" minWidth="260" maxWidth="260" fillWidth="true">
+        <!-- Top Area: Sidebar + Content -->
+        <HBox VBox.vgrow="ALWAYS" fillHeight="true">
 
-            <!-- Logo/Brand Section -->
-            <VBox styleClass="p-6, pb-2">
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <FontIcon iconLiteral="mdi2r-rocket-launch" iconSize="24" iconColor="WHITE"/>
-                    <Label text="EconoNova FX" styleClass="text-white, text-xl, font-bold"/>
-                </HBox>
-                <Label text="Sistema Contable" styleClass="text-slate-400, text-xs, mt-1"/>
-            </VBox>
+            <!-- Sidebar Navigation (Full Height) -->
+            <ScrollPane fx:id="sidebarScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="sidebar-scroll" HBox.hgrow="NEVER" minWidth="260" prefWidth="260">
+                <HBox.margin>
+                    <Insets top="0" right="0" bottom="0" left="0"/>
+                </HBox.margin>
+                <VBox fx:id="sidebarVBox" styleClass="sidebar-container, bg-slate-800" prefWidth="260" minWidth="260" maxWidth="260" fillWidth="true">
 
-            <!-- MÓDULOS Section -->
-            <Label text="MÓDULOS" styleClass="sidebar-section-title"/>
+                <!-- Logo/Brand Section -->
+                <VBox styleClass="p-6, pb-2">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <FontIcon iconLiteral="mdi2r-rocket-launch" iconSize="24" iconColor="WHITE"/>
+                        <Label text="EconoNova FX" styleClass="text-white, text-xl, font-bold"/>
+                    </HBox>
+                    <Label text="Sistema Contable" styleClass="text-slate-400, text-xs, mt-1"/>
+                </VBox>
 
-            <Button fx:id="btnDashboard" onAction="#showDashboard" styleClass="btn, btn-ghost, sidebar-btn">
-                <graphic>
-                    <FontIcon iconLiteral="mdi2v-view-dashboard" iconSize="20" iconColor="WHITE"/>
-                </graphic>
-                <text>Dashboard</text>
-            </Button>
+                <!-- MÓDULOS Section -->
+                <Label text="MÓDULOS" styleClass="sidebar-section-title"/>
 
-            <!-- Contabilidad with submenu -->
-            <VBox styleClass="sidebar-menu-group">
-                <StackPane styleClass="sidebar-btn-wrapper">
-                    <Button fx:id="btnContabilidad" onAction="#toggleContabilidadMenu" styleClass="btn, btn-ghost, sidebar-btn">
-                        <graphic>
-                            <FontIcon iconLiteral="mdi2b-book-open" iconSize="20" iconColor="WHITE"/>
-                        </graphic>
-                        <text>Contabilidad</text>
+                <Button fx:id="btnDashboard" onAction="#showDashboard" styleClass="btn, btn-ghost, sidebar-btn">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2v-view-dashboard" iconSize="20" iconColor="WHITE"/>
+                    </graphic>
+                    <text>Dashboard</text>
+                </Button>
+
+                <!-- Contabilidad with submenu -->
+                <VBox styleClass="sidebar-menu-group">
+                    <StackPane styleClass="sidebar-btn-wrapper">
+                        <Button fx:id="btnContabilidad" onAction="#toggleContabilidadMenu" styleClass="btn, btn-ghost, sidebar-btn">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2b-book-open" iconSize="20" iconColor="WHITE"/>
+                            </graphic>
+                            <text>Contabilidad</text>
+                        </Button>
+                        <FontIcon fx:id="contabilidadChevron" iconLiteral="mdi2c-chevron-down" iconSize="16" iconColor="WHITE" StackPane.alignment="CENTER_RIGHT" styleClass="sidebar-chevron-float"/>
+                    </StackPane>
+                    <VBox fx:id="contabilidadSubmenu" visible="false" managed="false" styleClass="sidebar-submenu">
+                        <Button fx:id="btnComprobantes" onAction="#showComprobantes" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                            <graphic><FontIcon iconLiteral="mdi2f-file-document" iconSize="18" iconColor="WHITE"/></graphic>
+                            <text>Comprobantes de Operaciones</text>
+                        </Button>
+                        <Button fx:id="btnCuentas" onAction="#showCuentas" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                            <graphic><FontIcon iconLiteral="mdi2b-book-open" iconSize="18" iconColor="WHITE"/></graphic>
+                            <text>Cuentas Contables</text>
+                        </Button>
+                        <Button fx:id="btnClasificador" onAction="#showClasificador" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                            <graphic><FontIcon iconLiteral="mdi2s-sort-alphabetical-ascending" iconSize="18" iconColor="WHITE"/></graphic>
+                            <text>Clasificador de Cuentas</text>
+                        </Button>
+                        <Button fx:id="btnTerceros" onAction="#showTerceros" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                            <graphic><FontIcon iconLiteral="mdi2a-account-group" iconSize="18" iconColor="WHITE"/></graphic>
+                            <text>Terceros (Clientes/Proveedores)</text>
+                        </Button>
+                        <Button fx:id="btnPeriodos" onAction="#showPeriodos" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                            <graphic><FontIcon iconLiteral="mdi2c-calendar" iconSize="18" iconColor="WHITE"/></graphic>
+                            <text>Periodos Contables</text>
+                        </Button>
+                        <Button fx:id="btnCierres" onAction="#showCierres" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                            <graphic><FontIcon iconLiteral="mdi2l-lock" iconSize="18" iconColor="WHITE"/></graphic>
+                            <text>Cierres Contables</text>
+                        </Button>
+                        <Button fx:id="btnCostos" onAction="#showCostos" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                            <graphic><FontIcon iconLiteral="mdi2c-cash" iconSize="18" iconColor="WHITE"/></graphic>
+                            <text>Costos y Procesos</text>
+                        </Button>
+                        <Button fx:id="btnTasasCambio" onAction="#showTasasCambio" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                            <graphic><FontIcon iconLiteral="mdi2c-currency-usd" iconSize="18" iconColor="WHITE"/></graphic>
+                            <text>Tasas de Cambio</text>
+                        </Button>
+                    </VBox>
+                </VBox>
+
+                <Button fx:id="btnFinanzas" onAction="#showFinanzas" styleClass="btn, btn-ghost, sidebar-btn">
+                    <graphic><FontIcon iconLiteral="mdi2t-trending-up" iconSize="20" iconColor="WHITE"/></graphic>
+                    <text>Finanzas</text>
+                </Button>
+                <Button fx:id="btnAFT" onAction="#showAFT" styleClass="btn, btn-ghost, sidebar-btn">
+                    <graphic><FontIcon iconLiteral="mdi2f-file-document-outline" iconSize="20" iconColor="WHITE"/></graphic>
+                    <text>AFT</text>
+                </Button>
+                <Button fx:id="btnInventarios" onAction="#showInventarios" styleClass="btn, btn-ghost, sidebar-btn">
+                    <graphic><FontIcon iconLiteral="mdi2b-box" iconSize="20" iconColor="WHITE"/></graphic>
+                    <text>Inventarios</text>
+                </Button>
+                <Button fx:id="btnNominas" onAction="#showNominas" styleClass="btn, btn-ghost, sidebar-btn">
+                    <graphic><FontIcon iconLiteral="mdi2a-account-group" iconSize="20" iconColor="WHITE"/></graphic>
+                    <text>Nóminas</text>
+                </Button>
+
+                <!-- Spacer to push system section to bottom -->
+                <Region VBox.vgrow="ALWAYS"/>
+
+                <!-- SISTEMA Section -->
+                <Separator styleClass="sidebar-separator"/>
+                <Label text="SISTEMA" styleClass="sidebar-section-title"/>
+                <VBox styleClass="sidebar-menu-group">
+                    <StackPane styleClass="sidebar-btn-wrapper">
+                        <Button fx:id="btnSettings" onAction="#toggleSettingsMenu" styleClass="btn, btn-ghost, sidebar-btn">
+                            <graphic><FontIcon iconLiteral="mdi2c-cog" iconSize="20" iconColor="WHITE"/></graphic>
+                            <text>Configuración</text>
+                        </Button>
+                        <FontIcon fx:id="settingsChevron" iconLiteral="mdi2c-chevron-down" iconSize="16" iconColor="WHITE" StackPane.alignment="CENTER_RIGHT" styleClass="sidebar-chevron-float"/>
+                    </StackPane>
+                </VBox>
+                <VBox fx:id="settingsSubmenu" visible="false" managed="false" styleClass="sidebar-submenu">
+                    <Button fx:id="btnPerfil" onAction="#showPerfil" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                        <graphic><FontIcon iconLiteral="mdi2a-account" iconSize="18" iconColor="WHITE"/></graphic>
+                        <text>Mi Perfil</text>
                     </Button>
-                    <FontIcon fx:id="contabilidadChevron" iconLiteral="mdi2c-chevron-down" iconSize="16" iconColor="WHITE" StackPane.alignment="CENTER_RIGHT" styleClass="sidebar-chevron-float"/>
-                </StackPane>
-                <VBox fx:id="contabilidadSubmenu" visible="false" managed="false" styleClass="sidebar-submenu">
-                    <Button fx:id="btnComprobantes" onAction="#showComprobantes" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                        <graphic><FontIcon iconLiteral="mdi2f-file-document" iconSize="18" iconColor="WHITE"/></graphic>
-                        <text>Comprobantes de Operaciones</text>
+                    <Button fx:id="btnAppSettings" onAction="#showAppSettings" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                        <graphic><FontIcon iconLiteral="mdi2t-tune" iconSize="18" iconColor="WHITE"/></graphic>
+                        <text>Ajustes de la App</text>
                     </Button>
-                    <Button fx:id="btnCuentas" onAction="#showCuentas" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                        <graphic><FontIcon iconLiteral="mdi2b-book-open" iconSize="18" iconColor="WHITE"/></graphic>
-                        <text>Cuentas Contables</text>
-                    </Button>
-                    <Button fx:id="btnClasificador" onAction="#showClasificador" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                        <graphic><FontIcon iconLiteral="mdi2s-sort-alphabetical-ascending" iconSize="18" iconColor="WHITE"/></graphic>
-                        <text>Clasificador de Cuentas</text>
-                    </Button>
-                    <Button fx:id="btnTerceros" onAction="#showTerceros" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                        <graphic><FontIcon iconLiteral="mdi2a-account-group" iconSize="18" iconColor="WHITE"/></graphic>
-                        <text>Terceros (Clientes/Proveedores)</text>
-                    </Button>
-                    <Button fx:id="btnPeriodos" onAction="#showPeriodos" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                        <graphic><FontIcon iconLiteral="mdi2c-calendar" iconSize="18" iconColor="WHITE"/></graphic>
-                        <text>Periodos Contables</text>
-                    </Button>
-                    <Button fx:id="btnCierres" onAction="#showCierres" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                        <graphic><FontIcon iconLiteral="mdi2l-lock" iconSize="18" iconColor="WHITE"/></graphic>
-                        <text>Cierres Contables</text>
-                    </Button>
-                    <Button fx:id="btnCostos" onAction="#showCostos" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                        <graphic><FontIcon iconLiteral="mdi2c-cash" iconSize="18" iconColor="WHITE"/></graphic>
-                        <text>Costos y Procesos</text>
-                    </Button>
-                    <Button fx:id="btnTasasCambio" onAction="#showTasasCambio" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                        <graphic><FontIcon iconLiteral="mdi2c-currency-usd" iconSize="18" iconColor="WHITE"/></graphic>
-                        <text>Tasas de Cambio</text>
+                    <Button fx:id="btnBackup" onAction="#showBackup" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
+                        <graphic><FontIcon iconLiteral="mdi2c-content-save" iconSize="18" iconColor="WHITE"/></graphic>
+                        <text>Copia de Seguridad</text>
                     </Button>
                 </VBox>
-            </VBox>
-
-            <Button fx:id="btnFinanzas" onAction="#showFinanzas" styleClass="btn, btn-ghost, sidebar-btn">
-                <graphic><FontIcon iconLiteral="mdi2t-trending-up" iconSize="20" iconColor="WHITE"/></graphic>
-                <text>Finanzas</text>
-            </Button>
-            <Button fx:id="btnAFT" onAction="#showAFT" styleClass="btn, btn-ghost, sidebar-btn">
-                <graphic><FontIcon iconLiteral="mdi2f-file-document-outline" iconSize="20" iconColor="WHITE"/></graphic>
-                <text>AFT</text>
-            </Button>
-            <Button fx:id="btnInventarios" onAction="#showInventarios" styleClass="btn, btn-ghost, sidebar-btn">
-                <graphic><FontIcon iconLiteral="mdi2b-box" iconSize="20" iconColor="WHITE"/></graphic>
-                <text>Inventarios</text>
-            </Button>
-            <Button fx:id="btnNominas" onAction="#showNominas" styleClass="btn, btn-ghost, sidebar-btn">
-                <graphic><FontIcon iconLiteral="mdi2a-account-group" iconSize="20" iconColor="WHITE"/></graphic>
-                <text>Nóminas</text>
-            </Button>
-
-            <!-- Spacer to push system section to bottom -->
-            <Region VBox.vgrow="ALWAYS"/>
-
-            <!-- SISTEMA Section -->
-            <Separator styleClass="sidebar-separator"/>
-            <Label text="SISTEMA" styleClass="sidebar-section-title"/>
-            <VBox styleClass="sidebar-menu-group">
-                <StackPane styleClass="sidebar-btn-wrapper">
-                    <Button fx:id="btnSettings" onAction="#toggleSettingsMenu" styleClass="btn, btn-ghost, sidebar-btn">
-                        <graphic><FontIcon iconLiteral="mdi2c-cog" iconSize="20" iconColor="WHITE"/></graphic>
-                        <text>Configuración</text>
-                    </Button>
-                    <FontIcon fx:id="settingsChevron" iconLiteral="mdi2c-chevron-down" iconSize="16" iconColor="WHITE" StackPane.alignment="CENTER_RIGHT" styleClass="sidebar-chevron-float"/>
-                </StackPane>
-            </VBox>
-            <VBox fx:id="settingsSubmenu" visible="false" managed="false" styleClass="sidebar-submenu">
-                <Button fx:id="btnPerfil" onAction="#showPerfil" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                    <graphic><FontIcon iconLiteral="mdi2a-account" iconSize="18" iconColor="WHITE"/></graphic>
-                    <text>Mi Perfil</text>
+                <Button fx:id="btnHelp" onAction="#showHelp" styleClass="btn, btn-ghost, sidebar-btn">
+                    <graphic><FontIcon iconLiteral="mdi2h-help-circle" iconSize="20" iconColor="WHITE"/></graphic>
+                    <text>Ayuda</text>
                 </Button>
-                <Button fx:id="btnAppSettings" onAction="#showAppSettings" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                    <graphic><FontIcon iconLiteral="mdi2t-tune" iconSize="18" iconColor="WHITE"/></graphic>
-                    <text>Ajustes de la App</text>
+                <Button fx:id="btnAbout" onAction="#showAbout" styleClass="btn, btn-ghost, sidebar-btn">
+                    <graphic><FontIcon iconLiteral="mdi2i-information" iconSize="20" iconColor="WHITE"/></graphic>
+                    <text>Acerca de</text>
                 </Button>
-                <Button fx:id="btnBackup" onAction="#showBackup" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn">
-                    <graphic><FontIcon iconLiteral="mdi2c-content-save" iconSize="18" iconColor="WHITE"/></graphic>
-                    <text>Copia de Seguridad</text>
-                </Button>
+
             </VBox>
-            <Button fx:id="btnHelp" onAction="#showHelp" styleClass="btn, btn-ghost, sidebar-btn">
-                <graphic><FontIcon iconLiteral="mdi2h-help-circle" iconSize="20" iconColor="WHITE"/></graphic>
-                <text>Ayuda</text>
-            </Button>
-            <Button fx:id="btnAbout" onAction="#showAbout" styleClass="btn, btn-ghost, sidebar-btn">
-                <graphic><FontIcon iconLiteral="mdi2i-information" iconSize="20" iconColor="WHITE"/></graphic>
-                <text>Acerca de</text>
-            </Button>
+            </ScrollPane>
 
-        </VBox>
-        </ScrollPane>
+            <!-- Right Side: Header + Content -->
+            <BorderPane HBox.hgrow="ALWAYS" fx:id="mainContentPane">
+                <HBox.margin>
+                    <Insets top="0" right="0" bottom="0" left="0"/>
+                </HBox.margin>
 
-        <!-- Right Side: Header + Content -->
-        <BorderPane HBox.hgrow="ALWAYS" fx:id="mainContentPane">
-            <HBox.margin>
-                <Insets top="0" right="0" bottom="0" left="0"/>
-            </HBox.margin>
+                <!-- Top: Header -->
+                <top>
+                    <HBox styleClass="header-main" alignment="CENTER_LEFT" fillHeight="true">
+                        <Label text="EconoNova FX" styleClass="header-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="currentUserLabel" text="Usuario: Admin" styleClass="header-user"/>
+                        <Button text="Cerrar Sesión" onAction="#handleLogout" styleClass="header-logout"/>
+                    </HBox>
+                </top>
 
-            <!-- Top: Header -->
-            <top>
-                <HBox styleClass="header-main" alignment="CENTER_LEFT" fillHeight="true">
-                    <Label text="EconoNova FX" styleClass="header-title"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="currentUserLabel" text="Usuario: Admin" styleClass="header-user"/>
-                    <Button text="Cerrar Sesión" onAction="#handleLogout" styleClass="header-logout"/>
-                </HBox>
-            </top>
+                <!-- Center: Content Area with Scroll -->
+                <center>
+                    <ScrollPane fx:id="contentScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="content-scroll">
+                        <BorderPane.margin>
+                            <Insets top="0" right="0" bottom="0" left="0"/>
+                        </BorderPane.margin>
+                        <StackPane fx:id="contentArea" styleClass="bg-gray-50, p-6"/>
+                    </ScrollPane>
+                </center>
+            </BorderPane>
 
-            <!-- Center: Content Area with Scroll -->
-            <center>
-                <ScrollPane fx:id="contentScrollPane" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="content-scroll">
-                    <BorderPane.margin>
-                        <Insets top="0" right="0" bottom="0" left="0"/>
-                    </BorderPane.margin>
-                    <StackPane fx:id="contentArea" styleClass="bg-gray-50, p-6"/>
-                </ScrollPane>
-            </center>
-        </BorderPane>
+        </HBox>
 
-    </HBox>
+        <!-- Status Bar (Full Width, Below Sidebar) -->
+        <HBox styleClass="status-bar" alignment="CENTER_LEFT" VBox.vgrow="NEVER">
+            <Label fx:id="statusLabel" text="Listo" styleClass="text-gray-500, text-xs, font-medium"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="EconoNova FX v1.0.0" styleClass="text-gray-500, text-xs, font-medium"/>
+        </HBox>
 
-    <!-- Status Bar (Full Width, Below Sidebar) -->
-    <HBox styleClass="status-bar" alignment="CENTER_LEFT" VBox.vgrow="NEVER">
-        <Label fx:id="statusLabel" text="Listo" styleClass="text-gray-500, text-xs, font-medium"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label text="EconoNova FX v1.0.0" styleClass="text-gray-500, text-xs, font-medium"/>
-    </HBox>
+    </VBox>
 
-</VBox>
+    <!-- Toast notification container anchored to top-right corner -->
+    <VBox fx:id="toastContainer"
+          spacing="10"
+          pickOnBounds="false"
+          style="-fx-padding: 20;"
+          StackPane.alignment="TOP_RIGHT"
+          maxHeight="-Infinity"
+          maxWidth="-Infinity"
+          prefWidth="320"/>
+
+</StackPane>
