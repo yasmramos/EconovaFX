@@ -254,6 +254,102 @@
 }
 
 /* =============================================================================
+ * SIDEBAR TOGGLE BUTTON
+ * ============================================================================= */
+
+.btn-icon-toggle {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4px;
+    -fx-padding: 4px;
+    -fx-cursor: hand;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-pref-width: 32px;
+    -fx-pref-height: 32px;
+}
+
+.btn-icon-toggle:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-icon-toggle:armed {
+    -fx-background-color: rgba(59, 130, 246, 0.4);
+}
+
+/* =============================================================================
+ * COLLAPSED SIDEBAR STATE
+ * ============================================================================= */
+
+/* Collapsed sidebar container */
+.sidebar-collapsed {
+    /* Width is controlled by animation in controller */
+}
+
+/* Hide section titles in collapsed mode */
+.sidebar-collapsed .sidebar-section-title {
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+/* Hide separators in collapsed mode */
+.sidebar-collapsed .sidebar-separator {
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+/* Hide logo text label in collapsed mode */
+.sidebar-collapsed .text-xl {
+    -fx-opacity: 0;
+    -fx-managed: false;
+}
+
+.sidebar-collapsed .text-slate-400 {
+    -fx-opacity: 0;
+    -fx-managed: false;
+}
+
+/* Center align buttons and adjust width in collapsed mode */
+.sidebar-collapsed .button.sidebar-btn {
+    -fx-pref-width: 64;
+    -fx-max-width: 64;
+    -fx-alignment: CENTER;
+    -fx-padding: 6px 0;
+    -fx-content-display: graphic-only;
+}
+
+/* Center submenu buttons in collapsed mode */
+.sidebar-collapsed .button.sidebar-submenu-btn {
+    -fx-pref-width: 64;
+    -fx-max-width: 64;
+    -fx-alignment: CENTER;
+    -fx-padding: 6px 0;
+    -fx-content-display: graphic-only;
+}
+
+/* Hide chevrons in collapsed mode */
+.sidebar-collapsed .sidebar-chevron-float {
+    -fx-opacity: 0;
+    -fx-managed: false;
+}
+
+/* Hide submenus in collapsed mode */
+.sidebar-collapsed .sidebar-submenu {
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+    -fx-opacity: 0;
+    -fx-managed: false;
+}
+
+/* Hide active state styling in collapsed mode (icons only) */
+.sidebar-collapsed .button.sidebar-btn-active {
+    -fx-border-width: 0;
+}
+
+/* =============================================================================
  * STATUS BAR
  * ============================================================================= */
 
