@@ -28,6 +28,11 @@
                 <!-- Logo/Brand Section -->
                 <VBox styleClass="p-6, pb-2">
                     <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button fx:id="btnToggleSidebar" onAction="#toggleSidebar" styleClass="btn-icon-toggle">
+                            <graphic>
+                                <FontIcon iconLiteral="mdi2c-chevron-left" iconSize="20" iconColor="WHITE"/>
+                            </graphic>
+                        </Button>
                         <FontIcon iconLiteral="mdi2r-rocket-launch" iconSize="24" iconColor="WHITE"/>
                         <Label text="EconoNova FX" styleClass="text-white, text-xl, font-bold"/>
                     </HBox>

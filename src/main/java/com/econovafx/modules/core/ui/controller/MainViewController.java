@@ -133,6 +133,13 @@ public class MainViewController implements Initializable {
     @FXML
     private Button btnAbout;
 
+    @FXML
+    private Button btnToggleSidebar;
+
+    private boolean sidebarCollapsed = false;
+    private static final double SIDEBAR_EXPANDED_WIDTH = 260;
+    private static final double SIDEBAR_COLLAPSED_WIDTH = 64;
+
     private Button activeButton;
 
     public MainViewController(AccountService accountService,
@@ -177,6 +184,123 @@ public class MainViewController implements Initializable {
                 logger.error("Error during dashboard initialization", e);
             }
         });
+    }
+
+    /**
+     * Toggle sidebar between expanded and collapsed state with animation.
+     * When collapsed, only icons are visible; when expanded, icons + text are shown.
+     */
+    @FXML
+    private void toggleSidebar() {
+        if (sidebarVBox == null || sidebarScrollPane == null) {
+            return;
+        }
+
+        sidebarCollapsed = !sidebarCollapsed;
+
+        if (sidebarCollapsed) {
+            collapseSidebar();
+        } else {
+            expandSidebar();
+        }
+    }
+
+    /**
+     * Collapse the sidebar to icon-only mode with animation.
+     */
+    private void collapseSidebar() {
+        // Close any open submenus first
+        if (contabilidadSubmenu != null && contabilidadSubmenu.isVisible()) {
+            animateSubmenu(contabilidadSubmenu, contabilidadChevron, btnContabilidad);
+        }
+        if (settingsSubmenu != null && settingsSubmenu.isVisible()) {
+            animateSubmenu(settingsSubmenu, settingsChevron, btnSettings);
+        }
+
+        // Add collapsed style class
+        sidebarVBox.getStyleClass().add("sidebar-collapsed");
+
+        // Animate width change
+        double targetWidth = SIDEBAR_COLLAPSED_WIDTH;
+        Timeline timeline = new Timeline();
+        
+        // Animate sidebarScrollPane width
+        KeyValue scrollPanePrefWidthKV = new KeyValue(sidebarScrollPane.prefWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyValue scrollPaneMinWidthKV = new KeyValue(sidebarScrollPane.minWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyValue scrollPaneMaxWidthKV = new KeyValue(sidebarScrollPane.maxWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyFrame scrollPaneKF = new KeyFrame(Duration.millis(200), scrollPanePrefWidthKV, scrollPaneMinWidthKV, scrollPaneMaxWidthKV);
+        
+        // Animate sidebarVBox width
+        KeyValue vboxPrefWidthKV = new KeyValue(sidebarVBox.prefWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyValue vboxMinWidthKV = new KeyValue(sidebarVBox.minWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyValue vboxMaxWidthKV = new KeyValue(sidebarVBox.maxWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyFrame vboxKF = new KeyFrame(Duration.millis(200), vboxPrefWidthKV, vboxMinWidthKV, vboxMaxWidthKV);
+        
+        timeline.getKeyFrames().addAll(scrollPaneKF, vboxKF);
+        timeline.play();
+
+        // Set all menu buttons to icon-only mode
+        setAllButtonsContentDisplay(javafx.scene.control.ContentDisplay.GRAPHIC_ONLY);
+
+        // Update toggle button icon
+        if (btnToggleSidebar != null && btnToggleSidebar.getGraphic() instanceof FontIcon) {
+            FontIcon icon = (FontIcon) btnToggleSidebar.getGraphic();
+            icon.setIconLiteral("mdi2c-chevron-right");
+        }
+    }
+
+    /**
+     * Expand the sidebar to full width with animation.
+     */
+    private void expandSidebar() {
+        // Remove collapsed style class
+        sidebarVBox.getStyleClass().remove("sidebar-collapsed");
+
+        // Animate width change
+        double targetWidth = SIDEBAR_EXPANDED_WIDTH;
+        Timeline timeline = new Timeline();
+        
+        // Animate sidebarScrollPane width
+        KeyValue scrollPanePrefWidthKV = new KeyValue(sidebarScrollPane.prefWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyValue scrollPaneMinWidthKV = new KeyValue(sidebarScrollPane.minWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyValue scrollPaneMaxWidthKV = new KeyValue(sidebarScrollPane.maxWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyFrame scrollPaneKF = new KeyFrame(Duration.millis(200), scrollPanePrefWidthKV, scrollPaneMinWidthKV, scrollPaneMaxWidthKV);
+        
+        // Animate sidebarVBox width
+        KeyValue vboxPrefWidthKV = new KeyValue(sidebarVBox.prefWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyValue vboxMinWidthKV = new KeyValue(sidebarVBox.minWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyValue vboxMaxWidthKV = new KeyValue(sidebarVBox.maxWidthProperty(), targetWidth, Interpolator.EASE_BOTH);
+        KeyFrame vboxKF = new KeyFrame(Duration.millis(200), vboxPrefWidthKV, vboxMinWidthKV, vboxMaxWidthKV);
+        
+        timeline.getKeyFrames().addAll(scrollPaneKF, vboxKF);
+        timeline.play();
+
+        // Restore all menu buttons to show icon + text
+        setAllButtonsContentDisplay(javafx.scene.control.ContentDisplay.LEFT);
+
+        // Update toggle button icon
+        if (btnToggleSidebar != null && btnToggleSidebar.getGraphic() instanceof FontIcon) {
+            FontIcon icon = (FontIcon) btnToggleSidebar.getGraphic();
+            icon.setIconLiteral("mdi2c-chevron-left");
+        }
+    }
+
+    /**
+     * Set content display mode for all sidebar menu buttons.
+     */
+    private void setAllButtonsContentDisplay(javafx.scene.control.ContentDisplay display) {
+        Button[] buttons = {
+            btnDashboard, btnContabilidad, btnComprobantes, btnCuentas, btnClasificador,
+            btnTerceros, btnPeriodos, btnCierres, btnCostos, btnTasasCambio,
+            btnFinanzas, btnAFT, btnInventarios, btnNominas, btnSettings,
+            btnPerfil, btnAppSettings, btnBackup, btnHelp, btnAbout
+        };
+        
+        for (Button btn : buttons) {
+            if (btn != null) {
+                btn.setContentDisplay(display);
+            }
+        }
     }
 
     private void setActiveButton(Button button) {
