@@ -57,7 +57,6 @@ public class InventoryMovementDialogController {
     private final UserContext userContext;
     private InventoryItem currentItem;
     private MovementType movementType;
-    private boolean saved = false;
 
     public enum MovementType {
         OUTPUT,
@@ -126,14 +125,30 @@ public class InventoryMovementDialogController {
         }
     }
 
+    private ModernDialog.DialogHandle dialogHandle;
+
+    @FXML
+    public void initialize() {
+        // Initialize logic here
+    }
+
+    public void setDialogHandle(ModernDialog.DialogHandle handle) {
+        this.dialogHandle = handle;
+    }
+
     @FXML
     private void handleCancel() {
         closeDialog();
     }
 
     private void closeDialog() {
-        Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
-        dialogStage.close();
+        if (dialogHandle != null) {
+            dialogHandle.close();
+        } else {
+            // Fallback to old method if handle not set
+            Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
+            dialogStage.close();
+        }
     }
 
     @FXML

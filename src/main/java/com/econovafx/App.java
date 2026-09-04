@@ -10,6 +10,8 @@ import com.econovafx.modules.core.service.backup.BackupSchedulerService;
 import com.econovafx.modules.core.ui.controller.MainViewController;
 import com.econovafx.modules.core.ui.controller.CompanySelectionController;
 import com.econovafx.modules.core.ui.controller.UnitSelectionController;
+import com.econovafx.modules.core.ui.controller.DashboardController;
+import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.core.ui.view.SplashController;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.security.ui.controller.LoginController;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.util.Locale;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -119,7 +122,7 @@ public class App extends Application {
             loginStage.centerOnScreen();
             
             // Set callback for successful login
-            loginController.setOnLoginSuccess(this::showCompanySelection);
+            loginController.setOnLoginSuccess(this::loadMainAppAndShowCompanySelection);
             
             // Close splash and show login
             if (splashStage != null) {
@@ -134,9 +137,62 @@ public class App extends Application {
         }
     }
 
+    /**
+     * Loads the main app first, then shows company selection as a modal overlay.
+     */
+    private void loadMainAppAndShowCompanySelection() {
+        // First load the main app with empty dashboard
+        loadMainApp();
+        
+        // Then show company selection as modal overlay on top of the dashboard
+        showCompanySelectionModal();
+    }
+
     private Stage companySelectionStage;
     private Stage unitSelectionStage;
     private Company selectedCompany;
+
+    /**
+     * Shows company selection as a modal overlay on top of the main dashboard.
+     */
+    private void showCompanySelectionModal() {
+        try {
+            logger.info("Showing company selection modal overlay...");
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/company-selection.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> context.getBeanScope().get(cls));
+            VBox root = loader.load();
+            CompanySelectionController controller = loader.getController();
+            
+            // Apply styles
+            root.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
+            
+            // Show as modal using ModernDialog
+            ModernDialog.showModal(primaryStage, root, "Seleccionar Empresa");
+            
+            // Set callbacks
+            controller.setOnCompanySelected(() -> {
+                // Company selected, now check if it has units
+                selectedCompany = TenantContext.getCurrentTenant();
+                
+                // Close the modal by getting the dialog stage from the controller's context
+                // The ModernDialog handles closing automatically when callback completes
+                checkAndShowUnitSelectionModal();
+            });
+            
+            controller.setOnCancel(() -> {
+                logger.info("Company selection cancelled, exiting application");
+                System.exit(0);
+            });
+            
+            logger.info("Company selection modal displayed successfully");
+            
+        } catch (IOException e) {
+            logger.error("Failed to load company selection modal", e);
+            throw new RuntimeException("Failed to load company selection modal", e);
+        }
+    }
 
     private void showCompanySelection() {
         try {
@@ -184,6 +240,79 @@ public class App extends Application {
         } catch (IOException e) {
             logger.error("Failed to load company selection dialog", e);
             throw new RuntimeException("Failed to load company selection dialog", e);
+        }
+    }
+
+    /**
+     * Checks if the selected company has business units and shows unit selection modal if needed.
+     */
+    private void checkAndShowUnitSelectionModal() {
+        if (selectedCompany == null) {
+            logger.error("No company selected");
+            refreshDashboard();
+            return;
+        }
+        
+        try {
+            BusinessUnitService unitService = context.getBeanScope().get(BusinessUnitService.class);
+            boolean hasUnits = unitService.hasUnits(selectedCompany.getId());
+            
+            if (hasUnits) {
+                logger.info("Company {} has business units, showing unit selection modal", selectedCompany.getName());
+                showUnitSelectionModal();
+            } else {
+                logger.info("Company {} has no business units, refreshing dashboard", selectedCompany.getName());
+                refreshDashboard();
+            }
+        } catch (Exception e) {
+            logger.error("Error checking business units, proceeding to refresh dashboard", e);
+            refreshDashboard();
+        }
+    }
+
+    /**
+     * Shows business unit selection as a modal overlay on top of the main dashboard.
+     */
+    private void showUnitSelectionModal() {
+        try {
+            logger.info("Showing business unit selection modal overlay...");
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/unit-selection.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> context.getBeanScope().get(cls));
+            VBox root = loader.load();
+            UnitSelectionController controller = loader.getController();
+            
+            // Pass the selected company to the controller
+            controller.setCompany(selectedCompany);
+            
+            // Apply styles
+            root.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
+            
+            // Show as modal using ModernDialog
+            ModernDialog.showModal(primaryStage, root, "Seleccionar Unidad de Negocio");
+            
+            // Set callbacks
+            controller.setOnUnitSelected(() -> {
+                logger.info("Business unit selected, refreshing dashboard");
+                refreshDashboard();
+            });
+            
+            controller.setOnUnitSkipped(() -> {
+                logger.info("Business unit skipped, refreshing dashboard");
+                refreshDashboard();
+            });
+            
+            controller.setOnCancel(() -> {
+                logger.info("Unit selection cancelled, returning to company selection");
+                showCompanySelectionModal();
+            });
+            
+            logger.info("Business unit selection modal displayed successfully");
+            
+        } catch (IOException e) {
+            logger.error("Failed to load unit selection modal", e);
+            throw new RuntimeException("Failed to load unit selection modal", e);
         }
     }
 
@@ -327,6 +456,29 @@ public class App extends Application {
             }
         } catch (Exception e) {
             logger.error("Error starting backup scheduler: {}", e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Refreshes the dashboard data after company/unit selection.
+     * Gets the DashboardController from the ViewFactory and calls its refresh method.
+     */
+    private void refreshDashboard() {
+        try {
+            Scene scene = primaryStage.getScene();
+            if (scene != null) {
+                // Get the ViewFactory from context and retrieve the DashboardController
+                ViewFactory viewFactory = context.getViewFactory();
+                if (viewFactory != null) {
+                    DashboardController dashboardController = viewFactory.getDashboardController();
+                    if (dashboardController != null) {
+                        dashboardController.loadDashboardData();
+                        logger.info("Dashboard data refreshed");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error refreshing dashboard", e);
         }
     }
 
