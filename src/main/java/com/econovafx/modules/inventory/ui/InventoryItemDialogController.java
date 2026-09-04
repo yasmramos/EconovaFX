@@ -33,8 +33,6 @@ public class InventoryItemDialogController {
         this.dialogHandle = handle;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(InventoryItemDialogController.class);
-
     @FXML
     private Label titleLabel;
 
@@ -85,7 +83,6 @@ public class InventoryItemDialogController {
 
     private final InventoryService inventoryService;
     private InventoryItem currentItem;
-    private boolean saved = false;
 
     public InventoryItemDialogController(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
@@ -153,7 +150,6 @@ public class InventoryItemDialogController {
     }
 
     private ModernDialog.DialogHandle dialogHandle;
-    private boolean saved = false;
 
     @FXML
     public void initialize() {

@@ -57,7 +57,6 @@ public class InventoryMovementDialogController {
     private final UserContext userContext;
     private InventoryItem currentItem;
     private MovementType movementType;
-    private boolean saved = false;
 
     public enum MovementType {
         OUTPUT,
@@ -127,7 +126,6 @@ public class InventoryMovementDialogController {
     }
 
     private ModernDialog.DialogHandle dialogHandle;
-    private boolean saved = false;
 
     @FXML
     public void initialize() {

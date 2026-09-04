@@ -287,7 +287,7 @@ public class DashboardController implements Initializable {
         filterStartDate.setValue(LocalDate.now().minusDays(30));
     }
 
-    private void loadDashboardData() {
+    public void loadDashboardData() {
         showLoading(true);
 
         // Use background thread for data loading

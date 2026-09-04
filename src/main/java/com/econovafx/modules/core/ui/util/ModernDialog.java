@@ -98,19 +98,11 @@ public class ModernDialog {
         }
 
         /**
-         * Checks if the dialog is currently being dismissed.
-         * @return true if dismissal is in progress
+         * Gets the close property for observing dialog closure.
+         * @return The close property
          */
-        boolean isDismissing() {
-            return isDismissing;
-        }
-        
-        /**
-         * Sets the dismissing flag.
-         * @param dismissing true if dismissal is in progress
-         */
-        void setDismissing(boolean dismissing) {
-            isDismissing = dismissing;
+        public ObjectProperty<Void> closeProperty() {
+            return closeProperty;
         }
     }
 
@@ -452,7 +444,7 @@ public class ModernDialog {
         messageLabel.setMaxWidth(400);
         messageLabel.setStyle("-fx-font-size: 14px; -fx-padding: 20px;");
         
-        VBox content = new VBox(messageLabel);
+        javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(messageLabel);
         content.setStyle("-fx-background-color: white; -fx-padding: 20px;");
         
         showAndWait(ownerStage, content, title);
