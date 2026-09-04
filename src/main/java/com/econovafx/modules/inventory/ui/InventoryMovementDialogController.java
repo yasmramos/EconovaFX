@@ -126,14 +126,31 @@ public class InventoryMovementDialogController {
         }
     }
 
+    private ModernDialog.DialogHandle dialogHandle;
+    private boolean saved = false;
+
+    @FXML
+    public void initialize() {
+        // Initialize logic here
+    }
+
+    public void setDialogHandle(ModernDialog.DialogHandle handle) {
+        this.dialogHandle = handle;
+    }
+
     @FXML
     private void handleCancel() {
         closeDialog();
     }
 
     private void closeDialog() {
-        Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
-        dialogStage.close();
+        if (dialogHandle != null) {
+            dialogHandle.close();
+        } else {
+            // Fallback to old method if handle not set
+            Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
+            dialogStage.close();
+        }
     }
 
     @FXML
