@@ -349,10 +349,26 @@ public class ModernDialog {
             dialogStage.close();
             // Exit nested event loop if showAndWait is waiting
             if (nestedLoopKey != null) {
-                Platform.exitNestedEventLoop(nestedLoopKey, null);
+                try {
+                    Platform.exitNestedEventLoop(nestedLoopKey, null);
+                } catch (IllegalArgumentException e) {
+                    // Event loop already exited or key invalid - ignore in test environments
+                    if (!"test".equals(System.getProperty("env"))) {
+                        System.err.println("Warning: Could not exit nested event loop: " + e.getMessage());
+                    }
+                }
             } else {
                 // Fallback: try using dialogStage as key (for backward compatibility with deprecated closeDialog)
-                Platform.runLater(() -> Platform.exitNestedEventLoop(dialogStage, null));
+                Platform.runLater(() -> {
+                    try {
+                        Platform.exitNestedEventLoop(dialogStage, null);
+                    } catch (IllegalArgumentException e) {
+                        // Event loop already exited or key invalid - ignore in test environments
+                        if (!"test".equals(System.getProperty("env"))) {
+                            System.err.println("Warning: Could not exit nested event loop (fallback): " + e.getMessage());
+                        }
+                    }
+                });
             }
         });
         parallel.play();
