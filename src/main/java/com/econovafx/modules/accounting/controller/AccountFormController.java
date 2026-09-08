@@ -1,5 +1,6 @@
 package com.econovafx.modules.accounting.controller;
 
+import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.model.AccountType;
 import com.econovafx.modules.accounting.service.AccountService;
@@ -49,6 +50,11 @@ public class AccountFormController implements Initializable {
     
     private Account editingAccount;
     private boolean saved = false;
+    private ModernDialog.DialogHandle dialogHandle;
+    
+    public void setDialogHandle(ModernDialog.DialogHandle handle) {
+        this.dialogHandle = handle;
+    }
     
     public AccountFormController(AccountService accountService) {
         this.accountService = accountService;
@@ -159,8 +165,13 @@ public class AccountFormController implements Initializable {
     }
     
     private void closeDialog() {
-        Stage stage = (Stage) titleLabel.getScene().getWindow();
-        stage.close();
+        if (dialogHandle != null) {
+            dialogHandle.close();
+        } else {
+            // Fallback to old method if handle not set
+            Stage stage = (Stage) titleLabel.getScene().getWindow();
+            stage.close();
+        }
     }
     
     private void showAlert(Alert.AlertType alertType, String title, String message) {

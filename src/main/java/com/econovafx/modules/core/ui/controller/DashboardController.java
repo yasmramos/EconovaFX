@@ -194,16 +194,21 @@ public class DashboardController implements Initializable {
         
         initializeTableColumns();
         
-        // Wrap initialization in try-catch for visual tests where DB might not be ready
-        try {
-            initializeComboBoxes();
-            initializeDatePickerDefaults();
-            loadDashboardData();
-        } catch (Exception e) {
-            logger.warn("Could not initialize dashboard data (DB might not be ready): {}", e.getMessage());
+        // Only load data if tenant is already selected (e.g., returning to dashboard)
+        // Otherwise, wait for onCompanySelected() to be called after company selection
+        if (com.econovafx.modules.core.config.TenantContext.hasTenant()) {
+            try {
+                initializeComboBoxes();
+                initializeDatePickerDefaults();
+                loadDashboardData();
+            } catch (Exception e) {
+                logger.warn("Could not initialize dashboard data (DB might not be ready): {}", e.getMessage());
+            }
+        } else {
+            logger.info("No tenant selected yet, waiting for company selection to load dashboard data");
         }
         
-        // Auto-refresh every 30 seconds
+        // Auto-refresh every 30 seconds (only if tenant is selected)
         startAutoRefresh();
     }
 
@@ -282,7 +287,7 @@ public class DashboardController implements Initializable {
         filterStartDate.setValue(LocalDate.now().minusDays(30));
     }
 
-    private void loadDashboardData() {
+    public void loadDashboardData() {
         showLoading(true);
 
         // Use background thread for data loading

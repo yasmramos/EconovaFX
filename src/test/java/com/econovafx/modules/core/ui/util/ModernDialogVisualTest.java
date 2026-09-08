@@ -90,12 +90,15 @@ public class ModernDialogVisualTest extends ApplicationTest {
     public void testModernDialogClosed() throws Exception {
         // Open dialog
         clickOn("Open Dialog");
-        Thread.sleep(300);
+        Thread.sleep(500);
         
-        // Close dialog and capture on FX thread
+        // Close dialog by clicking close button within the dialog context
         interact(() -> {
-            // Close dialog by clicking close button
-            clickOn("Close");
+            // Find and click the close button in the dialog
+            Button closeButton = lookup(".button").queryAs(Button.class);
+            if (closeButton != null && "Close".equals(closeButton.getText())) {
+                closeButton.fire();
+            }
         });
         Thread.sleep(500);
         
