@@ -86,6 +86,7 @@ module econonovafx {
     requires java.desktop;
     
     provides io.ebean.config.EntityClassRegister with com.econovafx.EbeanEntityRegister;
+    provides io.avaje.inject.spi.InjectExtension with com.econovafx.EconovafxModule;
     
     // Open entity model packages to Ebean for reflective access (e.g. @DbEnumValue
     // enum introspection in io.ebean.core). Without these, io.ebean.core throws
