@@ -83,6 +83,7 @@ public class InventoryItemDialogController {
 
     private final InventoryService inventoryService;
     private InventoryItem currentItem;
+    private boolean saved = false;
 
     public InventoryItemDialogController(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
@@ -147,17 +148,6 @@ public class InventoryItemDialogController {
         barcodeField.setText(currentItem.getBarcode());
         contraAccountField.setText(currentItem.getContraAccountCode());
         costCenterField.setText(currentItem.getCostCenterCode());
-    }
-
-    private ModernDialog.DialogHandle dialogHandle;
-
-    @FXML
-    public void initialize() {
-        // Initialize logic here
-    }
-
-    public void setDialogHandle(ModernDialog.DialogHandle handle) {
-        this.dialogHandle = handle;
     }
 
     @FXML

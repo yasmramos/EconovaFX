@@ -2,6 +2,7 @@ package com.econovafx.modules.inventory.ui;
 
 import com.econovafx.modules.core.config.UserContext;
 import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.inventory.model.InventoryItem;
 import com.econovafx.modules.inventory.model.InventoryMovement;
 import com.econovafx.modules.inventory.model.Warehouse;
@@ -57,6 +58,7 @@ public class InventoryMovementDialogController {
     private final UserContext userContext;
     private InventoryItem currentItem;
     private MovementType movementType;
+    private boolean saved = false;
 
     public enum MovementType {
         OUTPUT,

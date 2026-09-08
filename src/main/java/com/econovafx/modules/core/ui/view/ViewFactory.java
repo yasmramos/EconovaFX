@@ -335,7 +335,7 @@ public class ViewFactory {
             // Wait for closure using showAndWait which uses nested event loop internally
             // We need to wait on the handle's closeProperty
             Object nestedLoopKey = new Object();
-            handle.closeProperty.addListener((obs, oldVal, newVal) -> {
+            handle.closeProperty().addListener((obs, oldVal, newVal) -> {
                 Platform.exitNestedEventLoop(nestedLoopKey, null);
             });
             Platform.enterNestedEventLoop(nestedLoopKey);
@@ -371,7 +371,7 @@ public class ViewFactory {
             
             // Wait for closure using showAndWait which uses nested event loop internally
             Object nestedLoopKey = new Object();
-            handle.closeProperty.addListener((obs, oldVal, newVal) -> {
+            handle.closeProperty().addListener((obs, oldVal, newVal) -> {
                 Platform.exitNestedEventLoop(nestedLoopKey, null);
             });
             Platform.enterNestedEventLoop(nestedLoopKey);
