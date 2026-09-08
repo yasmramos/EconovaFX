@@ -3,6 +3,7 @@ package com.econovafx.modules.billing.controller;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.core.exception.GlobalExceptionHandler;
+import com.econovafx.modules.core.ui.util.ModernDialog;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,6 +30,18 @@ public class ThirdPartyFormController implements Initializable {
     private static final ExecutorService backgroundExecutor = Executors.newCachedThreadPool();
     
     private final ThirdPartyService thirdPartyService;
+    
+    // Reference to dialog handle for proper closure
+    private ModernDialog.DialogHandle dialogHandle;
+    
+    /**
+     * Sets the dialog handle for this controller.
+     * Call this after loading the FXML to enable proper dialog closure.
+     * @param handle The dialog handle
+     */
+    public void setDialogHandle(ModernDialog.DialogHandle handle) {
+        this.dialogHandle = handle;
+    }
     
     @FXML
     private Label titleLabel;
@@ -280,8 +293,13 @@ public class ThirdPartyFormController implements Initializable {
     }
     
     private void closeDialog() {
-        Stage stage = (Stage) nameField.getScene().getWindow();
-        stage.close();
+        if (dialogHandle != null) {
+            dialogHandle.close();
+        } else {
+            // Fallback for backward compatibility
+            Stage stage = (Stage) nameField.getScene().getWindow();
+            stage.close();
+        }
     }
     
     public ThirdParty getResult() {

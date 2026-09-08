@@ -42,6 +42,18 @@ public class ComprobanteFormController implements Initializable {
     private final TransactionService transactionService;
     private final ThirdPartyService thirdPartyService;
 
+    // Reference to dialog handle for proper closure
+    private ModernDialog.DialogHandle dialogHandle;
+
+    /**
+     * Sets the dialog handle for this controller.
+     * Call this after loading the FXML to enable proper dialog closure.
+     * @param handle The dialog handle
+     */
+    public void setDialogHandle(ModernDialog.DialogHandle handle) {
+        this.dialogHandle = handle;
+    }
+
     // Header fields
     @FXML
     private Label titleLabel;
@@ -580,8 +592,13 @@ public class ComprobanteFormController implements Initializable {
     }
 
     private void closeDialog() {
-        Stage stage = (Stage) titleLabel.getScene().getWindow();
-        stage.close();
+        if (dialogHandle != null) {
+            dialogHandle.close();
+        } else {
+            // Fallback to old method if handle not set
+            Stage stage = (Stage) titleLabel.getScene().getWindow();
+            stage.close();
+        }
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {

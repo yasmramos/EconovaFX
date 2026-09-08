@@ -2,6 +2,7 @@ package com.econovafx.modules.inventory.ui;
 
 import com.econovafx.modules.core.config.UserContext;
 import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.inventory.model.InventoryItem;
 import com.econovafx.modules.inventory.model.InventoryMovement;
 import com.econovafx.modules.inventory.model.Warehouse;
@@ -126,14 +127,30 @@ public class InventoryMovementDialogController {
         }
     }
 
+    private ModernDialog.DialogHandle dialogHandle;
+
+    @FXML
+    public void initialize() {
+        // Initialize logic here
+    }
+
+    public void setDialogHandle(ModernDialog.DialogHandle handle) {
+        this.dialogHandle = handle;
+    }
+
     @FXML
     private void handleCancel() {
         closeDialog();
     }
 
     private void closeDialog() {
-        Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
-        dialogStage.close();
+        if (dialogHandle != null) {
+            dialogHandle.close();
+        } else {
+            // Fallback to old method if handle not set
+            Stage dialogStage = (Stage) titleLabel.getScene().getWindow();
+            dialogStage.close();
+        }
     }
 
     @FXML

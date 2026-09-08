@@ -22,7 +22,7 @@
         <logback.version>1.4.14</logback.version>
         <jacoco.version>0.8.13</jacoco.version>
         <testfx.version>4.0.17</testfx.version>
-        <monocle.version>3.1.0</monocle.version>
+        <monocle.version>17.0.10</monocle.version>
         <!-- Default so Surefire's @{argLine} resolves even when JaCoCo is skipped -->
         <argLine></argLine>
     </properties>
@@ -226,7 +226,7 @@
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>openjfx-monocle</artifactId>
-            <version>jdk-12.0.1+2</version>
+            <version>${monocle.version}</version>
             <scope>test</scope>
         </dependency>
         
@@ -297,7 +297,7 @@
                     </excludes>
                     <forkCount>1</forkCount>
                     <useModulePath>false</useModulePath>
-                    <argLine>-Xmx1024m -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Djava.awt.headless=true @{argLine}</argLine>
+                    <argLine>-Xmx1024m -Dtestfx.robot=glass -Dtestfx.headless=true -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw -Dprism.text=t2k -Djava.awt.headless=true @{argLine}</argLine>
                 </configuration>
             </plugin>
             <!-- Compiler Plugin -->
