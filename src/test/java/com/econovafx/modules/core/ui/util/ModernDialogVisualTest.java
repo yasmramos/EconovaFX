@@ -1,6 +1,7 @@
 package com.econovafx.modules.core.ui.util;
 
 import com.econovafx.modules.core.ui.util.ModernDialog;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -140,9 +141,12 @@ public class ModernDialogVisualTest extends ApplicationTest {
             while (parent != null) {
                 if (parent.getStyleClass().contains("modern-overlay")) {
                     Object userData = parent.getUserData();
-                    if (userData instanceof ModernDialog.CleanupHandler) {
-                        ModernDialog.CleanupHandler handler = (ModernDialog.CleanupHandler) userData;
-                        handler.closeProperty.setValue(null);
+                    if (userData instanceof ModernDialog.DialogHandle) {
+                        // Find the DialogHandle by searching overlay's children
+                        ModernDialog.DialogHandle handle = findDialogHandle(parent);
+                        if (handle != null) {
+                            handle.close();
+                        }
                     }
                     break;
                 }
@@ -152,5 +156,28 @@ public class ModernDialogVisualTest extends ApplicationTest {
         
         content.getChildren().addAll(title, message, closeButton);
         return content;
+    }
+
+    /**
+     * Helper method to find the DialogHandle associated with an overlay.
+     * The handle is stored in the overlay's properties map.
+     */
+    private ModernDialog.DialogHandle findDialogHandle(Node overlay) {
+        // Try to get from properties (using a known key)
+        Object prop = overlay.getProperties().get("dialogHandle");
+        if (prop instanceof ModernDialog.DialogHandle) {
+            return (ModernDialog.DialogHandle) prop;
+        }
+        
+        // Fallback: search through children if needed
+        if (overlay instanceof javafx.scene.Parent) {
+            for (Node child : ((javafx.scene.Parent) overlay).getChildrenUnmodifiable()) {
+                if (child.getStyleClass().contains("modern-modal-card")) {
+                    // The handle should be accessible via the overlay itself
+                    break;
+                }
+            }
+        }
+        return null;
     }
 }
