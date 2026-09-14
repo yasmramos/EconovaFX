@@ -198,8 +198,9 @@ public class ModernDialog {
             }
         });
 
-        // Store cleanup handler in overlay's user data
-        overlay.setUserData(new CleanupHandler(ownerRoot, closeProperty, nestedLoopKey));
+        // Create dialog handle and store it in overlay's properties for external access
+        DialogHandle handle = new DialogHandle(overlay, ownerRoot, modalCard, closeProperty, nestedLoopKey);
+        overlay.getProperties().put("dialogHandle", handle);
 
         // Show the overlay
         overlay.setVisible(true);
@@ -207,8 +208,8 @@ public class ModernDialog {
         // Play entrance animations
         playEntranceAnimation(overlay, modalCard);
 
-        // Create and return handle
-        return new DialogHandle(overlay, ownerRoot, modalCard, closeProperty, nestedLoopKey);
+        // Return handle
+        return handle;
     }
     
     /**
