@@ -26,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.scene.text.Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,11 @@ public class App extends Application {
     @Override
     public void init() throws Exception {
         logger.info("Initializing EconoNova FX Application v{}", VERSION);
+        
+        // Load Lato font from resources
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Lato-Regular.ttf"), 12);
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Lato-Bold.ttf"), 12);
+        logger.info("Lato font family loaded successfully");
         
         // Initialize internationalization with default locale (Spanish - Cuba)
         I18nManager.init(new Locale("es", "CU"));
@@ -82,6 +88,9 @@ public class App extends Application {
             splashController = loader.getController();
             
             Scene splashScene = new Scene(root);
+            // Load theme tokens first for global variables
+            splashScene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
+            splashScene.getStylesheets().add(getClass().getResource("/css/splash.css").toExternalForm());
             splashStage.setScene(splashScene);
             splashStage.setTitle("EconoNova FX - Loading");
             splashStage.setResizable(false);
@@ -111,6 +120,8 @@ public class App extends Application {
             loginController = loader.getController();
             
             Scene loginScene = new Scene(root);
+            // Load theme tokens first for global variables
+            loginScene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
             loginScene.getStylesheets().add(getClass().getResource("/css/login-styles.css").toExternalForm());
             
             loginStage = new Stage();
@@ -165,7 +176,8 @@ public class App extends Application {
             VBox root = loader.load();
             CompanySelectionController controller = loader.getController();
             
-            // Apply styles
+            // Apply styles - theme tokens first, then component styles
+            root.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
             root.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
             
             // Show as modal using ModernDialog
@@ -286,7 +298,8 @@ public class App extends Application {
             // Pass the selected company to the controller
             controller.setCompany(selectedCompany);
             
-            // Apply styles
+            // Apply styles - theme tokens first, then component styles
+            root.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
             root.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
             
             // Show as modal using ModernDialog
@@ -417,7 +430,8 @@ public class App extends Application {
 
             Scene scene = new Scene(loader.load(), 1200, 800);
 
-            // Add all stylesheets in correct order
+            // Add all stylesheets in correct order - theme tokens first!
+            scene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/css/main-styles.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/styles/sidebar.css").toExternalForm());
             scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
