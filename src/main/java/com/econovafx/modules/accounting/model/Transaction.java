@@ -1,0 +1,201 @@
+package com.econovafx.modules.accounting.model;
+import com.econovafx.modules.core.model.BaseEntity;
+import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.billing.model.ThirdParty;
+
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Accounting Transaction entity
+ */
+@Entity
+@Table(name = "transactions")
+public class Transaction extends BaseEntity {
+
+    @Column(nullable = false)
+    private String number;
+
+    @Column(nullable = false, columnDefinition = "DATE")
+    private LocalDate date;
+
+    @Column(nullable = false)
+    private String type;
+
+    @Column(length = 500)
+    private String description;
+
+    @Column(length = 100)
+    private String reference;
+
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<TransactionEntry> entries = new ArrayList<>();
+
+    @Column(name = "created_by_user_id", updatable = false, columnDefinition = "BIGINT")
+    private Long createdByUserId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "third_party_id")
+    private ThirdParty thirdParty;
+
+    @Column(precision = 19, scale = 4)
+    private BigDecimal totalDebit = BigDecimal.ZERO;
+
+    @Column(precision = 19, scale = 4)
+    private BigDecimal totalCredit = BigDecimal.ZERO;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private TransactionStatus status = TransactionStatus.DRAFT;
+
+    @Column(name = "is_posted")
+    @Deprecated // Use status field instead
+    private Boolean isPosted = false;
+
+    public Transaction() {
+    }
+
+    // Getters and Setters
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public List<TransactionEntry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<TransactionEntry> entries) {
+        this.entries = entries;
+    }
+    public Long getCreatedBy() {
+        return createdByUserId;
+    }
+
+    public void setCreatedBy(Long createdByUserId) {
+        this.createdByUserId = createdByUserId;
+    }
+
+    public ThirdParty getThirdParty() {
+        return thirdParty;
+    }
+
+    public void setThirdParty(ThirdParty thirdParty) {
+        this.thirdParty = thirdParty;
+    }
+
+    public BigDecimal getTotalDebit() {
+        return totalDebit;
+    }
+
+    public void setTotalDebit(BigDecimal totalDebit) {
+        this.totalDebit = totalDebit;
+    }
+
+    public BigDecimal getTotalCredit() {
+        return totalCredit;
+    }
+
+    public void setTotalCredit(BigDecimal totalCredit) {
+        this.totalCredit = totalCredit;
+    }
+
+    public Boolean getIsPosted() {
+        return isPosted;
+    }
+
+    @Deprecated // Use getStatus instead
+    public void setIsPosted(Boolean posted) {
+        isPosted = posted;
+        // Keep status in sync for backward compatibility
+        if (posted != null && posted) {
+            this.status = TransactionStatus.POSTED;
+        } else if (posted != null && !posted) {
+            this.status = TransactionStatus.DRAFT;
+        }
+    }
+
+    public TransactionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransactionStatus status) {
+        this.status = status;
+        // Keep isPosted in sync for backward compatibility
+        if (status == TransactionStatus.POSTED) {
+            this.isPosted = true;
+        } else if (status == TransactionStatus.DRAFT) {
+            this.isPosted = false;
+        }
+    }
+
+    public void addEntry(TransactionEntry entry) {
+        entries.add(entry);
+        entry.setTransaction(this);
+        if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) > 0) {
+            totalDebit = totalDebit.add(entry.getDebitAmount());
+        }
+        if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+            totalCredit = totalCredit.add(entry.getCreditAmount());
+        }
+    }
+
+    public boolean isBalanced() {
+        return totalDebit.compareTo(totalCredit) == 0;
+    }
+
+    /**
+     * Recalculate totals from entries to ensure consistency
+     */
+    public void recalculateTotals() {
+        totalDebit = BigDecimal.ZERO;
+        totalCredit = BigDecimal.ZERO;
+        for (TransactionEntry entry : entries) {
+            if (entry.getDebitAmount().compareTo(BigDecimal.ZERO) > 0) {
+                totalDebit = totalDebit.add(entry.getDebitAmount());
+            }
+            if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+                totalCredit = totalCredit.add(entry.getCreditAmount());
+            }
+        }
+    }
+}

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Pre-commit hook para bloquear archivos de la carpeta target
+
+# Verificar si hay archivos staged en la carpeta target
+if git diff --cached --name-only | grep -q "^target/"; then
+    echo "❌ ERROR: No se permiten archivos de la carpeta 'target' en el commit."
+    echo ""
+    echo "La carpeta 'target' contiene archivos compilados y no debe versionarse."
+    echo "Por favor, ejecuta:"
+    echo "  git reset HEAD target/"
+    echo "  git clean -fd target/"
+    echo ""
+    echo "Y asegúrate de que '.gitignore' incluya 'target/' antes de hacer commit."
+    exit 1
+fi
+
+exit 0

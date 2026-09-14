@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.econovafx.modules.inventory.ui.InventoryMovementDialogController"
+      spacing="15" styleClass="dialog-content">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <!-- Title -->
+    <Label fx:id="titleLabel" text="Register Inventory Movement" styleClass="dialog-title">
+        <font>
+            <Font name="System Bold" size="18"/>
+        </font>
+    </Label>
+    
+    <!-- Form Fields -->
+    <GridPane hgap="15" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="70"/>
+        </columnConstraints>
+        
+        <!-- Movement Type -->
+        <Label text="Type:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="typeCombo" prefWidth="200" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        
+        <!-- Quantity -->
+        <Label text="Quantity:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="quantityField" promptText="0.00" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        
+        <!-- Document Number -->
+        <Label text="Document Number:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="documentField" promptText="e.g., DOC-001" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        
+        <!-- Date -->
+        <Label text="Date:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="datePicker" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        
+        <!-- Notes/Reason -->
+        <Label text="Notes/Reason:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextArea fx:id="notesField" promptText="Enter movement notes or reason" 
+                  prefRowCount="4" wrapText="true" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        
+        <!-- Current Stock Info -->
+        <Label text="Current Stock:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <Label fx:id="currentStockLabel" text="0.00" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        
+        <!-- Warehouse -->
+        <Label text="Warehouse:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="warehouseCombo" prefWidth="200" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+    </GridPane>
+    
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel"/>
+        <Button fx:id="saveButton" text="Save" onAction="#handleSave" styleClass="button-primary"/>
+    </HBox>
+    
+</VBox>

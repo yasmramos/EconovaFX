@@ -1,0 +1,140 @@
+/* Selection Dialog Styles - Modern Web Dashboard Style */
+
+/* Container */
+.selection-dialog-container {
+    -fx-background-color: linear-gradient(to bottom, #f5f7fa, #e8ecf1);
+    -fx-background-radius: 12px;
+}
+
+/* Title */
+.selection-dialog-title {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 24px;
+}
+
+/* Subtitle */
+.selection-dialog-subtitle {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 13px;
+}
+
+/* Card */
+.selection-dialog-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-padding: 20px;
+}
+
+/* ListView */
+.company-list-view,
+.unit-list-view {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8px;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.company-list-view .list-cell,
+.unit-list-view .list-cell {
+    -fx-background-color: white;
+    -fx-padding: 12px 15px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+}
+
+.company-list-view .list-cell:hover,
+.unit-list-view .list-cell:hover {
+    -fx-background-color: #e3f2fd;
+}
+
+.company-list-view .list-cell:selected,
+.unit-list-view .list-cell:selected {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+}
+
+/* Buttons */
+.select-button {
+    -fx-background-color: linear-gradient(to right, #2196F3, #1976D2);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.select-button:hover {
+    -fx-background-color: linear-gradient(to right, #1976D2, #1565C0);
+    -fx-effect: dropshadow(three-pass-box, rgba(33,150,243,0.4), 10, 0, 0, 2);
+}
+
+.select-button:disabled {
+    -fx-background-color: #bdc3c7;
+    -fx-opacity: 0.7;
+}
+
+.cancel-button {
+    -fx-background-color: #ecf0f1;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #bdc3c7;
+}
+
+.skip-button {
+    -fx-background-color: #fff3cd;
+    -fx-text-fill: #856404;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.skip-button:hover {
+    -fx-background-color: #ffe69c;
+}
+
+/* Info Box */
+.selected-info-box {
+    -fx-background-color: #e8f5e9;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px;
+    -fx-border-color: #4caf50;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+}
+
+.info-label {
+    -fx-text-fill: #2e7d32;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.selected-company-name,
+.selected-unit-name {
+    -fx-text-fill: #1b5e20;
+    -fx-font-size: 13px;
+}
+
+/* Empty State */
+.empty-state-label {
+    -fx-text-fill: #95a5a6;
+    -fx-font-size: 13px;
+    -fx-text-alignment: center;
+}
+
+/* Footer */
+.selection-dialog-footer {
+    -fx-text-fill: #bdc3c7;
+    -fx-font-size: 11px;
+}
+
+/* Progress Bar */
+.progress-bar {
+    -fx-accent: #2196F3;
+}

@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.econovafx</groupId>
+    <artifactId>econovafx</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>EconoNova FX - Accounting System</name>
+    <description>Modern accounting system built with JavaFX, Ebean ORM, and manual dependency injection</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+        <javafx.version>17.0.2</javafx.version>
+        <ebean.version>17.11.0</ebean.version>
+        <h2.version>2.2.224</h2.version>
+        <logback.version>1.4.14</logback.version>
+        <jacoco.version>0.8.13</jacoco.version>
+        <testfx.version>4.0.17</testfx.version>
+        <monocle.version>17.0.10</monocle.version>
+        <!-- Default so Surefire's @{argLine} resolves even when JaCoCo is skipped -->
+        <argLine></argLine>
+    </properties>
+
+    <dependencies>
+
+        <!-- JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        
+        <!-- Ikonli - Icon Library -->
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>12.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-materialdesign2-pack</artifactId>
+            <version>12.4.0</version>
+        </dependency>
+
+        <!-- Jakarta Persistence API (JPA) -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <!-- Ebean ORM -->
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean</artifactId>
+            <version>${ebean.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-ddl-generator</artifactId>
+            <version>${ebean.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-migration</artifactId>
+            <version>14.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-test</artifactId>
+            <version>${ebean.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- H2 Database (for development and tests) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+
+        <!-- PostgreSQL Database Driver (for production) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <!-- Avaje Inject (Dependency Injection) -->
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-inject</artifactId>
+            <version>12.6</version>
+        </dependency>
+
+        <!-- Avaje Config (Configuration Management) -->
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-config</artifactId>
+            <version>5.2</version>
+        </dependency>
+
+        <!-- Avaje Aspect Inject (AOP for method interception) -->
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-inject-aop</artifactId>
+            <version>12.6</version>
+        </dependency>
+
+        <!-- Jsoup for HTML Parsing (BCC Exchange Rates) -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.17.2</version>
+        </dependency>
+
+        <!-- BCrypt for Password Hashing -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <!-- Apache PDFBox for PDF Generation -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.29</version>
+        </dependency>
+
+        <!-- OpenHTMLToPDF for HTML/CSS to PDF rendering -->
+        <dependency>
+            <groupId>com.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-core</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-pdfbox</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-slf4j</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+
+        <!-- Apache POI for Excel Export -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.5</version>
+        </dependency>
+
+        <!-- JAXB for Java 17+ (required by Ebean) -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>4.0.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- TestFX for JavaFX Testing -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>${testfx.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>${testfx.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Monocle for Headless JavaFX Testing -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>${monocle.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.3</version>
+        </dependency>
+        
+        <!-- Jackson JSR310 for Java 8 Date/Time support (required by ebean-test) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.15.3</version>
+        </dependency>
+        <!-- ebean-annotation is provided transitively by ebean ${ebean.version};
+             do not pin an older version (was 7.8) so annotations like @Where stay
+             consistent with the Ebean 17.x enhancer. -->
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <!-- JaCoCo Plugin for Code Coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                            <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Surefire Plugin for JUnit 5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/MainViewVisualTest.java</exclude>
+                    </excludes>
+                    <forkCount>1</forkCount>
+                    <useModulePath>false</useModulePath>
+                    <argLine>-Xmx1024m -Dtestfx.robot=glass -Dtestfx.headless=true -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw -Dprism.text=t2k -Djava.awt.headless=true @{argLine}</argLine>
+                </configuration>
+            </plugin>
+            <!-- Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.12.1</version>
+                <configuration>
+                    <release>17</release>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>io.avaje</groupId>
+                            <artifactId>avaje-inject-generator</artifactId>
+                            <version>12.6</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!-- Ebean Enhance Plugin -->
+            <plugin>
+                <groupId>io.ebean</groupId>
+                <artifactId>ebean-maven-plugin</artifactId>
+                <version>${ebean.version}</version>
+                <executions>
+                    <execution>
+                        <id>enhance</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                        <configuration>
+                            <transformArgs>debug=1,version=149</transformArgs>
+                            <packages>com.econovafx.modules.core.model,com.econovafx.modules.accounting.model,com.econovafx.modules.billing.model,com.econovafx.modules.payroll.model,com.econovafx.modules.inventory.model,com.econovafx.modules.receivables.model,com.econovafx.modules.payables.model,com.econovafx.modules.bank.model,com.econovafx.modules.cash.model,com.econovafx.modules.assets.model,com.econovafx.modules.fixedassets.model,com.econovafx.modules.reporting.model,com.econovafx.modules.security.model</packages>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- JAR Plugin with Main-Class -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.econovafx.Launcher</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- JavaFX Maven Plugin -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>com.econovafx.Launcher</mainClass>
+                    <options>
+                        <!-- Ensure Ebean agent is loaded at runtime to enhance beans when necessary -->
+                        <option>-javaagent=${project.basedir}/lib/ebean-agent-${ebean.version}.jar</option>
+
+                        <!-- Open entity model packages to Ebean for reflective access.
+                             The module name is 'econonovafx' (see module-info.java); the
+                             previous target 'com.econovafx.domain' did not exist. -->
+                        <option>--add-opens=econonovafx/com.econovafx.modules.core.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.accounting.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.billing.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.payroll.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.inventory.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.receivables.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.payables.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.bank.model=io.ebean.core</option>
+                        <option>--add-opens=econonovafx/com.econovafx.modules.cash.model=io.ebean.core</option>
+                        <option>--add-opens=java.base/java.lang=ALL-UNNAMED</option>
+                        <option>--add-opens=java.base/java.lang.invoke=ALL-UNNAMED</option>
+                        <option>--add-opens=java.base/java.lang.reflect=ALL-UNNAMED</option>
+                        <option>--add-opens=java.base/java.util=ALL-UNNAMED</option>
+                        <option>--add-opens=java.base/java.math=ALL-UNNAMED</option>
+                        <!-- Add opens for TestFX/Monocle -->
+                        <option>--add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED</option>
+                        <option>--add-opens=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</option>
+                        <option>--add-opens=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED</option>
+                    </options>
+                </configuration>
+            </plugin>
+
+            <!-- Copy Ebean agent into lib/ so -javaagent can reference it during runtime -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-ebean-agent</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifact>io.ebean:ebean-agent:${ebean.version}</artifact>
+                            <outputDirectory>${project.basedir}/lib</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+          <!-- generated by avaje inject -->
+      <plugin>
+        <groupId>io.avaje</groupId>
+        <artifactId>avaje-inject-maven-plugin</artifactId>
+        <version>12.6</version>
+        <executions>
+          <execution>
+            <?m2e execute?>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>provides</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Maven Shade Plugin for creating executable fat JAR -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>com.econovafx.Launcher</mainClass>
+                </transformer>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <dependencyReducedPomLocation>${java.io.tmpdir}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    </build>
+
+    <profiles>
+        <!-- Profile for full build with all dependencies -->
+        <profile>
+            <id>full</id>
+            <properties>
+                <java.version>17</java.version>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.12.1</version>
+                        <configuration>
+                            <release>17</release>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>io.avaje</groupId>
+                                    <artifactId>avaje-inject-generator</artifactId>
+                                    <version>12.6</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Profile for native image compilation with GraalVM -->
+        <profile>
+            <id>native</id>
+            <properties>
+                <java.version>17</java.version>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Disable shade plugin for native build -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>shade-jar</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                    <!-- Disable ebean agent copy for native build -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-ebean-agent</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- GluonFX Maven Plugin for JavaFX native image -->
+                    <plugin>
+                        <groupId>com.gluonhq</groupId>
+                        <artifactId>gluonfx-maven-plugin</artifactId>
+                        <version>1.0.22</version>
+                        <configuration>
+                            <mainClass>com.econovafx.Launcher</mainClass>
+                            <verbose>true</verbose>
+                            <nativeImageArgs>
+                                <arg>--initialize-at-run-time=ch.qos.logback.classic.Logger,ch.qos.logback.classic.LoggerContext,ch.qos.logback.core.util.DynamicClassLoadingVisitor</arg>
+                                <arg>--initialize-at-run-time=com.zaxxer.hikari.HikariConfig</arg>
+                                <arg>-H:+ReportExceptionStackTraces</arg>
+                                <arg>--report-unsupported-elements-at-runtime</arg>
+                                <arg>--no-fallback</arg>
+                            </nativeImageArgs>
+                            <bundlesList>
+                                <bundle>messages</bundle>
+                                <bundle>messages_es</bundle>
+                            </bundlesList>
+                            <reflectionList>
+                                <!-- Ebean Entities - Core -->
+                                <list>com.econovafx.modules.core.model.Company</list>
+                                <list>com.econovafx.modules.core.model.User</list>
+                                <list>com.econovafx.modules.core.model.Currency</list>
+                                <list>com.econovafx.modules.core.model.ExchangeRate</list>
+                                <list>com.econovafx.modules.core.model.BusinessUnit</list>
+                                <list>com.econovafx.modules.core.model.AuditLog</list>
+                                <list>com.econovafx.modules.core.model.SystemConfiguration</list>
+                                <list>com.econovafx.modules.core.model.ReportDefinition</list>
+                                <!-- Ebean Entities - Security -->
+                                <list>com.econovafx.modules.security.model.Role</list>
+                                <!-- Ebean Entities - Accounting -->
+                                <list>com.econovafx.modules.accounting.model.Account</list>
+                                <list>com.econovafx.modules.accounting.model.Transaction</list>
+                                <list>com.econovafx.modules.accounting.model.TransactionEntry</list>
+                                <list>com.econovafx.modules.accounting.model.AccountingPeriod</list>
+                                <list>com.econovafx.modules.accounting.model.ClosingEntry</list>
+                                <list>com.econovafx.modules.accounting.model.ExchangeDifference</list>
+                                <list>com.econovafx.modules.accounting.model.FinancialStatementModel</list>
+                                <list>com.econovafx.modules.accounting.model.FinancialStatementRow</list>
+                                <!-- Ebean Entities - Billing -->
+                                <list>com.econovafx.modules.billing.model.ThirdParty</list>
+                                <list>com.econovafx.modules.billing.model.SalesInvoice</list>
+                                <list>com.econovafx.modules.billing.model.SalesInvoiceLine</list>
+                                <list>com.econovafx.modules.billing.model.BillingSeries</list>
+                                <list>com.econovafx.modules.billing.model.TaxRate</list>
+                                <!-- Ebean Entities - Payroll -->
+                                <list>com.econovafx.modules.payroll.model.Employee</list>
+                                <list>com.econovafx.modules.payroll.model.PayrollBatch</list>
+                                <list>com.econovafx.modules.payroll.model.PayrollDetail</list>
+                                <list>com.econovafx.modules.payroll.model.PayrollConcept</list>
+                                <list>com.econovafx.modules.payroll.model.PayrollPeriod</list>
+                                <!-- Ebean Entities - Inventory -->
+                                <list>com.econovafx.modules.inventory.model.InventoryItem</list>
+                                <list>com.econovafx.modules.inventory.model.InventoryMovement</list>
+                                <list>com.econovafx.modules.inventory.model.InventoryCategory</list>
+                                <list>com.econovafx.modules.inventory.model.Warehouse</list>
+                                <!-- Ebean Entities - Receivables -->
+                                <list>com.econovafx.modules.receivables.model.CustomerInvoice</list>
+                                <list>com.econovafx.modules.receivables.model.CustomerPayment</list>
+                                <!-- Ebean Entities - Payables -->
+                                <list>com.econovafx.modules.payables.model.SupplierInvoice</list>
+                                <list>com.econovafx.modules.payables.model.SupplierPayment</list>
+                                <!-- Ebean Entities - Bank -->
+                                <list>com.econovafx.modules.bank.model.BankAccount</list>
+                                <list>com.econovafx.modules.bank.model.BankReconciliation</list>
+                                <list>com.econovafx.modules.bank.model.ReconciliationItem</list>
+                                <!-- Ebean Entities - Cash -->
+                                <list>com.econovafx.modules.cash.model.CashBox</list>
+                                <list>com.econovafx.modules.cash.model.CashMovement</list>
+                                <!-- Ebean Entities - Assets -->
+                                <list>com.econovafx.modules.assets.model.FixedAsset</list>
+                                <!-- Ebean Entities - Fixed Assets -->
+                                <list>com.econovafx.modules.fixedassets.model.FixedAsset</list>
+                                <list>com.econovafx.modules.fixedassets.model.FixedAssetCategory</list>
+                                <list>com.econovafx.modules.fixedassets.model.DepreciationRecord</list>
+                                <!-- Ebean Entities - Reporting -->
+                                <list>com.econovafx.modules.reporting.model.FinancialReport</list>
+                                <!-- FXML Controllers - Core -->
+                                <list>com.econovafx.modules.core.ui.controller.DashboardController</list>
+                                <list>com.econovafx.modules.core.ui.controller.MainViewController</list>
+                                <list>com.econovafx.modules.core.ui.controller.CompanySelectionController</list>
+                                <list>com.econovafx.modules.core.ui.controller.UnitSelectionController</list>
+                                <list>com.econovafx.modules.core.ui.controller.WarehouseConfigController</list>
+                                <list>com.econovafx.modules.core.ui.controller.ExchangeRatesController</list>
+                                <list>com.econovafx.modules.core.ui.controller.SystemSettingsController</list>
+                                <list>com.econovafx.modules.core.ui.controller.AuditLogsController</list>
+                                <list>com.econovafx.modules.core.ui.view.SplashController</list>
+                                <!-- FXML Controllers - Security -->
+                                <list>com.econovafx.modules.security.ui.controller.LoginController</list>
+                                <!-- FXML Controllers - Accounting -->
+                                <list>com.econovafx.modules.accounting.controller.AccountsController</list>
+                                <list>com.econovafx.modules.accounting.controller.AccountFormController</list>
+                                <list>com.econovafx.modules.accounting.controller.TransactionsController</list>
+                                <list>com.econovafx.modules.accounting.controller.TransactionEntryController</list>
+                                <list>com.econovafx.modules.accounting.controller.AccountingPeriodsController</list>
+                                <list>com.econovafx.modules.accounting.controller.AccountingClosuresController</list>
+                                <list>com.econovafx.modules.accounting.controller.ComprobantesController</list>
+                                <list>com.econovafx.modules.accounting.controller.ComprobanteFormController</list>
+                                <!-- FXML Controllers - Billing -->
+                                <list>com.econovafx.modules.billing.controller.ThirdPartiesController</list>
+                                <list>com.econovafx.modules.billing.controller.ThirdPartyFormController</list>
+                                <list>com.econovafx.modules.billing.controller.ThirdPartyTransactionsController</list>
+                                <!-- FXML Controllers - Inventory -->
+                                <list>com.econovafx.modules.inventory.controller.InventoryController</list>
+                                <list>com.econovafx.modules.inventory.controller.WarehouseConfigController</list>
+                                <list>com.econovafx.modules.inventory.ui.InventoryItemDialogController</list>
+                                <list>com.econovafx.modules.inventory.ui.InventoryMovementDialogController</list>
+                                <!-- FXML Controllers - Fixed Assets -->
+                                <list>com.econovafx.modules.fixedassets.controller.FixedAssetController</list>
+                                <!-- FXML Controllers - Cash -->
+                                <list>com.econovafx.modules.cash.controller.CashBankController</list>
+                                <list>com.econovafx.modules.cash.controller.CashModuleController</list>
+                                <!-- FXML Controllers - Reporting -->
+                                <list>com.econovafx.modules.reporting.controller.FinancialReportingController</list>
+                            </reflectionList>
+                            <appIdentifier>econovafx</appIdentifier>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

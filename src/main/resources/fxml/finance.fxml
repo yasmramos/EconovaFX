@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.modules.finance.controller.FinanceController"
+      fx:id="contentArea"
+      spacing="20"
+      styleClass="bg-gray-50, p-6">
+
+    <Label text="Financial Management" styleClass="text-2xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2c-cash-multiple" iconSize="24"/></graphic></Label>
+
+    <Separator/>
+
+    <!-- Summary Cards -->
+    <GridPane hgap="20" vgap="20">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="33" />
+            <ColumnConstraints percentWidth="33" />
+            <ColumnConstraints percentWidth="34" />
+        </columnConstraints>
+        
+        <VBox styleClass="card, bg-white, p-6" GridPane.columnIndex="0">
+            <Label text="Cash Flow" styleClass="text-lg, font-semibold, text-slate-700"/>
+            <Label text="$0.00" styleClass="text-2xl, font-bold, text-green-600" fx:id="lblCashFlow"/>
+        </VBox>
+        
+        <VBox styleClass="card, bg-white, p-6" GridPane.columnIndex="1">
+            <Label text="Receivables" styleClass="text-lg, font-semibold, text-slate-700"/>
+            <Label text="$0.00" styleClass="text-2xl, font-bold, text-blue-600" fx:id="lblReceivables"/>
+        </VBox>
+        
+        <VBox styleClass="card, bg-white, p-6" GridPane.columnIndex="2">
+            <Label text="Payables" styleClass="text-lg, font-semibold, text-slate-700"/>
+            <Label text="$0.00" styleClass="text-2xl, font-bold, text-red-600" fx:id="lblPayables"/>
+        </VBox>
+    </GridPane>
+
+    <!-- Toolbar -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button fx:id="btnNewTransaction" graphicTextGap="8" onAction="#handleNewTransaction" styleClass="btn, btn-primary">
+            <text>New Financial Transaction</text>
+            <graphic><FontIcon iconLiteral="mdi2p-plus-circle" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnReport" graphicTextGap="8" onAction="#handleReport" styleClass="btn, btn-secondary">
+            <text>Financial Report</text>
+            <graphic><FontIcon iconLiteral="mdi2f-file-document-outline" iconSize="18"/></graphic>
+        </Button>
+        <Region HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <!-- Transactions Table -->
+    <VBox styleClass="card, bg-white, p-6" spacing="15" VBox.vgrow="ALWAYS">
+        <Label text="Recent Financial Transactions" styleClass="text-lg, font-semibold, text-slate-700"/>
+
+        <TableView fx:id="financeTable" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+                <TableColumn fx:id="colType" text="Type" prefWidth="150"/>
+                <TableColumn fx:id="colDescription" text="Description" prefWidth="250"/>
+                <TableColumn fx:id="colAmount" text="Amount" prefWidth="120"/>
+                <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20"/>
+    </padding>
+</VBox>
