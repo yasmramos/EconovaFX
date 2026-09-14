@@ -7,23 +7,25 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.BoxBlur;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
- * Modern Modal Dialog with backdrop blur effect, similar to web applications.
+ * Modern Modal Dialog with overlay scrim effect, similar to web applications.
+ * Uses an in-scene overlay (StackPane) added to the owner's root instead of creating a separate Stage.
  * Supports showing any Node (forms, custom UI) in a centered, animated modal window.
  * 
  * Usage example:
@@ -40,7 +42,7 @@ import javafx.util.Duration;
  */
 public class ModernDialog {
 
-    private static final Color BACKDROP_COLOR = new Color(0, 0, 0, 0.5);
+    private static final Color SCRIM_COLOR = new Color(0.051, 0.067, 0.09, 0.58); // rgba(13,17,23,0.58)
     private static final Duration ANIMATION_DURATION = Duration.millis(250);
 
     /**
@@ -48,53 +50,50 @@ public class ModernDialog {
      * Provides access to close the dialog and clean up resources properly.
      */
     public static class DialogHandle {
-        private final Stage dialogStage;
-        private final Node ownerContent;
-        private final Region backdrop;
-        private final Node contentContainer;
+        private final StackPane overlay;
+        private final Node ownerRoot;
+        private final Node modalCard;
         private final ObjectProperty<Void> closeProperty;
         private final Object nestedLoopKey;
         private boolean isDismissing = false;
 
-        private DialogHandle(Stage dialogStage, Node ownerContent, Region backdrop, 
-                            Node contentContainer, ObjectProperty<Void> closeProperty) {
-            this(dialogStage, ownerContent, backdrop, contentContainer, closeProperty, null);
+        private DialogHandle(StackPane overlay, Node ownerRoot, Node modalCard, 
+                            ObjectProperty<Void> closeProperty) {
+            this(overlay, ownerRoot, modalCard, closeProperty, null);
         }
 
-        private DialogHandle(Stage dialogStage, Node ownerContent, Region backdrop, 
-                            Node contentContainer, ObjectProperty<Void> closeProperty, 
-                            Object nestedLoopKey) {
-            this.dialogStage = dialogStage;
-            this.ownerContent = ownerContent;
-            this.backdrop = backdrop;
-            this.contentContainer = contentContainer;
+        private DialogHandle(StackPane overlay, Node ownerRoot, Node modalCard, 
+                            ObjectProperty<Void> closeProperty, Object nestedLoopKey) {
+            this.overlay = overlay;
+            this.ownerRoot = ownerRoot;
+            this.modalCard = modalCard;
             this.closeProperty = closeProperty;
             this.nestedLoopKey = nestedLoopKey;
         }
 
         /**
-         * Gets the dialog stage.
-         * @return The dialog stage
+         * Gets the overlay pane.
+         * @return The overlay pane
          */
-        public Stage getDialogStage() {
-            return dialogStage;
+        public StackPane getOverlay() {
+            return overlay;
         }
 
         /**
          * Gets the owner's root node (for reference).
          * @return The owner's root node
          */
-        public Node getOwnerContent() {
-            return ownerContent;
+        public Node getOwnerRoot() {
+            return ownerRoot;
         }
 
         /**
          * Closes this dialog gracefully with exit animation.
-         * This method ensures proper cleanup: removes blur from owner,
+         * This method ensures proper cleanup: removes overlay from root,
          * completes the close property, and exits the nested event loop if applicable.
          */
         public void close() {
-            dismiss(dialogStage, ownerContent, backdrop, contentContainer, closeProperty, nestedLoopKey);
+            dismiss(overlay, ownerRoot, modalCard, closeProperty, nestedLoopKey);
         }
 
         /**
@@ -107,7 +106,7 @@ public class ModernDialog {
     }
 
     /**
-     * Shows a node as a modern modal dialog with backdrop blur effect.
+     * Shows a node as a modern modal dialog with overlay scrim effect.
      * Non-blocking method - returns immediately.
      * 
      * @param ownerStage The owner stage (main window)
@@ -120,7 +119,7 @@ public class ModernDialog {
     }
     
     /**
-     * Shows a node as a modern modal dialog with backdrop blur effect.
+     * Shows a node as a modern modal dialog with overlay scrim effect.
      * Non-blocking method - returns immediately.
      * 
      * @param ownerStage The owner stage (main window)
@@ -130,37 +129,115 @@ public class ModernDialog {
      * @return DialogHandle for controlling the dialog programmatically
      */
     private static DialogHandle showModal(Stage ownerStage, Node content, String title, Object nestedLoopKey) {
-        // Create the dialog stage
-        Stage dialogStage = new Stage();
-        dialogStage.initOwner(ownerStage);
-        dialogStage.initModality(Modality.WINDOW_MODAL);
-        dialogStage.initStyle(StageStyle.TRANSPARENT);
-
-        // Create the root pane with transparency (StackPane for proper centering)
-        StackPane rootPane = new StackPane();
-        rootPane.setStyle("-fx-background-color: transparent;");
-
-        // Create backdrop (semi-transparent dark overlay)
-        Region backdrop = new Region();
-        backdrop.setBackground(new Background(new BackgroundFill(
-            BACKDROP_COLOR, CornerRadii.EMPTY, null)));
-        backdrop.setMouseTransparent(false); // Capture clicks to prevent interaction with main window
-
-        // Apply blur effect to the owner stage's scene content
-        BoxBlur blur = new BoxBlur(10, 10, 3);
-        Node ownerContent = ownerStage.getScene().getRoot();
-        ownerContent.setEffect(blur);
-
-        // Create content container with white background and shadow
-        // Use Pane to hold the content, but wrap in StackPane for centering
-        Pane contentContainer = new Pane(content);
-        contentContainer.setStyle(
-            "-fx-background-color: white;" +
-            "-fx-background-radius: 12;" +
-            "-fx-border-radius: 12;" +
-            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 30, 0.5, 0, 10);"
-        );
+        Scene scene = ownerStage.getScene();
+        if (scene == null) {
+            throw new IllegalStateException("Owner stage must have a scene");
+        }
         
+        Node ownerRoot = scene.getRoot();
+        StackPane rootStackPane;
+        
+        // Check if root is already a StackPane (like rootStackPane in main-view.fxml)
+        if (ownerRoot instanceof StackPane) {
+            rootStackPane = (StackPane) ownerRoot;
+        } else {
+            // If root is not a StackPane, we need to find or create one
+            // Try to find rootStackPane by looking for a StackPane child
+            rootStackPane = findRootStackPane(ownerRoot);
+            if (rootStackPane == null) {
+                // Wrap the root in a temporary StackPane
+                rootStackPane = new StackPane(ownerRoot);
+                scene.setRoot(rootStackPane);
+            }
+        }
+
+        // Create overlay (full coverage)
+        StackPane overlay = new StackPane();
+        overlay.getStyleClass().add("modern-overlay");
+        overlay.setBackground(new Background(new BackgroundFill(
+            SCRIM_COLOR, CornerRadii.EMPTY, null)));
+        overlay.setPickOnBounds(true); // Capture clicks to prevent interaction with main window
+        overlay.setVisible(false); // Start invisible for animation
+
+        // Create modal card (content container)
+        VBox modalCard = createModalCard(content, title);
+        modalCard.getStyleClass().add("modern-modal-card");
+        
+        // Add nodes to overlay (card centered automatically by StackPane)
+        overlay.getChildren().add(modalCard);
+        StackPane.setAlignment(modalCard, javafx.geometry.Pos.CENTER);
+
+        // Add overlay to root stack pane
+        rootStackPane.getChildren().add(overlay);
+        
+        // Bind overlay size to root stack pane
+        overlay.prefWidthProperty().bind(rootStackPane.widthProperty());
+        overlay.prefHeightProperty().bind(rootStackPane.heightProperty());
+        overlay.maxWidthProperty().bind(rootStackPane.widthProperty());
+        overlay.maxHeightProperty().bind(rootStackPane.heightProperty());
+
+        // Create close property
+        ObjectProperty<Void> closeProperty = new SimpleObjectProperty<>();
+
+        // Click-outside-to-close: click on scrim (outside card) closes dialog
+        overlay.setOnMousePressed(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                // Check if click was directly on overlay (not on card)
+                Node target = event.getPickResult().getIntersectedNode();
+                if (target == overlay || !modalCard.getBoundsInParent().contains(event.getX(), event.getY())) {
+                    dismiss(overlay, ownerRoot, modalCard, closeProperty, nestedLoopKey);
+                }
+            }
+        });
+
+        // ESC key to close
+        scene.addEventHandler(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE && overlay.isVisible()) {
+                event.consume();
+                dismiss(overlay, ownerRoot, modalCard, closeProperty, nestedLoopKey);
+            }
+        });
+
+        // Store cleanup handler in overlay's user data
+        overlay.setUserData(new CleanupHandler(ownerRoot, closeProperty, nestedLoopKey));
+
+        // Show the overlay
+        overlay.setVisible(true);
+
+        // Play entrance animations
+        playEntranceAnimation(overlay, modalCard);
+
+        // Create and return handle
+        return new DialogHandle(overlay, ownerRoot, modalCard, closeProperty, nestedLoopKey);
+    }
+    
+    /**
+     * Finds the root StackPane in the scene graph.
+     * @param root The root node to search from
+     * @return The root StackPane, or null if not found
+     */
+    private static StackPane findRootStackPane(Node root) {
+        if (root instanceof StackPane) {
+            return (StackPane) root;
+        }
+        if (root instanceof Parent) {
+            for (Node child : ((Parent) root).getChildrenUnmodifiable()) {
+                StackPane result = findRootStackPane(child);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Creates the modal card containing title and content.
+     * @param content The content node
+     * @param title The optional title
+     * @return The modal card VBox
+     */
+    private static VBox createModalCard(Node content, String title) {
         // Set preferred size if not already set
         if (content instanceof Region) {
             Region region = (Region) content;
@@ -172,88 +249,31 @@ public class ModernDialog {
             }
         }
 
+        // Create content container pane
+        Pane contentContainer = new Pane(content);
+        contentContainer.setStyle("-fx-background-color: transparent;");
+        
         // Add title label if title is provided
         Label titleLabel = null;
         if (title != null && !title.trim().isEmpty()) {
             titleLabel = new Label(title);
-            titleLabel.setStyle(
-                "-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 15 20 10 20;" +
-                "-fx-text-fill: #333333; -fx-alignment: center;"
-            );
+            titleLabel.getStyleClass().add("modern-modal-title");
             titleLabel.setMaxWidth(Double.MAX_VALUE);
         }
 
-        // Create a VBox to hold title and content if title exists
-        Node displayContent;
+        // Create VBox to hold title and content
+        VBox modalCard;
         if (titleLabel != null) {
-            javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(5, titleLabel, contentContainer);
-            vbox.setStyle("-fx-background-color: transparent;");
-            displayContent = vbox;
+            modalCard = new VBox(5, titleLabel, contentContainer);
         } else {
-            displayContent = contentContainer;
+            modalCard = new VBox(contentContainer);
         }
-
-        // Add nodes to root (backdrop first, then centered content)
-        rootPane.getChildren().add(backdrop);
-        rootPane.getChildren().add(displayContent);
-        StackPane.setAlignment(displayContent, javafx.geometry.Pos.CENTER);
-
-        // Sync root size with owner using listeners (avoid bind on ReadOnlyProperty)
-        ownerStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            double width = newVal.doubleValue();
-            rootPane.setPrefWidth(width);
-            backdrop.setPrefWidth(width);
-            // No need to manually position contentContainer - StackPane handles centering
-        });
-        ownerStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            double height = newVal.doubleValue();
-            rootPane.setPrefHeight(height);
-            backdrop.setPrefHeight(height);
-            // No need to manually position contentContainer - StackPane handles centering
-        });
+        modalCard.setStyle("-fx-background-color: transparent;");
         
-        // Initialize sizes
-        double ownerWidth = ownerStage.getWidth();
-        double ownerHeight = ownerStage.getHeight();
+        // Prevent card clicks from propagating to overlay
+        modalCard.setOnMousePressed(event -> event.consume());
         
-        // Handle case where owner is not yet dimensioned
-        if (Double.isNaN(ownerWidth) || ownerWidth <= 0) {
-            ownerWidth = 800; // Default fallback
-        }
-        if (Double.isNaN(ownerHeight) || ownerHeight <= 0) {
-            ownerHeight = 600; // Default fallback
-        }
-        
-        rootPane.setPrefWidth(ownerWidth);
-        rootPane.setPrefHeight(ownerHeight);
-        backdrop.setPrefWidth(ownerWidth);
-        backdrop.setPrefHeight(ownerHeight);
-
-        // Create scene
-        Scene scene = new Scene(rootPane, ownerWidth, ownerHeight, Color.TRANSPARENT);
-        dialogStage.setScene(scene);
-
-        // Create close property
-        ObjectProperty<Void> closeProperty = new SimpleObjectProperty<>();
-
-        // Unified close handler - delegate to dismiss method
-        dialogStage.setOnCloseRequest(event -> {
-            dismiss(dialogStage, ownerContent, backdrop, contentContainer, closeProperty);
-        });
-
-        // Safety net: ensure blur is removed when stage is hidden by any means
-        dialogStage.setOnHidden(event -> {
-            ownerContent.setEffect(null);
-        });
-
-        // Show the dialog
-        dialogStage.show();
-
-        // Play entrance animations
-        playEntranceAnimation(backdrop, displayContent);
-
-        // Create and return handle
-        return new DialogHandle(dialogStage, ownerContent, backdrop, contentContainer, closeProperty, nestedLoopKey);
+        return modalCard;
     }
 
     /**
@@ -283,70 +303,81 @@ public class ModernDialog {
     }
 
     /**
+     * Cleanup handler stored in overlay's user data for proper cleanup.
+     */
+    private static class CleanupHandler {
+        private final Node ownerRoot;
+        private final ObjectProperty<Void> closeProperty;
+        private final Object nestedLoopKey;
+        
+        CleanupHandler(Node ownerRoot, ObjectProperty<Void> closeProperty, Object nestedLoopKey) {
+            this.ownerRoot = ownerRoot;
+            this.closeProperty = closeProperty;
+            this.nestedLoopKey = nestedLoopKey;
+        }
+    }
+
+    /**
      * Unified dismiss method that handles all cleanup.
      * This is the single point of truth for closing dialogs.
      * 
-     * @param dialogStage The dialog stage to close
-     * @param ownerContent The owner's root node (to remove blur)
-     * @param backdrop The backdrop region for animation
-     * @param contentContainer The content container for animation
+     * @param overlay The overlay to remove
+     * @param ownerRoot The owner's root node (reference only, no blur to remove)
+     * @param modalCard The modal card for animation
      * @param closeProperty The close property to complete
      */
-    private static void dismiss(Stage dialogStage, Node ownerContent, Region backdrop, 
-                               Node contentContainer, ObjectProperty<Void> closeProperty) {
-        dismiss(dialogStage, ownerContent, backdrop, contentContainer, closeProperty, null);
+    private static void dismiss(StackPane overlay, Node ownerRoot, Node modalCard, 
+                               ObjectProperty<Void> closeProperty) {
+        dismiss(overlay, ownerRoot, modalCard, closeProperty, null);
     }
     
     /**
      * Unified dismiss method that handles all cleanup.
      * This is the single point of truth for closing dialogs.
      * 
-     * @param dialogStage The dialog stage to close
-     * @param ownerContent The owner's root node (to remove blur)
-     * @param backdrop The backdrop region for animation
-     * @param contentContainer The content container for animation
+     * @param overlay The overlay to remove
+     * @param ownerRoot The owner's root node (reference only, no blur to remove)
+     * @param modalCard The modal card for animation
      * @param closeProperty The close property to complete
      * @param nestedLoopKey Optional key for exiting nested event loop
      */
-    private static void dismiss(Stage dialogStage, Node ownerContent, Region backdrop, 
-                               Node contentContainer, ObjectProperty<Void> closeProperty, 
-                               Object nestedLoopKey) {
-        if (dialogStage == null || !dialogStage.isShowing()) {
+    private static void dismiss(StackPane overlay, Node ownerRoot, Node modalCard, 
+                               ObjectProperty<Void> closeProperty, Object nestedLoopKey) {
+        if (overlay == null || overlay.getParent() == null || !overlay.isVisible()) {
             return;
         }
 
         // Mark as dismissing to prevent double-cleanup
-        // Find the handle if possible to check this flag
-        // For now, we proceed with cleanup
-        
-        // Fade out backdrop
-        FadeTransition fadeBackdrop = new FadeTransition(ANIMATION_DURATION, backdrop);
-        fadeBackdrop.setFromValue(1.0);
-        fadeBackdrop.setToValue(0.0);
+        overlay.setVisible(false);
 
-        // Scale and fade out content
-        ScaleTransition scale = new ScaleTransition(ANIMATION_DURATION, contentContainer);
+        // Fade out overlay
+        FadeTransition fadeOverlay = new FadeTransition(ANIMATION_DURATION, overlay);
+        fadeOverlay.setFromValue(1.0);
+        fadeOverlay.setToValue(0.0);
+
+        // Scale and fade out modal card
+        ScaleTransition scale = new ScaleTransition(ANIMATION_DURATION, modalCard);
         scale.setFromX(1.0);
         scale.setFromY(1.0);
         scale.setToX(0.95);
         scale.setToY(0.95);
 
-        FadeTransition fadeContent = new FadeTransition(ANIMATION_DURATION, contentContainer);
+        FadeTransition fadeContent = new FadeTransition(ANIMATION_DURATION, modalCard);
         fadeContent.setFromValue(1.0);
         fadeContent.setToValue(0.0);
 
-        ParallelTransition parallel = new ParallelTransition(fadeBackdrop, scale, fadeContent);
+        ParallelTransition parallel = new ParallelTransition(fadeOverlay, scale, fadeContent);
         parallel.setOnFinished(event -> {
-            // Remove blur from owner
-            if (ownerContent != null) {
-                ownerContent.setEffect(null);
+            // Remove overlay from parent
+            if (overlay.getParent() instanceof StackPane) {
+                ((StackPane) overlay.getParent()).getChildren().remove(overlay);
             }
+            
             // Complete the close property
             if (closeProperty != null) {
                 closeProperty.setValue(null);
             }
-            // Close the dialog stage
-            dialogStage.close();
+            
             // Exit nested event loop if showAndWait is waiting
             if (nestedLoopKey != null) {
                 try {
@@ -357,18 +388,6 @@ public class ModernDialog {
                         System.err.println("Warning: Could not exit nested event loop: " + e.getMessage());
                     }
                 }
-            } else {
-                // Fallback: try using dialogStage as key (for backward compatibility with deprecated closeDialog)
-                Platform.runLater(() -> {
-                    try {
-                        Platform.exitNestedEventLoop(dialogStage, null);
-                    } catch (IllegalArgumentException e) {
-                        // Event loop already exited or key invalid - ignore in test environments
-                        if (!"test".equals(System.getProperty("env"))) {
-                            System.err.println("Warning: Could not exit nested event loop (fallback): " + e.getMessage());
-                        }
-                    }
-                });
             }
         });
         parallel.play();
@@ -386,65 +405,31 @@ public class ModernDialog {
      */
     @Deprecated
     public static void closeDialog(Stage dialogStage, Node ownerContent) {
-        if (dialogStage == null || !dialogStage.isShowing()) {
-            return;
-        }
-
-        Node backdrop = null;
-        Node contentContainer = null;
-
-        if (dialogStage.getScene() != null && dialogStage.getScene().getRoot() instanceof StackPane) {
-            StackPane root = (StackPane) dialogStage.getScene().getRoot();
-            if (root.getChildren().size() >= 2) {
-                backdrop = root.getChildren().get(0);
-                // Content might be wrapped in VBox if there's a title
-                Node potentialContent = root.getChildren().get(1);
-                if (potentialContent instanceof javafx.scene.layout.VBox) {
-                    javafx.scene.layout.VBox vbox = (javafx.scene.layout.VBox) potentialContent;
-                    // Find the Pane contentContainer within the VBox
-                    for (Node child : vbox.getChildren()) {
-                        if (child instanceof Pane) {
-                            contentContainer = child;
-                            break;
-                        }
-                    }
-                } else {
-                    contentContainer = potentialContent;
-                }
-            }
-        }
-
-        if (backdrop != null && contentContainer != null) {
-            // Use the unified dismiss method
-            dismiss(dialogStage, ownerContent, (Region) backdrop, contentContainer, null);
-        } else {
-            // Fallback: just close the dialog
-            if (ownerContent != null) {
-                ownerContent.setEffect(null);
-            }
+        // Legacy method - no longer supported with overlay-based approach
+        // Users should use DialogHandle.close() instead
+        if (dialogStage != null && dialogStage.isShowing()) {
             dialogStage.close();
-            Platform.runLater(() -> Platform.exitNestedEventLoop(dialogStage, null));
         }
     }
 
-    private static void playEntranceAnimation(Node backdrop, Node content) {
-        // Fade in backdrop
-        FadeTransition fadeBackdrop = new FadeTransition(ANIMATION_DURATION, backdrop);
-        fadeBackdrop.setFromValue(0.0);
-        fadeBackdrop.setToValue(1.0);
+    private static void playEntranceAnimation(StackPane overlay, Node modalCard) {
+        // Fade in overlay
+        FadeTransition fadeOverlay = new FadeTransition(ANIMATION_DURATION, overlay);
+        fadeOverlay.setFromValue(0.0);
+        fadeOverlay.setToValue(1.0);
 
-        // Scale and fade in content with smooth bounce effect
-        ScaleTransition scale = new ScaleTransition(ANIMATION_DURATION.multiply(1.2), content);
+        // Scale and fade in modal card with smooth bounce effect
+        ScaleTransition scale = new ScaleTransition(ANIMATION_DURATION.multiply(1.2), modalCard);
         scale.setFromX(0.85);
         scale.setFromY(0.85);
         scale.setToX(1.0);
         scale.setToY(1.0);
 
-        FadeTransition fadeContent = new FadeTransition(ANIMATION_DURATION, content);
+        FadeTransition fadeContent = new FadeTransition(ANIMATION_DURATION, modalCard);
         fadeContent.setFromValue(0.0);
         fadeContent.setToValue(1.0);
 
-        ParallelTransition parallel = new ParallelTransition(fadeBackdrop, scale, fadeContent);
+        ParallelTransition parallel = new ParallelTransition(fadeOverlay, scale, fadeContent);
         parallel.play();
     }
     

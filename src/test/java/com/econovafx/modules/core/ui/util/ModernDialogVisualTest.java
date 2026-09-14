@@ -4,6 +4,7 @@ import com.econovafx.modules.core.ui.util.ModernDialog;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +18,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 /**
- * Visual tests for ModernDialog component.
+ * Visual tests for ModernDialog component (overlay-based in-scene modal).
  * Captures screenshots and saves them to docs/images/
  */
 public class ModernDialogVisualTest extends ApplicationTest {
@@ -27,8 +28,10 @@ public class ModernDialogVisualTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         primaryStage = stage;
+        StackPane rootLayout = new StackPane();
+        rootLayout.setStyle("-fx-padding: 20; -fx-background-color: #f5f5f5;");
+        
         VBox mainLayout = new VBox(10);
-        mainLayout.setStyle("-fx-padding: 20; -fx-background-color: #f5f5f5;");
         mainLayout.getChildren().add(new Label("Main Application Window"));
         
         Button openDialogBtn = new Button("Open Dialog");
@@ -38,7 +41,8 @@ public class ModernDialogVisualTest extends ApplicationTest {
         });
         mainLayout.getChildren().add(openDialogBtn);
         
-        Scene scene = new Scene(mainLayout, 800, 600);
+        rootLayout.getChildren().add(mainLayout);
+        Scene scene = new Scene(rootLayout, 800, 600);
         stage.setScene(scene);
         stage.setTitle("ModernDialog Visual Test");
         stage.show();
@@ -71,8 +75,8 @@ public class ModernDialogVisualTest extends ApplicationTest {
         // Wait for dialog to appear and ensure we're on FX thread
         Thread.sleep(500);
         interact(() -> {
-            // Verify dialog is visible
-            verifyThat(".dialog-content", isVisible());
+            // Verify overlay is visible (modern-overlay class)
+            verifyThat(".modern-overlay", isVisible());
             
             // Capture screenshot
             Scene scene = primaryStage.getScene();
@@ -92,12 +96,13 @@ public class ModernDialogVisualTest extends ApplicationTest {
         clickOn("Open Dialog");
         Thread.sleep(500);
         
-        // Close dialog by clicking close button within the dialog context
+        // Close dialog by clicking outside (on scrim)
         interact(() -> {
-            // Find and click the close button in the dialog
-            Button closeButton = lookup(".button").queryAs(Button.class);
-            if (closeButton != null && "Close".equals(closeButton.getText())) {
-                closeButton.fire();
+            // Find the overlay and simulate click on scrim area
+            Node overlay = lookup(".modern-overlay").query();
+            if (overlay != null) {
+                // Click on overlay (scrim) to close
+                clickOn(overlay);
             }
         });
         Thread.sleep(500);
@@ -124,14 +129,25 @@ public class ModernDialogVisualTest extends ApplicationTest {
         Label title = new Label("Test Dialog Title");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         
-        Label message = new Label("This is a modern modal dialog with backdrop blur effect.");
+        Label message = new Label("This is a modern modal dialog with overlay scrim effect. Click outside or press ESC to close.");
         message.setWrapText(true);
         
         Button closeButton = new Button("Close");
         closeButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white; -fx-padding: 8 16;");
         closeButton.setOnAction(e -> {
-            Stage dialogStage = (Stage) ((Button) e.getSource()).getScene().getWindow();
-            ModernDialog.closeDialog(dialogStage, primaryStage.getScene().getRoot());
+            // Get the dialog handle from parent overlay's user data
+            Node parent = closeButton.getParent();
+            while (parent != null) {
+                if (parent.getStyleClass().contains("modern-overlay")) {
+                    Object userData = parent.getUserData();
+                    if (userData instanceof ModernDialog.CleanupHandler) {
+                        ModernDialog.CleanupHandler handler = (ModernDialog.CleanupHandler) userData;
+                        handler.closeProperty.setValue(null);
+                    }
+                    break;
+                }
+                parent = parent.getParent();
+            }
         });
         
         content.getChildren().addAll(title, message, closeButton);
