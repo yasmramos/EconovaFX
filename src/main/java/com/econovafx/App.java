@@ -500,6 +500,17 @@ public class App extends Application {
     public void stop() throws Exception {
         logger.info("Shutting down application...");
         
+        // Stop local web server
+        try {
+            com.econovafx.modules.core.ui.web.LocalWebServer webServer = context.getBeanScope().get(com.econovafx.modules.core.ui.web.LocalWebServer.class);
+            if (webServer != null && webServer.isRunning()) {
+                webServer.stop(0);
+                logger.info("Local web server stopped");
+            }
+        } catch (Exception e) {
+            logger.warn("Could not stop local web server: {}", e.getMessage());
+        }
+        
         // Stop backup scheduler
         if (backupSchedulerService != null) {
             backupSchedulerService.stopScheduler();
