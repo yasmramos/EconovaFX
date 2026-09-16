@@ -110,6 +110,9 @@ public class MainViewController implements Initializable {
     private Button btnNominas;
 
     @FXML
+    private Button btnWebUI;
+
+    @FXML
     private Button btnSettings;
 
     @FXML
@@ -292,7 +295,7 @@ public class MainViewController implements Initializable {
         Button[] buttons = {
             btnDashboard, btnContabilidad, btnComprobantes, btnCuentas, btnClasificador,
             btnTerceros, btnPeriodos, btnCierres, btnCostos, btnTasasCambio,
-            btnFinanzas, btnAFT, btnInventarios, btnNominas, btnSettings,
+            btnFinanzas, btnAFT, btnInventarios, btnNominas, btnWebUI, btnSettings,
             btnPerfil, btnAppSettings, btnBackup, btnHelp, btnAbout
         };
         
@@ -508,6 +511,15 @@ public class MainViewController implements Initializable {
         logger.debug("Showing about");
         setActiveButton(btnAbout);
         updateStatus("EconoNova FX v1.0.0");
+    }
+
+    @FXML
+    private void showWebUI() {
+        logger.debug("Showing Web UI");
+        setActiveButton(btnWebUI);
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createWebView());
+        updateStatus("Web UI");
     }
 
     @FXML

@@ -112,6 +112,10 @@
                     <graphic><FontIcon iconLiteral="mdi2a-account-group" iconSize="20" iconColor="WHITE"/></graphic>
                     <text>Nóminas</text>
                 </Button>
+                <Button fx:id="btnWebUI" onAction="#showWebUI" styleClass="btn, btn-ghost, sidebar-btn">
+                    <graphic><FontIcon iconLiteral="mdi2w-web" iconSize="20" iconColor="WHITE"/></graphic>
+                    <text>Web UI</text>
+                </Button>
 
                 <!-- Spacer to push system section to bottom -->
                 <Region VBox.vgrow="ALWAYS"/>
