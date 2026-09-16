@@ -7,6 +7,9 @@ module econonovafx {
     requires javafx.graphics;
     requires javafx.fxmlEmpty;
     requires javafx.fxml;
+    requires javafx.webEmpty;
+    requires javafx.web;
+    requires jdk.httpserver;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.materialdesign2;
