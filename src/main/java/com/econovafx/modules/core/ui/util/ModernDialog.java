@@ -137,18 +137,14 @@ public class ModernDialog {
         Node ownerRoot = scene.getRoot();
         StackPane rootStackPane;
         
-        // Check if root is already a StackPane (like rootStackPane in main-view.fxml)
+        // Prefer the scene's root if it's a StackPane (like rootStackPane in main-view.fxml)
+        // This ensures the overlay covers the entire window, not a nested subtree
         if (ownerRoot instanceof StackPane) {
             rootStackPane = (StackPane) ownerRoot;
         } else {
-            // If root is not a StackPane, we need to find or create one
-            // Try to find rootStackPane by looking for a StackPane child
-            rootStackPane = findRootStackPane(ownerRoot);
-            if (rootStackPane == null) {
-                // Wrap the root in a temporary StackPane
-                rootStackPane = new StackPane(ownerRoot);
-                scene.setRoot(rootStackPane);
-            }
+            // If root is not a StackPane, wrap it in one
+            rootStackPane = new StackPane(ownerRoot);
+            scene.setRoot(rootStackPane);
         }
 
         // Create overlay (full coverage)
