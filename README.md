@@ -1,10 +1,12 @@
 # 📊 EconoNova FX - Sistema Contable Profesional
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg?logo=java)](https://openjdk.java.net/)
-[![JavaFX](https://img.shields.io/badge/JavaFX-17-blue.svg?logo=javafx)](https://openjfx.io/)
+[![JavaFX](https://img.shields.io/badge/JavaFX-17.0.2-blue.svg?logo=javafx)](https://openjfx.io/)
 [![Ebean ORM](https://img.shields.io/badge/Ebean-17.11.0-green.svg)](https://ebean.io/)
 [![H2 Database](https://img.shields.io/badge/H2-2.2.224-red.svg)](https://h2database.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-42.7.3-blue.svg?logo=postgresql)](https://www.postgresql.org/)
+[![Ebean Migration](https://img.shields.io/badge/Ebean_Migration-14.2.0-purple.svg)](https://ebean.io/)
+[![TestFX](https://img.shields.io/badge/TestFX-4.0.17-orange.svg)](https://github.com/TestFX/TestFX)
 [![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg?logo=apache-maven)](https://maven.apache.org/)
 [![Tests](https://img.shields.io/badge/tests-385%20passing-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -79,6 +81,15 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 - ✅ Exportación a formatos oficiales (PDF, Excel)
 - ✅ Auditoría completa de todas las operaciones
 
+### Interfaz Web Embebida
+- ✅ UI moderna construida con **SvelteKit** + **Tailwind CSS**
+- ✅ Renderizada dentro de la app mediante **JavaFX WebView**
+- ✅ Servida por un servidor HTTP local en `http://127.0.0.1:<port>/`
+- ✅ Generación de sitio estático (SSG) para carga rápida
+- ✅ Navegación SPA (Single Page Application) con routing del lado del cliente
+- ✅ Compatible con ES2017 para JavaFX 17 WebView
+- ✅ Ver [web-ui/README.md](web-ui/README.md) para detalles de desarrollo
+
 ---
 
 ## 🚀 Tecnologías Utilizadas
@@ -86,7 +97,10 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 | Tecnología | Versión | Descripción |
 |------------|---------|-------------|
 | **Java** | 17 LTS | Lenguaje de programación |
-| **JavaFX** | 17 | Interfaz gráfica de usuario moderna |
+| **JavaFX** | 17.0.2 | Interfaz gráfica de usuario moderna |
+| **JavaFX WebView** | 17.0.2 | Navegador embebido para UI web |
+| **SvelteKit** | Latest | Framework web reactivo moderno |
+| **Tailwind CSS** | Latest | Framework CSS utility-first |
 | **Ebean ORM** | 17.11.0 | Mapeo objeto-relacional de alto rendimiento |
 | **H2 Database** | 2.2.224 | Base de datos embebida para desarrollo/testing |
 | **PostgreSQL** | 42.7.3 | Base de datos de producción |
@@ -138,7 +152,18 @@ mvn clean compile
 mvn test
 ```
 
-### 4. Ejecutar la Aplicación
+### 4. Compilar la Interfaz Web (Opcional pero recomendado)
+
+```bash
+cd web-ui
+npm install
+npm run build
+cd ..
+```
+
+Esto compilará la UI web con SvelteKit y copiará los archivos estáticos a `src/main/resources/web/` para que JavaFX pueda servirlos.
+
+### 5. Ejecutar la Aplicación
 
 ```bash
 mvn javafx:run
@@ -225,6 +250,9 @@ La documentación completa está indexada en [`docs/README.md`](docs/README.md):
 ### Documentación del Proyecto
 - [Changelog](CHANGELOG.md) - Historial de cambios por versión
 - [Commit Guidelines](COMMIT_GUIDELINES.md) - Convenciones para mensajes de commit
+
+### Interfaz Web
+- [Web UI README](web-ui/README.md) - Guía de desarrollo de la interfaz web embebida (SvelteKit + Tailwind CSS)
 
 ---
 
