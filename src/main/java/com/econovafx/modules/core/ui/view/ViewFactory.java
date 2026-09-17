@@ -1,0 +1,476 @@
+package com.econovafx.modules.core.ui.view;
+
+import com.econovafx.core.i18n.I18nManager;
+import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.billing.model.ThirdParty;
+import com.econovafx.modules.accounting.model.Transaction;
+import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.accounting.service.AccountingPeriodService;
+import com.econovafx.modules.core.service.ExportService;
+import com.econovafx.modules.core.service.NotificationService;
+import com.econovafx.modules.billing.service.ThirdPartyService;
+import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.accounting.controller.AccountFormController;
+import com.econovafx.modules.accounting.controller.AccountingClosuresController;
+import com.econovafx.modules.accounting.controller.AccountingPeriodsController;
+import com.econovafx.modules.accounting.controller.AccountsController;
+import com.econovafx.modules.accounting.controller.ComprobanteFormController;
+import com.econovafx.modules.accounting.controller.ComprobantesController;
+import com.econovafx.modules.core.ui.controller.DashboardController;
+import com.econovafx.modules.core.ui.controller.ExchangeRatesController;
+import com.econovafx.modules.core.ui.controller.SystemSettingsController;
+import com.econovafx.modules.billing.controller.ThirdPartiesController;
+import com.econovafx.modules.billing.controller.ThirdPartyFormController;
+import com.econovafx.modules.accounting.controller.TransactionEntryController;
+import com.econovafx.modules.accounting.controller.TransactionsController;
+import com.econovafx.modules.inventory.controller.InventoryController;
+import com.econovafx.modules.inventory.service.InventoryService;
+import com.econovafx.modules.core.ui.util.ModernDialog;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Optional;
+import java.util.function.Consumer;
+
+/**
+ * Factory for creating UI views and dialogs
+ */
+public class ViewFactory {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ViewFactory.class);
+    
+    private final DashboardController dashboardController;
+    private final AccountsController accountsController;
+    private final TransactionsController transactionsController;
+    private final ThirdPartiesController thirdPartiesController;
+    private final AccountingPeriodsController accountingPeriodsController;
+    private final AccountingClosuresController accountingClosuresController;
+    private final ExchangeRatesController exchangeRatesController;
+    private final AccountFormController accountFormController;
+    private final ThirdPartyFormController thirdPartyFormController;
+    private final TransactionEntryController transactionEntryController;
+    private final ComprobantesController comprobantesController;
+    private final SystemSettingsController systemSettingsController;
+    private final InventoryController inventoryController;
+    private final com.econovafx.modules.core.ui.controller.WebViewController webViewController;
+    private final AccountService accountService;
+    private final ThirdPartyService thirdPartyService;
+    private final TransactionService transactionService;
+    private final ExportService exportService;
+    private final AccountingPeriodService accountingPeriodService;
+    private final InventoryService inventoryService;
+    private final Consumer<Runnable> viewSwitcher;
+
+    public ViewFactory(DashboardController dashboardController,
+                      AccountsController accountsController,
+                      TransactionsController transactionsController,
+                      ThirdPartiesController thirdPartiesController,
+                      AccountingPeriodsController accountingPeriodsController,
+                      AccountingClosuresController accountingClosuresController,
+                      ExchangeRatesController exchangeRatesController,
+                      AccountFormController accountFormController,
+                      ThirdPartyFormController thirdPartyFormController,
+                      TransactionEntryController transactionEntryController,
+                      ComprobantesController comprobantesController,
+                      SystemSettingsController systemSettingsController,
+                      InventoryController inventoryController,
+                      com.econovafx.modules.core.ui.controller.WebViewController webViewController,
+                      AccountService accountService,
+                      ThirdPartyService thirdPartyService,
+                      TransactionService transactionService,
+                      ExportService exportService,
+                      AccountingPeriodService accountingPeriodService,
+                      NotificationService notificationService,
+                      InventoryService inventoryService,
+                      Consumer<Runnable> viewSwitcher) {
+        this.dashboardController = dashboardController;
+        this.accountsController = accountsController;
+        this.transactionsController = transactionsController;
+        this.thirdPartiesController = thirdPartiesController;
+        this.accountingPeriodsController = accountingPeriodsController;
+        this.accountingClosuresController = accountingClosuresController;
+        this.exchangeRatesController = exchangeRatesController;
+        this.accountFormController = accountFormController;
+        this.thirdPartyFormController = thirdPartyFormController;
+        this.transactionEntryController = transactionEntryController;
+        this.comprobantesController = comprobantesController;
+        this.systemSettingsController = systemSettingsController;
+        this.inventoryController = inventoryController;
+        this.webViewController = webViewController;
+        this.accountService = accountService;
+        this.thirdPartyService = thirdPartyService;
+        this.transactionService = transactionService;
+        this.exportService = exportService;
+        this.accountingPeriodService = accountingPeriodService;
+        this.inventoryService = inventoryService;
+        this.viewSwitcher = viewSwitcher;
+    }
+
+    public TransactionService getTransactionService() {
+        return transactionService;
+    }
+
+    public ThirdPartyService getThirdPartyService() {
+        return thirdPartyService;
+    }
+
+    public ExportService getExportService() {
+        return exportService;
+    }
+
+    public DashboardController getDashboardController() {
+        return dashboardController;
+    }
+    
+    public Node createDashboardView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> dashboardController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading dashboard view", e);
+            throw new RuntimeException("Failed to load dashboard view", e);
+        }
+    }
+    
+    public Node createAccountsView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounts.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> accountsController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading accounts view", e);
+            throw new RuntimeException("Failed to load accounts view", e);
+        }
+    }
+
+    public Node loadFXML(String url , Class<?> clazz){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(url));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> clazz);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading view", e);
+            throw new RuntimeException("Failed to load view", e);
+        }
+    }
+    
+    public Node createTransactionsView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transactions.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> transactionsController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading transactions view", e);
+            throw new RuntimeException("Failed to load transactions view", e);
+        }
+    }
+
+    public Node createComprobantesView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/comprobantes.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> comprobantesController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading comprobantes view", e);
+            throw new RuntimeException("Failed to load comprobantes view", e);
+        }
+    }
+    
+    public Node createThirdPartiesView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/third-parties.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> thirdPartiesController);
+            Node view = loader.load();
+            // Store reference for dialog owner lookup
+            this.currentThirdPartiesView = view;
+            return view;
+        } catch (IOException e) {
+            logger.error("Error loading third parties view", e);
+            throw new RuntimeException("Failed to load third parties view", e);
+        }
+    }
+    
+    private Node currentThirdPartiesView;
+    
+    public Node createAccountingPeriodsView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounting-periods.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> accountingPeriodsController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading accounting periods view", e);
+            throw new RuntimeException("Failed to load accounting periods view", e);
+        }
+    }
+    
+    public Node createAccountingClosuresView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/accounting-closures.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> accountingClosuresController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading accounting closures view", e);
+            throw new RuntimeException("Failed to load accounting closures view", e);
+        }
+    }
+    
+    public Node createInventoryView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/inventory.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> inventoryController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading inventory view", e);
+            throw new RuntimeException("Failed to load inventory view", e);
+        }
+    }
+    
+    /**
+     * Create the Web UI view for SvelteKit application.
+     * @return The WebView node containing the web interface
+     */
+    public Node createWebView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/web-view.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> webViewController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading web view", e);
+            throw new RuntimeException("Failed to load web view", e);
+        }
+    }
+    
+    public Optional<Account> showAccountFormDialog(Account account) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/account-form.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> accountFormController);
+            Parent root = loader.load();
+
+            accountFormController.setEditingAccount(account);
+
+            Stage stage = new Stage(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(account == null ? "Nueva Cuenta" : "Editar Cuenta");
+            
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            
+            // Add custom styles
+            scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
+            
+            stage.setScene(scene);
+            stage.setResizable(false);
+            
+            // Make dialog draggable via FXML
+            setupDraggable(stage, root);
+            
+            stage.showAndWait();
+
+            return Optional.ofNullable(accountFormController.getResult());
+
+        } catch (IOException e) {
+            logger.error("Error showing account form dialog", e);
+            return Optional.empty();
+        }
+    }
+    
+    public Optional<Transaction> showTransactionEntryDialog(Transaction transaction) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction-entry.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> transactionEntryController);
+            Parent root = loader.load();
+
+            Stage stage = new Stage(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Nueva Transacción");
+            
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            
+            // Add custom styles
+            scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
+            
+            stage.setScene(scene);
+            stage.setResizable(true);
+            
+            // Make dialog draggable
+            setupDraggable(stage, root);
+            
+            stage.showAndWait();
+
+            return Optional.ofNullable(transactionEntryController.getResult());
+
+        } catch (IOException e) {
+            logger.error("Error showing transaction entry dialog", e);
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Transaction> showComprobanteFormDialog(Transaction transaction) {
+        try {
+            ComprobanteFormController controller = new ComprobanteFormController(accountService, transactionService, thirdPartyService);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/comprobante-form.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> controller);
+            Parent root = loader.load();
+
+            controller.setEditingTransaction(transaction);
+
+            // Use ModernDialog for web-style modal with backdrop blur
+            Stage ownerStage = comprobantesController != null && comprobantesController.getRootNode() != null ? 
+                (Stage) comprobantesController.getRootNode().getScene().getWindow() : null;
+            if (ownerStage == null) {
+                logger.warn("Could not determine owner stage for comprobante dialog");
+                return Optional.empty();
+            }
+            
+            // Show dialog using showModal to get handle, then set it on controller
+            ModernDialog.DialogHandle handle = ModernDialog.showModal(ownerStage, root, transaction == null ? "New Voucher" : "Edit Voucher");
+            controller.setDialogHandle(handle);
+            
+            // Wait for closure using showAndWait which uses nested event loop internally
+            // We need to wait on the handle's closeProperty
+            Object nestedLoopKey = new Object();
+            handle.closeProperty().addListener((obs, oldVal, newVal) -> {
+                Platform.exitNestedEventLoop(nestedLoopKey, null);
+            });
+            Platform.enterNestedEventLoop(nestedLoopKey);
+
+            return Optional.ofNullable(controller.getResult());
+
+        } catch (IOException e) {
+            logger.error("Error showing comprobante form dialog", e);
+            return Optional.empty();
+        }
+    }
+    
+    public Optional<ThirdParty> showThirdPartyFormDialog(ThirdParty thirdParty) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/third-party-form.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> thirdPartyFormController);
+            Parent root = loader.load();
+
+            thirdPartyFormController.setEditingThirdParty(thirdParty);
+
+            // Use ModernDialog for web-style modal with backdrop blur
+            Stage ownerStage = currentThirdPartiesView != null ? 
+                (Stage) currentThirdPartiesView.getScene().getWindow() : null;
+            if (ownerStage == null) {
+                logger.warn("Could not determine owner stage for dialog");
+                return Optional.empty();
+            }
+            
+            // Show dialog using showModal to get handle, then set it on controller
+            ModernDialog.DialogHandle handle = ModernDialog.showModal(ownerStage, root, thirdParty == null ? "New Third Party" : "Edit Third Party");
+            thirdPartyFormController.setDialogHandle(handle);
+            
+            // Wait for closure using showAndWait which uses nested event loop internally
+            Object nestedLoopKey = new Object();
+            handle.closeProperty().addListener((obs, oldVal, newVal) -> {
+                Platform.exitNestedEventLoop(nestedLoopKey, null);
+            });
+            Platform.enterNestedEventLoop(nestedLoopKey);
+
+            return Optional.ofNullable(thirdPartyFormController.getResult());
+
+        } catch (IOException e) {
+            logger.error("Error showing third party form dialog", e);
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Setup draggable window for undecorated stages
+     */
+    private void setupDraggable(Stage stage, Parent root) {
+        final double[] xOffset = new double[1];
+        final double[] yOffset = new double[1];
+
+        root.setOnMousePressed(event -> {
+            xOffset[0] = event.getSceneX();
+            yOffset[0] = event.getSceneY();
+        });
+
+        root.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset[0]);
+            stage.setY(event.getScreenY() - yOffset[0]);
+        });
+    }
+
+    /**
+     * Load System Settings view in a new window
+     */
+    public void loadSystemSettings() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/econovafx/ui/view/system-settings.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> systemSettingsController);
+            Parent root = loader.load();
+
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setTitle("Configuración del Sistema");
+            stage.setScene(new Scene(root, 900, 650));
+            
+            // Add styles
+            stage.getScene().getStylesheets().add(getClass().getResource("/com/econovafx/ui/css/system-settings.css").toExternalForm());
+            
+            stage.show();
+        } catch (IOException e) {
+            logger.error("Error loading system settings view", e);
+            throw new RuntimeException("Failed to load system settings view", e);
+        }
+    }
+
+    /**
+     * Create Exchange Rates view
+     */
+    public Node createExchangeRatesView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/exchange-rates.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> exchangeRatesController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading exchange rates view", e);
+            throw new RuntimeException("Failed to load exchange rates view", e);
+        }
+    }
+
+    /**
+     * Switch to transactions view via the main view controller
+     */
+    public void showTransactions() {
+        if (viewSwitcher != null) {
+            viewSwitcher.accept(() -> {
+                // This will be executed by MainViewController to switch to transactions view
+                logger.debug("Switching to transactions view");
+            });
+        } else {
+            logger.warn("ViewSwitcher is not configured, cannot switch to transactions view");
+        }
+    }
+}

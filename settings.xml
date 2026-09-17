@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
+  <proxies>
+    <proxy>
+        <id>proxy-http</id>
+        <active>true</active>
+        <protocol>http</protocol>
+        <host>proxy.ch.cav.geg.cu</host>
+        <port>3128</port>
+        <username>contador</username>
+        <password>haaDpz.800</password>
+        <nonProxyHosts>localhost|127.0.0.1|repo.maven.apache.org|*.maven.apache.org</nonProxyHosts>
+    </proxy>
+    <proxy>
+        <id>proxy-https</id>
+        <active>true</active>
+        <protocol>https</protocol>
+        <host>proxy.ch.cav.geg.cu</host>
+        <port>3128</port>
+        <username>contador</username>
+        <password>haaDpz.800</password>
+        <nonProxyHosts>localhost|127.0.0.1|repo.maven.apache.org|*.maven.apache.org</nonProxyHosts>
+    </proxy>
+  </proxies>
+  
+  <profiles>
+    <profile>
+      <id>offline</id>
+      <repositories>
+        <repository>
+          <id>local</id>
+          <url>file://${user.home}/.m2/repository</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+  
+  <activeProfiles>
+    <activeProfile>offline</activeProfile>
+  </activeProfiles>
+</settings>

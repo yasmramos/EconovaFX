@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox spacing="16" styleClass="bg-gray-100, p-6" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.accounting.controller.ComprobantesController">
+
+    <!-- Header with Actions -->
+    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="dashboard-header">
+        <VBox>
+            <Label styleClass="dashboard-title" text="Vouchers"><graphic><FontIcon iconLiteral="mdi2f-file-document" iconSize="18"/></graphic></Label>
+            <Label styleClass="dashboard-subtitle" text="Accounting vouchers management" />
+        </VBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="btnNewComprobante" onAction="#newComprobante" styleClass="submit-btn" graphicTextGap="8">
+            <text>New Voucher</text>
+            <graphic><FontIcon iconLiteral="mdi2p-plus" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnRefresh" onAction="#refreshData" styleClass="refresh-btn" graphicTextGap="8">
+            <text>Refresh</text>
+            <graphic><FontIcon iconLiteral="mdi2r-refresh" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnExportPdf" onAction="#exportToPdf" styleClass="action-btn" graphicTextGap="8">
+            <text>Export PDF</text>
+            <graphic><FontIcon iconLiteral="mdi2f-file-pdf-box" iconSize="18"/></graphic>
+        </Button>
+        <Button fx:id="btnExportExcel" onAction="#exportToExcel" styleClass="action-btn" graphicTextGap="8">
+            <text>Export Excel</text>
+            <graphic><FontIcon iconLiteral="mdi2m-microsoft-excel" iconSize="18"/></graphic>
+        </Button>
+    </HBox>
+
+    <!-- Filters Section -->
+    <VBox styleClass="filter-section">
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label styleClass="filter-label" text="Date:"><graphic><FontIcon iconLiteral="mdi2c-calendar" iconSize="16"/></graphic></Label>
+            <DatePicker fx:id="filterStartDate" promptText="Start date" styleClass="filter-date-picker" />
+            <Label styleClass="filter-label" text="—" />
+            <DatePicker fx:id="filterEndDate" promptText="End date" styleClass="filter-date-picker" />
+            
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <Label styleClass="filter-label" text="Status:"><graphic><FontIcon iconLiteral="mdi2s-state-machine" iconSize="16"/></graphic></Label>
+            <ComboBox fx:id="filterStatusCombo" promptText="All" styleClass="form-combo" prefWidth="150" />
+            
+            <Label styleClass="filter-label" text="Search:"><graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic></Label>
+            <TextField fx:id="searchField" promptText="Number or description..." styleClass="form-input" prefWidth="250" />
+            
+            <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8">
+                <text>Filter</text>
+                <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
+            </Button>
+            <Button onAction="#clearFilters" styleClass="clear-btn" graphicTextGap="8">
+                <text>Clear</text>
+                <graphic><FontIcon iconLiteral="mdi2d-delete-outline" iconSize="16"/></graphic>
+            </Button>
+        </HBox>
+    </VBox>
+
+    <!-- Summary Cards -->
+    <GridPane hgap="16" vgap="16">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="25" />
+            <ColumnConstraints percentWidth="25" />
+            <ColumnConstraints percentWidth="25" />
+            <ColumnConstraints percentWidth="25" />
+        </columnConstraints>
+
+        <!-- Total Vouchers -->
+        <VBox styleClass="summary-card, card-assets" GridPane.columnIndex="0">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox styleClass="card-icon-bg">
+                    <FontIcon iconLiteral="mdi2f-file-document" iconSize="32" iconColor="#10B981"/>
+                </VBox>
+                <VBox>
+                    <Label styleClass="card-label" text="Total Vouchers" />
+                    <Label fx:id="totalCountLabel" styleClass="card-value, value-positive" text="0" />
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Posted -->
+        <VBox styleClass="summary-card, card-equity" GridPane.columnIndex="1">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox styleClass="card-icon-bg-blue">
+                    <FontIcon iconLiteral="mdi2c-check-circle" iconSize="32" iconColor="#3B82F6"/>
+                </VBox>
+                <VBox>
+                    <Label styleClass="card-label" text="Posted" />
+                    <Label fx:id="postedCountLabel" styleClass="card-value, value-info" text="0" />
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Draft -->
+        <VBox styleClass="summary-card, card-balance" GridPane.columnIndex="2">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox styleClass="card-icon-bg-amber">
+                    <FontIcon iconLiteral="mdi2f-file-edit-outline" iconSize="32" iconColor="#F59E0B"/>
+                </VBox>
+                <VBox>
+                    <Label styleClass="card-label" text="Draft" />
+                    <Label fx:id="draftCountLabel" styleClass="card-value, value-warning" text="0" />
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Cancelled -->
+        <VBox styleClass="summary-card, card-liabilities" GridPane.columnIndex="3">
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox styleClass="card-icon-bg-red">
+                    <FontIcon iconLiteral="mdi2c-close-circle" iconSize="32" iconColor="#EF4444"/>
+                </VBox>
+                <VBox>
+                    <Label styleClass="card-label" text="Cancelled" />
+                    <Label fx:id="cancelledCountLabel" styleClass="card-value, value-negative" text="0" />
+                </VBox>
+            </HBox>
+        </VBox>
+        <rowConstraints>
+            <RowConstraints />
+        </rowConstraints>
+    </GridPane>
+
+    <!-- Vouchers Table -->
+    <VBox styleClass="bg-white, rounded-xl, shadow-md, p-5" VBox.vgrow="ALWAYS">
+        <TableView fx:id="comprobantesTable" styleClass="transactions-table" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colNumber" prefWidth="80" text="Number" />
+                <TableColumn fx:id="colDate" prefWidth="100" text="Date" />
+                <TableColumn fx:id="colType" prefWidth="100" text="Type" />
+                <TableColumn fx:id="colDescription" prefWidth="300" text="Description" />
+                <TableColumn fx:id="colAmount" prefWidth="120" text="Total Amount" />
+                <TableColumn fx:id="colAccounts" prefWidth="150" text="Accounts" />
+                <TableColumn fx:id="colStatus" prefWidth="100" text="Status" />
+                <TableColumn fx:id="colActions" prefWidth="100" text="Actions" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
+
+    <!-- Detail Panel (shown when row selected) -->
+    <VBox fx:id="detailPanel" visible="false" managed="false" styleClass="bg-white, rounded-xl, shadow-md, p-5">
+        <HBox alignment="CENTER_LEFT" spacing="16">
+            <Label styleClass="stats-title" text="Voucher Details"><graphic><FontIcon iconLiteral="mdi2c-clipboard-text" iconSize="18"/></graphic></Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnEdit" onAction="#editComprobante" styleClass="submit-btn" graphicTextGap="8">
+                <text>Edit</text>
+                <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="16"/></graphic>
+            </Button>
+            <Button fx:id="btnPublish" onAction="#publishComprobante" styleClass="filter-btn" graphicTextGap="8">
+                <text>Post</text>
+                <graphic><FontIcon iconLiteral="mdi2c-check-circle" iconSize="16"/></graphic>
+            </Button>
+            <Button fx:id="btnCancel" onAction="#cancelComprobante" styleClass="clear-btn" graphicTextGap="8">
+                <text>Cancel</text>
+                <graphic><FontIcon iconLiteral="mdi2c-close-circle" iconSize="16"/></graphic>
+            </Button>
+            <Button fx:id="btnCloseDetail" onAction="#closeDetail" styleClass="clear-btn" graphicTextGap="8">
+                <text>Close</text>
+                <graphic><FontIcon iconLiteral="mdi2c-close" iconSize="16"/></graphic>
+            </Button>
+        </HBox>
+        <Separator styleClass="sidebar-separator" />
+        <GridPane hgap="16" vgap="12">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="15" />
+                <ColumnConstraints percentWidth="35" />
+                <ColumnConstraints percentWidth="15" />
+                <ColumnConstraints percentWidth="35" />
+            </columnConstraints>
+
+            <Label styleClass="form-label" text="Number:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label fx:id="detailNumber" styleClass="stat-value" text="-" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label styleClass="form-label" text="Date:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <Label fx:id="detailDate" styleClass="stat-value" text="-" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+            <Label styleClass="form-label" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label fx:id="detailType" styleClass="stat-value" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label styleClass="form-label" text="Status:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label fx:id="detailStatus" styleClass="stat-value" text="-" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+            <Label styleClass="form-label" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label fx:id="detailDescription" styleClass="stat-value" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3" />
+
+            <Label styleClass="form-label" text="Amount:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Label fx:id="detailAmount" styleClass="stat-value, value-positive" text="-" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+        </GridPane>
+    </VBox>
+
+    <!-- Loading Overlay -->
+    <StackPane fx:id="loadingOverlay" managed="false" styleClass="loading-overlay" visible="false">
+        <VBox alignment="CENTER" spacing="16" styleClass="loading-content">
+            <ProgressIndicator fx:id="loadingIndicator" progress="-1" />
+            <Label styleClass="loading-label" text="Loading vouchers..." />
+        </VBox>
+    </StackPane>
+
+</VBox>
