@@ -108,4 +108,22 @@ module econonovafx {
     opens com.econovafx.modules.fixedassets.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.reporting.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.security.model to io.ebean.core, io.ebean;
+
+    // Open packages for reflection-based testing
+    opens com.econovafx to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.accounting.repository to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.accounting.service to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.accounting.validation to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.billing.service to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.security to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.service to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.service.backup to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.repository to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.config to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.ui.controller to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.core.ui.util to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.reporting.service to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.reporting.service.consolidation to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.reporting.controller to org.junit.platform.commons, org.junit.jupiter.api;
+    opens com.econovafx.modules.payroll.service to org.junit.platform.commons, org.junit.jupiter.api;
 }

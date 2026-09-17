@@ -429,9 +429,6 @@ public class App extends Application {
             loader.setControllerFactory(cls -> mainController);
 
             Scene scene = new Scene(loader.load(), 1200, 800);
-            
-            // Set background color to match theme before showing to prevent black flash
-            scene.setFill(javafx.scene.paint.Color.web("#f9fafb"));
 
             // Add all stylesheets in correct order - theme tokens first!
             scene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
@@ -444,24 +441,7 @@ public class App extends Application {
             primaryStage.setMinWidth(1024);
             primaryStage.setMinHeight(768);
             primaryStage.centerOnScreen();
-            
-            // Force CSS and layout resolution before showing to prevent black flash
-            scene.getRoot().applyCss();
-            scene.getRoot().layout();
-            
             primaryStage.show(); // Explicitly show the primary stage
-            
-            // Ensure root is fully opaque before fade transition
-            scene.getRoot().setOpacity(1.0);
-            
-            // Apply fade-in transition for smooth appearance
-            javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(
-                javafx.util.Duration.millis(200), 
-                scene.getRoot()
-            );
-            fadeIn.setFromValue(0.95);
-            fadeIn.setToValue(1.0);
-            fadeIn.play();
             
             logger.info("Main application window displayed successfully");
             logger.info("Application started successfully");
