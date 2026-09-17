@@ -451,12 +451,15 @@ public class App extends Application {
             
             primaryStage.show(); // Explicitly show the primary stage
             
+            // Ensure root is fully opaque before fade transition
+            scene.getRoot().setOpacity(1.0);
+            
             // Apply fade-in transition for smooth appearance
             javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(
-                javafx.util.Duration.millis(250), 
+                javafx.util.Duration.millis(200), 
                 scene.getRoot()
             );
-            fadeIn.setFromValue(0.0);
+            fadeIn.setFromValue(0.95);
             fadeIn.setToValue(1.0);
             fadeIn.play();
             
