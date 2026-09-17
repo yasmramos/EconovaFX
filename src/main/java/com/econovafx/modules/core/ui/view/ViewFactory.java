@@ -62,6 +62,7 @@ public class ViewFactory {
     private final ComprobantesController comprobantesController;
     private final SystemSettingsController systemSettingsController;
     private final InventoryController inventoryController;
+    private final com.econovafx.modules.core.ui.controller.WebViewController webViewController;
     private final AccountService accountService;
     private final ThirdPartyService thirdPartyService;
     private final TransactionService transactionService;
@@ -83,6 +84,7 @@ public class ViewFactory {
                       ComprobantesController comprobantesController,
                       SystemSettingsController systemSettingsController,
                       InventoryController inventoryController,
+                      com.econovafx.modules.core.ui.controller.WebViewController webViewController,
                       AccountService accountService,
                       ThirdPartyService thirdPartyService,
                       TransactionService transactionService,
@@ -104,6 +106,7 @@ public class ViewFactory {
         this.comprobantesController = comprobantesController;
         this.systemSettingsController = systemSettingsController;
         this.inventoryController = inventoryController;
+        this.webViewController = webViewController;
         this.accountService = accountService;
         this.thirdPartyService = thirdPartyService;
         this.transactionService = transactionService;
@@ -239,6 +242,22 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading inventory view", e);
             throw new RuntimeException("Failed to load inventory view", e);
+        }
+    }
+    
+    /**
+     * Create the Web UI view for SvelteKit application.
+     * @return The WebView node containing the web interface
+     */
+    public Node createWebView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/web-view.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> webViewController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading web view", e);
+            throw new RuntimeException("Failed to load web view", e);
         }
     }
     

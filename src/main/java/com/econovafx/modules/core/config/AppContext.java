@@ -25,6 +25,7 @@ import com.econovafx.modules.billing.controller.ThirdPartyFormController;
 import com.econovafx.modules.accounting.controller.AccountingPeriodsController;
 import com.econovafx.modules.accounting.controller.AccountingClosuresController;
 import com.econovafx.modules.inventory.controller.InventoryController;
+import com.econovafx.modules.core.ui.controller.WebViewController;
 import com.econovafx.modules.inventory.service.InventoryService;
 import io.avaje.inject.BeanScope;
 import io.ebean.Database;
@@ -74,6 +75,7 @@ public final class AppContext {
     private ComprobantesController comprobantesController;
     private SystemSettingsController systemSettingsController;
     private InventoryController inventoryController;
+    private WebViewController webViewController;
 
     // View Factory
     private ViewFactory viewFactory;
@@ -133,6 +135,7 @@ public final class AppContext {
                 null, // comprobantesController - will be set later
                 null, // systemSettingsController - will be set later
                 inventoryController,
+                null, // webViewController - will be set later
                 accountService,
                 thirdPartyService,
                 transactionService,
@@ -163,6 +166,9 @@ public final class AppContext {
         systemSettingsController = beanScope.get(SystemSettingsController.class);
         systemSettingsController.initializeViewFactory(viewFactory);
 
+        // Create WebViewController with injected LocalWebServer
+        webViewController = beanScope.get(WebViewController.class);
+
         // Re-create ViewFactory with all controllers properly initialized
         viewFactory = new ViewFactory(
                 dashboardController,
@@ -178,6 +184,7 @@ public final class AppContext {
                 comprobantesController,
                 systemSettingsController,
                 inventoryController,
+                webViewController,
                 accountService,
                 thirdPartyService,
                 transactionService,
