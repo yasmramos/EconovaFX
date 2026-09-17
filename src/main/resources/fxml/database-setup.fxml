@@ -20,7 +20,6 @@
             <ColumnConstraints hgrow="ALWAYS" />
         </columnConstraints>
 
-        <RowConstraints />
         <Label text="Host:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
         <TextField fx:id="pgHostField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
