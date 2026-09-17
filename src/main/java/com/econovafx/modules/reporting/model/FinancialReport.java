@@ -42,8 +42,14 @@ public class FinancialReport extends BaseEntity {
     public static class ReportLine {
         private String accountCode;
         private String description;
+        
+        @Column(columnDefinition = "DOUBLE PRECISION")
         private Double debitAmount;
+        
+        @Column(columnDefinition = "DOUBLE PRECISION")
         private Double creditAmount;
+        
+        @Column(columnDefinition = "DOUBLE PRECISION")
         private Double balance;
 
         public ReportLine() {}
