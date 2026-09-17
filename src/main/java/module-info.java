@@ -83,6 +83,7 @@ module econonovafx {
     requires jakarta.activation;
     requires javafx.baseEmpty;
     requires javafx.base;
+    requires jdk.jsobject;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.core;

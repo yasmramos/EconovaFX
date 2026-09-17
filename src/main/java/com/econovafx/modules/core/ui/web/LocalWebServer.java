@@ -1,6 +1,7 @@
 package com.econovafx.modules.core.ui.web;
 
 import com.sun.net.httpserver.HttpServer;
+import io.avaje.inject.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.util.Map;
  * Uses loopback address (127.0.0.1) with an ephemeral port to avoid CORS issues
  * with ES modules in JavaFX 17 WebView.
  */
+@Component
 public class LocalWebServer {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalWebServer.class);
