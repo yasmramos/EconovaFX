@@ -11,6 +11,8 @@ import com.econovafx.modules.core.ui.controller.MainViewController;
 import com.econovafx.modules.core.ui.controller.CompanySelectionController;
 import com.econovafx.modules.core.ui.controller.UnitSelectionController;
 import com.econovafx.modules.core.ui.controller.DashboardController;
+import com.econovafx.modules.core.ui.controller.DatabaseSetupController;
+import com.econovafx.modules.core.config.ConfigFileUtil;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.core.ui.view.SplashController;
 import com.econovafx.modules.core.ui.view.ViewFactory;
@@ -58,9 +60,12 @@ public class App extends Application {
         // Initialize internationalization with default locale (Spanish - Cuba)
         I18nManager.init(new Locale("es", "CU"));
         logger.info("I18n initialized with locale: {}", I18nManager.getCurrentLocale());
-        
-        context = AppContext.getInstance();
-        logger.info("Application context initialized");
+
+        // NOTE: Do NOT initialize AppContext here. AppConfig uses a static block
+        // that reads Avaje Config values at class-load time. To allow an external
+        // properties file to be provided by the database setup assistant before
+        // AppConfig is loaded, the AppContext initialization is deferred until
+        // after the assistant finishes (if required). See start().
     }
 
     @Override
@@ -69,7 +74,18 @@ public class App extends Application {
         this.primaryStage = stage;
 
         try {
-            // Show splash screen first
+            // If this is the first run (no external config file present), show the
+            // database setup assistant before doing anything that may trigger
+            // AppConfig (Avaje Config) to load. The assistant will persist an
+            // external properties file in the user's home directory and set the
+            // system property so Avaje Config picks it up prior to class loading.
+            if (!showDatabaseSetupIfNeeded()) {
+                // User cancelled the setup assistant - exit application
+                logger.info("Database setup cancelled by user. Exiting.");
+                System.exit(0);
+            }
+
+            // Now it's safe to show the splash screen which will begin DB init
             showSplashScreen();
 
         } catch (Exception e) {
@@ -77,7 +93,75 @@ public class App extends Application {
             throw new RuntimeException("Failed to start application", e);
         }
     }
-    
+
+    /**
+     * Called when the splash finishes initialization. Ensure AppContext is
+     * created now (so controllers can be resolved from DI) and then show login.
+     */
+    private void onSplashInitializationComplete() {
+        if (context == null) {
+            logger.info("Creating application context after DB initialization...");
+            context = AppContext.getInstance();
+            logger.info("Application context initialized");
+        }
+        showLoginScreen();
+    }
+
+    /**
+     * Shows the database setup assistant if the external config file does not
+     * exist. Returns true when the app should continue, false if the user
+     * cancelled and the app must exit.
+     */
+    private boolean showDatabaseSetupIfNeeded() {
+        try {
+            java.nio.file.Path configFile = ConfigFileUtil.getDefaultConfigFile();
+
+            if (java.nio.file.Files.exists(configFile)) {
+                // If external config exists, instruct Avaje Config to load it
+                System.setProperty("props.file", configFile.toAbsolutePath().toString());
+                logger.info("External config found: {}", configFile);
+                return true;
+            }
+
+            // Show assistant as a modal dialog on primaryStage
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/database-setup.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            VBox root = loader.load();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/css/login-styles.css").toExternalForm());
+
+            Stage dialog = new Stage();
+            dialog.initOwner(primaryStage);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initStyle(StageStyle.UNDECORATED);
+            dialog.setScene(scene);
+            dialog.centerOnScreen();
+
+            DatabaseSetupController controller = loader.getController();
+            controller.setDialogStage(dialog);
+
+            dialog.showAndWait();
+
+            if (!controller.isSaved()) {
+                return false;
+            }
+
+            // After successful save, set system property so Avaje Config will
+            // load the external file before AppConfig is referenced.
+            java.nio.file.Path saved = controller.getSavedConfigPath();
+            if (saved != null) {
+                System.setProperty("props.file", saved.toAbsolutePath().toString());
+                logger.info("External configuration written to {}", saved);
+            }
+
+            return true;
+
+        } catch (IOException e) {
+            logger.error("Failed to show database setup assistant", e);
+            return false;
+        }
+    }    
     private void showSplashScreen() {
         try {
             splashStage = new Stage();
@@ -98,8 +182,10 @@ public class App extends Application {
             splashStage.centerOnScreen();
             splashStage.show();
             
-            // Set callback for when initialization is complete
-            splashController.setOnInitializationComplete(this::showLoginScreen);
+            // Set callback for when initialization is complete. Ensure the DI
+            // context is created right after DB initialization and before showing
+            // the login screen so controllers can be resolved from the container.
+            splashController.setOnInitializationComplete(this::onSplashInitializationComplete);
             
         } catch (IOException e) {
             logger.error("Failed to load splash screen", e);

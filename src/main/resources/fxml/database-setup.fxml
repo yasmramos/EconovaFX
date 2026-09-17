@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.core.ui.controller.DatabaseSetupController" spacing="10" alignment="CENTER" stylesheets="/css/theme-tokens.css" >
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+
+    <Label text="Asistente de Configuración de Base de Datos" style="-fx-font-size:16px; -fx-font-weight:bold;" />
+
+    <HBox spacing="10">
+        <Label text="Tipo de BD:" />
+        <ComboBox fx:id="dbTypeCombo" prefWidth="160" />
+    </HBox>
+
+    <GridPane hgap="10" vgap="8">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <RowConstraints />
+        <Label text="Host:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="pgHostField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+        <Label text="Puerto:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextField fx:id="pgPortField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+        <Label text="Base de datos:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <TextField fx:id="pgDatabaseField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+        <Label text="Usuario:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <TextField fx:id="pgUserField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+        <Label text="Contraseña:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+        <PasswordField fx:id="pgPasswordField" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+        <Label text="sslmode:" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+        <ComboBox fx:id="pgSslModeCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="testButton" text="Probar conexión" />
+        <Button fx:id="saveButton" text="Guardar y continuar" />
+        <Button fx:id="cancelButton" text="Cancelar" />
+    </HBox>
+
+    <Label fx:id="statusLabel" text="" />
+
+</VBox>
