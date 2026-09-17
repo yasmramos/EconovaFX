@@ -1,0 +1,49 @@
+```
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Python (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+.venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Java/Maven
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.hprof
+.DS_Store
+Thumbs.db
+
+# Web-specific
+.webpack/
+.nuxt/
+.next/
+public/dist/
+```
