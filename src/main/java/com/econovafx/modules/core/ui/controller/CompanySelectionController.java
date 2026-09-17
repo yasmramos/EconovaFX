@@ -4,9 +4,19 @@ import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.core.service.CompanyService;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
+import javafx.collections.FXCollections;
+import javafx.collections.ListWrapper;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,10 +57,15 @@ public class CompanySelectionController {
     @FXML
     private Label selectedCompanyLabel;
 
+    @FXML
+    private TextField searchField;
+
     private CompanyService companyService;
     private Runnable onCompanySelected;
     private Runnable onCancel;
     private Company selectedCompany;
+    private ObservableList<Company> companyObservableList;
+    private FilteredList<Company> filteredCompanyList;
 
     public CompanySelectionController() {
         // Default constructor - services will be injected by Avaje Inject
@@ -74,22 +89,81 @@ public class CompanySelectionController {
         emptyStateLabel.setManaged(false);
         selectedCompanyInfo.setVisible(false);
         selectedCompanyInfo.setManaged(false);
+        searchField.setVisible(false);
+        searchField.setManaged(false);
         
-        // Configure ListView
+        // Setup search field filtering
+        searchField.textProperty().addListener((obs, oldText, newText) -> {
+            if (filteredCompanyList != null) {
+                filteredCompanyList.setPredicate(company -> {
+                    if (newText == null || newText.isEmpty()) {
+                        return true;
+                    }
+                    String lowerCaseFilter = newText.toLowerCase();
+                    return company.getName().toLowerCase().contains(lowerCaseFilter)
+                            || company.getCode().toLowerCase().contains(lowerCaseFilter)
+                            || (company.getNif() != null && company.getNif().toLowerCase().contains(lowerCaseFilter));
+                });
+            }
+        });
+        
+        // Configure ListView with enriched cells
         companyListView.setCellFactory(param -> new ListCell<Company>() {
+            private final HBox hbox = new HBox(10);
+            private final Circle avatar = new Circle(20);
+            private final Text initials = new Text();
+            private final VBox textVBox = new VBox(4);
+            private final Text nameText = new Text();
+            private final Text codeText = new Text();
+            
+            {
+                // Setup avatar circle
+                avatar.setFill(Color.web("#2196F3"));
+                initials.setFont(Font.font("System", FontWeight.BOLD, 14));
+                initials.setFill(Color.WHITE);
+                
+                // Setup text elements
+                nameText.setFont(Font.font("System", FontWeight.BOLD, 14));
+                nameText.setFill(Color.web("#2c3e50"));
+                codeText.setFont(Font.font("System", 12));
+                codeText.setFill(Color.web("#7f8c8d"));
+                
+                textVBox.getChildren().addAll(nameText, codeText);
+                hbox.getChildren().addAll(avatar, textVBox);
+                hbox.setStyle("-fx-padding: 8px; -fx-alignment: center-left;");
+                hbox.setMaxWidth(Double.MAX_VALUE);
+            }
+            
             @Override
             protected void updateItem(Company company, boolean empty) {
                 super.updateItem(company, empty);
                 if (empty || company == null) {
+                    setGraphic(null);
                     setText(null);
                     setStyle("");
                 } else {
-                    setText(company.getName() + " (" + company.getCode() + ")");
-                    // Highlight if previously selected
+                    // Set initials
+                    String companyName = company.getName();
+                    String initialChars = companyName.length() > 0 ? 
+                            companyName.substring(0, Math.min(2, companyName.length())).toUpperCase() : "EC";
+                    initials.setText(initialChars);
+                    
+                    // Set texts
+                    nameText.setText(companyName);
+                    String codeDisplay = company.getNif() != null && !company.getNif().isEmpty() 
+                            ? "NIF: " + company.getNif() 
+                            : "Cód: " + company.getCode();
+                    codeText.setText(codeDisplay);
+                    
+                    setGraphic(hbox);
+                    setText(null);
+                    
+                    // Apply selected style via CSS class instead of inline style
+                    getStyleClass().remove("previously-selected");
                     if (selectedCompany != null && selectedCompany.getId().equals(company.getId())) {
-                        setStyle("-fx-background-color: #e3f2fd; -fx-font-weight: bold;");
+                        getStyleClass().add("previously-selected");
                     } else {
-                        setStyle("");
+                        getStyleClass().remove("previously-selected");
                     }
                 }
             }
@@ -139,9 +213,20 @@ public class CompanySelectionController {
                         emptyStateLabel.setVisible(true);
                         emptyStateLabel.setManaged(true);
                         selectButton.setDisable(true);
+                        searchField.setVisible(false);
+                        searchField.setManaged(false);
                         logger.warn("No active companies found");
                     } else {
-                        companyListView.getItems().setAll(companies);
+                        companyObservableList = FXCollections.observableArrayList(companies);
+                        filteredCompanyList = new FilteredList<>(companyObservableList, p -> true);
+                        companyListView.setItems(filteredCompanyList);
+                        
+                        // Show search field if more than 5 companies
+                        if (companies.size() > 5) {
+                            searchField.setVisible(true);
+                            searchField.setManaged(true);
+                        }
+                        
                         logger.info("Loaded {} companies", companies.size());
                         
                         // Auto-select if only one company
@@ -154,7 +239,7 @@ public class CompanySelectionController {
                 logger.error("Error loading companies", e);
                 javafx.application.Platform.runLater(() -> {
                     setLoading(false);
-                    errorLabel.setText("Error loading companies: " + e.getMessage());
+                    errorLabel.setText("Error al cargar las empresas: " + e.getMessage());
                     errorLabel.setVisible(true);
                     errorLabel.setManaged(true);
                     selectButton.setDisable(true);
@@ -167,14 +252,14 @@ public class CompanySelectionController {
     private void handleSelect() {
         if (selectedCompany == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Company Selected");
+            alert.setTitle("Advertencia");
             alert.setHeaderText(null);
-            alert.setContentText("Please select a company to continue.");
+            alert.setContentText("Por favor, selecciona una empresa para continuar.");
             alert.showAndWait();
             return;
         }
         
-        logger.info("Company selected: {} ({})", selectedCompany.getName(), selectedCompany.getCode());
+        logger.info("Empresa seleccionada: {} ({})", selectedCompany.getName(), selectedCompany.getCode());
         
         // Set as active tenant
         companyService.selectTenant(selectedCompany);
@@ -186,7 +271,7 @@ public class CompanySelectionController {
 
     @FXML
     private void handleCancel() {
-        logger.info("Company selection cancelled");
+        logger.info("Selección de empresa cancelada");
         if (onCancel != null) {
             onCancel.run();
         }
