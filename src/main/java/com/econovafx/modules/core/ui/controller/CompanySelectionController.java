@@ -61,7 +61,7 @@ public class CompanySelectionController {
     private Runnable onCancel;
     private Company selectedCompany;
     private ObservableList<Company> masterData = FXCollections.observableArrayList();
-    private javafx.collections.FilteredList<Company> filteredData;
+    private FilteredList<Company> filteredData;
 
     public CompanySelectionController() {
         // Default constructor - services will be injected by Avaje Inject
@@ -220,7 +220,7 @@ public class CompanySelectionController {
                         logger.warn("No active companies found");
                     } else {
                         masterData.setAll(companies);
-                        filteredData = new javafx.collections.FilteredList<>(masterData, p -> true);
+                        filteredData = new FilteredList<>(masterData, p -> true);
                         companyListView.setItems(filteredData);
                         logger.info("Loaded {} companies", companies.size());
                         
