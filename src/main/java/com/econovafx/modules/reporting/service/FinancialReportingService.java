@@ -7,7 +7,7 @@ import com.econovafx.modules.accounting.model.TransactionEntry;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.reporting.model.FinancialReport;
-import com.econovafx.modules.reporting.model.FinancialReport.ReportLine;
+import com.econovafx.modules.reporting.model.ReportLine;
 import com.econovafx.modules.reporting.repository.FinancialReportRepository;
 import io.ebean.annotation.Transactional;
 import io.avaje.inject.Component;
