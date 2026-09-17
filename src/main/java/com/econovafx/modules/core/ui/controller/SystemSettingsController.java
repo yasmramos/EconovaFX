@@ -12,6 +12,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -109,7 +112,8 @@ public class SystemSettingsController {
             "Inventario",
             "Seguridad",
             "Copias de Seguridad",
-            "Interfaz"
+            "Interfaz",
+            "Base de Datos"
         };
 
         for (String category : categories) {
@@ -178,6 +182,12 @@ public class SystemSettingsController {
                     createFormLabel("Idioma"), languageCombo
                 );
                 break;
+            case "Base de Datos":
+                Button openDbBtn = createButton("Reconfigurar Base de Datos", ev -> openDatabaseSetup());
+                Label note = new Label("Cambiar la configuración de la base de datos requiere reiniciar la aplicación.");
+                note.setWrapText(true);
+                panel.getChildren().addAll(createFormLabel("Base de Datos"), note, openDbBtn);
+                break;
         }
 
         Button saveBtn = new Button("Guardar Cambios");
@@ -186,6 +196,42 @@ public class SystemSettingsController {
         
         panel.getChildren().add(saveBtn);
         contentArea.getChildren().add(panel);
+    }
+
+    private void openDatabaseSetup() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/database-setup.fxml"));
+            loader.setResources(java.util.ResourceBundle.getBundle("i18n/messages"));
+            VBox root = loader.load();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
+
+            Stage dialog = new Stage();
+            dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            dialog.initStyle(javafx.stage.StageStyle.UNDECORATED);
+            dialog.setScene(scene);
+            dialog.centerOnScreen();
+
+            com.econovafx.modules.core.ui.controller.DatabaseSetupController controller = loader.getController();
+            controller.setDialogStage(dialog);
+            dialog.showAndWait();
+
+            if (controller.isSaved()) {
+                // Inform user that a restart is required
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Reiniciar requerido");
+                alert.setHeaderText("Cambios aplicados");
+                alert.setContentText("La configuración de la base de datos ha sido guardada. Reinicie la aplicación para aplicar los cambios.");
+                alert.showAndWait();
+            }
+
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("No se pudo abrir el asistente de base de datos");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
     }
 
     private Label createFormLabel(String text) {
