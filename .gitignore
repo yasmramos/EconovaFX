@@ -1,42 +1,49 @@
 ```
-# Compiled and build artifacts
-*.class
-*.o
-*.obj
-*.out
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
 build/
 target/
-
-# Dependencies
-.gradle/
-lib/
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-
-# Editors
-.vscode/
-.idea/
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
+# Editors
+.vscode/
+.idea/
 
-# Package manager
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Logs
+*.log
 
-# OS generated files
+# Python (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+.venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Java/Maven
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.hprof
 .DS_Store
 Thumbs.db
+
+# Web-specific
+.webpack/
+.nuxt/
+.next/
+public/dist/
 ```
