@@ -1,49 +1,52 @@
 ```
+# Compiled and binary files
+*.class
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
+
 # Dependencies
-node_modules/
+lib/
+libs/
+dependency/
+dependencies/
 
 # Build artifacts
-dist/
-build/
 target/
+build/
+dist/
+out/
+bin/
+obj/
 
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
+# IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
 
 # Logs
 *.log
 
-# Python (if applicable)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-venv/
-.venv/
-.venv.bak/
-pip-log.txt
-pip-delete-this-directory.txt
+# Package manager caches
+.gradle/
+.mypy_cache/
+.pytest_cache/
+coverage/
+htmlcov/
+.coverage
 
-# Java/Maven
-*.class
-*.jar
-*.war
-*.ear
-*.nar
-*.hprof
+# System files
 .DS_Store
 Thumbs.db
 
-# Web-specific
-.webpack/
-.nuxt/
-.next/
-public/dist/
+# Environment files
+.env
+.env.local
+*.env.*
 ```
