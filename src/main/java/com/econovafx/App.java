@@ -180,21 +180,24 @@ public class App extends Application {
             root.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
             root.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
             
-            // Show as modal using ModernDialog
-            ModernDialog.showModal(primaryStage, root, "Seleccionar Empresa");
+            // Show as modal using ModernDialog and capture the handle for programmatic control
+            ModernDialog.DialogHandle handle = ModernDialog.showModal(primaryStage, root, "Seleccionar Empresa");
             
             // Set callbacks
             controller.setOnCompanySelected(() -> {
                 // Company selected, now check if it has units
                 selectedCompany = TenantContext.getCurrentTenant();
                 
-                // Close the modal by getting the dialog stage from the controller's context
-                // The ModernDialog handles closing automatically when callback completes
+                // Close the modal overlay before proceeding
+                handle.close();
+                
                 checkAndShowUnitSelectionModal();
             });
             
             controller.setOnCancel(() -> {
                 logger.info("Company selection cancelled, exiting application");
+                // Close the modal overlay before exiting (cleaner, though exit handles it)
+                handle.close();
                 System.exit(0);
             });
             
@@ -302,22 +305,28 @@ public class App extends Application {
             root.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
             root.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
             
-            // Show as modal using ModernDialog
-            ModernDialog.showModal(primaryStage, root, "Seleccionar Unidad de Negocio");
+            // Show as modal using ModernDialog and capture the handle for programmatic control
+            ModernDialog.DialogHandle handle = ModernDialog.showModal(primaryStage, root, "Seleccionar Unidad de Negocio");
             
             // Set callbacks
             controller.setOnUnitSelected(() -> {
                 logger.info("Business unit selected, refreshing dashboard");
+                // Close the modal overlay before proceeding
+                handle.close();
                 refreshDashboard();
             });
             
             controller.setOnUnitSkipped(() -> {
                 logger.info("Business unit skipped, refreshing dashboard");
+                // Close the modal overlay before proceeding
+                handle.close();
                 refreshDashboard();
             });
             
             controller.setOnCancel(() -> {
                 logger.info("Unit selection cancelled, returning to company selection");
+                // Close the modal overlay before showing company selection to avoid stacking overlays
+                handle.close();
                 showCompanySelectionModal();
             });
             
