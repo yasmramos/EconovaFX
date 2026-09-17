@@ -251,7 +251,7 @@ public class ModernDialog {
         }
 
         // Create content container pane
-        StackPane contentContainer = new StackPane(content);
+        Pane contentContainer = new Pane(content);
         contentContainer.setStyle("-fx-background-color: transparent;");
         
         // Add title label if title is provided

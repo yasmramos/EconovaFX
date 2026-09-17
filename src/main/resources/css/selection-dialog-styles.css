@@ -22,27 +22,8 @@
 .selection-dialog-card {
     -fx-background-color: white;
     -fx-background-radius: 10px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 15, 0, 0, 3);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
     -fx-padding: 20px;
-}
-
-/* Search Field */
-.search-field {
-    -fx-background-color: white;
-    -fx-background-radius: 8px;
-    -fx-border-color: #dee2e6;
-    -fx-border-radius: 8px;
-    -fx-border-width: 1px;
-    -fx-padding: 10px 15px;
-    -fx-font-size: 14px;
-    -fx-text-fill: #2c3e50;
-    -fx-prompt-text-fill: #95a5a6;
-}
-
-.search-field:focused {
-    -fx-border-color: #2196F3;
-    -fx-border-width: 2px;
-    -fx-effect: dropshadow(three-pass-box, rgba(33,150,243,0.2), 8, 0, 0, 2);
 }
 
 /* ListView */
@@ -53,99 +34,25 @@
     -fx-border-color: #dee2e6;
     -fx-border-radius: 8px;
     -fx-border-width: 1px;
-    -fx-padding: 5px;
-}
-
-.company-list-view .scroll-bar,
-.unit-list-view .scroll-bar {
-    -fx-background-color: transparent;
-}
-
-.company-list-view .scroll-bar .thumb,
-.unit-list-view .scroll-bar .thumb {
-    -fx-background-color: #bdc3c7;
-    -fx-background-radius: 5px;
-}
-
-.company-list-view .scroll-bar .thumb:hover,
-.unit-list-view .scroll-bar .thumb:hover {
-    -fx-background-color: #95a5a6;
-}
-
-/* Company Cell Container */
-.company-cell-container {
-    -fx-background-color: white;
-    -fx-background-radius: 6px;
-    -fx-padding: 8px 12px;
-    -fx-spacing: 12px;
-    -fx-alignment: center-left;
-}
-
-.company-cell-container .company-avatar {
-    -fx-background-color: linear-gradient(to bottom right, #2196F3, #1976D2);
-    -fx-background-radius: 20px;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-alignment: center;
-    -fx-content-display: center;
-}
-
-.company-cell-container .company-name {
-    -fx-text-fill: #2c3e50;
-    -fx-font-weight: bold;
-    -fx-font-size: 15px;
-}
-
-.company-cell-container .company-code {
-    -fx-text-fill: #7f8c8d;
-    -fx-font-size: 12px;
 }
 
 .company-list-view .list-cell,
 .unit-list-view .list-cell {
-    -fx-background-color: transparent;
-    -fx-padding: 5px;
-    -fx-background-radius: 6px;
-}
-
-.company-list-view .list-cell > .company-cell-container,
-.unit-list-view .list-cell > .company-cell-container {
     -fx-background-color: white;
+    -fx-padding: 12px 15px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
 }
 
-.company-list-view .list-cell:hover > .company-cell-container,
-.unit-list-view .list-cell:hover > .company-cell-container {
+.company-list-view .list-cell:hover,
+.unit-list-view .list-cell:hover {
     -fx-background-color: #e3f2fd;
-    -fx-effect: dropshadow(three-pass-box, rgba(33,150,243,0.15), 5, 0, 0, 1);
 }
 
-.company-list-view .list-cell:selected > .company-cell-container,
-.unit-list-view .list-cell:selected > .company-cell-container {
-    -fx-background-color: linear-gradient(to right, #2196F3, #1976D2);
-}
-
-.company-list-view .list-cell:selected > .company-cell-container .company-name,
-.unit-list-view .list-cell:selected > .company-cell-container .company-name {
+.company-list-view .list-cell:selected,
+.unit-list-view .list-cell:selected {
+    -fx-background-color: #2196F3;
     -fx-text-fill: white;
-}
-
-.company-list-view .list-cell:selected > .company-cell-container .company-code,
-.unit-list-view .list-cell:selected > .company-cell-container .company-code {
-    -fx-text-fill: rgba(255, 255, 255, 0.85);
-}
-
-.company-list-view .list-cell:selected > .company-cell-container .company-avatar,
-.unit-list-view .list-cell:selected > .company-cell-container .company-avatar {
-    -fx-background-color: white;
-    -fx-text-fill: #1976D2;
-}
-
-/* Previously selected company */
-.company-cell-container.previously-selected {
-    -fx-border-color: #4caf50;
-    -fx-border-width: 2px;
-    -fx-border-radius: 6px;
 }
 
 /* Buttons */
