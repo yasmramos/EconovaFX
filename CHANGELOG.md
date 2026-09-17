@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Web UI**: Modern embedded web interface with SvelteKit + Tailwind CSS served via JavaFX WebView
 - Initial project setup with JavaFX 17 and Ebean ORM 17
 - Core accounting modules: Chart of Accounts, Journal Entries, Periods
 - User management with role-based access control
