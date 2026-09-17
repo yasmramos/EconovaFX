@@ -5,7 +5,6 @@ import com.econovafx.modules.core.service.CompanyService;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
-import javafx.collections.ListWrapper;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
