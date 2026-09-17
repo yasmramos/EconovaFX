@@ -115,7 +115,7 @@ public class ModernDialog {
      * @return DialogHandle for controlling the dialog programmatically
      */
     public static DialogHandle showModal(Stage ownerStage, Node content, String title) {
-        return showModal(ownerStage, content, title, null);
+        return showModal(ownerStage, content, title, javafx.geometry.Pos.CENTER);
     }
     
     /**
@@ -125,10 +125,25 @@ public class ModernDialog {
      * @param ownerStage The owner stage (main window)
      * @param content The content node to display (e.g., a form loaded from FXML)
      * @param title The dialog title (displayed as a header label inside the dialog)
+     * @param alignment The alignment position for the modal card within the overlay
+     * @return DialogHandle for controlling the dialog programmatically
+     */
+    public static DialogHandle showModal(Stage ownerStage, Node content, String title, javafx.geometry.Pos alignment) {
+        return showModal(ownerStage, content, title, alignment, null);
+    }
+    
+    /**
+     * Shows a node as a modern modal dialog with overlay scrim effect.
+     * Non-blocking method - returns immediately.
+     * 
+     * @param ownerStage The owner stage (main window)
+     * @param content The content node to display (e.g., a form loaded from FXML)
+     * @param title The dialog title (displayed as a header label inside the dialog)
+     * @param alignment The alignment position for the modal card within the overlay
      * @param nestedLoopKey Optional key for nested event loop (used by showAndWait)
      * @return DialogHandle for controlling the dialog programmatically
      */
-    private static DialogHandle showModal(Stage ownerStage, Node content, String title, Object nestedLoopKey) {
+    private static DialogHandle showModal(Stage ownerStage, Node content, String title, javafx.geometry.Pos alignment, Object nestedLoopKey) {
         Scene scene = ownerStage.getScene();
         if (scene == null) {
             throw new IllegalStateException("Owner stage must have a scene");
@@ -161,13 +176,13 @@ public class ModernDialog {
         
         // Add nodes to overlay (card centered automatically by StackPane)
         overlay.getChildren().add(modalCard);
-        // Set alignment to CENTER for proper vertical and horizontal centering
-        StackPane.setAlignment(modalCard, javafx.geometry.Pos.CENTER);
+        // Set alignment using the provided alignment parameter for proper vertical and horizontal centering
+        StackPane.setAlignment(modalCard, alignment);
         // Ensure no margins interfere with centering
         StackPane.setMargin(modalCard, new javafx.geometry.Insets(0));
         
         // Also set the overlay's own alignment to ensure content is centered
-        overlay.setAlignment(javafx.geometry.Pos.CENTER);
+        overlay.setAlignment(alignment);
 
         // Add overlay to root stack pane
         rootStackPane.getChildren().add(overlay);
@@ -288,12 +303,25 @@ public class ModernDialog {
      * @param title The dialog title
      */
     public static void showAndWait(Stage ownerStage, Node content, String title) {
+        showAndWait(ownerStage, content, title, javafx.geometry.Pos.CENTER);
+    }
+    
+    /**
+     * Shows a node as a modern modal dialog and waits for it to close.
+     * Blocking method - uses nested event loop to keep UI responsive while waiting.
+     * 
+     * @param ownerStage The owner stage
+     * @param content The content node to display
+     * @param title The dialog title
+     * @param alignment The alignment position for the modal card within the overlay
+     */
+    public static void showAndWait(Stage ownerStage, Node content, String title, javafx.geometry.Pos alignment) {
         if (!Platform.isFxApplicationThread()) {
             throw new IllegalStateException("showAndWait must be called on the FX Application Thread");
         }
         
         Object nestedLoopKey = new Object();
-        DialogHandle handle = showModal(ownerStage, content, title, nestedLoopKey);
+        DialogHandle handle = showModal(ownerStage, content, title, alignment, nestedLoopKey);
         
         // Add listener BEFORE entering nested loop to avoid race conditions
         handle.closeProperty.addListener((obs, oldVal, newVal) -> {
