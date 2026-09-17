@@ -161,7 +161,13 @@ public class ModernDialog {
         
         // Add nodes to overlay (card centered automatically by StackPane)
         overlay.getChildren().add(modalCard);
+        // Set alignment to CENTER for proper vertical and horizontal centering
         StackPane.setAlignment(modalCard, javafx.geometry.Pos.CENTER);
+        // Ensure no margins interfere with centering
+        StackPane.setMargin(modalCard, new javafx.geometry.Insets(0));
+        
+        // Also set the overlay's own alignment to ensure content is centered
+        overlay.setAlignment(javafx.geometry.Pos.CENTER);
 
         // Add overlay to root stack pane
         rootStackPane.getChildren().add(overlay);
