@@ -20,7 +20,7 @@
         <ebean.version>17.11.0</ebean.version>
         <h2.version>2.2.224</h2.version>
         <logback.version>1.4.14</logback.version>
-        <jacoco.version>0.8.13</jacoco.version>
+        <jacoco.version>0.8.15</jacoco.version>
         <testfx.version>4.0.17</testfx.version>
         <monocle.version>17.0.10</monocle.version>
         <!-- Default so Surefire's @{argLine} resolves even when JaCoCo is skipped -->
