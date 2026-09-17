@@ -192,6 +192,11 @@ public class DashboardController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("DashboardController initialized");
         
+        // Disable animations on charts to prevent flickering and layout jumps on load/resize
+        financialPieChart.setAnimated(false);
+        monthlyBarChart.setAnimated(false);
+        cashFlowLineChart.setAnimated(false);
+        
         initializeTableColumns();
         
         // Only load data if tenant is already selected (e.g., returning to dashboard)
