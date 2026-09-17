@@ -1,49 +1,98 @@
-```
-# Dependencies
-node_modules/
+# Compiled and build artifacts
+*.class
+*.o
+*.obj
+*.out
+*.dll
+*.so
+*.a
 
-# Build artifacts
-dist/
+# Dependencies
+lib/
+libs/
+dependency/
+dependencies/
+
+# Build directories
 build/
 target/
+dist/
+out/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Editors
-.vscode/
-.idea/
+# Coverage
+coverage/
+htmlcov/
+.coverage
 
-# Logs
-*.log
-
-# Python (if applicable)
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
+
+# Node
+node_modules/
+
+# Virtual environments
 venv/
 .venv/
-.venv.bak/
-pip-log.txt
-pip-delete-this-directory.txt
+env/
+.env/
 
-# Java/Maven
-*.class
-*.jar
-*.war
-*.ear
-*.nar
-*.hprof
+# Gradle
+.gradle/
+build/
+
+# Maven
+target/
+
+# Temporary files
+*.tmp
+*~
 .DS_Store
 Thumbs.db
 
-# Web-specific
-.webpack/
-.nuxt/
-.next/
-public/dist/
-```
+# MyPy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
