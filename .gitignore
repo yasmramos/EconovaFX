@@ -1,4 +1,4 @@
-```
+target/*
 # Exported PDF files
 export_pdf/
 
@@ -8,4 +8,3 @@ export_pdf/
 # Temporary files
 *.tmp
 *.temp
-```
