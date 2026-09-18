@@ -9,24 +9,24 @@ import jakarta.persistence.Column;
  */
 @Embeddable
 public class ReportLine {
-    
+
     @Column(name = "account_code")
     private String accountCode;
-    
+
     @Column(name = "description")
     private String description;
-    
+
     @Column(name = "debit_amount", columnDefinition = "DOUBLE")
     private Double debitAmount;
-    
+
     @Column(name = "credit_amount", columnDefinition = "DOUBLE")
     private Double creditAmount;
-    
+
     @Column(name = "balance", columnDefinition = "DOUBLE")
     private Double balance;
 
     public ReportLine() {}
-    
+
     public ReportLine(String accountCode, String description, Double debitAmount, Double creditAmount, Double balance) {
         this.accountCode = accountCode;
         this.description = description;
