@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.modules.accounting.controller.AccountingClosuresController"
+      fx:id="contentArea"
+      spacing="20"
+      styleClass="bg-gray-50, p-6">
+
+    <Label text="Accounting Closures" styleClass="text-2xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2l-lock" iconSize="24"/></graphic></Label>
+    
+    <Separator/>
+
+    <!-- Info Panel -->
+    <VBox styleClass="card, bg-white, p-6" spacing="15">
+        <Label text="Accounting Closures Management" styleClass="text-lg, font-semibold, text-slate-700"/>
+        <Label text="Manage monthly and annual closings of the accounting system. This functionality allows closing accounting periods securely, generating corresponding closing entries and blocking movements in already closed periods." 
+               styleClass="text-slate-600" wrapText="true"/>
+        
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Button fx:id="btnVerPeriodos" graphicTextGap="8" onAction="#handleVerPeriodos" styleClass="btn, btn-primary">
+                <text>View Open Periods</text>
+                <graphic><FontIcon iconLiteral="mdi2c-chart-bar" iconSize="18"/></graphic>
+            </Button>
+            <Button fx:id="btnCierreMensual" graphicTextGap="8" onAction="#handleCierreMensual" styleClass="btn, btn-warning">
+                <text>Execute Monthly Close</text>
+                <graphic><FontIcon iconLiteral="mdi2l-lock" iconSize="18"/></graphic>
+            </Button>
+            <Button fx:id="btnCierreAnual" graphicTextGap="8" onAction="#handleCierreAnual" styleClass="btn, btn-danger">
+                <text>Execute Annual Close</text>
+                <graphic><FontIcon iconLiteral="mdi2c-calendar-clock" iconSize="18"/></graphic>
+            </Button>
+        </HBox>
+    </VBox>
+
+    <!-- Closures List Placeholder -->
+    <VBox styleClass="card, bg-white, p-6" spacing="15" VBox.vgrow="ALWAYS">
+        <Label text="Closures History" styleClass="text-lg, font-semibold, text-slate-700"/>
+        
+        <TableView fx:id="closuresTable" prefHeight="300">
+            <columns>
+                <TableColumn fx:id="colTipo" text="Type" prefWidth="150"/>
+                <TableColumn fx:id="colPeriodo" text="Period" prefWidth="200"/>
+                <TableColumn fx:id="colFechaCierre" text="Close Date" prefWidth="150"/>
+                <TableColumn fx:id="colUsuario" text="User" prefWidth="200"/>
+                <TableColumn fx:id="colEstado" text="Status" prefWidth="150"/>
+                <TableColumn fx:id="colAcciones" text="Actions" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+</VBox>
