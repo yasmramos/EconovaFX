@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.econovafx.modules.accounting.repository.UserRepositoryTest
--------------------------------------------------------------------------------
-Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.115 s -- in com.econovafx.modules.accounting.repository.UserRepositoryTest
