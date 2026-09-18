@@ -73,6 +73,11 @@
         </dependency>
         <dependency>
             <groupId>io.ebean</groupId>
+            <artifactId>ebean-datasource</artifactId>
+            <version>${ebean.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
             <artifactId>ebean-ddl-generator</artifactId>
             <version>${ebean.version}</version>
         </dependency>
