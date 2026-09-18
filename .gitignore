@@ -11,3 +11,4 @@ export_pdf/
 compile.log
 export_pdf/*
 db/*
+.qwen/
