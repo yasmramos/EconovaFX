@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.econovafx.modules.billing.service.SequentialNumberServiceTest
--------------------------------------------------------------------------------
-Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.180 s -- in com.econovafx.modules.billing.service.SequentialNumberServiceTest
