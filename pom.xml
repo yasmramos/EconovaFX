@@ -73,11 +73,6 @@
         </dependency>
         <dependency>
             <groupId>io.ebean</groupId>
-            <artifactId>ebean-datasource</artifactId>
-            <version>${ebean.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.ebean</groupId>
             <artifactId>ebean-ddl-generator</artifactId>
             <version>${ebean.version}</version>
         </dependency>
@@ -91,6 +86,13 @@
             <artifactId>ebean-test</artifactId>
             <version>${ebean.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- HikariCP - Connection Pooling for Ebean -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.1.0</version>
         </dependency>
 
         <!-- H2 Database (for development and tests) -->
