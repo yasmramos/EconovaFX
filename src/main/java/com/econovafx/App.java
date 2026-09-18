@@ -118,7 +118,7 @@ public class App extends Application {
 
             if (java.nio.file.Files.exists(configFile)) {
                 // If external config exists, instruct Avaje Config to load it
-                System.setProperty("props.file", configFile.toAbsolutePath().toString());
+                System.setProperty("config.file", configFile.toAbsolutePath().toString());
                 logger.info("External config found: {}", configFile);
                 return true;
             }
@@ -151,7 +151,7 @@ public class App extends Application {
             // load the external file before AppConfig is referenced.
             java.nio.file.Path saved = controller.getSavedConfigPath();
             if (saved != null) {
-                System.setProperty("props.file", saved.toAbsolutePath().toString());
+                System.setProperty("config.file", saved.toAbsolutePath().toString());
                 logger.info("External configuration written to {}", saved);
             }
 

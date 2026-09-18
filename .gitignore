@@ -8,3 +8,7 @@ export_pdf/
 # Temporary files
 *.tmp
 *.temp
+compile.log
+export_pdf/*
+db/*
+.qwen/
