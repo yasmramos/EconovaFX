@@ -1,22 +1,32 @@
 package com.econovafx.modules.reporting.model;
 
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Column;
+
 /**
  * Represents a line item in a financial report.
- * This is a simple POJO used for report data transfer, not a persistent entity.
+ * This is an embeddable class used as part of FinancialReport's element collection.
  */
+@Embeddable
 public class ReportLine {
-    
+
+    @Column(name = "account_code")
     private String accountCode;
+
+    @Column(name = "description")
     private String description;
-    
+
+    @Column(name = "debit_amount", columnDefinition = "DOUBLE")
     private Double debitAmount;
-    
+
+    @Column(name = "credit_amount", columnDefinition = "DOUBLE")
     private Double creditAmount;
-    
+
+    @Column(name = "balance", columnDefinition = "DOUBLE")
     private Double balance;
 
     public ReportLine() {}
-    
+
     public ReportLine(String accountCode, String description, Double debitAmount, Double creditAmount, Double balance) {
         this.accountCode = accountCode;
         this.description = description;
