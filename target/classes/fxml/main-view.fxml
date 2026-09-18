@@ -9,11 +9,11 @@
 <StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.econovafx.modules.core.ui.controller.MainViewController"
            fx:id="rootStackPane"
-           style="-fx-background-color: #f9fafb;">
+           styleClass="web-shell">
 
     <!-- Main VBox layout (sidebar + content + status bar) -->
     <VBox spacing="0"
-          styleClass="bg-gray-50"
+          styleClass="web-shell-body"
           fx:id="rootVBox">
 
         <!-- Top Area: Sidebar + Content -->
@@ -27,14 +27,13 @@
                 <VBox fx:id="sidebarVBox" styleClass="sidebar-container, bg-slate-800" prefWidth="260" minWidth="260" maxWidth="260" fillWidth="true">
 
                 <!-- Logo/Brand Section -->
-                <VBox styleClass="p-6, pb-2">
+                <VBox styleClass="sidebar-brand">
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Button fx:id="btnToggleSidebar" onAction="#toggleSidebar" styleClass="btn-icon-toggle">
                             <graphic>
                                 <FontIcon iconLiteral="mdi2c-chevron-left" iconSize="20" iconColor="WHITE"/>
                             </graphic>
                         </Button>
-                        <FontIcon iconLiteral="mdi2r-rocket-launch" iconSize="24" iconColor="WHITE"/>
                         <Label text="EconoNova FX" styleClass="text-white, text-xl, font-bold"/>
                     </HBox>
                     <Label text="Sistema Contable" styleClass="text-slate-400, text-xs, mt-1"/>
@@ -167,11 +166,14 @@
 
                 <!-- Top: Header -->
                 <top>
-                    <HBox styleClass="header-main" alignment="CENTER_LEFT" fillHeight="true">
-                        <Label text="EconoNova FX" styleClass="header-title"/>
+                    <HBox styleClass="header-main" alignment="CENTER_LEFT" fillHeight="true" spacing="16">
+                        <VBox alignment="CENTER_LEFT" spacing="4">
+                            <Label text="Espacio de trabajo" styleClass="header-title"/>
+                            <Label text="Gestión contable y financiera" styleClass="header-subtitle"/>
+                        </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Label fx:id="currentUserLabel" text="Usuario: Admin" styleClass="header-user"/>
-                        <Button text="Cerrar Sesión" onAction="#handleLogout" styleClass="header-logout"/>
+                        <Button text="Cerrar sesión" onAction="#handleLogout" styleClass="header-logout"/>
                     </HBox>
                 </top>
 
@@ -181,7 +183,7 @@
                         <BorderPane.margin>
                             <Insets top="0" right="0" bottom="0" left="0"/>
                         </BorderPane.margin>
-                        <StackPane fx:id="contentArea" styleClass="bg-gray-50, p-6"/>
+                        <StackPane fx:id="contentArea" styleClass="workspace-content"/>
                     </ScrollPane>
                 </center>
             </BorderPane>
