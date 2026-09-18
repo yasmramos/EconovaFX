@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.econovafx.modules.inventory.ui.InventoryItemDialogController"
+      spacing="15" styleClass="dialog-content">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <!-- Title -->
+    <Label fx:id="titleLabel" text="New Product" styleClass="dialog-title">
+        <font>
+            <Font name="System Bold" size="18"/>
+        </font>
+    </Label>
+    
+    <!-- Form Fields -->
+    <GridPane hgap="15" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="30"/>
+            <ColumnConstraints percentWidth="70"/>
+        </columnConstraints>
+        
+        <!-- Code -->
+        <Label text="Code:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="codeField" promptText="Enter product code" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        
+        <!-- Name -->
+        <Label text="Name:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="nameField" promptText="Enter product name" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        
+        <!-- Description -->
+        <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextArea fx:id="descriptionField" promptText="Enter product description" 
+                  prefRowCount="3" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        
+        <!-- Category -->
+        <Label text="Category:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="categoryCombo" prefWidth="200" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        
+        <!-- Warehouse -->
+        <Label text="Warehouse:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="warehouseCombo" prefWidth="200" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        
+        <!-- Unit of Measure -->
+        <Label text="Unit of Measure:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <TextField fx:id="unitOfMeasureField" text="UNIDAD" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        
+        <!-- Unit Cost -->
+        <Label text="Unit Cost:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        <TextField fx:id="unitCostField" promptText="0.00" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        
+        <!-- Sale Price -->
+        <Label text="Sale Price:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+        <TextField fx:id="salePriceField" promptText="0.00" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        
+        <!-- Minimum Stock -->
+        <Label text="Minimum Stock:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+        <TextField fx:id="minStockField" promptText="0.00" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+        
+        <!-- Maximum Stock -->
+        <Label text="Maximum Stock:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+        <TextField fx:id="maxStockField" promptText="0.00" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        
+        <!-- Barcode -->
+        <Label text="Barcode:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+        <TextField fx:id="barcodeField" promptText="Enter barcode (optional)" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+        
+        <!-- Contra Account -->
+        <Label text="Contra Account:" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+        <TextField fx:id="contraAccountField" promptText="e.g., 106-001" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+        
+        <!-- Cost Center -->
+        <Label text="Cost Center:" GridPane.rowIndex="12" GridPane.columnIndex="0"/>
+        <TextField fx:id="costCenterField" promptText="e.g., CC-001" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
+    </GridPane>
+    
+    <!-- Action Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel"/>
+        <Button fx:id="saveButton" text="Save" onAction="#handleSave" styleClass="button-primary"/>
+    </HBox>
+    
+</VBox>
