@@ -1,0 +1,37 @@
+-------------------------------------------------------------------------------
+Test set: com.econovafx.EbeanInitializationTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.009 s <<< FAILURE! -- in com.econovafx.EbeanInitializationTest
+com.econovafx.EbeanInitializationTest.testDefaultServerIdentification -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class io.ebean.DB
+	at com.econovafx.EbeanInitializationTest.testDefaultServerIdentification(EbeanInitializationTest.java:52)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.ExceptionInInitializerError [in thread "main"]
+	at io.ebean.DB.<clinit>(DB.java:63)
+	at com.econovafx.ApplicationStartupTest.testDatabaseConnection(ApplicationStartupTest.java:76)
+	... 3 more
+
+com.econovafx.EbeanInitializationTest.testEbeanDataSourceConfiguration -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class io.ebean.DB
+	at com.econovafx.EbeanInitializationTest.testEbeanDataSourceConfiguration(EbeanInitializationTest.java:30)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.ExceptionInInitializerError [in thread "main"]
+	at io.ebean.DB.<clinit>(DB.java:63)
+	at com.econovafx.ApplicationStartupTest.testDatabaseConnection(ApplicationStartupTest.java:76)
+	... 3 more
+
+com.econovafx.EbeanInitializationTest.testDatabaseConnectivity -- Time elapsed: 0.001 s <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class io.ebean.DB
+	at com.econovafx.EbeanInitializationTest.testDatabaseConnectivity(EbeanInitializationTest.java:71)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.ExceptionInInitializerError [in thread "main"]
+	at io.ebean.DB.<clinit>(DB.java:63)
+	at com.econovafx.ApplicationStartupTest.testDatabaseConnection(ApplicationStartupTest.java:76)
+	... 3 more
+
