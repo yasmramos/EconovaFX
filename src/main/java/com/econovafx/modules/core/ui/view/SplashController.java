@@ -116,6 +116,11 @@ public class SplashController {
                 
             } catch (Exception e) {
                 logger.error("Error during initialization: " + e.getMessage(), e);
+                // Log full stack trace to help diagnose
+                logger.error("Full stack trace:", e);
+                if (e.getCause() != null) {
+                    logger.error("Root cause:", e.getCause());
+                }
                 javafx.application.Platform.runLater(() -> {
                     statusLabel.setText("Error: " + e.getMessage());
                     statusLabel.setStyle("-fx-text-fill: #e74c3c;");
@@ -129,6 +134,9 @@ public class SplashController {
         initializationFuture.orTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
             .exceptionally(throwable -> {
                 logger.error("Initialization timeout or error: " + throwable.getMessage(), throwable);
+                if (throwable.getCause() != null) {
+                    logger.error("Root cause:", throwable.getCause());
+                }
                 javafx.application.Platform.runLater(() -> {
                     statusLabel.setText("Error: Initialization timeout");
                     statusLabel.setStyle("-fx-text-fill: #e74c3c;");

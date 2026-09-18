@@ -67,36 +67,42 @@ public class DatabaseConfig {
     }
 
     public static void initializeMaster() {
-        logger.info("Opening master H2 connection: {}", AppConfig.MASTER_DB_URL);
-        
-        DataSourceConfig dsConfig = new DataSourceConfig();
-        dsConfig.setName("master");
-        dsConfig.setDriver(AppConfig.MASTER_DB_DRIVER);
-        dsConfig.setUrl(AppConfig.MASTER_DB_URL);
-        dsConfig.setUsername(AppConfig.MASTER_DB_USERNAME);
-        dsConfig.setPassword(AppConfig.MASTER_DB_PASSWORD);
-        dsConfig.setMinConnections(1);
-        dsConfig.setMaxConnections(10);
-        // Note: Connection timeout is handled by the pool's acquireRetryInterval and maxLifetime settings
-        
-        DataSourcePool pool = DataSourceFactory.create("master", dsConfig);
+        try {
+            logger.info("Opening master {} connection: {}", AppConfig.DB_TYPE, AppConfig.MASTER_DB_URL);
+            
+            DataSourceConfig dsConfig = new DataSourceConfig();
+            dsConfig.setName("master");
+            dsConfig.setDriver(AppConfig.MASTER_DB_DRIVER);
+            dsConfig.setUrl(AppConfig.MASTER_DB_URL);
+            dsConfig.setUsername(AppConfig.MASTER_DB_USERNAME);
+            dsConfig.setPassword(AppConfig.MASTER_DB_PASSWORD);
+            dsConfig.setMinConnections(1);
+            dsConfig.setMaxConnections(10);
+            // Note: Connection timeout is handled by the pool's acquireRetryInterval and maxLifetime settings
+            
+            DataSourcePool pool = DataSourceFactory.create("master", dsConfig);
 
-        DatabaseBuilder builder = Database.builder();
-        builder.name("master")
-                .dataSource(pool)
-                .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
-                .ddlGenerate(AppConfig.EBEAN_DDL_GENERATE)
-                .ddlRun(AppConfig.EBEAN_DDL_RUN)
-                .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
-                .defaultDatabase(true);
+            DatabaseBuilder builder = Database.builder();
+            builder.name("master")
+                    .dataSource(pool)
+                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
+                    .ddlGenerate(AppConfig.EBEAN_DDL_GENERATE)
+                    .ddlRun(AppConfig.EBEAN_DDL_RUN)
+                    .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
+                    .defaultDatabase(true);
 
-        Database masterDb = builder.build();
-        masterDatabase = masterDb;
-        logger.info("Master database initialized successfully with platform: {}", AppConfig.DB_TYPE);
-        
-        // Run migrations for master database if enabled (disabled when using DDL Generation)
-        if (AppConfig.EBEAN_MIGRATION_RUN && !AppConfig.EBEAN_DDL_GENERATE) {
-            runMasterMigrations(pool);
+            Database masterDb = builder.build();
+            masterDatabase = masterDb;
+            logger.info("Master database initialized successfully with platform: {}", AppConfig.DB_TYPE);
+            
+            // Run migrations for master database if enabled (disabled when using DDL Generation)
+            if (AppConfig.EBEAN_MIGRATION_RUN && !AppConfig.EBEAN_DDL_GENERATE) {
+                runMasterMigrations(pool);
+            }
+        } catch (Exception e) {
+            logger.error("CRITICAL: Failed to initialize master database. Check your database configuration (driver: {}, url: {})", 
+                AppConfig.MASTER_DB_DRIVER, AppConfig.MASTER_DB_URL, e);
+            throw new RuntimeException("Failed to initialize master database: " + e.getMessage(), e);
         }
     }
     
@@ -176,8 +182,8 @@ public class DatabaseConfig {
             logger.info("Multi-tenant database initialized successfully with TenantMode.DB and platform: {}", AppConfig.DB_TYPE);
 
         } catch (Exception e) {
-            logger.error("Failed to initialize multi-tenant database", e);
-            throw new RuntimeException("Multi-tenant database initialization failed", e);
+            logger.error("CRITICAL: Failed to initialize multi-tenant database", e);
+            throw new RuntimeException("Multi-tenant database initialization failed: " + e.getMessage(), e);
         }
     }
 
