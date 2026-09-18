@@ -2,6 +2,8 @@ package com.econovafx.modules.core.config;
 
 import com.econovafx.modules.core.config.AppConfig;
 import com.econovafx.modules.core.model.Company;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import io.ebean.Database;
 import io.ebean.DatabaseBuilder;
 import io.ebean.config.ClassLoadConfig;
@@ -9,9 +11,6 @@ import io.ebean.config.CurrentTenantProvider;
 import io.ebean.config.TenantDataSourceProvider;
 import io.ebean.config.TenantMode;
 import io.ebean.config.dbplatform.DatabasePlatform;
-import io.ebean.datasource.DataSourceConfig;
-import io.ebean.datasource.DataSourceFactory;
-import io.ebean.datasource.DataSourcePool;
 import io.ebean.migration.MigrationConfig;
 import io.ebean.migration.MigrationRunner;
 import io.ebean.platform.h2.H2Platform;
@@ -70,21 +69,21 @@ public class DatabaseConfig {
         try {
             logger.info("Opening master {} connection: {}", AppConfig.DB_TYPE, AppConfig.MASTER_DB_URL);
             
-            DataSourceConfig dsConfig = new DataSourceConfig();
-            dsConfig.setName("master");
-            dsConfig.setDriver(AppConfig.MASTER_DB_DRIVER);
-            dsConfig.setUrl(AppConfig.MASTER_DB_URL);
-            dsConfig.setUsername(AppConfig.MASTER_DB_USERNAME);
-            dsConfig.setPassword(AppConfig.MASTER_DB_PASSWORD);
-            dsConfig.setMinConnections(1);
-            dsConfig.setMaxConnections(10);
-            // Note: Connection timeout is handled by the pool's acquireRetryInterval and maxLifetime settings
+            // Create HikariCP DataSource
+            HikariConfig hikariConfig = new HikariConfig();
+            hikariConfig.setJdbcUrl(AppConfig.MASTER_DB_URL);
+            hikariConfig.setDriverClassName(AppConfig.MASTER_DB_DRIVER);
+            hikariConfig.setUsername(AppConfig.MASTER_DB_USERNAME);
+            hikariConfig.setPassword(AppConfig.MASTER_DB_PASSWORD);
+            hikariConfig.setMinimumIdle(1);
+            hikariConfig.setMaximumPoolSize(10);
+            hikariConfig.setPoolName("master");
             
-            DataSourcePool pool = DataSourceFactory.create("master", dsConfig);
+            HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
             DatabaseBuilder builder = Database.builder();
             builder.name("master")
-                    .dataSource(pool)
+                    .dataSource(dataSource)
                     .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
                     .ddlGenerate(AppConfig.EBEAN_DDL_GENERATE)
                     .ddlRun(AppConfig.EBEAN_DDL_RUN)
@@ -97,7 +96,7 @@ public class DatabaseConfig {
             
             // Run migrations for master database if enabled (disabled when using DDL Generation)
             if (AppConfig.EBEAN_MIGRATION_RUN && !AppConfig.EBEAN_DDL_GENERATE) {
-                runMasterMigrations(pool);
+                runMasterMigrations(dataSource);
             }
         } catch (Exception e) {
             logger.error("CRITICAL: Failed to initialize master database. Check your database configuration (driver: {}, url: {})", 
@@ -108,9 +107,9 @@ public class DatabaseConfig {
     
     /**
      * Runs database migrations for the master database.
-     * @param dataSource The DataSourcePool for the master database
+     * @param dataSource The DataSource for the master database
      */
-    private static void runMasterMigrations(DataSourcePool dataSource) {
+    private static void runMasterMigrations(DataSource dataSource) {
         try {
             MigrationConfig migrationConfig = new MigrationConfig();
             migrationConfig.setMigrationPath("dbmigration/master");
@@ -203,8 +202,6 @@ public class DatabaseConfig {
             logger.info("Creating DataSource for tenant: {} ({})", company.getName(), company.getCode());
 
             try {
-                DataSourceConfig dsConfig = new DataSourceConfig();
-                
                 // Determine driver and URL based on database type from config or company
                 String dbType = AppConfig.DB_TYPE;
                 String driver, url, username, password;
@@ -241,9 +238,6 @@ public class DatabaseConfig {
                         url = String.format("jdbc:h2:./db/tenant-%s;DB_CLOSE_DELAY=-1", company.getCode());
                     }
                 }
-                
-                dsConfig.setDriver(driver);
-                dsConfig.setUrl(url);
 
                 if (company.getDatabaseUser() != null && !company.getDatabaseUser().isEmpty()) {
                     username = company.getDatabaseUser();
@@ -255,16 +249,18 @@ public class DatabaseConfig {
                     username = driver.contains("postgresql") ? AppConfig.POSTGRES_USERNAME : "sa";
                     password = driver.contains("postgresql") ? AppConfig.POSTGRES_PASSWORD : "";
                 }
-                
-                dsConfig.setUsername(username);
-                dsConfig.setPassword(password);
 
-                dsConfig.setMinConnections(1);
-                dsConfig.setMaxConnections(10);
-                // Note: Connection timeout is handled by the pool's acquireRetryInterval and maxLifetime settings
+                // Create HikariCP DataSource
+                HikariConfig hikariConfig = new HikariConfig();
+                hikariConfig.setJdbcUrl(url);
+                hikariConfig.setDriverClassName(driver);
+                hikariConfig.setUsername(username);
+                hikariConfig.setPassword(password);
+                hikariConfig.setMinimumIdle(1);
+                hikariConfig.setMaximumPoolSize(10);
+                hikariConfig.setPoolName("econova-tenant-" + company.getCode());
 
-                String dbName = "econova-tenant-" + company.getCode();
-                DataSource dataSource = DataSourceFactory.create(dbName, dsConfig);
+                HikariDataSource dataSource = new HikariDataSource(hikariConfig);
                 logger.info("DataSource created successfully for: {} with driver: {}", company.getCode(), driver);
 
                 // Run migrations for this tenant database if enabled (disabled when using DDL Generation)
