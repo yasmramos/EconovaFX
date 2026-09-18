@@ -544,14 +544,10 @@ public class App extends Application {
             scene.getRoot().applyCss();
             scene.getRoot().layout();
             
-            primaryStage.show(); // Explicitly show the primary stage
+            // Ensure root is fully opaque before showing to prevent empty background flash
+            scene.getRoot().setOpacity(1.0);
             
-            // Apply subtle fade-in effect for smooth appearance
-            javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(
-                javafx.util.Duration.millis(250), scene.getRoot());
-            fadeIn.setFromValue(0.0);
-            fadeIn.setToValue(1.0);
-            fadeIn.play();
+            primaryStage.show(); // Explicitly show the primary stage
             
             logger.info("Main application window displayed successfully");
             logger.info("Application started successfully");
