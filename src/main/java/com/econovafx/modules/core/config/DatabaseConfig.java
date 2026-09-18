@@ -67,15 +67,19 @@ public class DatabaseConfig {
     }
 
     public static void initializeMaster() {
-        DataSourcePool pool = DataSourcePool.builder()
-                .name("master")
-                .driver(AppConfig.MASTER_DB_DRIVER)
-                .url(AppConfig.MASTER_DB_URL)
-                .username(AppConfig.MASTER_DB_USERNAME)
-                .password(AppConfig.MASTER_DB_PASSWORD)
-                .minConnections(1)
-                .maxConnections(10)
-                .build();
+        logger.info("Opening master H2 connection: {}", AppConfig.MASTER_DB_URL);
+        
+        DataSourceConfig dsConfig = new DataSourceConfig();
+        dsConfig.setName("master");
+        dsConfig.setDriver(AppConfig.MASTER_DB_DRIVER);
+        dsConfig.setUrl(AppConfig.MASTER_DB_URL);
+        dsConfig.setUsername(AppConfig.MASTER_DB_USERNAME);
+        dsConfig.setPassword(AppConfig.MASTER_DB_PASSWORD);
+        dsConfig.setMinConnections(1);
+        dsConfig.setMaxConnections(10);
+        // Note: Connection timeout is handled by the pool's acquireRetryInterval and maxLifetime settings
+        
+        DataSourcePool pool = DataSourceFactory.create("master", dsConfig);
 
         DatabaseBuilder builder = Database.builder();
         builder.name("master")
@@ -227,7 +231,8 @@ public class DatabaseConfig {
                                 AppConfig.POSTGRES_SSLMODE);
                     } else {
                         driver = "org.h2.Driver";
-                        url = String.format("jdbc:h2:./db/tenant-%s;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE", company.getCode());
+                        // Removed AUTO_SERVER=TRUE to prevent hanging on single-process desktop app
+                        url = String.format("jdbc:h2:./db/tenant-%s;DB_CLOSE_DELAY=-1", company.getCode());
                     }
                 }
                 
@@ -250,6 +255,7 @@ public class DatabaseConfig {
 
                 dsConfig.setMinConnections(1);
                 dsConfig.setMaxConnections(10);
+                // Note: Connection timeout is handled by the pool's acquireRetryInterval and maxLifetime settings
 
                 String dbName = "econova-tenant-" + company.getCode();
                 DataSource dataSource = DataSourceFactory.create(dbName, dsConfig);

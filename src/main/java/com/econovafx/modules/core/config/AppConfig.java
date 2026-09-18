@@ -116,7 +116,7 @@ public class AppConfig {
         // Database Type and Configuration
         DB_TYPE = Config.get("database.type", "h2");
         DB_DRIVER = Config.get("database.driver", "org.h2.Driver");
-        DB_URL = Config.get("database.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
+        DB_URL = Config.get("database.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1");
         DB_USERNAME = Config.get("database.username", "sa");
         DB_PASSWORD = Config.get("database.password", "");
         DB_PATH = Config.get("app.database.path", "./db/master");
@@ -131,7 +131,7 @@ public class AppConfig {
         
         // Master Database
         MASTER_DB_DRIVER = Config.get("ebean.datasource.master.driver", "org.h2.Driver");
-        MASTER_DB_URL = Config.get("ebean.datasource.master.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
+        MASTER_DB_URL = Config.get("ebean.datasource.master.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1");
         MASTER_DB_USERNAME = Config.get("ebean.datasource.master.username", "sa");
         MASTER_DB_PASSWORD = Config.get("ebean.datasource.master.password", "");
         
