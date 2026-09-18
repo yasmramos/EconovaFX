@@ -1,0 +1,19 @@
+# =============================================================================
+# Test Configuration for EconovaFX
+# This configuration is used when running tests to ensure proper Ebean initialization
+# Note: Primary configuration is in application-test.properties to avoid SnakeYAML dependency
+# Only platform-specific overrides should be placed here
+# =============================================================================
+
+# Application Configuration
+app:
+  name: EconoNova FX (Test)
+  version: 1.0.0-TEST
+  database:
+    path: ./db/test
+
+# Ebean Test Configuration - Minimal config, main settings in application-test.properties
+ebean:
+  test:
+    platform: h2
+    ddlMode: dropCreate
