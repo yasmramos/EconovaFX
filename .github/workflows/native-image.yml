@@ -1,0 +1,64 @@
+# This workflow builds a GraalVM Native Image of the JavaFX application
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+name: Native Image Build
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  pull_request:
+    branches: [ "main", "develop" ]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  native-image-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up GraalVM JDK 17
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: '17'
+        distribution: 'graalvm'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        native-image-job: 'true'
+        cache: 'maven'
+    
+    - name: Verify GraalVM installation
+      run: |
+        echo "JAVA_HOME: $JAVA_HOME"
+        java --version
+        native-image --version
+    
+    - name: Build Native Image
+      run: mvn clean gluonfx:build -Pnative --file pom.xml
+      env:
+        GRAALVM_HOME: ${{ env.GRAALVM_HOME }}
+    
+    - name: List build artifacts
+      run: |
+        echo "=== Build output directory ==="
+        ls -la target/gluonfx/x86_64-linux/ 2>/dev/null || echo "GluonFX output directory not found"
+        echo "=== Executable check ==="
+        find target -name "econovafx" -type f 2>/dev/null || echo "Native executable not found"
+    
+    - name: Upload Native Image
+      uses: actions/upload-artifact@v4
+      with:
+        name: econovafx-native-linux
+        path: |
+          target/gluonfx/x86_64-linux/econovafx
+        retention-days: 14
+        if-no-files-found: warn
