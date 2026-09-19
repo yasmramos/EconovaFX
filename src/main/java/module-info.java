@@ -50,7 +50,6 @@ module econovafx {
     requires io.ebean.platform.h2;
     requires com.h2database;
     requires org.postgresql.jdbc;
-    requires com.zaxxer.hikaricp;
     requires org.slf4j;
     requires ch.qos.logback.classic;
     requires ch.qos.logback.core;
