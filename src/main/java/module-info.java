@@ -29,6 +29,7 @@ module econovafx {
     requires io.ebean.jackson.jsonnode;
     requires io.ebean.jackson.mapper;
     requires io.ebean.datasource;
+    requires com.zaxxer.hikari;
     requires io.ebean.migration;
     requires io.ebean.querybean;
     requires io.ebean.platform.all;
