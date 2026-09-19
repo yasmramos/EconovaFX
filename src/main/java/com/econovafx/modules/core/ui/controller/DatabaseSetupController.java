@@ -129,8 +129,8 @@ public class DatabaseSetupController {
                     statusLabel.setText("Conexión exitosa a PostgreSQL");
                 }
             } else {
-                // H2 - try default embedded url
-                String url = "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE";
+                // H2 - try default embedded url (without AUTO_SERVER to prevent hanging)
+                String url = "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1";
                 try (Connection c = DriverManager.getConnection(url, "sa", "")) {
                     statusLabel.setText("Conexión exitosa a H2");
                 }
@@ -191,8 +191,8 @@ public class DatabaseSetupController {
                 props.setProperty("ebean.datasource.master.password", pass);
 
             } else {
-                // H2 defaults
-                String url = "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE";
+                // H2 defaults (without AUTO_SERVER to prevent hanging on single-process app)
+                String url = "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1";
                 props.setProperty("database.type", "h2");
                 props.setProperty("database.url", url);
                 props.setProperty("database.username", "sa");
