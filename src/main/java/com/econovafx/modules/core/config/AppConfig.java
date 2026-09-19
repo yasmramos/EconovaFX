@@ -107,65 +107,70 @@ public class AppConfig {
     public static final int MAX_LOGIN_ATTEMPTS;
     
     static {
-        logger.info("Loading application configuration with Avaje Config...");
-        
-        // Application
-        APP_NAME = Config.get("app.name", "EconoNova FX");
-        APP_VERSION = Config.get("app.version", "1.0.0");
-        
-        // Database Type and Configuration
-        DB_TYPE = Config.get("database.type", "h2");
-        DB_DRIVER = Config.get("database.driver", "org.h2.Driver");
-        DB_URL = Config.get("database.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
-        DB_USERNAME = Config.get("database.username", "sa");
-        DB_PASSWORD = Config.get("database.password", "");
-        DB_PATH = Config.get("app.database.path", "./db/master");
-        
-        // PostgreSQL Configuration
-        POSTGRES_HOST = Config.get("database.postgres.host", "localhost");
-        POSTGRES_PORT = Config.getInt("database.postgres.port", 5432);
-        POSTGRES_DATABASE = Config.get("database.postgres.database", "econovafx_master");
-        POSTGRES_USERNAME = Config.get("database.postgres.username", "postgres");
-        POSTGRES_PASSWORD = Config.get("database.postgres.password", "changeme");
-        POSTGRES_SSLMODE = Config.get("database.postgres.sslmode", "prefer");
-        
-        // Master Database
-        MASTER_DB_DRIVER = Config.get("ebean.datasource.master.driver", "org.h2.Driver");
-        MASTER_DB_URL = Config.get("ebean.datasource.master.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE");
-        MASTER_DB_USERNAME = Config.get("ebean.datasource.master.username", "sa");
-        MASTER_DB_PASSWORD = Config.get("ebean.datasource.master.password", "");
-        
-        // Ebean
-        EBEAN_DDL_GENERATE = Config.getBool("ebean.ddl.generate", true);
-        EBEAN_DDL_RUN = Config.getBool("ebean.ddl.run", true);
-        EBEAN_MIGRATION_AUTO = Config.getBool("ebean.migration.auto", true);
-        EBEAN_MIGRATION_RUN = Config.getBool("ebean.migration.run", true);
-        EBEAN_MIGRATION_PATH = Config.get("ebean.migration.resourcePath", "dbmigration");
-        
-        // UI
-        UI_THEME = Config.get("ui.theme", "modern");
-        UI_WIDTH = Config.getInt("ui.width", 1200);
-        UI_HEIGHT = Config.getInt("ui.height", 800);
-        
-        // Exchange Rate
-        EXCHANGE_RATE_CACHE_TTL_MINUTES = Config.getInt("exchange.rate.cache.ttl.minutes", 60);
-        EXCHANGE_RATE_SCHEDULER_ENABLED = Config.getBool("exchange.rate.scheduler.enabled", true);
-        EXCHANGE_RATE_SCHEDULER_CRON = Config.get("exchange.rate.scheduler.cron", "0 0 6 * * ?");
-        
-        // BCC API
-        BCC_API_BASE_URL = Config.get("bcc.api.base.url", "https://api.bc.gob.cu/v1/tasas-de-cambio");
-        BCC_API_TIMEOUT_SECONDS = Config.getInt("bcc.api.timeout.seconds", 30);
-        BCC_API_RETRY_MAX_ATTEMPTS = Config.getInt("bcc.api.retry.max.attempts", 3);
-        BCC_API_RETRY_DELAY_MS = Config.getLong("bcc.api.retry.delay.ms", 2000L);
-        
-        // Security
-        SESSION_TIMEOUT = Config.get("security.session.timeout", "30m");
-        MAX_LOGIN_ATTEMPTS = Config.getInt("security.login.max.attempts", 5);
-        
-        logger.info("Configuration loaded successfully");
-        logger.debug("App: {} v{}", APP_NAME, APP_VERSION);
-        logger.debug("Database: {}", DB_URL);
-        logger.debug("UI: {} ({}x{})", UI_THEME, UI_WIDTH, UI_HEIGHT);
+        try {
+            logger.info("Loading application configuration with Avaje Config...");
+            
+            // Application
+            APP_NAME = Config.get("app.name", "EconoNova FX");
+            APP_VERSION = Config.get("app.version", "1.0.0");
+            
+            // Database Type and Configuration
+            DB_TYPE = Config.get("database.type", "h2");
+            DB_DRIVER = Config.get("database.driver", "org.h2.Driver");
+            DB_URL = Config.get("database.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1");
+            DB_USERNAME = Config.get("database.username", "sa");
+            DB_PASSWORD = Config.get("database.password", "");
+            DB_PATH = Config.get("app.database.path", "./db/master");
+            
+            // PostgreSQL Configuration
+            POSTGRES_HOST = Config.get("database.postgres.host", "localhost");
+            POSTGRES_PORT = Config.getInt("database.postgres.port", 5432);
+            POSTGRES_DATABASE = Config.get("database.postgres.database", "econovafx_master");
+            POSTGRES_USERNAME = Config.get("database.postgres.username", "postgres");
+            POSTGRES_PASSWORD = Config.get("database.postgres.password", "changeme");
+            POSTGRES_SSLMODE = Config.get("database.postgres.sslmode", "prefer");
+            
+            // Master Database
+            MASTER_DB_DRIVER = Config.get("ebean.datasource.master.driver", "org.h2.Driver");
+            MASTER_DB_URL = Config.get("ebean.datasource.master.url", "jdbc:h2:./db/master;DB_CLOSE_DELAY=-1");
+            MASTER_DB_USERNAME = Config.get("ebean.datasource.master.username", "sa");
+            MASTER_DB_PASSWORD = Config.get("ebean.datasource.master.password", "");
+            
+            // Ebean
+            EBEAN_DDL_GENERATE = Config.getBool("ebean.ddl.generate", true);
+            EBEAN_DDL_RUN = Config.getBool("ebean.ddl.run", true);
+            EBEAN_MIGRATION_AUTO = Config.getBool("ebean.migration.auto", true);
+            EBEAN_MIGRATION_RUN = Config.getBool("ebean.migration.run", true);
+            EBEAN_MIGRATION_PATH = Config.get("ebean.migration.resourcePath", "dbmigration");
+            
+            // UI
+            UI_THEME = Config.get("ui.theme", "modern");
+            UI_WIDTH = Config.getInt("ui.width", 1200);
+            UI_HEIGHT = Config.getInt("ui.height", 800);
+            
+            // Exchange Rate
+            EXCHANGE_RATE_CACHE_TTL_MINUTES = Config.getInt("exchange.rate.cache.ttl.minutes", 60);
+            EXCHANGE_RATE_SCHEDULER_ENABLED = Config.getBool("exchange.rate.scheduler.enabled", true);
+            EXCHANGE_RATE_SCHEDULER_CRON = Config.get("exchange.rate.scheduler.cron", "0 0 6 * * ?");
+            
+            // BCC API
+            BCC_API_BASE_URL = Config.get("bcc.api.base.url", "https://api.bc.gob.cu/v1/tasas-de-cambio");
+            BCC_API_TIMEOUT_SECONDS = Config.getInt("bcc.api.timeout.seconds", 30);
+            BCC_API_RETRY_MAX_ATTEMPTS = Config.getInt("bcc.api.retry.max.attempts", 3);
+            BCC_API_RETRY_DELAY_MS = Config.getLong("bcc.api.retry.delay.ms", 2000L);
+            
+            // Security
+            SESSION_TIMEOUT = Config.get("security.session.timeout", "30m");
+            MAX_LOGIN_ATTEMPTS = Config.getInt("security.login.max.attempts", 5);
+            
+            logger.info("Configuration loaded successfully");
+            logger.debug("App: {} v{}", APP_NAME, APP_VERSION);
+            logger.debug("Database: {}", DB_URL);
+            logger.debug("UI: {} ({}x{})", UI_THEME, UI_WIDTH, UI_HEIGHT);
+        } catch (Exception e) {
+            logger.error("CRITICAL: Failed to load application configuration", e);
+            throw new ExceptionInInitializerError("Failed to load application configuration: " + e.getMessage());
+        }
     }
     
     /**

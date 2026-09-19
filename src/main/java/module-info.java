@@ -1,4 +1,4 @@
-module econonovafx {
+module econovafx {
     requires java.base;
     requires java.net.http;
     requires javafx.controlsEmpty;
