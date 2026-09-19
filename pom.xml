@@ -385,17 +385,17 @@
                         <option>-javaagent=${project.basedir}/lib/ebean-agent-${ebean.version}.jar</option>
 
                         <!-- Open entity model packages to Ebean for reflective access.
-                             The module name is 'econonovafx' (see module-info.java); the
-                             previous target 'com.econovafx.domain' did not exist. -->
-                        <option>--add-opens=econonovafx/com.econovafx.modules.core.model=io.ebean.core</option>
-                        <option>--add-opens=econonovafx/com.econovafx.modules.accounting.model=io.ebean.core</option>
-                        <option>--add-opens=econonovafx/com.econovafx.modules.billing.model=io.ebean.core</option>
-                        <option>--add-opens=econonovafx/com.econovafx.modules.payroll.model=io.ebean.core</option>
-                        <option>--add-opens=econonovafx/com.econovafx.modules.inventory.model=io.ebean.core</option>
-                        <option>--add-opens=econonovafx/com.econovafx.modules.receivables.model=io.ebean.core</option>
-                        <option>--add-opens=econonovafx/com.econovafx.modules.payables.model=io.ebean.core</option>
-                        <option>--add-opens=econonovafx/com.econovafx.modules.bank.model=io.ebean.core</option>
-                        <option>--add-opens=econonovafx/com.econovafx.modules.cash.model=io.ebean.core</option>
+                             The module name is 'econovafx' (see module-info.java); the
+                             previous target 'econonovafx' had a typo (double "no"). -->
+                        <option>--add-opens=econovafx/com.econovafx.modules.core.model=io.ebean.core</option>
+                        <option>--add-opens=econovafx/com.econovafx.modules.accounting.model=io.ebean.core</option>
+                        <option>--add-opens=econovafx/com.econovafx.modules.billing.model=io.ebean.core</option>
+                        <option>--add-opens=econovafx/com.econovafx.modules.payroll.model=io.ebean.core</option>
+                        <option>--add-opens=econovafx/com.econovafx.modules.inventory.model=io.ebean.core</option>
+                        <option>--add-opens=econovafx/com.econovafx.modules.receivables.model=io.ebean.core</option>
+                        <option>--add-opens=econovafx/com.econovafx.modules.payables.model=io.ebean.core</option>
+                        <option>--add-opens=econovafx/com.econovafx.modules.bank.model=io.ebean.core</option>
+                        <option>--add-opens=econovafx/com.econovafx.modules.cash.model=io.ebean.core</option>
                         <option>--add-opens=java.base/java.lang=ALL-UNNAMED</option>
                         <option>--add-opens=java.base/java.lang.invoke=ALL-UNNAMED</option>
                         <option>--add-opens=java.base/java.lang.reflect=ALL-UNNAMED</option>
