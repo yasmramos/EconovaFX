@@ -1,0 +1,2 @@
+avaje-inject-generator
+avaje-spi-core
