@@ -543,6 +543,9 @@
                                 <arg>--report-unsupported-elements-at-runtime</arg>
                                 <arg>--no-fallback</arg>
                             </nativeImageArgs>
+                            <linkerArgs>
+                                <arg>management_ext.lib</arg>
+                            </linkerArgs>
                             <bundlesList>
                                 <bundle>messages</bundle>
                                 <bundle>messages_es</bundle>
