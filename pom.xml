@@ -532,7 +532,7 @@
                     <plugin>
                         <groupId>com.gluonhq</groupId>
                         <artifactId>gluonfx-maven-plugin</artifactId>
-                        <version>1.0.22</version>
+                        <version>1.0.29</version>
                         <configuration>
                             <mainClass>com.econovafx.Launcher</mainClass>
                             <verbose>true</verbose>
@@ -543,6 +543,9 @@
                                 <arg>--report-unsupported-elements-at-runtime</arg>
                                 <arg>--no-fallback</arg>
                             </nativeImageArgs>
+                            <linkerArgs>
+                                <arg>management_ext.lib</arg>
+                            </linkerArgs>
                             <bundlesList>
                                 <bundle>messages</bundle>
                                 <bundle>messages_es</bundle>

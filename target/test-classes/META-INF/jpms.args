@@ -1,0 +1,4 @@
+--patch-module
+econovafx=_
+--add-reads
+econovafx=ALL-UNNAMED

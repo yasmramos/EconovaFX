@@ -1,0 +1,180 @@
+/* =============================================================================
+ * THEME TOKENS - Design System Variables for EconoNova FX
+ * Based on ultimate-pdf-viewer style guide
+ * ============================================================================= */
+
+.root {
+    /* =========================================================================
+     * TYPOGRAPHY
+     * ========================================================================= */
+    -fx-font-family: "Lato", "Segoe UI", "Roboto", "Arial", sans-serif;
+    
+    /* Font weights (for reference, use -fx-font-weight directly) */
+    /* -fw-normal: 400 */
+    /* -fw-medium: 500 */
+    /* -fw-semibold: 600 */
+    /* -fw-bold: 700 */
+    
+    /* Font sizes */
+    -fs-xs: 10px;
+    -fs-sm: 11px;
+    -fs-base: 12px;
+    -fs-md: 14px;
+    -fs-lg: 16px;
+    -fs-xl: 18px;
+    -fs-2xl: 20px;
+    -fs-3xl: 24px;
+    
+    /* =========================================================================
+     * COLOR PALETTE - Grays (Tailwind-inspired)
+     * ========================================================================= */
+    -gray-0: #ffffff;
+    -gray-50: #f9fafb;
+    -gray-100: #f3f4f6;
+    -gray-200: #e5e7eb;
+    -gray-300: #d1d5db;
+    -gray-400: #9ca3af;
+    -gray-500: #6b7280;
+    -gray-600: #4b5563;
+    -gray-700: #374151;
+    -gray-800: #1f2937;
+    -gray-900: #111827;
+    
+    /* =========================================================================
+     * COLOR PALETTE - Blues (Chrome/Google style)
+     * ========================================================================= */
+    -blue-50: #eff6ff;
+    -blue-100: #dbeafe;
+    -blue-200: #bfdbfe;
+    -blue-300: #93c5fd;
+    -blue-400: #60a5fa;
+    -blue-500: #3b82f6;
+    -blue-600: #2563eb;
+    -blue-700: #1d4ed8;
+    -blue-800: #1e40af;
+    -blue-900: #1e3a8a;
+    
+    /* =========================================================================
+     * COLOR PALETTE - Semantic Colors
+     * ========================================================================= */
+    /* Success/Green */
+    -green-50: #f0fdf4;
+    -green-100: #dcfce7;
+    -green-500: #22c55e;
+    -green-600: #16a34a;
+    -green-700: #15803d;
+    
+    /* Error/Red */
+    -red-50: #fef2f2;
+    -red-100: #fee2e2;
+    -red-500: #ef4444;
+    -red-600: #dc2626;
+    -red-700: #b91c1c;
+    
+    /* Warning/Amber */
+    -amber-50: #fffbeb;
+    -amber-100: #fef3c7;
+    -amber-500: #f59e0b;
+    -amber-600: #d97706;
+    -amber-700: #b45309;
+    
+    /* Info/Cyan */
+    -cyan-50: #ecfeff;
+    -cyan-100: #cffafe;
+    -cyan-500: #06b6d4;
+    -cyan-600: #0891b2;
+    
+    /* =========================================================================
+     * COMPONENT COLORS
+     * ========================================================================= */
+    /* Primary accent button (Chrome blue) */
+    -accent-button: #1a73e8;
+    -accent-button-hover: #1557b0;
+    -accent-button-pressed: #0f3f7f;
+    -accent-button-disabled: #a0c3ff;
+    
+    /* Component backgrounds */
+    -component-background: #ffffff;
+    -component-background-secondary: #f9fafb;
+    -component-background-tertiary: #f3f4f6;
+    
+    /* Text colors */
+    -primary-text: #111827;      /* gray-900 */
+    -secondary-text: #374151;    /* gray-700 */
+    -muted-text: #6b7280;        /* gray-500 */
+    -faded-text: #9ca3af;        /* gray-400 */
+    
+    /* Border colors */
+    -border-light: #e5e7eb;      /* gray-200 */
+    -border-medium: #d1d5db;     /* gray-300 */
+    -border-dark: #9ca3af;       /* gray-400 */
+    
+    /* Overlay/Scrim */
+    -scrim-color: rgba(13, 17, 23, 0.58);
+    -overlay-background: rgba(255, 255, 255, 0.95);
+    
+    /* =========================================================================
+     * RADII (Border Radius)
+     * ========================================================================= */
+    -radius-none: 0px;
+    -radius-sm: 4px;
+    -radius-md: 6px;
+    -radius-lg: 8px;
+    -radius-xl: 10px;
+    -radius-2xl: 12px;
+    -radius-3xl: 14px;
+    -radius-full: 9999px;
+    
+    /* Standard component radii */
+    -button-radius: 6px;
+    -input-radius: 8px;
+    -card-radius: 14px;
+    -modal-radius: 14px;
+    
+    /* =========================================================================
+     * SHADOWS
+     * ========================================================================= */
+    /* Shadow colors */
+    -shadow-color: rgba(0, 0, 0, 0.5);
+    -shadow-color-light: rgba(0, 0, 0, 0.1);
+    -shadow-color-medium: rgba(0, 0, 0, 0.15);
+    -shadow-color-strong: rgba(0, 0, 0, 0.22);
+    -shadow-color-accent: rgba(59, 130, 246, 0.3);
+    
+    /* Standard shadow presets (for reference, use in effects) */
+    /* 
+    Shadow format: dropshadow(type, color, radius, spread, offsetX, offsetY)
+    
+    -shadow-sm: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+    -shadow-md: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+    -shadow-lg: dropshadow(gaussian, rgba(0,0,0,0.2), 12, 0, 0, 4);
+    -shadow-xl: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0, 0, 8);
+    -shadow-card: dropshadow(gaussian, rgba(0,0,0,0.5), 48, 0.22, 0, 18);
+    */
+    
+    /* =========================================================================
+     * SPACING (for reference)
+     * ========================================================================= */
+    -spacing-1: 4px;
+    -spacing-2: 8px;
+    -spacing-3: 12px;
+    -spacing-4: 16px;
+    -spacing-5: 20px;
+    -spacing-6: 24px;
+    -spacing-8: 32px;
+    -spacing-10: 40px;
+    -spacing-12: 48px;
+    
+    /* =========================================================================
+     * TRANSITIONS
+     * ========================================================================= */
+    -transition-fast: 0.15s ease;
+    -transition-base: 0.2s ease;
+    -transition-slow: 0.3s ease;
+    
+    /* =========================================================================
+     * BASE STYLES
+     * ========================================================================= */
+    -fx-base: -gray-50;
+    -fx-background: -gray-50;
+}
