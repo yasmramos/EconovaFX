@@ -39,7 +39,7 @@ public class FixedAsset extends BaseEntity {
     private BigDecimal netBookValue;
 
     @Column(nullable = false)
-    private boolean isActive;
+    private boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
@@ -74,8 +74,8 @@ public class FixedAsset extends BaseEntity {
     public BigDecimal getNetBookValue() { return netBookValue; }
     public void setNetBookValue(BigDecimal netBookValue) { this.netBookValue = netBookValue; }
     
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean active) { isActive = active; }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
     
     public com.econovafx.modules.accounting.model.Account getAssetAccount() { return assetAccount; }
     public void setAssetAccount(com.econovafx.modules.accounting.model.Account assetAccount) { this.assetAccount = assetAccount; }
