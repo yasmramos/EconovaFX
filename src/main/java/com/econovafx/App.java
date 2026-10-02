@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.Locale;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -294,56 +293,6 @@ public class App extends Application {
             throw new RuntimeException("Failed to load company selection modal", e);
         }
     }
-
-    private void showCompanySelection() {
-        try {
-            logger.info("Showing company selection dialog...");
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/company-selection.fxml"));
-            loader.setResources(I18nManager.getBundle());
-            loader.setControllerFactory(cls -> context.getBeanScope().get(cls));
-            VBox root = loader.load();
-            CompanySelectionController controller = loader.getController();
-            
-            Scene selectionScene = new Scene(root);
-            selectionScene.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
-            
-            companySelectionStage = new Stage();
-            companySelectionStage.setScene(selectionScene);
-            companySelectionStage.setTitle("Select Company");
-            companySelectionStage.setResizable(false);
-            companySelectionStage.initStyle(StageStyle.UNDECORATED);
-            companySelectionStage.initModality(Modality.APPLICATION_MODAL);
-            companySelectionStage.initOwner(loginStage);
-            companySelectionStage.centerOnScreen();
-            
-            // Set callbacks
-            controller.setOnCompanySelected(() -> {
-                // Company selected, now check if it has units
-                selectedCompany = TenantContext.getCurrentTenant();
-                companySelectionStage.close();
-                checkAndShowUnitSelection();
-            });
-            
-            controller.setOnCancel(() -> {
-                companySelectionStage.close();
-                System.exit(0);
-            });
-            
-            // Close login and show company selection
-            if (loginStage != null) {
-                loginStage.close();
-            }
-            companySelectionStage.show();
-            
-            logger.info("Company selection dialog displayed successfully");
-            
-        } catch (IOException e) {
-            logger.error("Failed to load company selection dialog", e);
-            throw new RuntimeException("Failed to load company selection dialog", e);
-        }
-    }
-
     /**
      * Checks if the selected company has business units and shows unit selection modal if needed.
      */
@@ -421,83 +370,6 @@ public class App extends Application {
         } catch (IOException e) {
             logger.error("Failed to load unit selection modal", e);
             throw new RuntimeException("Failed to load unit selection modal", e);
-        }
-    }
-
-    private void checkAndShowUnitSelection() {
-        if (selectedCompany == null) {
-            logger.error("No company selected");
-            loadMainApp();
-            return;
-        }
-        
-        try {
-            BusinessUnitService unitService = context.getBeanScope().get(BusinessUnitService.class);
-            boolean hasUnits = unitService.hasUnits(selectedCompany.getId());
-            
-            if (hasUnits) {
-                logger.info("Company {} has business units, showing unit selection", selectedCompany.getName());
-                showUnitSelection();
-            } else {
-                logger.info("Company {} has no business units, proceeding to main app", selectedCompany.getName());
-                loadMainApp();
-            }
-        } catch (Exception e) {
-            logger.error("Error checking business units, proceeding to main app", e);
-            loadMainApp();
-        }
-    }
-
-    private void showUnitSelection() {
-        try {
-            logger.info("Showing business unit selection dialog...");
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/unit-selection.fxml"));
-            loader.setResources(I18nManager.getBundle());
-            loader.setControllerFactory(cls -> context.getBeanScope().get(cls));
-            VBox root = loader.load();
-            UnitSelectionController controller = loader.getController();
-            
-            // Pass the selected company to the controller
-            controller.setCompany(selectedCompany);
-            
-            Scene selectionScene = new Scene(root);
-            selectionScene.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
-            
-            unitSelectionStage = new Stage();
-            unitSelectionStage.setScene(selectionScene);
-            unitSelectionStage.setTitle("Select Business Unit");
-            unitSelectionStage.setResizable(false);
-            unitSelectionStage.initStyle(StageStyle.UNDECORATED);
-            unitSelectionStage.initModality(Modality.APPLICATION_MODAL);
-            unitSelectionStage.initOwner(companySelectionStage);
-            unitSelectionStage.centerOnScreen();
-            
-            // Set callbacks
-            controller.setOnUnitSelected(() -> {
-                unitSelectionStage.close();
-                loadMainApp();
-            });
-            
-            controller.setOnUnitSkipped(() -> {
-                unitSelectionStage.close();
-                loadMainApp();
-            });
-            
-            controller.setOnCancel(() -> {
-                unitSelectionStage.close();
-                // Return to company selection
-                showCompanySelection();
-            });
-            
-            companySelectionStage.close();
-            unitSelectionStage.show();
-            
-            logger.info("Business unit selection dialog displayed successfully");
-            
-        } catch (IOException e) {
-            logger.error("Failed to load unit selection dialog", e);
-            throw new RuntimeException("Failed to load unit selection dialog", e);
         }
     }
 
@@ -606,15 +478,18 @@ public class App extends Application {
     public void stop() throws Exception {
         logger.info("Shutting down application...");
         
-        // Stop local web server
-        try {
-            com.econovafx.modules.core.ui.web.LocalWebServer webServer = context.getBeanScope().get(com.econovafx.modules.core.ui.web.LocalWebServer.class);
-            if (webServer != null && webServer.isRunning()) {
-                webServer.stop(0);
-                logger.info("Local web server stopped");
+        // Stop local web server. The context may still be null here when startup
+        // failed before onSplashInitializationComplete() ran, so guard it.
+        if (context != null) {
+            try {
+                com.econovafx.modules.core.ui.web.LocalWebServer webServer = context.getBeanScope().get(com.econovafx.modules.core.ui.web.LocalWebServer.class);
+                if (webServer != null && webServer.isRunning()) {
+                    webServer.stop(0);
+                    logger.info("Local web server stopped");
+                }
+            } catch (Exception e) {
+                logger.warn("Could not stop local web server: {}", e.getMessage());
             }
-        } catch (Exception e) {
-            logger.warn("Could not stop local web server: {}", e.getMessage());
         }
         
         // Stop backup scheduler
