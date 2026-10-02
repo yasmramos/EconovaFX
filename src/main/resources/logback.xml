@@ -22,7 +22,9 @@
     </appender>
 
     <logger name="io.ebean" level="INFO"/>
-    <logger name="io.ebean.SQL" level="DEBUG"/>
+    <!-- Set io.ebean.SQL to DEBUG temporarily to log every statement (bind values
+         included). That is what identified the seeding/multi-instance bug. -->
+    <logger name="io.ebean.SQL" level="INFO"/>
     <logger name="io.ebean.TXN" level="INFO"/>
     <logger name="io.avaje" level="INFO"/>
     <logger name="com.zaxxer.hikari" level="INFO"/>
