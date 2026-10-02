@@ -155,11 +155,12 @@ public class ThirdPartiesController implements Initializable {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
+                getStyleClass().removeAll("value-positive", "value-negative");
                 if (empty || item == null) {
                     setText(null);
                 } else {
                     setText(item ? "Active" : "Inactive");
-                    setStyle(item ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+                    getStyleClass().add(item ? "value-positive" : "value-negative");
                 }
             }
         });

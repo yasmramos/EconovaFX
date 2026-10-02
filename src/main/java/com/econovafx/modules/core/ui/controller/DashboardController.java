@@ -231,12 +231,12 @@ public class DashboardController implements Initializable {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
+                getStyleClass().removeAll("value-positive", "value-warning");
                 if (empty || item == null) {
                     setText(null);
                 } else {
                     setText(item ? "Publicado" : "Borrador");
-                    setStyle(item ? "-fx-text-fill: #10b981; -fx-font-weight: bold;" : 
-                                   "-fx-text-fill: #f59e0b; -fx-font-weight: bold;");
+                    getStyleClass().add(item ? "value-positive" : "value-warning");
                 }
             }
         });

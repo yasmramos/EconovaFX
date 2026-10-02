@@ -110,11 +110,12 @@ public class TransactionsController implements Initializable {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
+                getStyleClass().removeAll("value-positive", "value-warning");
                 if (empty || item == null) {
                     setText(null);
                 } else {
                     setText(item ? "Publicado" : "Borrador");
-                    setStyle(item ? "-fx-text-fill: #27ae60;" : "-fx-text-fill: #f39c12;");
+                    getStyleClass().add(item ? "value-positive" : "value-warning");
                 }
             }
         });

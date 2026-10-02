@@ -118,11 +118,12 @@ public class WarehouseConfigController {
             @Override
             protected void updateItem(Boolean active, boolean empty) {
                 super.updateItem(active, empty);
+                getStyleClass().removeAll("value-positive", "value-negative");
                 if (empty || active == null) {
                     setText(null);
                 } else {
                     setText(active ? "Activo" : "Inactivo");
-                    setStyle(active ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+                    getStyleClass().add(active ? "value-positive" : "value-negative");
                 }
             }
         });

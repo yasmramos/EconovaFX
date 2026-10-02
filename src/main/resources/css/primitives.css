@@ -615,6 +615,10 @@
     -fx-border-color: transparent transparent 1 transparent;
     -fx-cell-size: 36;
 }
+
+/* Placeholder shown inside a cell that is intentionally disabled because its
+   parent row value is missing (accounting entry grid). */
+.table-empty-cell { -fx-background-color: -zinc-50; }
 .table-view .table-row-cell:odd,
 .table-view .table-row-cell:even,
 .data-table .table-row-cell:odd,
