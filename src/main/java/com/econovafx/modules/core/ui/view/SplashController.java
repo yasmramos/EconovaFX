@@ -2,19 +2,16 @@ package com.econovafx.modules.core.ui.view;
 
 import com.econovafx.modules.core.config.DatabaseConfig;
 import com.econovafx.modules.core.config.DatabaseSeeder;
-import com.econovafx.modules.core.security.AuthService;
-import com.econovafx.modules.core.service.CompanyService;
-import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.StackPane;
 import javafx.animation.FadeTransition;
 import javafx.util.Duration;
-import io.ebean.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class SplashController {
 
@@ -33,9 +30,6 @@ public class SplashController {
     private Label versionLabel;
 
     private Runnable onInitializationComplete;
-    
-    @Inject
-    private DatabaseSeeder databaseSeeder;
 
     public void setOnInitializationComplete(Runnable callback) {
         this.onInitializationComplete = callback;
@@ -65,14 +59,12 @@ public class SplashController {
                 logger.info("Database connection verified");
                 
                 updateProgress(0.5, "Seeding initial data...");
-                // Seed database with default data (company, currencies, admin user)
-                if (databaseSeeder != null) {
-                    databaseSeeder.seed();
-                } else {
-                    logger.warn("DatabaseSeeder not injected, using fallback");
-                    DatabaseSeeder seeder = new DatabaseSeeder();
-                    seeder.seed();
-                }
+                // Seed database with default data (company, currencies, admin user).
+                // NOTE: this controller is created by FXMLLoader before the Avaje Inject
+                // scope (AppContext) exists, so @Inject was always null here. The
+                // no-arg constructor resolves the same repositories from DB.getDefault(),
+                // so an injected instance would be identical.
+                new DatabaseSeeder().seed();
                 logger.info("Database seeding completed");
                 
                 updateProgress(0.7, "Loading core modules...");
@@ -116,34 +108,43 @@ public class SplashController {
                 
             } catch (Exception e) {
                 logger.error("Error during initialization: " + e.getMessage(), e);
-                // Log full stack trace to help diagnose
                 logger.error("Full stack trace:", e);
                 if (e.getCause() != null) {
                     logger.error("Root cause:", e.getCause());
                 }
-                javafx.application.Platform.runLater(() -> {
-                    statusLabel.setText("Error: " + e.getMessage());
-                    statusLabel.setStyle("-fx-text-fill: #e74c3c;");
-                    // Show alert dialog with option to exit or retry
-                    showInitializationErrorDialog(e);
-                });
+                // Re-throw so the exceptionally() handler below presents the dialog.
+                // Previously the dialog was shown here AND from exceptionally(), so any
+                // initialization failure popped up two stacked error dialogs.
+                throw new CompletionException(e);
             }
         });
         
         // Add timeout handling (30 seconds max for initialization)
         initializationFuture.orTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
             .exceptionally(throwable -> {
-                logger.error("Initialization timeout or error: " + throwable.getMessage(), throwable);
-                if (throwable.getCause() != null) {
-                    logger.error("Root cause:", throwable.getCause());
+                Throwable cause = unwrap(throwable);
+                logger.error("Initialization timeout or error: " + cause.getMessage(), cause);
+                if (cause.getCause() != null) {
+                    logger.error("Root cause:", cause.getCause());
                 }
+                final Exception reported = cause instanceof Exception ex ? ex : new Exception(cause);
                 javafx.application.Platform.runLater(() -> {
-                    statusLabel.setText("Error: Initialization timeout");
+                    statusLabel.setText("Error: " + reported.getMessage());
                     statusLabel.setStyle("-fx-text-fill: #e74c3c;");
-                    showInitializationErrorDialog(throwable instanceof Exception ? (Exception) throwable : new Exception(throwable));
+                    showInitializationErrorDialog(reported);
                 });
                 return null;
             });
+    }
+
+    /** Unwraps CompletionException/ExecutionException so the dialog shows the real cause. */
+    private static Throwable unwrap(Throwable t) {
+        Throwable cur = t;
+        while ((cur instanceof CompletionException || cur instanceof java.util.concurrent.ExecutionException)
+                && cur.getCause() != null) {
+            cur = cur.getCause();
+        }
+        return cur;
     }
     
     /**
