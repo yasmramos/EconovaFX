@@ -64,6 +64,34 @@
     -fx-text-fill: -info-hover;
 }
 
+/* ------------------------------------------------------- enriched company row */
+.company-cell {
+    -fx-padding: 8;
+    -fx-alignment: center-left;
+}
+
+.company-avatar { -fx-fill: -primary; }
+
+.company-avatar-initials {
+    -fx-fill: -primary-foreground;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.company-name {
+    -fx-fill: -foreground;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.company-code {
+    -fx-fill: -muted-foreground;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+    -fx-font-size: 12px;
+}
+
 /* --------------------------------------------------------- summary box */
 .selected-info-box {
     -fx-background-color: -muted;

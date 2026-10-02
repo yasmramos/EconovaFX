@@ -6,12 +6,8 @@ import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -34,7 +30,7 @@ public class NotificationService {
      * @param message The message to display.
      */
     public static void showSuccess(Stage stage, String message) {
-        showNotification(stage, message, Color.web("#28a745"), "✓");
+        showNotification(stage, message, "toast-success", "✓");
     }
 
     /**
@@ -43,7 +39,7 @@ public class NotificationService {
      * @param message The message to display.
      */
     public static void showError(Stage stage, String message) {
-        showNotification(stage, message, Color.web("#dc3545"), "✕");
+        showNotification(stage, message, "toast-error", "✕");
     }
 
     /**
@@ -52,7 +48,7 @@ public class NotificationService {
      * @param message The message to display.
      */
     public static void showInfo(Stage stage, String message) {
-        showNotification(stage, message, Color.web("#17a2b8"), "ℹ");
+        showNotification(stage, message, "toast-info", "ℹ");
     }
 
     /**
@@ -61,30 +57,40 @@ public class NotificationService {
      * @param message The message to display.
      */
     public static void showWarning(Stage stage, String message) {
-        showNotification(stage, message, Color.web("#ffc107"), "⚠");
+        showNotification(stage, message, "toast-warning", "⚠");
     }
 
-    private static void showNotification(Stage stage, String message, Color color, String icon) {
+    /**
+     * Builds one toast. Its whole appearance comes from the {@code toast} and
+     * {@code toast-<variant>} style classes, so there is no per-type colour code
+     * here and the toast matches the app palette (see primitives.css).
+     *
+     * @param stage   the owner stage, used to find the toast container
+     * @param message the message to display
+     * @param variant style class selecting the accent colour
+     * @param icon    leading glyph
+     */
+    private static void showNotification(Stage stage, String message, String variant, String icon) {
         if (stage == null || stage.getScene() == null) return;
 
         // Create content
         Label iconLabel = new Label(icon);
-        iconLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: white; -fx-font-weight: bold;");
-        
+        iconLabel.getStyleClass().add("toast-icon");
+
         Label messageLabel = new Label(message);
-        messageLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: white; -fx-font-weight: normal;");
+        messageLabel.getStyleClass().add("toast-message");
         messageLabel.setWrapText(true);
         messageLabel.setMaxWidth(WIDTH - 60);
 
         VBox content = new VBox(5, iconLabel, messageLabel);
         content.setAlignment(Pos.CENTER_LEFT);
         content.setPadding(new Insets(10, 15, 10, 15));
-        content.setStyle("-fx-background-color: rgba(0,0,0,0.8); -fx-background-radius: 8px;");
+        content.getStyleClass().add("toast-body");
         content.setPrefSize(WIDTH, HEIGHT);
 
         // Overlay background for the specific notification
         VBox notificationBox = new VBox(content);
-        notificationBox.setStyle("-fx-background-color: " + toHex(color) + "; -fx-background-radius: 8px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 4);");
+        notificationBox.getStyleClass().addAll("toast", variant);
         notificationBox.setPickOnBounds(false);
         notificationBox.setMaxWidth(Region.USE_PREF_SIZE);
 
@@ -155,12 +161,5 @@ public class NotificationService {
         
         // Fallback: return null if toast container not found
         return null;
-    }
-
-    private static String toHex(Color color) {
-        return String.format("#%02X%02X%02X", 
-            (int)(color.getRed() * 255), 
-            (int)(color.getGreen() * 255), 
-            (int)(color.getBlue() * 255));
     }
 }

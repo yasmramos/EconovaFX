@@ -269,8 +269,7 @@ public class ModernDialog {
 
         // Create content container pane
         StackPane contentContainer = new StackPane(content);
-        contentContainer.setStyle("-fx-background-color: transparent;");
-        
+
         // Add title label if title is provided
         Label titleLabel = null;
         if (title != null && !title.trim().isEmpty()) {
@@ -286,8 +285,9 @@ public class ModernDialog {
         } else {
             modalCard = new VBox(contentContainer);
         }
-        modalCard.setStyle("-fx-background-color: transparent;");
-        
+        // Background comes from the .modern-modal-card class (transparent); the
+        // content node inside paints the actual surface.
+
         // Prevent card clicks from propagating to overlay
         modalCard.setOnMousePressed(event -> event.consume());
         
@@ -474,11 +474,11 @@ public class ModernDialog {
         Label messageLabel = new Label(message);
         messageLabel.setWrapText(true);
         messageLabel.setMaxWidth(400);
-        messageLabel.setStyle("-fx-font-size: 14px; -fx-padding: 20px;");
-        
+        messageLabel.getStyleClass().add("modern-dialog-message");
+
         javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(messageLabel);
-        content.setStyle("-fx-background-color: white; -fx-padding: 20px;");
-        
+        content.getStyleClass().addAll("card", "p-5");
+
         showAndWait(ownerStage, content, title);
     }
 }

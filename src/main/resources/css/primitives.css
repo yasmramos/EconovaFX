@@ -995,3 +995,52 @@
 .trend-positive { -fx-text-fill: -success; }
 .trend-negative { -fx-text-fill: -destructive; }
 .trend-neutral  { -fx-text-fill: -muted-foreground; }
+
+/* =============================================================================
+ * TOASTS + INLINE NOTIFICATIONS
+ * ========================================================================== */
+/* Floating toasts (core/ui/util/NotificationService). A white shadcn card with a
+ * hairline border; the variant tints the border and the leading icon only. */
+.toast {
+    -fx-background-color: -card;
+    -fx-background-radius: 8;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, -shadow-md, 16, 0, 0, 6);
+}
+.toast-body    { -fx-background-color: transparent; }
+.toast-icon    { -fx-font-size: 22px; -fx-font-weight: 700; -fx-text-fill: -muted-foreground; }
+.toast-message { -fx-font-size: 13px; -fx-text-fill: -foreground; }
+
+.toast-success { -fx-border-color: -success-border; }
+.toast-success .toast-icon { -fx-text-fill: -success; }
+.toast-error   { -fx-border-color: -danger-border; }
+.toast-error .toast-icon { -fx-text-fill: -destructive; }
+.toast-info    { -fx-border-color: -info-border; }
+.toast-info .toast-icon { -fx-text-fill: -info; }
+.toast-warning { -fx-border-color: -warning-border; }
+.toast-warning .toast-icon { -fx-text-fill: -warning; }
+
+/* Stacked in-layout banners (core/service/NotificationService). Soft tint plus a
+ * matching hairline, the shadcn "alert" look. */
+.notification {
+    -fx-padding: 10 15;
+    -fx-background-radius: 6;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+.notification-info {
+    -fx-background-color: -info-soft;    -fx-border-color: -info-border;    -fx-text-fill: -info;
+}
+.notification-success {
+    -fx-background-color: -success-soft; -fx-border-color: -success-border; -fx-text-fill: -success;
+}
+.notification-warning {
+    -fx-background-color: -warning-soft; -fx-border-color: -warning-border; -fx-text-fill: -warning;
+}
+.notification-error {
+    -fx-background-color: -danger-soft;  -fx-border-color: -danger-border;  -fx-text-fill: -destructive;
+}

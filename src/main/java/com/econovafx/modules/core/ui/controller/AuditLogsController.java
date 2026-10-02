@@ -155,12 +155,12 @@ public class AuditLogsController {
             @Override
             protected void updateItem(Boolean success, boolean empty) {
                 super.updateItem(success, empty);
+                getStyleClass().removeAll("value-positive", "value-negative");
                 if (empty || success == null) {
                     setText(null);
-                    setStyle("");
                 } else {
                     setText(success ? "✓ Éxito" : "✗ Fallido");
-                    setStyle(success ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+                    getStyleClass().add(success ? "value-positive" : "value-negative");
                 }
             }
         });

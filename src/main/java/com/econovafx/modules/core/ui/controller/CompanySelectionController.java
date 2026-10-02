@@ -11,10 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,20 +113,16 @@ public class CompanySelectionController {
             private final Text codeText = new Text();
             
             {
-                // Setup avatar circle
-                avatar.setFill(Color.web("#2196F3"));
-                initials.setFont(Font.font("System", FontWeight.BOLD, 14));
-                initials.setFill(Color.WHITE);
-                
-                // Setup text elements
-                nameText.setFont(Font.font("System", FontWeight.BOLD, 14));
-                nameText.setFill(Color.web("#2c3e50"));
-                codeText.setFont(Font.font("System", 12));
-                codeText.setFill(Color.web("#7f8c8d"));
-                
+                // All visuals come from style classes (see
+                // selection-dialog-styles.css); no inline colours or fonts.
+                avatar.getStyleClass().add("company-avatar");
+                initials.getStyleClass().add("company-avatar-initials");
+                nameText.getStyleClass().add("company-name");
+                codeText.getStyleClass().add("company-code");
+
                 textVBox.getChildren().addAll(nameText, codeText);
                 hbox.getChildren().addAll(avatar, textVBox);
-                hbox.setStyle("-fx-padding: 8px; -fx-alignment: center-left;");
+                hbox.getStyleClass().add("company-cell");
                 hbox.setMaxWidth(Double.MAX_VALUE);
             }
             
@@ -139,7 +132,7 @@ public class CompanySelectionController {
                 if (empty || company == null) {
                     setGraphic(null);
                     setText(null);
-                    setStyle("");
+                    getStyleClass().remove("previously-selected");
                 } else {
                     // Set initials
                     String companyName = company.getName();

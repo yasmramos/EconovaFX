@@ -289,7 +289,7 @@ public class ComprobanteFormController implements Initializable {
                     }
                 });
                 
-                emptyCell.setStyle("-fx-background-color: #f9fafb;");
+                emptyCell.getStyleClass().add("table-empty-cell");
             }
 
             @Override
