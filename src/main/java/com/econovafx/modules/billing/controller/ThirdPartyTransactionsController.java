@@ -1,4 +1,7 @@
-package com.econovafx.controller;
+// The package must match the directory: FXMLLoader resolves this controller by its
+// fully-qualified name (see resources/com/econovafx/view/third-party-transactions.fxml,
+// fx:controller="com.econovafx.modules.billing.controller.ThirdPartyTransactionsController").
+package com.econovafx.modules.billing.controller;
 
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.accounting.model.Transaction;

@@ -1,6 +1,5 @@
 package com.econovafx.modules.billing.controller;
 
-import com.econovafx.controller.ThirdPartyTransactionsController;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.core.service.NotificationService;
