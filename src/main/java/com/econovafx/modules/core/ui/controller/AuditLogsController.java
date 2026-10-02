@@ -175,7 +175,7 @@ public class AuditLogsController {
             private final Button detailBtn = new Button("Ver Detalle");
             
             {
-                detailBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+                detailBtn.getStyleClass().addAll("row-action", "row-action-info");
                 detailBtn.setOnAction(event -> {
                     AuditLog log = getTableView().getItems().get(getIndex());
                     showAuditLogDetails(log);
