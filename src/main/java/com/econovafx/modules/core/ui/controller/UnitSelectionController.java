@@ -88,16 +88,15 @@ public class UnitSelectionController {
             @Override
             protected void updateItem(BusinessUnit unit, boolean empty) {
                 super.updateItem(unit, empty);
+                // previously-selected is a real class on the cell, so the highlight
+                // is styled by the stylesheet instead of an inline style.
+                getStyleClass().remove("previously-selected");
                 if (empty || unit == null) {
                     setText(null);
-                    setStyle("");
                 } else {
                     setText(unit.getName() + " (" + unit.getCode() + ")");
-                    // Highlight if previously selected
                     if (selectedUnit != null && selectedUnit.getId().equals(unit.getId())) {
-                        setStyle("-fx-background-color: #e3f2fd; -fx-font-weight: bold;");
-                    } else {
-                        setStyle("");
+                        getStyleClass().add("previously-selected");
                     }
                 }
             }
