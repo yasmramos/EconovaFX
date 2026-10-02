@@ -5,7 +5,7 @@ import com.econovafx.modules.core.service.ExchangeRateService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 // Avaje Inject only honours its own @Inject; jakarta.inject.Inject was silently
 // ignored, leaving exchangeRateService null at runtime (NPE on initialize()).
-import io.avaje.inject.Inject;
+import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -29,8 +29,16 @@ public class ExchangeRatesController {
 
     private static final Logger logger = LoggerFactory.getLogger(ExchangeRatesController.class);
 
-    @Inject
-    ExchangeRateService exchangeRateService;
+    private final ExchangeRateService exchangeRateService;
+
+    /**
+     * Avaje Inject has no {@code @Inject} annotation: it wires beans through a single
+     * constructor. The previous field injection was therefore never applied and
+     * initialize() threw an NPE on the first call to load the active rates.
+     */
+    public ExchangeRatesController(ExchangeRateService exchangeRateService) {
+        this.exchangeRateService = exchangeRateService;
+    }
 
     @FXML
     private VBox rootView;

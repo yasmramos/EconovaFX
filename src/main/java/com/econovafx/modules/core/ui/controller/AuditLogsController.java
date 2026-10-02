@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.avaje.inject.Inject;
+import jakarta.inject.Inject;
 import java.time.LocalDate;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -33,12 +33,17 @@ public class AuditLogsController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuditLogsController.class);
 
-    @Inject
-    public AuditService auditService;
+    // Avaje Inject wires beans via a single constructor; it has no @Inject for fields,
+    // so these were always null.
+    private final AuditService auditService;
 
-    @Inject
-    public NotificationService notificationService;
-    
+    private final NotificationService notificationService;
+
+    public AuditLogsController(AuditService auditService, NotificationService notificationService) {
+        this.auditService = auditService;
+        this.notificationService = notificationService;
+    }
+
     private Stage mainStage;
 
     // Filters

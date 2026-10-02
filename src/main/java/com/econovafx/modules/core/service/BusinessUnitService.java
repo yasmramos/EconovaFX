@@ -3,7 +3,7 @@ package com.econovafx.modules.core.service;
 import com.econovafx.modules.core.model.BusinessUnit;
 import com.econovafx.modules.core.repository.BusinessUnitRepository;
 import io.ebean.annotation.Transactional;
-import io.avaje.inject.Inject;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +19,13 @@ public class BusinessUnitService {
 
     private static final Logger logger = LoggerFactory.getLogger(BusinessUnitService.class);
 
-    @Inject
-    public BusinessUnitRepository businessUnitRepository;
+    // Avaje Inject wires beans via a single constructor; it has no @Inject for fields,
+    // so this repository was always null and every call threw an NPE.
+    private final BusinessUnitRepository businessUnitRepository;
+
+    public BusinessUnitService(BusinessUnitRepository businessUnitRepository) {
+        this.businessUnitRepository = businessUnitRepository;
+    }
 
     /**
      * Get all active business units for a company.
