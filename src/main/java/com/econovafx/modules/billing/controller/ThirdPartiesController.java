@@ -379,13 +379,11 @@ public class ThirdPartiesController implements Initializable {
             private final HBox pane = new HBox(5, btnEdit, btnDelete);
             
             {
-                btnEdit.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;");
-                btnEdit.setOnMouseEntered(e -> btnEdit.setStyle("-fx-background-color: #2563eb; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
-                btnEdit.setOnMouseExited(e -> btnEdit.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
-                
-                btnDelete.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;");
-                btnDelete.setOnMouseEntered(e -> btnDelete.setStyle("-fx-background-color: #dc2626; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
-                btnDelete.setOnMouseExited(e -> btnDelete.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
+                // Style comes from the shared row-action classes; the hover tint is a CSS
+                // pseudo-class, so the manual mouse handlers that used to
+                // re-apply setStyle() on every hover are gone.
+                btnEdit.getStyleClass().addAll("row-action", "row-action-info");
+                btnDelete.getStyleClass().addAll("row-action", "row-action-danger");
                 
                 btnEdit.setOnAction(event -> {
                     ThirdParty thirdParty = getTableView().getItems().get(getIndex());

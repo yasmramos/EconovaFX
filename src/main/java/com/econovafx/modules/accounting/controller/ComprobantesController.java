@@ -207,8 +207,8 @@ public class ComprobantesController implements Initializable {
             {
                 btnView.setGraphic(new FontIcon(MaterialDesignE.EYE));
                 btnEdit.setGraphic(new FontIcon(MaterialDesignP.PENCIL));
-                btnView.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 4px 8px; -fx-cursor: hand;");
-                btnEdit.setStyle("-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 4px 8px; -fx-cursor: hand;");
+                btnView.getStyleClass().addAll("icon-btn", "icon-btn-info");
+                btnEdit.getStyleClass().addAll("icon-btn", "icon-btn-success");
                 btnView.setOnAction(e -> {
                     ComprobanteRow row = getTableView().getItems().get(getIndex());
                     showDetail(row);
@@ -226,7 +226,7 @@ public class ComprobantesController implements Initializable {
                     setGraphic(null);
                 } else {
                     HBox box = new HBox(4, btnView, btnEdit);
-                    box.setStyle("-fx-alignment: center;");
+                    box.setAlignment(javafx.geometry.Pos.CENTER);
                     setGraphic(box);
                 }
             }
