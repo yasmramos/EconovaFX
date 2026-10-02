@@ -1,4 +1,4 @@
-package com.econovafx.modules.core.ui.views;
+package com.econovafx.modules.core.ui;
 
 import com.econovafx.modules.core.model.ExchangeRate;
 import com.econovafx.modules.core.model.Currency;
