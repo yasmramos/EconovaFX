@@ -63,7 +63,7 @@ public class NotificationService {
     /**
      * Builds one toast. Its whole appearance comes from the {@code toast} and
      * {@code toast-<variant>} style classes, so there is no per-type colour code
-     * here and the toast matches the app palette (see primitives.css).
+     * here and the toast matches the app palette (see utilities.css).
      *
      * @param stage   the owner stage, used to find the toast container
      * @param message the message to display

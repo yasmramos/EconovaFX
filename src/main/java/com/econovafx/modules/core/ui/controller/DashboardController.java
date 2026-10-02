@@ -577,7 +577,7 @@ public class DashboardController implements Initializable {
             averageTransactionLabel.setText(formatCurrency(finalAvgTransaction));
             
             // Trend indicators. Colour and weight come from the shared trend-* classes
-            // (see primitives.css), so nothing here needs an inline style.
+            // (see utilities.css), so nothing here needs an inline style.
             profitTrendLabel.getStyleClass().removeAll("trend-positive", "trend-negative", "trend-neutral");
             if (finalProfit.compareTo(BigDecimal.ZERO) > 0) {
                 profitTrendLabel.setText("▲ Positivo");

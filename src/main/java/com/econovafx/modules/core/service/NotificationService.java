@@ -37,7 +37,7 @@ public class NotificationService {
 
     /**
      * Shows a notification. Its appearance comes from the {@code notification}
-     * and variant style classes (see primitives.css), so no colour is set in
+     * and variant style classes (see utilities.css), so no colour is set in
      * code and the banner matches the rest of the app.
      *
      * @param container the VBox that hosts the notification
