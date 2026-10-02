@@ -4,7 +4,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <VBox fx:id="loginRoot" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
       prefHeight="550.0" prefWidth="420.0" 
@@ -29,16 +28,8 @@
                 <javafx.scene.image.Image url="@../images/logo.svg"/>
             </image>
         </ImageView>
-        <Label text="%login.title" styleClass="login-title">
-            <font>
-                <Font name="System Bold" size="28.0"/>
-            </font>
-        </Label>
-        <Label text="%login.subtitle" styleClass="login-subtitle">
-            <font>
-                <Font size="14.0"/>
-            </font>
-        </Label>
+        <Label text="%login.title" styleClass="login-title"/>
+        <Label text="%login.subtitle" styleClass="login-subtitle"/>
     </VBox>
     
     <Region prefHeight="25.0" VBox.vgrow="NEVER"/>
