@@ -862,3 +862,45 @@
 .cursor-resize { -fx-cursor: size-ew; }
 
 .truncate { -fx-overflow: ellipsis; -fx-text-overflow: ellipsis; }
+
+/* =============================================================================
+ * 16. UTILITIES - status text (shared by pages, forms and dialogs)
+ * ============================================================================= */
+.form-label,
+.filter-label,
+.field-label,
+.input-label {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+}
+
+.info-label    { -fx-text-fill: -info;         -fx-font-size: 13px; }
+.success-label { -fx-text-fill: -success;      -fx-font-size: 13px; }
+.warning-label { -fx-text-fill: -warning;      -fx-font-size: 13px; }
+.error-label   { -fx-text-fill: -destructive;  -fx-font-size: 13px; }
+
+.stat-label { -fx-text-fill: -muted-foreground; -fx-font-size: 12px; -fx-font-weight: 500; }
+.stat-title { -fx-text-fill: -foreground;      -fx-font-size: 14px; -fx-font-weight: 600; }
+.stat-value { -fx-text-fill: -foreground;      -fx-font-size: 22px; -fx-font-weight: 600; }
+
+.value-positive { -fx-text-fill: -success; }
+.value-negative { -fx-text-fill: -destructive; }
+.value-warning  { -fx-text-fill: -warning; }
+.value-info     { -fx-text-fill: -info; }
+.value-success  { -fx-text-fill: -success; }
+
+.stat-success { -fx-text-fill: -success; }
+.stat-danger  { -fx-text-fill: -destructive; }
+.stat-info    { -fx-text-fill: -info; }
+.stat-warning { -fx-text-fill: -warning; }
+
+.empty-state-label {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+.trend-positive { -fx-text-fill: -success; }
+.trend-negative { -fx-text-fill: -destructive; }
+.trend-neutral  { -fx-text-fill: -muted-foreground; }
