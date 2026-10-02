@@ -106,13 +106,15 @@ public class ThirdPartyTransactionsController {
             BigDecimal balance = calculateThirdPartyBalance();
             totalBalanceLabel.setText(formatCurrency(balance));
             
-            // Color code the balance
+            // Colour code the balance. Uses the shared utility classes rather than
+            // setStyle(), because an inline style beats every stylesheet rule.
+            totalBalanceLabel.getStyleClass().removeAll("value-negative", "value-positive", "value-info");
             if (balance.compareTo(BigDecimal.ZERO) > 0) {
-                totalBalanceLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #dc2626;");
+                totalBalanceLabel.getStyleClass().add("value-negative");
             } else if (balance.compareTo(BigDecimal.ZERO) < 0) {
-                totalBalanceLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #059669;");
+                totalBalanceLabel.getStyleClass().add("value-positive");
             } else {
-                totalBalanceLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #6b7280;");
+                totalBalanceLabel.getStyleClass().add("value-info");
             }
         }
     }
