@@ -220,13 +220,15 @@ public class ThirdPartyTransactionsController {
                     setText(null);
                 } else {
                     setText(formatCurrency(item));
-                    // Color code positive/negative balances
+                    // Colour-code positive/negative balances through the shared
+                    // utility classes; setStyle() would beat the stylesheets.
+                    getStyleClass().removeAll("value-negative", "value-positive", "value-info");
                     if (item.compareTo(BigDecimal.ZERO) > 0) {
-                        setStyle("-fx-text-fill: #dc2626; -fx-font-weight: bold;");
+                        getStyleClass().add("value-negative");
                     } else if (item.compareTo(BigDecimal.ZERO) < 0) {
-                        setStyle("-fx-text-fill: #059669; -fx-font-weight: bold;");
+                        getStyleClass().add("value-positive");
                     } else {
-                        setStyle("-fx-text-fill: #6b7280;");
+                        getStyleClass().add("value-info");
                     }
                 }
             }

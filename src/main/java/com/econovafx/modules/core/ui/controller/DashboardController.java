@@ -577,23 +577,25 @@ public class DashboardController implements Initializable {
             profitLabel.setText(formatCurrency(finalProfit));
             averageTransactionLabel.setText(formatCurrency(finalAvgTransaction));
             
-            // Set trend indicators (placeholder - would need historical data)
+            // Trend indicators. Colour and weight come from the shared trend-* classes
+            // (see primitives.css), so nothing here needs an inline style.
+            profitTrendLabel.getStyleClass().removeAll("trend-positive", "trend-negative", "trend-neutral");
             if (finalProfit.compareTo(BigDecimal.ZERO) > 0) {
                 profitTrendLabel.setText("▲ Positivo");
-                profitTrendLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold;");
+                profitTrendLabel.getStyleClass().add("trend-positive");
             } else if (finalProfit.compareTo(BigDecimal.ZERO) < 0) {
                 profitTrendLabel.setText("▼ Negativo");
-                profitTrendLabel.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 12px; -fx-font-weight: bold;");
+                profitTrendLabel.getStyleClass().add("trend-negative");
             } else {
                 profitTrendLabel.setText("▬ Equilibrio");
-                profitTrendLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 12px; -fx-font-weight: bold;");
+                profitTrendLabel.getStyleClass().add("trend-neutral");
             }
-            
+
             revenueTrendLabel.setText("Este mes");
-            revenueTrendLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 11px;");
-            
+            revenueTrendLabel.getStyleClass().add("trend-neutral");
+
             expensesTrendLabel.setText("Este mes");
-            expensesTrendLabel.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 11px;");
+            expensesTrendLabel.getStyleClass().add("trend-neutral");
         });
     }
 

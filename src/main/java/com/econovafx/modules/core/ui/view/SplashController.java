@@ -130,7 +130,7 @@ public class SplashController {
                 final Exception reported = cause instanceof Exception ex ? ex : new Exception(cause);
                 javafx.application.Platform.runLater(() -> {
                     statusLabel.setText("Error: " + reported.getMessage());
-                    statusLabel.setStyle("-fx-text-fill: #e74c3c;");
+                    statusLabel.getStyleClass().add("value-negative");
                     showInitializationErrorDialog(reported);
                 });
                 return null;
@@ -187,7 +187,8 @@ public class SplashController {
                         } else if (response == retryButton) {
                             logger.info("User chose to retry initialization");
                             updateProgress(0, "Retrying initialization...");
-                            statusLabel.setStyle("-fx-text-fill: #2ecc71;");
+                            statusLabel.getStyleClass().remove("value-negative");
+                            statusLabel.getStyleClass().add("status-label");
                             startInitialization();
                         }
                     });
