@@ -1,153 +1,144 @@
-/* Report CSS - OpenHTMLToPDF */
+/* =============================================================================
+ * REPORT CSS - rendered by the WebView and by OpenHTMLToPDF
+ * Same design language as the app (shadcn/zinc), but tuned for print: pure
+ * black text, hairlines that survive a laser printer, and no colour that a
+ * greyscale conversion would flatten.
+ * ========================================================================== */
 
 @page {
     size: A4;
     margin: 2cm;
 }
 
-body {
-    font-family: "Helvetica", "Arial", sans-serif;
-    font-size: 11pt;
-    line-height: 1.4;
-    color: #333;
+:root {
+    --background: #ffffff;
+    --foreground: #09090b;
+    --muted: #fafafa;
+    --muted-foreground: #71717a;
+    --border: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --primary: #18181b;
+    --accent: #2563eb;
+    --success: #16a34a;
+    --radius: 6px;
 }
 
+body {
+    font-family: "Inter", "Helvetica", "Arial", sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    color: var(--foreground);
+    background: var(--background);
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------ head */
 h1 {
-    font-size: 18pt;
+    font-size: 17pt;
+    font-weight: 600;
     text-align: center;
-    margin-bottom: 20px;
-    color: #2c3e50;
-    border-bottom: 2px solid #2c3e50;
+    margin: 0 0 20px;
     padding-bottom: 10px;
+    color: var(--foreground);
+    border-bottom: 1px solid var(--border-strong);
 }
 
 h2 {
-    font-size: 14pt;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    color: #34495e;
+    font-size: 12.5pt;
+    font-weight: 600;
+    margin: 22px 0 8px;
+    color: var(--foreground);
 }
 
 .header {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
-.voucher-info, .reconciliation-info, .report-info {
-    background-color: #f8f9fa;
-    padding: 10px;
-    border-left: 4px solid #2c3e50;
-    margin-bottom: 15px;
+/* ----------------------------------------------------------------- boxes */
+.voucher-info,
+.reconciliation-info,
+.report-info,
+.summary,
+.third-party {
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 14px;
 }
+.summary { border-left-color: var(--accent); }
+.third-party { border-left-color: var(--success); }
 
-.voucher-info p, .reconciliation-info p, .report-info p {
-    margin: 5px 0;
-}
+.voucher-info p,
+.reconciliation-info p,
+.report-info p,
+.summary p,
+.third-party p { margin: 4px 0; }
 
-.description {
-    margin-bottom: 20px;
-}
+.description { margin-bottom: 18px; }
+.table-container { margin-bottom: 18px; }
 
-.table-container {
-    margin-bottom: 20px;
-}
-
+/* ----------------------------------------------------------------- table */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 thead {
-    background-color: #2c3e50;
-    color: white;
+    background-color: var(--muted);
+    border-top: 1px solid var(--border-strong);
+    border-bottom: 1px solid var(--border-strong);
 }
 
 th {
-    padding: 10px 8px;
+    padding: 8px 8px;
     text-align: left;
-    font-weight: bold;
-    font-size: 10pt;
+    font-weight: 600;
+    font-size: 9.5pt;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-    font-size: 10pt;
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 9.5pt;
 }
 
-tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
+tbody tr:nth-child(even) { background-color: #fcfcfc; }
 
-.col-account-code {
-    width: 15%;
-}
+/* --------------------------------------------------------------- columns */
+.col-account-code { width: 15%; }
+.col-account-name { width: 35%; }
+.col-debit,
+.col-credit,
+.col-balance,
+.col-amount { width: 15%; text-align: right; }
+.col-date { width: 12%; }
+.col-reference { width: 15%; }
+.col-description { width: 38%; }
+.col-type { width: 10%; }
 
-.col-account-name {
-    width: 35%;
-}
-
-.col-debit, .col-credit, .col-balance, .col-amount {
-    width: 15%;
-    text-align: right;
-}
-
-.col-date {
-    width: 12%;
-}
-
-.col-reference {
-    width: 15%;
-}
-
-.col-description {
-    width: 38%;
-}
-
-.col-type {
-    width: 10%;
-}
-
+/* ---------------------------------------------------------------- totals */
 .totals {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-top: 2px solid #2c3e50;
-    margin-top: 20px;
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-top: 18px;
 }
+.totals p { margin: 6px 0; font-size: 11pt; }
 
-.totals p {
-    margin: 8px 0;
-    font-size: 12pt;
-}
-
-.summary {
-    background-color: #f8f9fa;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-left: 4px solid #3498db;
-}
-
-.summary p {
-    margin: 8px 0;
-}
-
+/* ---------------------------------------------------------------- footer */
 .footer {
-    margin-top: 30px;
-    padding-top: 15px;
-    border-top: 1px solid #ddd;
-    font-size: 9pt;
-    color: #7f8c8d;
+    margin-top: 28px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 8.5pt;
+    color: var(--muted-foreground);
     text-align: center;
-}
-
-/* Third party section */
-.third-party {
-    background-color: #f8f9fa;
-    padding: 10px;
-    margin: 15px 0;
-    border-left: 4px solid #27ae60;
-}
-
-.third-party p {
-    margin: 5px 0;
 }

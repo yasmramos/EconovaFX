@@ -762,6 +762,7 @@
 .text-slate-800  { -fx-text-fill: -zinc-800; }
 .text-blue-600   { -fx-text-fill: -blue-600; }
 .text-green-600  { -fx-text-fill: -green-600; }
+.text-green-800  { -fx-text-fill: -green-700; }
 .text-orange-600 { -fx-text-fill: -orange-600; }
 .text-purple-600 { -fx-text-fill: -purple-600; }
 .text-red-600    { -fx-text-fill: -red-600; }
