@@ -167,7 +167,6 @@ module econovafx {
     exports com.econovafx.modules.payables.model;
     exports com.econovafx.modules.bank.model;
     exports com.econovafx.modules.cash.model;
-    exports com.econovafx.modules.assets.model;
     exports com.econovafx.modules.fixedassets.model;
     exports com.econovafx.modules.reporting.model;
     exports com.econovafx.modules.security.model;
@@ -184,7 +183,6 @@ module econovafx {
     opens com.econovafx.modules.payables.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.bank.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.cash.model to io.ebean.core, io.ebean;
-    opens com.econovafx.modules.assets.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.fixedassets.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.reporting.model to io.ebean.core, io.ebean;
     opens com.econovafx.modules.security.model to io.ebean.core, io.ebean;

@@ -88,7 +88,6 @@ public class DbMigrationGenerator {
             .addPackage("com.econovafx.modules.payables.model")
             .addPackage("com.econovafx.modules.bank.model")
             .addPackage("com.econovafx.modules.cash.model")
-            .addPackage("com.econovafx.modules.assets.model")
             .addPackage("com.econovafx.modules.fixedassets.model")
             .addPackage("com.econovafx.modules.reporting.model")
             .addPackage("com.econovafx.modules.security.model");
