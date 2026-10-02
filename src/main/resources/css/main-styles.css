@@ -50,11 +50,11 @@
 }
 
 .text-xl {
-    -fx-font-size: -fs-2xl;
+    -fx-font-size: 20px;
 }
 
 .text-xs {
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
 }
 
 .font-bold {

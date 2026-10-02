@@ -7,8 +7,8 @@
 /* Dialog Pane */
 .modern-dialog-pane {
     -fx-background-color: -component-background;
-    -fx-background-radius: -radius-2xl;
-    -fx-border-radius: -radius-2xl;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
     -fx-effect: dropshadow(gaussian, -shadow-color-strong, 30, 0.5, 0, 10);
     -fx-padding: 25;
     -fx-spacing: 15;
@@ -16,7 +16,7 @@
 
 /* Dialog Title */
 .modern-dialog-title {
-    -fx-font-size: -fs-2xl;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: -primary-text;
     -fx-padding: 0 0 5 0;
@@ -24,18 +24,18 @@
 
 /* Dialog Message */
 .modern-dialog-message {
-    -fx-font-size: -fs-md;
+    -fx-font-size: 14px;
     -fx-text-fill: -secondary-text;
     -fx-line-spacing: 1.5;
 }
 
 /* Modern Buttons - flat design per ultimate-pdf-viewer */
 .modern-button {
-    -fx-font-size: -fs-md;
+    -fx-font-size: 14px;
     -fx-font-weight: 600;
     -fx-padding: 10 20;
-    -fx-background-radius: -button-radius;
-    -fx-border-radius: -button-radius;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-cursor: hand;
     -fx-min-width: 80px;
 }
@@ -153,17 +153,17 @@
 /* Modal card - centered elevated card matching ultimate-pdf-viewer */
 .modern-modal-card {
     -fx-background-color: -component-background;
-    -fx-background-radius: -modal-radius;
+    -fx-background-radius: 14;
     -fx-border-color: rgba(0, 0, 0, 0.1);
     -fx-border-width: 1px;
-    -fx-border-radius: -modal-radius;
+    -fx-border-radius: 14;
     -fx-effect: dropshadow(gaussian, -shadow-color, 48, 0.22, 0, 18);
     -fx-padding: 0;
 }
 
 /* Modal title inside card */
 .modern-modal-title {
-    -fx-font-size: -fs-lg;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-padding: 15 20 10 20;
     -fx-text-fill: -primary-text;
@@ -185,14 +185,14 @@
 
 .dialog-title {
     -fx-text-fill: -primary-text;
-    -fx-font-size: -fs-lg;
+    -fx-font-size: 16px;
     -fx-font-weight: 700;
     -fx-effect: dropshadow(gaussian, -shadow-color-light, 2, 0, 0, 1);
 }
 
 .dialog-subtitle {
     -fx-text-fill: -muted-text;
-    -fx-font-size: -fs-xs;
+    -fx-font-size: 10px;
     -fx-font-weight: 500;
 }
 
@@ -203,7 +203,7 @@
     -fx-font-size: 20px;
     -fx-cursor: hand;
     -fx-padding: 4px 8px;
-    -fx-background-radius: -radius-lg;
+    -fx-background-radius: 8;
 }
 
 .dialog-close-btn:hover {
@@ -228,17 +228,17 @@
 
 .form-section {
     -fx-background-color: -component-background-secondary;
-    -fx-background-radius: -radius-md;
+    -fx-background-radius: 6;
     -fx-padding: 12px;
     -fx-spacing: 10px;
     -fx-border-color: -border-light;
     -fx-border-width: 1px;
-    -fx-border-radius: -radius-md;
+    -fx-border-radius: 6;
 }
 
 .form-section-title {
     -fx-text-fill: -secondary-text;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
     -fx-padding: 0 0 8px 0;
 }
@@ -249,18 +249,18 @@
 
 .form-label {
     -fx-text-fill: -secondary-text;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
 }
 
 .form-input {
     -fx-background-color: -component-background;
-    -fx-background-radius: -input-radius;
+    -fx-background-radius: 8;
     -fx-border-color: -border-medium;
-    -fx-border-radius: -input-radius;
+    -fx-border-radius: 8;
     -fx-border-width: 1px;
     -fx-padding: 6px 8px;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-text-fill: -primary-text;
 }
 
@@ -278,12 +278,12 @@
 /* Text Area */
 .form-textarea {
     -fx-background-color: -component-background;
-    -fx-background-radius: -radius-lg;
+    -fx-background-radius: 8;
     -fx-border-color: -border-medium;
-    -fx-border-radius: -radius-lg;
+    -fx-border-radius: 8;
     -fx-border-width: 1px;
     -fx-padding: 10px 14px;
-    -fx-font-size: -fs-md;
+    -fx-font-size: 14px;
     -fx-text-fill: -primary-text;
 }
 
@@ -301,12 +301,12 @@
 /* ComboBox */
 .form-combo {
     -fx-background-color: -component-background;
-    -fx-background-radius: -radius-lg;
+    -fx-background-radius: 8;
     -fx-border-color: -border-medium;
-    -fx-border-radius: -radius-lg;
+    -fx-border-radius: 8;
     -fx-border-width: 1px;
     -fx-padding: 10px 14px;
-    -fx-font-size: -fs-md;
+    -fx-font-size: 14px;
 }
 
 .form-combo:focused {
@@ -327,9 +327,9 @@
 
 .form-combo .list-view {
     -fx-background-color: -component-background;
-    -fx-background-radius: -radius-lg;
+    -fx-background-radius: 8;
     -fx-border-color: -border-medium;
-    -fx-border-radius: -radius-lg;
+    -fx-border-radius: 8;
     -fx-border-width: 1px;
     -fx-effect: dropshadow(gaussian, -shadow-color-light, 15, 0, 0, 5);
 }
@@ -352,9 +352,9 @@
 /* DatePicker */
 .form-date-picker {
     -fx-background-color: -component-background;
-    -fx-background-radius: -radius-lg;
+    -fx-background-radius: 8;
     -fx-border-color: -border-medium;
-    -fx-border-radius: -radius-lg;
+    -fx-border-radius: 8;
     -fx-border-width: 1px;
 }
 
@@ -376,7 +376,7 @@
 .form-date-picker .popup > .content {
     -fx-background-color: -component-background;
     -fx-border-color: -border-medium;
-    -fx-border-radius: -radius-lg;
+    -fx-border-radius: 8;
     -fx-border-width: 1px;
     -fx-effect: dropshadow(gaussian, -shadow-color-medium, 20, 0, 0, 8);
 }
@@ -388,9 +388,9 @@
 .btn-primary {
     -fx-background-color: -accent-button;
     -fx-text-fill: -component-background;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
-    -fx-background-radius: -button-radius;
+    -fx-background-radius: 6;
     -fx-padding: 6px 12px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, -shadow-color-accent, 5, 0, 0, 2);
@@ -410,9 +410,9 @@
 .btn-success {
     -fx-background-color: -green-600;
     -fx-text-fill: -component-background;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
-    -fx-background-radius: -button-radius;
+    -fx-background-radius: 6;
     -fx-padding: 6px 12px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, -green-500, 5, 0, 0, 2);
@@ -431,9 +431,9 @@
 .btn-danger {
     -fx-background-color: -red-600;
     -fx-text-fill: -component-background;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
-    -fx-background-radius: -button-radius;
+    -fx-background-radius: 6;
     -fx-padding: 6px 12px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, -red-500, 5, 0, 0, 2);
@@ -452,9 +452,9 @@
 .btn-secondary {
     -fx-background-color: -gray-500;
     -fx-text-fill: -component-background;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
-    -fx-background-radius: -button-radius;
+    -fx-background-radius: 6;
     -fx-padding: 6px 12px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, -shadow-color-medium, 5, 0, 0, 2);
@@ -473,9 +473,9 @@
 .btn-warning {
     -fx-background-color: -amber-600;
     -fx-text-fill: -component-background;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
-    -fx-background-radius: -button-radius;
+    -fx-background-radius: 6;
     -fx-padding: 6px 12px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, -amber-500, 5, 0, 0, 2);
@@ -489,13 +489,13 @@
 .btn-ghost {
     -fx-background-color: transparent;
     -fx-text-fill: -muted-text;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
-    -fx-background-radius: -button-radius;
+    -fx-background-radius: 6;
     -fx-padding: 6px 12px;
     -fx-cursor: hand;
     -fx-border-color: -border-medium;
-    -fx-border-radius: -button-radius;
+    -fx-border-radius: 6;
     -fx-border-width: 1px;
 }
 
@@ -511,9 +511,9 @@
 
 .dialog-table {
     -fx-background-color: -component-background;
-    -fx-background-radius: -radius-2xl;
+    -fx-background-radius: 12;
     -fx-border-color: -border-light;
-    -fx-border-radius: -radius-2xl;
+    -fx-border-radius: 12;
     -fx-border-width: 1px;
 }
 
@@ -529,7 +529,7 @@
 
 .dialog-table .column-header .label {
     -fx-text-fill: -secondary-text;
-    -fx-font-size: -fs-xs;
+    -fx-font-size: 10px;
     -fx-font-weight: 700;
     -fx-text-transform: uppercase;
 }
@@ -572,49 +572,49 @@
 
 .error-label {
     -fx-text-fill: -red-600;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
     -fx-padding: 6px 8px;
     -fx-background-color: -red-100;
-    -fx-background-radius: -radius-sm;
+    -fx-background-radius: 4;
     -fx-border-color: -red-100;
-    -fx-border-radius: -radius-sm;
+    -fx-border-radius: 4;
     -fx-border-width: 1px;
 }
 
 .success-label {
     -fx-text-fill: -green-600;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
     -fx-padding: 6px 8px;
     -fx-background-color: -green-100;
-    -fx-background-radius: -radius-sm;
+    -fx-background-radius: 4;
     -fx-border-color: -green-100;
-    -fx-border-radius: -radius-sm;
+    -fx-border-radius: 4;
     -fx-border-width: 1px;
 }
 
 .warning-label {
     -fx-text-fill: -amber-600;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
     -fx-padding: 6px 8px;
     -fx-background-color: -amber-100;
-    -fx-background-radius: -radius-sm;
+    -fx-background-radius: 4;
     -fx-border-color: -amber-100;
-    -fx-border-radius: -radius-sm;
+    -fx-border-radius: 4;
     -fx-border-width: 1px;
 }
 
 .info-label {
     -fx-text-fill: -blue-600;
-    -fx-font-size: -fs-sm;
+    -fx-font-size: 11px;
     -fx-font-weight: 600;
     -fx-padding: 6px 8px;
     -fx-background-color: -blue-100;
-    -fx-background-radius: -radius-sm;
+    -fx-background-radius: 4;
     -fx-border-color: -blue-100;
-    -fx-border-radius: -radius-sm;
+    -fx-border-radius: 4;
     -fx-border-width: 1px;
 }
 
@@ -624,14 +624,14 @@
 
 .stat-label {
     -fx-text-fill: -muted-text;
-    -fx-font-size: -fs-xs;
+    -fx-font-size: 10px;
     -fx-font-weight: 600;
     -fx-text-transform: uppercase;
 }
 
 .stat-value {
     -fx-text-fill: -primary-text;
-    -fx-font-size: -fs-md;
+    -fx-font-size: 14px;
     -fx-font-weight: 700;
 }
 
@@ -666,22 +666,22 @@
 
 .dialog-loading-overlay {
     -fx-background-color: -overlay-background;
-    -fx-background-radius: -radius-3xl;
+    -fx-background-radius: 14;
 }
 
 .dialog-loading-content {
     -fx-background-color: -component-background;
-    -fx-background-radius: -radius-3xl;
+    -fx-background-radius: 14;
     -fx-padding: 32px;
     -fx-effect: dropshadow(gaussian, -shadow-color-medium, 25, 0, 0, 8);
     -fx-border-color: -border-light;
-    -fx-border-radius: -radius-3xl;
+    -fx-border-radius: 14;
     -fx-border-width: 1px;
 }
 
 .dialog-loading-label {
     -fx-text-fill: -muted-text;
-    -fx-font-size: -fs-md;
+    -fx-font-size: 14px;
     -fx-font-weight: 600;
 }
 
@@ -704,7 +704,7 @@
 
 .dialog-scroll .scroll-bar .thumb {
     -fx-background-color: -gray-300;
-    -fx-background-radius: -radius-lg;
+    -fx-background-radius: 8;
 }
 
 .dialog-scroll .scroll-bar .thumb:hover {
