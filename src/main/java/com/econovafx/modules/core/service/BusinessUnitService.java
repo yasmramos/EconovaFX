@@ -3,7 +3,7 @@ package com.econovafx.modules.core.service;
 import com.econovafx.modules.core.model.BusinessUnit;
 import com.econovafx.modules.core.repository.BusinessUnitRepository;
 import io.ebean.annotation.Transactional;
-import jakarta.inject.Inject;
+import io.avaje.inject.Inject;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

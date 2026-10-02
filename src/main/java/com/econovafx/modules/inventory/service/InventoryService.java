@@ -11,7 +11,7 @@ import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.accounting.model.AccountingPeriod;
 import io.avaje.inject.Component;
 import com.econovafx.modules.core.security.RequiresTenant;
-import jakarta.inject.Inject;
+import io.avaje.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

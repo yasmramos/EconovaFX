@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.inject.Inject;
+import io.avaje.inject.Inject;
 import java.time.LocalDate;
 import java.time.Instant;
 import java.time.ZoneId;
