@@ -82,12 +82,13 @@ public final class StyleSheets {
     public static void apply(Parent root, String... screenSheets) {
         Objects.requireNonNull(root, "root");
         addTo(root.getStylesheets(), TOKENS);
+        addTo(root.getStylesheets(), CONTROLS);
         if (screenSheets != null) {
             for (String sheet : screenSheets) {
                 addTo(root.getStylesheets(), sheet);
             }
         }
-        addTo(root.getStylesheets(), PRIMITIVES);
+        addTo(root.getStylesheets(), UTILITIES);
     }
 
     private static void addTo(javafx.collections.ObservableList<String> target, String resource) {
