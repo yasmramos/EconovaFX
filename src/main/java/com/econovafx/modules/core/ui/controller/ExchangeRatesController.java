@@ -3,7 +3,9 @@ package com.econovafx.modules.core.ui.controller;
 import com.econovafx.modules.core.model.ExchangeRate;
 import com.econovafx.modules.core.service.ExchangeRateService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
-import jakarta.inject.Inject;
+// Avaje Inject only honours its own @Inject; jakarta.inject.Inject was silently
+// ignored, leaving exchangeRateService null at runtime (NPE on initialize()).
+import io.avaje.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
