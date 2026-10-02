@@ -6,7 +6,6 @@ import com.econovafx.modules.core.service.UserService;
 import com.econovafx.modules.core.ui.util.NotificationService;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
-import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

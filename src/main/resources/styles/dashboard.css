@@ -236,7 +236,7 @@
 .transactions-table .column-header,
 .dialog-table .column-header {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-padding: 0;
     -fx-size: 34;
 }
@@ -252,7 +252,7 @@
 .transactions-table .table-row-cell,
 .dialog-table .table-row-cell {
     -fx-background-color: -background;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-cell-size: 36;
 }
 .transactions-table .table-row-cell:odd,

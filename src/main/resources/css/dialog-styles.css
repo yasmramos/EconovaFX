@@ -36,7 +36,7 @@
  * --------------------------------------------------------------------------- */
 .dialog-header {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-border-width: 0 0 1 0;
     -fx-padding: 20 20 16 20;
     -fx-alignment: center-left;
@@ -269,7 +269,7 @@
 }
 .dialog-table .column-header {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-size: 34;
 }
 .dialog-table .column-header .label {
@@ -280,7 +280,7 @@
 }
 .dialog-table .table-row-cell {
     -fx-background-color: -background;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-cell-size: 36;
 }
 .dialog-table .table-row-cell:odd,

@@ -203,7 +203,7 @@
     <VBox fx:id="toastContainer"
           spacing="10"
           pickOnBounds="false"
-          style="-fx-padding: 20;"
+          styleClass="p-5"
           StackPane.alignment="TOP_RIGHT"
           maxHeight="-Infinity"
           maxWidth="-Infinity"

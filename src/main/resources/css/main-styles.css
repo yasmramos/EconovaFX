@@ -121,7 +121,7 @@
 
 .divider {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-border-width: 0 0 1 0;
     -fx-padding: 0;
     -fx-max-height: 1;

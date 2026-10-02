@@ -10,7 +10,6 @@ import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.core.ui.util.NotificationService;
 import io.avaje.inject.Component;
-import jakarta.inject.Inject;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

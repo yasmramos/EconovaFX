@@ -200,7 +200,7 @@
 .header,
 .header-main {
     -fx-background-color: -background;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-border-width: 0 0 1 0;
     -fx-padding: 0 24;
     -fx-min-height: 56;

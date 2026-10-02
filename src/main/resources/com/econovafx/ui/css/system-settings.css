@@ -11,7 +11,7 @@
 /* ---------------------------------------------------------------- header */
 .header-bar {
     -fx-background-color: -background;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-border-width: 0 0 1 0;
     -fx-padding: 14 20;
     -fx-min-height: 56;

@@ -204,7 +204,9 @@
     -fx-min-height: 36;
     -fx-pref-height: 36;
 }
-.btn-block { -fx-max-width: 1.7976931348623157E308; }
+/* Full-width button. JavaFX's CSS parser rejects exponent notation, so use a
+   wide-but-finite bound rather than Double.MAX_VALUE. */
+.btn-block { -fx-max-width: 100000; }
 
 /* A generic affordance for coloured Tailwind buttons, defined before the
  * per-colour hovers so those win on equal specificity. */
@@ -594,7 +596,7 @@
 .data-table .column-header,
 .table-view-modern .column-header {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-padding: 0;
     -fx-size: 34;
 }
@@ -612,7 +614,7 @@
 .data-table .table-row-cell,
 .table-view-modern .table-row-cell {
     -fx-background-color: -background;
-    -fx-border-color: transparent transparent 1 transparent;
+    -fx-border-color: transparent transparent -border transparent;
     -fx-cell-size: 36;
 }
 

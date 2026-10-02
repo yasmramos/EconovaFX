@@ -5,7 +5,6 @@ import com.econovafx.modules.accounting.model.AccountType;
 import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
-import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

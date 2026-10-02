@@ -8,7 +8,6 @@ import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.core.ui.util.StyleSheets;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
-import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

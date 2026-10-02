@@ -12,7 +12,6 @@ import com.econovafx.modules.core.model.SystemConfiguration;
 import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
-import jakarta.inject.Inject;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
