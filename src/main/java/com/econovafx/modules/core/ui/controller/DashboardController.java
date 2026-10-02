@@ -423,12 +423,13 @@ public class DashboardController implements Initializable {
         
         // Update label text with percentage
         label.setText(trendData.percentageText);
-        label.setStyle("-fx-text-fill: " + trendData.colorHex + ";");
-        
+        label.getStyleClass().removeAll("trend-positive", "trend-negative", "trend-neutral");
+        label.getStyleClass().add(trendData.styleClass);
+
         // Update icon container with FontIcon
         if (iconContainer != null) {
             iconContainer.getChildren().clear();
-            
+
             if (!"mdi2l-minus".equals(trendData.iconCode)) {
                 FontIcon trendIcon = new FontIcon(getMaterialDesignIcon(trendData.iconCode));
                 trendIcon.setIconSize(16);
@@ -449,36 +450,40 @@ public class DashboardController implements Initializable {
         String iconCode;
         String percentageText;
         String colorHex;
+        String styleClass;
         
         if (previous.compareTo(BigDecimal.ZERO) == 0) {
             if (current.compareTo(BigDecimal.ZERO) == 0) {
-                return new TrendData("mdi2l-minus", "0.0%", "#6b7280");
+                return new TrendData("mdi2l-minus", "0.0%", "#71717a", "trend-neutral");
             } else {
-                return new TrendData("mdi2l-minus", "N/D", "#6b7280");
+                return new TrendData("mdi2l-minus", "N/D", "#71717a", "trend-neutral");
             }
         }
-        
+
         BigDecimal variation = current.subtract(previous);
         BigDecimal percentage = variation.multiply(new BigDecimal("100"))
                 .divide(previous.abs(), 1, java.math.RoundingMode.HALF_UP);
-        
+
         if (variation.compareTo(BigDecimal.ZERO) > 0) {
             iconCode = favorableIncrease ? "mdi2a-arrow-up-bold" : "mdi2a-arrow-down-bold";
             boolean isFavorable = favorableIncrease;
-            colorHex = isFavorable ? "#10b981" : "#ef4444";
+            colorHex = isFavorable ? "#16a34a" : "#dc2626";
+            styleClass = isFavorable ? "trend-positive" : "trend-negative";
         } else if (variation.compareTo(BigDecimal.ZERO) < 0) {
             iconCode = favorableIncrease ? "mdi2a-arrow-down-bold" : "mdi2a-arrow-up-bold";
             boolean isFavorable = !favorableIncrease;
-            colorHex = isFavorable ? "#10b981" : "#ef4444";
+            colorHex = isFavorable ? "#16a34a" : "#dc2626";
+            styleClass = isFavorable ? "trend-positive" : "trend-negative";
         } else {
             iconCode = "mdi2l-minus";
-            colorHex = "#6b7280";
+            colorHex = "#71717a";
+            styleClass = "trend-neutral";
         }
-        
+
         percentageText = percentage.abs().setScale(1, java.math.RoundingMode.HALF_UP) + "%";
-        return new TrendData(iconCode, percentageText, colorHex);
+        return new TrendData(iconCode, percentageText, colorHex, styleClass);
     }
-    
+
     /**
      * Helper class to hold trend data
      */
@@ -486,11 +491,14 @@ public class DashboardController implements Initializable {
         String iconCode;
         String percentageText;
         String colorHex;
-        
-        TrendData(String iconCode, String percentageText, String colorHex) {
+        /** Utility class that paints this trend; keeps colour out of inline styles. */
+        String styleClass;
+
+        TrendData(String iconCode, String percentageText, String colorHex, String styleClass) {
             this.iconCode = iconCode;
             this.percentageText = percentageText;
             this.colorHex = colorHex;
+            this.styleClass = styleClass;
         }
     }
     
