@@ -63,12 +63,13 @@ public final class StyleSheets {
     public static void apply(Scene scene, String... screenSheets) {
         Objects.requireNonNull(scene, "scene");
         addTo(scene.getStylesheets(), TOKENS);
+        addTo(scene.getStylesheets(), CONTROLS);
         if (screenSheets != null) {
             for (String sheet : screenSheets) {
                 addTo(scene.getStylesheets(), sheet);
             }
         }
-        addTo(scene.getStylesheets(), PRIMITIVES);
+        addTo(scene.getStylesheets(), UTILITIES);
     }
 
     /**
