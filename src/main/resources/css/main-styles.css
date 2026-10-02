@@ -129,23 +129,6 @@
 }
 
 /* -----------------------------------------------------------------------------
- * SEARCH FIELD - shadcn input with a leading magnifier slot.
- * --------------------------------------------------------------------------- */
-.search-field {
-    -fx-background-color: -background;
-    -fx-border-color: -input;
-    -fx-border-width: 1;
-    -fx-background-radius: 6;
-    -fx-padding: 8 12;
-    -fx-min-height: 36;
-    -fx-font-size: 14px;
-    -fx-text-fill: -foreground;
-    -fx-prompt-text-fill: -muted-foreground;
-}
-.search-field:hover { -fx-border-color: -input-hover; }
-.search-field:focused { -fx-border-color: -ring; -fx-background-color: -ring-wash; }
-
-/* -----------------------------------------------------------------------------
  * EMPTY / LOADING STATES
  * --------------------------------------------------------------------------- */
 .loading-overlay {

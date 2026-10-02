@@ -1,128 +1,113 @@
-/* Login Screen Styles - Modern Web Dashboard Style */
+/* =============================================================================
+ * LOGIN - EconoNova FX
+ * shadcn centred card on a neutral page: one hairline, one shadow, one button.
+ * ========================================================================== */
 
 .login-container {
-    -fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298, #1e3c72);
-    -fx-padding: 20;
+    -fx-background-color: -zinc-50;
+    -fx-padding: 30;
 }
 
+/* ---------------------------------------------------------------- brand */
 .login-title {
-    -fx-text-fill: white;
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
+    -fx-text-fill: -foreground;
+    -fx-font-size: 24px;
+    -fx-font-weight: 600;
 }
 
 .login-subtitle {
-    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: -muted-foreground;
     -fx-font-size: 14px;
 }
 
+/* ----------------------------------------------------------------- card */
 .login-card {
-    -fx-background-color: white;
-    -fx-background-radius: 15;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 20, 0, 0, 10);
-    -fx-padding: 30;
-    -fx-max-width: 350;
+    -fx-background-color: -card;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 12;
+    -fx-background-insets: 0;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, -shadow-md, 12, 0, 0, 4);
 }
 
 .input-group {
-    -fx-pref-width: 280;
+    -fx-background-color: transparent;
+    -fx-spacing: 6;
 }
 
 .input-label {
-    -fx-text-fill: #333;
+    -fx-text-fill: -secondary-foreground;
     -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 0 5 0;
+    -fx-font-weight: 500;
 }
 
-.text-field, .password-field {
-    -fx-background-color: #f5f5f5;
-    -fx-border-color: #ddd;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
-    -fx-padding: 12 15;
+/* --------------------------------------------------------------- inputs */
+.login-card .text-field,
+.login-card .password-field {
+    -fx-background-color: -background;
+    -fx-border-color: -input;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-padding: 9 12;
+    -fx-min-height: 38;
     -fx-font-size: 14px;
-    -fx-pref-width: 280;
+    -fx-text-fill: -foreground;
+    -fx-prompt-text-fill: -muted-foreground;
+}
+.login-card .text-field:hover,
+.login-card .password-field:hover { -fx-border-color: -input-hover; }
+.login-card .text-field:focused,
+.login-card .password-field:focused {
+    -fx-border-color: -ring;
+    -fx-background-color: -ring-wash;
 }
 
-.text-field:focused, .password-field:focused {
-    -fx-background-color: white;
-    -fx-border-color: #2a5298;
-    -fx-effect: dropshadow(gaussian, rgba(42, 82, 152, 0.3), 10, 0, 0, 2);
+.login-card .progress-bar {
+    -fx-pref-width: 200;
+    -fx-pref-height: 6;
 }
 
-.text-field:hover, .password-field:hover {
-    -fx-border-color: #2a5298;
-}
-
-.error-label {
-    -fx-text-fill: #d32f2f;
-    -fx-font-size: 12px;
-    -fx-wrap-text: true;
-    -fx-padding: 10;
-    -fx-background-color: #ffebee;
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
-    -fx-max-width: 280;
-}
-
+/* --------------------------------------------------------------- button */
 .login-button {
-    -fx-background-color: linear-gradient(to right, #2a5298, #1e3c72);
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8;
+    -fx-background-color: -primary;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color: -primary;
+    -fx-border-width: 1;
+    -fx-padding: 11 20;
+    -fx-min-height: 44;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -primary-foreground;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(42, 82, 152, 0.4), 10, 0, 0, 2);
 }
-
-.login-button:hover {
-    -fx-background-color: linear-gradient(to right, #1e3c72, #2a5298);
-    -fx-effect: dropshadow(three-pass-box, rgba(42, 82, 152, 0.6), 15, 0, 0, 3);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-}
-
-.login-button:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
+.login-button .label { -fx-text-fill: -primary-foreground; }
+.login-button:hover { -fx-background-color: -primary-hover; -fx-border-color: -primary-hover; }
+.login-button:pressed { -fx-background-color: -primary-pressed; -fx-border-color: -primary-pressed; }
 .login-button:disabled {
-    -fx-opacity: 0.6;
+    -fx-opacity: 0.5;
     -fx-cursor: default;
 }
 
+/* ------------------------------------------------------------ close btn */
 .close-button {
     -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-background-radius: 5;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-padding: 6 10;
+    -fx-min-height: 30;
+    -fx-font-size: 13px;
+    -fx-text-fill: -muted-foreground;
     -fx-cursor: hand;
-    -fx-padding: 5 15;
 }
+.close-button:hover { -fx-background-color: -muted; -fx-text-fill: -foreground; }
+.close-button:pressed { -fx-background-color: -muted-hover; }
 
-.close-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-}
-
-.close-button:pressed {
-    -fx-background-color: rgba(255, 255, 255, 0.3);
-}
-
+/* ---------------------------------------------------------------- footer */
 .login-footer {
-    -fx-text-fill: rgba(255, 255, 255, 0.6);
-    -fx-font-size: 11px;
-    -fx-padding: 10 0 0 0;
-}
-
-/* Progress Bar Styling */
-.progress-bar .bar {
-    -fx-background-color: #2a5298;
-    -fx-padding: 8;
-}
-
-.progress-bar .track {
-    -fx-background-color: #e0e0e0;
-    -fx-background-radius: 4;
+    -fx-text-fill: -zinc-400;
+    -fx-font-size: 12px;
 }
