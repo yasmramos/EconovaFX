@@ -330,9 +330,8 @@ public class App extends Application {
             // Pass the selected company to the controller
             controller.setCompany(selectedCompany);
             
-            // Apply styles - theme tokens first, then component styles
-            root.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
-            root.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
+            // Apply styles through StyleSheets so the load order stays consistent
+            StyleSheets.apply(root, "/css/selection-dialog-styles.css");
             
             // Show as modal using ModernDialog and capture the handle for programmatic control
             ModernDialog.DialogHandle handle = ModernDialog.showModal(primaryStage, root, "Seleccionar Unidad de Negocio");
