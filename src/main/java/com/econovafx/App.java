@@ -127,8 +127,7 @@ public class App extends Application {
             loader.setResources(I18nManager.getBundle());
             VBox root = loader.load();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
-            scene.getStylesheets().add(getClass().getResource("/css/login-styles.css").toExternalForm());
+            StyleSheets.apply(scene, "/css/dialog-styles.css", "/css/database-setup.css");
 
             Stage dialog = new Stage();
             dialog.initOwner(primaryStage);
@@ -171,9 +170,7 @@ public class App extends Application {
             splashController = loader.getController();
             
             Scene splashScene = new Scene(root);
-            // Load theme tokens first for global variables
-            splashScene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
-            splashScene.getStylesheets().add(getClass().getResource("/css/splash.css").toExternalForm());
+            StyleSheets.apply(splashScene, "/css/splash.css");
             splashStage.setScene(splashScene);
             splashStage.setTitle("EconoNova FX - Loading");
             splashStage.setResizable(false);
@@ -205,9 +202,7 @@ public class App extends Application {
             loginController = loader.getController();
             
             Scene loginScene = new Scene(root);
-            // Load theme tokens first for global variables
-            loginScene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
-            loginScene.getStylesheets().add(getClass().getResource("/css/login-styles.css").toExternalForm());
+            StyleSheets.apply(loginScene, "/css/login-styles.css");
             
             loginStage = new Stage();
             loginStage.setScene(loginScene);
@@ -261,9 +256,8 @@ public class App extends Application {
             VBox root = loader.load();
             CompanySelectionController controller = loader.getController();
             
-            // Apply styles - theme tokens first, then component styles
-            root.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
-            root.getStylesheets().add(getClass().getResource("/css/selection-dialog-styles.css").toExternalForm());
+            // Apply styles through StyleSheets so the load order stays consistent
+            StyleSheets.apply(root, "/css/selection-dialog-styles.css");
             
             // Show as modal using ModernDialog and capture the handle for programmatic control
             ModernDialog.DialogHandle handle = ModernDialog.showModal(primaryStage, root, "Seleccionar Empresa");
