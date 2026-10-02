@@ -15,7 +15,7 @@
  * used and documented here as a comment. Do NOT reintroduce length tokens:
  * they do not throw, they just quietly do nothing.
  *
- * Load order everywhere: theme-tokens.css -> primitives.css -> screen css.
+ * Load order everywhere: theme-tokens.css -> controls.css -> screen css -> utilities.css.
  * ========================================================================== */
 
 .root {
@@ -133,7 +133,7 @@
 
     /* =========================================================================
      * RAW HUE SCALES
-     * Only used by the Tailwind-compatible utilities in primitives.css so the
+     * Only used by the Tailwind-compatible utilities in utilities.css so the
      * legacy FXML class names (bg-blue-500, text-green-600, ...) keep working.
      * ========================================================================= */
     -blue-50:   #eff6ff;
