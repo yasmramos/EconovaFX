@@ -1,7 +1,7 @@
 /* =============================================================================
  * MAIN STYLES - EconoNova FX
  * Page composition: layout scaffolding, page headers, cards, section headers.
- * Controls come from primitives.css, colours from theme-tokens.css.
+ * Controls come from controls.css, colours from theme-tokens.css.
  *
  * Loaded on the main window as: theme-tokens -> main-styles -> sidebar ->
  * dashboard -> primitives (utilities last so a Tailwind class always wins).
