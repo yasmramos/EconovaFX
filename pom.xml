@@ -343,7 +343,12 @@
                         </goals>
                         <configuration>
                             <transformArgs>debug=1,version=149</transformArgs>
-                            <packages>com.econovafx.modules.core.model,com.econovafx.modules.accounting.model,com.econovafx.modules.billing.model,com.econovafx.modules.payroll.model,com.econovafx.modules.inventory.model,com.econovafx.modules.receivables.model,com.econovafx.modules.payables.model,com.econovafx.modules.bank.model,com.econovafx.modules.cash.model,com.econovafx.modules.assets.model,com.econovafx.modules.fixedassets.model,com.econovafx.modules.reporting.model,com.econovafx.modules.security.model</packages>
+                            <!-- No <packages> here on purpose: with an explicit list the
+                                 enhancer fails as soon as a package is removed or renamed
+                                 ("File not found .../target/classes/<package>"), and it
+                                 duplicated the ebean.packages list in
+                                 application.properties. Without it every class under
+                                 target/classes is scanned and entities are enhanced. -->
                         </configuration>
                     </execution>
                 </executions>
