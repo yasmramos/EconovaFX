@@ -320,7 +320,9 @@ public class ThirdPartiesController implements Initializable {
             // Create and show stage
             javafx.stage.Stage stage = new javafx.stage.Stage();
             stage.setTitle("Transactions - " + selected.getName());
-            stage.setScene(new javafx.scene.Scene(root, 900, 600));
+            javafx.scene.Scene transactionsScene = new javafx.scene.Scene(root, 900, 600);
+            StyleSheets.apply(transactionsScene, "/css/main-styles.css");
+            stage.setScene(transactionsScene);
             stage.initOwner(thirdPartiesTable.getScene().getWindow());
             stage.setResizable(true);
             
