@@ -14,6 +14,7 @@ import com.econovafx.modules.core.ui.controller.DashboardController;
 import com.econovafx.modules.core.ui.controller.DatabaseSetupController;
 import com.econovafx.modules.core.config.ConfigFileUtil;
 import com.econovafx.modules.core.ui.util.ModernDialog;
+import com.econovafx.modules.core.ui.util.StyleSheets;
 import com.econovafx.modules.core.ui.view.SplashController;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.security.ui.controller.LoginController;
@@ -390,14 +391,13 @@ public class App extends Application {
 
             Scene scene = new Scene(loader.load(), 1200, 800);
 
-            // Set background color to match theme (bg-gray-50) to prevent black flash
-            scene.setFill(javafx.scene.paint.Color.web("#f9fafb"));
+            // Zinc-50 page background, so there is no black flash before CSS lands
+            scene.setFill(javafx.scene.paint.Color.web("#fafafa"));
 
-            // Add all stylesheets in correct order - theme tokens first!
-            scene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
-            scene.getStylesheets().add(getClass().getResource("/css/main-styles.css").toExternalForm());
-            scene.getStylesheets().add(getClass().getResource("/styles/sidebar.css").toExternalForm());
-            scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
+            StyleSheets.apply(scene,
+                    "/css/main-styles.css",
+                    "/styles/sidebar.css",
+                    "/styles/dashboard.css");
 
             primaryStage.setTitle("EconoNova FX - Accounting System");
             primaryStage.setScene(scene);
