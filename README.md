@@ -1,18 +1,17 @@
 # 📊 EconovaFX - Sistema Contable Profesional
 
-[![Java](https://img.shields.io/badge/Java-17-orange.svg?logo=java)](https://openjdk.java.net/)
+[![Java](https://img.shields.io/badge/Java-17-orange.svg?logo=openjdk)](https://openjdk.java.net/)
 [![JavaFX](https://img.shields.io/badge/JavaFX-17.0.2-blue.svg?logo=javafx)](https://openjfx.io/)
 [![Ebean ORM](https://img.shields.io/badge/Ebean-17.11.0-green.svg)](https://ebean.io/)
 [![H2 Database](https://img.shields.io/badge/H2-2.2.224-red.svg)](https://h2database.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-42.7.3-blue.svg?logo=postgresql)](https://www.postgresql.org/)
-[![Ebean Migration](https://img.shields.io/badge/Ebean_Migration-14.2.0-purple.svg)](https://ebean.io/)
-[![TestFX](https://img.shields.io/badge/TestFX-4.0.17-orange.svg)](https://github.com/TestFX/TestFX)
-[![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg?logo=apache-maven)](https://maven.apache.org/)
+[![GraalVM Native](https://img.shields.io/badge/GraalVM_Native-Image%20(CI)-purple.svg)](../../actions/workflows/native-image.yml)
 [![Tests](https://img.shields.io/badge/tests-385%20passing-brightgreen.svg)]()
+[![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg?logo=apache-maven)](https://maven.apache.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/yasmramos/econovafx)
 
-Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean ORM 17**, diseñado para cumplir con la normativa contable cubana (Resolución 340/2004).
+Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean ORM 17**, diseñado para cumplir con la normativa contable cubana (Resolución 340/2004). Incluye una interfaz de escritorio clásica (FXML) y una **interfaz web embebida** construida con SvelteKit servida en un `WebView` de JavaFX, además de compilación nativa experimental con GraalVM (GluonFX).
 
 ## 📋 Tabla de Contenidos
 
@@ -22,6 +21,8 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 - [Instalación](#-instalación-y-ejecución)
 - [Módulos](#-módulos-implementados)
 - [Testing](#-testing)
+- [CI/CD](#-cicd)
+- [Compilación Nativa](#-compilación-nativa-graalvm)
 - [Documentación](#-documentación)
 - [Desarrollo](#-guía-de-desarrollo)
 - [Contribución](#-contribución)
@@ -41,7 +42,7 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 ### Gestión de Transacciones
 - ✅ Registro de comprobantes contables
 - ✅ Asientos con múltiples entradas (debe/haber)
-- ✅ Numeración automática de transacciones
+- ✅ Numeración automática de transacciones (secuencias por tipo de comprobante)
 - ✅ Estados: Borrador, Validado, Contabilizado, Anulado
 - ✅ Auditoría completa (quién, cuándo, qué)
 
@@ -54,8 +55,9 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 ### Usuarios y Seguridad
 - ✅ Roles: Administrador, Contador, Auditor, Visualizador
 - ✅ Permisos granulares por módulo
-- ✅ Autenticación local (preparado para LDAP/AD)
-- ✅ Bitácora de actividades
+- ✅ Autenticación local con hashing bcrypt (preparado para LDAP/AD)
+- ✅ Bitácora de actividades (auditoría)
+- ✅ Aislamiento multi-tenant probado (por empresa/tenant)
 
 ### Terceros y Contactos
 - ✅ Clientes, proveedores, empleados
@@ -66,8 +68,10 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 ### Dashboard e Informes
 - ✅ Panel principal con KPIs contables
 - ✅ Balances de comprobación
-- ✅ Estados financieros básicos
-- ✅ Reportes exportables (PDF, Excel, CSV)
+- ✅ Estados financieros básicos (Balance General, Estado de Resultados)
+- ✅ Consolidación financiera multi-empresa (Res. 340/2004, norma II.18)
+- ✅ Filtrado por rango de fechas y transacciones contabilizadas
+- ✅ Reportes exportables (PDF con OpenHTMLtoPDF/PDFBox, Excel con Apache POI)
 
 ### Tipos de Cambio
 - ✅ Gestión de tasas de cambio activas
@@ -76,10 +80,11 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 
 ### Arquitectura Multi-Tenant y Cumplimiento Normativo
 - ✅ Arquitectura modular por paquetes (`com.econovafx.modules.*`)
-- ✅ Diseño preparado para multi-tenant (empresas múltiples)
+- ✅ Diseño multi-tenant (empresas múltiples) con aislamiento verificado por tests
 - ✅ Cumplimiento de la Resolución 340/2004 (normativa contable cubana)
 - ✅ Exportación a formatos oficiales (PDF, Excel)
 - ✅ Auditoría completa de todas las operaciones
+- ✅ Migraciones de esquema gestionadas con Ebean Migration
 
 ### Interfaz Web Embebida
 - ✅ UI moderna construida con **SvelteKit** + **Tailwind CSS**
@@ -96,37 +101,46 @@ Sistema contable moderno y profesional desarrollado con **JavaFX 17** y **Ebean 
 
 | Tecnología | Versión | Descripción |
 |------------|---------|-------------|
-| **Java** | 17 LTS | Lenguaje de programación |
-| **JavaFX** | 17.0.2 | Interfaz gráfica de usuario moderna |
-| **JavaFX WebView** | 17.0.2 | Navegador embebido para UI web |
-| **SvelteKit** | Latest | Framework web reactivo moderno |
-| **Tailwind CSS** | Latest | Framework CSS utility-first |
-| **Ebean ORM** | 17.11.0 | Mapeo objeto-relacional de alto rendimiento |
+| **Java** | 17 LTS (`maven.compiler.release=17`) | Lenguaje de programación; CI valida también JDK 21 y 25 |
+| **JavaFX** | 17.0.2 | Interfaz gráfica de usuario (controles, FXML y WebView) |
+| **SvelteKit** | ^2.5 (Vite ^5) | Framework web reactivo de la UI embebida |
+| **Tailwind CSS** | ^3.4 | Framework CSS utility-first |
+| **Ebean ORM** | 17.11.0 | Mapeo objeto-relacional con agente de enhancement en tiempo de ejecución |
+| **Ebean Migration** | 14.2.0 | Migraciones de base de datos |
+| **HikariCP** | 7.1.0 | Pool de conexiones |
 | **H2 Database** | 2.2.224 | Base de datos embebida para desarrollo/testing |
-| **PostgreSQL** | 42.7.3 | Base de datos de producción |
+| **PostgreSQL** | driver 42.7.3 | Base de datos de producción |
 | **Maven** | 3.9+ | Gestión de dependencias y build |
-| **Logback** | 1.4.14 | Framework de logging SLF4J |
-| **Avaje Inject** | 12.6 | Inyección de dependencias ligera |
+| **Avaje Inject** | 12.6 | Inyección de dependencias ligera (con plugin AOP) |
+| **Avaje Config** | 5.2 | Configuración externalizada |
+| **Logback / SLF4J** | 1.4.14 / 2.0.9 | Framework de logging |
 | **JUnit 5** | 5.11.0 | Testing framework |
-| **AssertJ** | 3.25.x | Assertions fluents para tests |
+| **AssertJ** | 3.25.x | Assertions fluidas para tests |
+| **TestFX + Monocle** | 4.0.17 / 17.0.10 | Tests de UI headless |
+| **JaCoCo** | 0.8.15 | Cobertura de código (integrada con CI) |
 | **Apache PDFBox** | 2.0.29 | Exportación a PDF |
+| **OpenHTMLtoPDF** | 1.0.10 | Plantillas HTML → PDF para reportes |
 | **Apache POI** | 5.2.5 | Exportación a Excel |
-| **Ikonli** | 12.4.0 | Iconos JavaFX (Material Design) |
+| **Jsoup** | 1.17.2 | Parsing/saneado de HTML |
+| **Ikonli** | 12.4.0 | Iconos JavaFX (Material Design 2) |
 | **jBCrypt** | 0.4 | Hashing de contraseñas |
+| **GraalVM + GluonFX Plugin** | native profile `-Pnative` | Compilación a imagen nativa (CI en Windows) |
 
 ---
 
 ## 📋 Requisitos Previos
 
-- **Java JDK 17** o superior ([descargar](https://adoptium.net/))
+- **Java JDK 17** o superior ([descargar](https://adoptium.net/)) — la app compila con `release=17`; se soporta ejecutarla sobre JDK 17, 21 o 25
 - **Maven 3.9+** ([instalar](https://maven.apache.org/download.cgi))
 - **Git** para clonar el repositorio
+- **Node.js 18+** (solo si vas a compilar la interfaz web embebida)
 
 Verifica tu instalación:
 ```bash
 java --version
 mvn --version
 git --version
+node --version   # opcional, para web-ui
 ```
 
 ---
@@ -140,19 +154,31 @@ git clone https://github.com/yasmramos/EconovaFX.git
 cd EconovaFX
 ```
 
-### 2. Compilar el Proyecto
+### 2. Configurar Hooks de Commit (recomendado)
+
+El repo incluye validación de Conventional Commits en `.githooks/pre-commit`:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+### 3. Compilar el Proyecto
 
 ```bash
 mvn clean compile
 ```
 
-### 3. Ejecutar Tests (Opcional pero recomendado)
+> **Requisito:** es necesario usar un JDK 21+ para compilar (recomendado JDK 25), ya que el compilador de Ebean requiere APIs disponibles desde Java 21. La aplicación resultante se ejecuta sobre JavaFX 17 / release 17.
+>
+> El agente de Ebean (`lib/ebean-agent-17.11.0.jar`) se descarga/copiará automáticamente a `lib/` durante el build vía `maven-dependency-plugin`.
+
+### 4. Ejecutar Tests (Opcional pero recomendado)
 
 ```bash
 mvn test
 ```
 
-### 4. Compilar la Interfaz Web (Opcional pero recomendado)
+### 5. Compilar la Interfaz Web (Opcional pero recomendado)
 
 ```bash
 cd web-ui
@@ -161,18 +187,28 @@ npm run build
 cd ..
 ```
 
-Esto compilará la UI web con SvelteKit y copiará los archivos estáticos a `src/main/resources/web/` para que JavaFX pueda servirlos.
+Esto compila la UI web con SvelteKit y copia el sitio estático a `src/main/resources/web/` para que JavaFX lo sirva en el `WebView`.
 
-### 5. Ejecutar la Aplicación
+### 6. Ejecutar la Aplicación
 
 ```bash
 mvn javafx:run
 ```
 
-### 5. Primer Inicio
+El plugin ya añade `-javaagent:lib/ebean-agent-17.11.0.jar` y los `--add-opens` necesarios. Alternativa equivalente: `mvn exec:java`.
+
+Para generar un JAR autocontenido (fat jar):
+
+```bash
+mvn package -Pshade
+java -jar target/econovafx-1.0.0.jar
+```
+
+### 7. Primer Inicio
 
 Al iniciar por primera vez:
 - Se crea automáticamente la base de datos H2 en `target/econovafx.db`
+- Se generan las tablas vía DDL/migraciones de Ebean
 - Se genera un período contable para el año actual
 - Usuario por defecto: `admin` (sin contraseña en modo desarrollo)
 
@@ -180,33 +216,39 @@ Al iniciar por primera vez:
 
 ## 📦 Módulos Implementados
 
-| Módulo | Estado | Descripción |
+Código actual: **15 módulos** con **239 clases Java** en `src/main/java/com/econovafx/modules/`.
+
+| Módulo (paquete) | Estado | Descripción |
 |--------|--------|-------------|
-| **Contabilidad (Accounting)** | ✅ Completado | Plan de cuentas, transacciones, períodos contables |
-| **Activos (Assets)** | ✅ Completado | Gestión de activos corrientes |
-| **Banco (Bank)** | ✅ Completado | Cuentas bancarias y conciliación bancaria |
-| **Facturación (Billing)** | ✅ Completado | Emisión y gestión de facturas |
-| **Caja (Cash)** | ✅ Completado | Gestión de efectivo y arqueo de caja |
-| **Core** | ✅ Completado | Configuración, empresa, utilidades |
-| **Activos Fijos (Fixed Assets)** | ✅ Completado | Depreciación y gestión de activos fijos |
-| **Inventario (Inventory)** | ✅ Completado | Almacenes, items y control de stock |
-| **Cuentas por Pagar (Payables)** | ✅ Completado | Gestión de obligaciones a proveedores |
-| **Nómina (Payroll)** | ✅ Completado | Gestión de salarios y empleados |
-| **Cuentas por Cobrar (Receivables)** | ✅ Completado | Gestión de créditos a clientes |
-| **Reportes (Reporting)** | ✅ Completado | Balances, estados financieros y consolidación |
-| **Seguridad (Security)** | ✅ Completado | Usuarios, roles y permisos |
+| **Contabilidad (`accounting`)** | ✅ Completado | Plan de cuentas, transacciones/partidas, períodos, validadores |
+| **Core (`core`)** | ✅ Completado | Empresa, configuración, seguridad, auditoría, utilidades, UI shell |
+| **Banco (`bank`)** | ✅ Completado | Cuentas bancarias y conciliación bancaria |
+| **Facturación (`billing`)** | ✅ Completado | Emisión y gestión de facturas, numeración secuencial |
+| **Caja (`cash`)** | ✅ Completado | Gestión de efectivo y arqueo de caja |
+| **Activos Fijos (`fixedassets`)** | ✅ Completado | Depreciación y gestión de activos fijos |
+| **Inventario (`inventory`)** | ✅ Completado | Almacenes, items y control de stock |
+| **Cuentas por Pagar (`payables`)** | ✅ Completado | Gestión de obligaciones a proveedores |
+| **Nómina (`payroll`)** | ✅ Completado | Gestión de salarios y empleados |
+| **Cuentas por Cobrar (`receivables`)** | ✅ Completado | Gestión de créditos a clientes |
+| **Reportes (`reporting`)** | ✅ Completado | Balances, estados financieros y consolidación multi-empresa |
+| **Seguridad (`security`)** | 🔶 Parcial | Complemento de usuarios/roles (la base está en `core`) |
+| **AFT (`aft`)** | 🔶 En desarrollo | Controlador UI de Activos Fijos Tangibles (integración con `fixedassets`) |
+| **Costos (`costing`)** | 🔶 En desarrollo | Centros de costos y procesos (controlador UI inicial) |
+| **Finanzas (`finance`)** | 🔶 En desarrollo | Operaciones financieras y flujo de caja (controlador UI inicial) |
 | **Presupuestos** | ⏳ Pendiente | Control presupuestario |
 
 ---
 
 ## 🧪 Testing
 
-El proyecto cuenta con **385 tests automatizados** que cubren:
+El proyecto cuenta con **385 tests automatizados** (✅ 100 % de passing en CI) repartidos en 34 clases de test:
 
-- ✅ Tests unitarios de servicios y validadores
+- ✅ Tests unitarios de servicios y validadores (partida doble, períodos, etc.)
 - ✅ Tests de integración con base de datos H2
 - ✅ Tests de repositorios
-- ✅ Validaciones de negocio (partida doble, períodos, etc.)
+- ✅ Tests de aislamiento multi-tenant y seguridad (auth, bcrypt)
+- ✅ Tests de arranque de la aplicación e inicialización de Ebean
+- ✅ Tests de UI headless con TestFX + Monocle
 
 ### Ejecutar Tests
 
@@ -214,12 +256,15 @@ El proyecto cuenta con **385 tests automatizados** que cubren:
 # Todos los tests
 mvn test
 
+# Suite completa con cobertura (igual que CI)
+mvn clean verify
+
 # Tests específicos
 mvn test -Dtest=AccountingValidatorTest
 mvn test -Dtest=TransactionServiceTest
 
-# Con reporte de cobertura (requiere plugin jacoco)
-mvn test jacoco:report
+# Reporte de cobertura JaCoCo (se genera con `verify`)
+open target/site/jacoco/index.html
 ```
 
 ### Estado Actual
@@ -229,6 +274,33 @@ Pasados: 385 (100%)
 Fallos: 0
 Errores: 0
 ```
+
+Umbrales de cobertura en CI (jacoco-report): 60 % global / 70 % en archivos modificados.
+
+---
+
+## 🔄 CI/CD
+
+GitHub Actions valida el proyecto en dos pipelines:
+
+| Workflow | Runner | Qué hace |
+|----------|--------|----------|
+| [`maven.yml`](.github/workflows/maven.yml) — *Java CI with Maven* | `ubuntu-26.04`, matriz JDK **17 / 21 / 25** (Temurin) | `mvn clean verify` + tests + cobertura JaCoCo; sube artefactos y comenta el coverage en PRs |
+| [`native-image.yml`](.github/workflows/native-image.yml) — *Native Image Build (Windows)* | `windows-2025` con **GraalVM JDK 25** (`distribution: 'graalvm'`, componente `native-image`) | `mvn clean gluonfx:build -Pnative` — compila la imagen nativa de la app JavaFX |
+
+---
+
+## 🚀 Compilación Nativa (GraalVM)
+
+El perfil `-Pnative` configura el **GluonFX Maven Plugin** para construir un ejecutable nativo de la aplicación:
+
+```bash
+# Requiere GraalVM (JDK 21+ recomendado, CI usa JDK 25) con Visual Studio Build Tools en Windows
+export GRAALVM_HOME=/ruta/a/graalvm   # o dejarla detectar por JAVA_HOME
+mvn clean gluonfx:build -Pnative
+```
+
+En CI esto ocurre automáticamente en el workflow *Native Image Build (Windows)* usando `graalvm/setup-graalvm@v1` con el esquema nuevo (`distribution: 'graalvm'` + `java-version: '25'`). Los reflect/config resources nativos viven en `src/main/resources/META-INF/native-image/`.
 
 ---
 
@@ -249,7 +321,7 @@ La documentación completa está indexada en [`docs/README.md`](docs/README.md):
 
 ### Documentación del Proyecto
 - [Changelog](CHANGELOG.md) - Historial de cambios por versión
-- [Commit Guidelines](COMMIT_GUIDELINES.md) - Convenciones para mensajes de commit
+- [Commit Guidelines](COMMIT_GUIDELINES.md) - Convenciones para mensajes de commit (validadas por pre-commit hook)
 
 ### Interfaz Web
 - [Web UI README](web-ui/README.md) - Guía de desarrollo de la interfaz web embebida (SvelteKit + Tailwind CSS)
@@ -265,22 +337,27 @@ La documentación completa está indexada en [`docs/README.md`](docs/README.md):
 2. Esperar a que Maven importe dependencias
 3. Ejecutar: `mvn javafx:run` desde Maven panel
 
-#### Eclipse
-1. File → Import → Existing Maven Projects
-2. Seleccionar directorio raíz
-3. Ejecutar: Run As → Maven Build... → `javafx:run`
+#### Eclipse / VS Code
+1. Importar como proyecto Maven
+2. Ejecutar: `mvn javafx:run` (el agente de Ebean y los `--add-opens` ya están configurados en el POM)
 
 ### Comandos Maven Útiles
 
 ```bash
-# Limpieza y compilación
+# Limpieza y compilación (requiere JDK 21+ para el compilador de Ebean)
 mvn clean compile
 
 # Ejecutar tests
 mvn test
 
-# Empaquetar JAR
+# Build completo + cobertura (como CI)
+mvn clean verify
+
+# Empaquetar JAR estándar
 mvn package
+
+# Empaquetar fat JAR ejecutable
+mvn package -Pshade
 
 # Instalar en repositorio local
 mvn install
@@ -288,8 +365,8 @@ mvn install
 # Ejecutar aplicación
 mvn javafx:run
 
-# Generar sitio de documentación
-mvn site
+# Compilar imagen nativa (requiere GraalVM)
+mvn clean gluonfx:build -Pnative
 
 # Ver árbol de dependencias
 mvn dependency:tree
@@ -301,22 +378,24 @@ mvn versions:display-dependency-updates
 ### Convenciones de Código
 
 - **Naming**: CamelCase para clases, snake_case para BD
-- **Entidades**: Heredan de `BaseEntity` (id, createdAt, updatedAt)
+- **Entidades**: Heredan de `BaseEntity` (id, createdAt, updatedAt); descubiertas por Ebean vía `ebean.packages` en `application.properties` (sin registro manual)
 - **Repositorios**: Interfaz + implementación opcional
 - **Servicios**: Lógica de negocio, transaccionalidad
 - **Controladores**: Solo UI, delegan a servicios
+- **DI**: Avaje Inject (`@Singleton`, generador de wiring en `process-sources`)
 - **Tests**: Nombre descriptivo, Given-When-Then
 
 ### Agregar Nueva Entidad
 
 1. Crear clase modelo en `src/main/java/com/econovafx/modules/<módulo>/model/` extendiendo `BaseEntity`
 2. Anotar con `@Entity`, `@Table(name = "tabla")`
-3. Definir campos con anotaciones JPA/Ebean
+3. Definir campos con anotaciones JPA/Ebean (el paquete debe estar listado en `ebean.packages`)
 4. Crear repositorio en `src/main/java/com/econovafx/modules/<módulo>/repository/`
 5. Crear servicio en `src/main/java/com/econovafx/modules/<módulo>/service/`
 6. Crear validador en `src/main/java/com/econovafx/modules/<módulo>/validation/` (si aplica)
 7. Crear controlador UI en `src/main/java/com/econovafx/modules/<módulo>/ui/controller/` (si aplica)
-8. Agregar tests en `src/test/java/com/econovafx/modules/<módulo>/`
+8. Si el módulo es nuevo y tiene entidades, añadir el `--add-opens` correspondiente al `javafx-maven-plugin` en `pom.xml`
+9. Agregar tests en `src/test/java/com/econovafx/modules/<módulo>/`
 
 ---
 
@@ -326,9 +405,9 @@ mvn versions:display-dependency-updates
 
 1. **Fork** el repositorio
 2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -m 'feat: agregar nueva funcionalidad'`)
+3. Commit tus cambios (`git commit -m 'feat: agregar nueva funcionalidad'`) — el hook `pre-commit` valida el formato
 4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un **Pull Request**
+5. Abre un **Pull Request** contra `develop`
 
 ### Convenciones de Commits
 
@@ -392,6 +471,7 @@ SOFTWARE.
 
 - [Ebean ORM](https://ebean.io/) - Por su excelente framework ORM
 - [OpenJFX](https://openjfx.io/) - Por JavaFX moderno y potente
+- [Gluon](https://gluonhq.com/) - Por GluonFX y el soporte de imágenes nativas JavaFX
 - [Comunidad Java Cuba](https://twitter.com/search?q=java%20cuba) - Por el apoyo continuo
 - [Resolución 340/2004](https://www.gacetaoficial.cu/) - Normativa contable cubana
 
