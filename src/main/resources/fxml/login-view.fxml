@@ -2,8 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox fx:id="loginRoot" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
       prefHeight="550.0" prefWidth="420.0" 
@@ -18,16 +18,21 @@
     <!-- Title Bar with Close Button -->
     <HBox alignment="CENTER_RIGHT" spacing="10.0" VBox.vgrow="NEVER">
         <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="closeButton" onAction="#handleClose" text="%login.close" styleClass="close-button"/>
+        <Button fx:id="closeButton" onAction="#handleClose" styleClass="close-button" accessibleText="%login.close">
+            <graphic>
+                <FontIcon iconLiteral="mdi2c-close" iconSize="18" styleClass="close-icon"/>
+            </graphic>
+            <tooltip>
+                <Tooltip text="%login.close"/>
+            </tooltip>
+        </Button>
     </HBox>
     
     <!-- Logo/Title Section -->
     <VBox alignment="CENTER" spacing="15.0" VBox.vgrow="NEVER">
-        <ImageView fx:id="logoImage" fitHeight="80.0" fitWidth="80.0" preserveRatio="true">
-            <image>
-                <javafx.scene.image.Image url="@../images/logo.svg"/>
-            </image>
-        </ImageView>
+        <StackPane styleClass="login-logo-badge">
+            <FontIcon iconLiteral="mdi2b-bank" iconSize="38" iconColor="#1e3c72"/>
+        </StackPane>
         <Label text="%login.title" styleClass="login-title"/>
         <Label text="%login.subtitle" styleClass="login-subtitle"/>
     </VBox>

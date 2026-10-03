@@ -34,7 +34,7 @@
                                 <FontIcon iconLiteral="mdi2c-chevron-left" iconSize="20" iconColor="WHITE"/>
                             </graphic>
                         </Button>
-                        <Label text="EconoNova FX" styleClass="text-white, text-xl, font-bold"/>
+                        <Label text="EconovaFX" styleClass="text-white, text-xl, font-bold"/>
                     </HBox>
                     <Label text="Sistema Contable" styleClass="text-slate-400, text-xs, mt-1"/>
                 </VBox>
@@ -194,7 +194,7 @@
         <HBox styleClass="status-bar" alignment="CENTER_LEFT" VBox.vgrow="NEVER">
             <Label fx:id="statusLabel" text="Listo" styleClass="text-gray-500, text-xs, font-medium"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Label text="EconoNova FX v1.0.0" styleClass="text-gray-500, text-xs, font-medium"/>
+            <Label text="EconovaFX v1.0.0" styleClass="text-gray-500, text-xs, font-medium"/>
         </HBox>
 
     </VBox>
