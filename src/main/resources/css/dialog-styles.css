@@ -1,0 +1,299 @@
+/* =============================================================================
+ * DIALOGS & FORMS - EconovaFX
+ * shadcn Dialog: rounded 10px surface, 1px hairline, soft drop shadow, a title
+ * row separated by a hairline, then the body.
+ *
+ * Note on .modern-modal-card: ModernDialog.java pins that node to
+ * "-fx-background-color: transparent" inline so the FXML content below it can
+ * paint its own surface. CSS therefore only supplies spacing and the shadow.
+ * ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * SHELL
+ * --------------------------------------------------------------------------- */
+.dialog-container,
+.dialog-content {
+    -fx-background-color: -popover;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.dialog-content {
+    -fx-padding: 20;
+    -fx-background-radius: 10;
+}
+
+/* FXML dialogs that render inside a transparent UNDECORATED stage. */
+.dialog-container {
+    -fx-effect: dropshadow(gaussian, -shadow-popover, 32, 0, 0, 14);
+}
+
+/* -----------------------------------------------------------------------------
+ * HEADER
+ * --------------------------------------------------------------------------- */
+.dialog-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 20 20 16 20;
+    -fx-alignment: center-left;
+}
+
+.dialog-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+
+.dialog-subtitle {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 13px;
+}
+
+.dialog-close-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-padding: 6;
+    -fx-min-width: 28;
+    -fx-pref-width: 28;
+    -fx-min-height: 28;
+    -fx-pref-height: 28;
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 15px;
+    -fx-cursor: hand;
+}
+.dialog-close-btn:hover { -fx-background-color: -muted; -fx-text-fill: -foreground; }
+.dialog-close-btn:pressed { -fx-background-color: -muted-hover; }
+
+.dialog-separator {
+    -fx-background-color: -border;
+    -fx-min-height: 1;
+    -fx-max-height: 1;
+    -fx-pref-height: 1;
+}
+
+/* -----------------------------------------------------------------------------
+ * BODY
+ * --------------------------------------------------------------------------- */
+.dialog-body {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+}
+
+/* -----------------------------------------------------------------------------
+ * FORM
+ * --------------------------------------------------------------------------- */
+.form-section {
+    -fx-background-color: -muted;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-padding: 16;
+}
+
+.form-section-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 0 0 10 0;
+}
+
+.form-textarea {
+    -fx-background-color: -background;
+    -fx-border-color: -input;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-padding: 8 10;
+    -fx-font-size: 14px;
+}
+.form-textarea .content {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-padding: 0;
+}
+.form-textarea:focused { -fx-border-color: -ring; }
+
+.form-date-picker {
+    -fx-background-color: -background;
+    -fx-border-color: -input;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-min-height: 36;
+    -fx-padding: 0;
+}
+.form-date-picker:hover { -fx-border-color: -input-hover; }
+.form-date-picker:focused { -fx-border-color: -ring; }
+.form-date-picker .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8;
+}
+.form-date-picker .arrow-button .arrow {
+    -fx-background-color: -muted-foreground;
+    -fx-pref-width: 9;
+    -fx-pref-height: 9;
+}
+.form-date-picker .popup > .content {
+    -fx-background-color: -popover;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-padding: 8;
+    -fx-effect: dropshadow(gaussian, -shadow-popover, 20, 0, 0, 8);
+}
+
+/* -----------------------------------------------------------------------------
+ * MODAL CARD (ModernDialog)
+ * --------------------------------------------------------------------------- */
+.modern-overlay {
+    -fx-background-color: -scrim;
+}
+
+.modern-modal-card {
+    /* background is pinned to transparent by ModernDialog; keep it that way */
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, -shadow-popover, 40, 0, 0, 18);
+}
+
+.modern-modal-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-padding: 20 20 12 20;
+}
+
+.modern-button {
+    -fx-background-color: -background;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-padding: 8 14;
+    -fx-min-height: 34;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -foreground;
+    -fx-cursor: hand;
+}
+.modern-button:hover { -fx-background-color: -muted; -fx-border-color: -input-hover; }
+.modern-button:pressed { -fx-background-color: -muted-hover; }
+
+/* Message dialogs: a coloured left rail keyed to the message type. */
+.modern-dialog-pane {
+    -fx-background-color: -popover;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 10;
+    -fx-padding: 0;
+}
+.dialog-error .modern-dialog-pane   { -fx-border-color: -danger-border; }
+.dialog-info .modern-dialog-pane    { -fx-border-color: -info-border; }
+.dialog-success .modern-dialog-pane { -fx-border-color: -success-border; }
+.dialog-warning .modern-dialog-pane { -fx-border-color: -warning-border; }
+
+.modern-dialog-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+}
+.modern-dialog-message {
+    -fx-text-fill: -secondary-foreground;
+    -fx-font-size: 13px;
+    -fx-wrap-text: true;
+}
+
+/* -----------------------------------------------------------------------------
+ * LOADING STATE
+ * --------------------------------------------------------------------------- */
+.dialog-loading-overlay {
+    -fx-background-color: rgba(255, 255, 255, 0.80);
+}
+.dialog-loading-content {
+    -fx-background-color: -popover;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-padding: 20 24;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, -shadow-popover, 20, 0, 0, 8);
+}
+.dialog-loading-label {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 13px;
+}
+
+/* -----------------------------------------------------------------------------
+ * SCROLLABLE DIALOG BODY
+ * --------------------------------------------------------------------------- */
+.dialog-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+}
+.dialog-scroll .viewport { -fx-background-color: transparent; }
+.dialog-scroll .content { -fx-background-color: transparent; }
+.dialog-scroll .scroll-bar:vertical { -fx-pref-width: 10; }
+.dialog-scroll .scroll-bar .thumb {
+    -fx-background-color: -zinc-300;
+    -fx-background-radius: 9999;
+    -fx-background-insets: 3;
+}
+.dialog-scroll .scroll-bar .thumb:hover { -fx-background-color: -zinc-400; }
+.dialog-scroll .scroll-bar:vertical > .increment-button,
+.dialog-scroll .scroll-bar:vertical > .decrement-button { -fx-opacity: 0; -fx-pref-height: 0; }
+
+/* -----------------------------------------------------------------------------
+ * DIALOG TABLE (kept for FXML that targets dialogs specifically)
+ * --------------------------------------------------------------------------- */
+.dialog-table {
+    -fx-background-color: -background;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+    -fx-cell-size: 36;
+    -fx-table-cell-border-color: transparent;
+    -fx-font-size: 13px;
+}
+.dialog-table .column-header-background {
+    -fx-background-color: -muted;
+    -fx-background-radius: 7 7 0 0;
+    -fx-background-insets: 0;
+}
+.dialog-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-size: 34;
+}
+.dialog-table .column-header .label {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-padding: 0 12;
+}
+.dialog-table .table-row-cell {
+    -fx-background-color: -background;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-cell-size: 36;
+}
+.dialog-table .table-row-cell:odd,
+.dialog-table .table-row-cell:even { -fx-background-color: -background; }
+.dialog-table .table-row-cell:hover { -fx-background-color: -muted; }
+.dialog-table .table-row-cell:selected {
+    -fx-background-color: -muted;
+    -fx-table-cell-border-color: transparent;
+}
+.dialog-table .table-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0 12;
+    -fx-text-fill: -foreground;
+    -fx-font-size: 13px;
+}

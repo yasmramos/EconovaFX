@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Styles come from StyleSheets (tokens -> main-styles -> primitives); nothing
+     here should carry an inline -fx- style, because inline styles beat CSS. -->
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.billing.controller.ThirdPartyTransactionsController" prefWidth="900.0" prefHeight="600.0" styleClass="background, p-5">
+    <children>
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="card, p-5">
+            <children>
+                <VBox HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label fx:id="thirdPartyNameLabel" styleClass="text-2xl, font-semibold" text="Third Party Name" />
+                        <Label fx:id="thirdPartyIdLabel" styleClass="text-sm, text-muted" text="ID: " />
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER_RIGHT">
+                    <children>
+                        <Label styleClass="text-sm, text-muted" text="Total Balance:" />
+                        <Label fx:id="totalBalanceLabel" styleClass="text-lg, font-semibold, text-green-600" text="$0.00" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Statistics Cards -->
+        <HBox spacing="15.0" VBox.vgrow="NEVER" styleClass="pt-4, pb-2">
+            <children>
+                <VBox styleClass="card, p-4" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="stat-label" text="Total Debit" />
+                        <Label fx:id="totalDebitLabel" styleClass="text-lg, font-semibold, text-red-600" text="$0.00" />
+                    </children>
+                </VBox>
+                <VBox styleClass="card, p-4" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="stat-label" text="Total Credit" />
+                        <Label fx:id="totalCreditLabel" styleClass="text-lg, font-semibold, text-green-600" text="$0.00" />
+                    </children>
+                </VBox>
+                <VBox styleClass="card, p-4" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="stat-label" text="Transaction Count" />
+                        <Label fx:id="transactionCountLabel" styleClass="text-lg, font-semibold, text-blue-600" text="0" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <!-- Toolbar -->
+        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="toolbar, py-2" VBox.vgrow="NEVER">
+            <children>
+                <Button fx:id="exportExcelButton" onAction="#handleExportExcel" styleClass="btn, btn-success" text="📊 Export Excel" />
+                <Button fx:id="closeButton" onAction="#handleClose" styleClass="btn, btn-secondary" text="Close" />
+            </children>
+        </HBox>
+
+        <!-- Transactions Table -->
+        <VBox styleClass="card, p-3" VBox.vgrow="ALWAYS">
+            <children>
+                <TableView fx:id="transactionsTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100.0" />
+                        <TableColumn fx:id="voucherTypeColumn" text="Voucher Type" prefWidth="120.0" />
+                        <TableColumn fx:id="voucherNumberColumn" text="Voucher #" prefWidth="100.0" />
+                        <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="250.0" />
+                        <TableColumn fx:id="debitColumn" text="Debit" prefWidth="100.0" />
+                        <TableColumn fx:id="creditColumn" text="Credit" prefWidth="100.0" />
+                        <TableColumn fx:id="balanceColumn" text="Running Balance" prefWidth="120.0" />
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100.0" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</VBox>

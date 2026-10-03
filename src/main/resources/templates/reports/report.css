@@ -1,0 +1,144 @@
+/* =============================================================================
+ * REPORT CSS - rendered by the WebView and by OpenHTMLToPDF
+ * Same design language as the app (shadcn/zinc), but tuned for print: pure
+ * black text, hairlines that survive a laser printer, and no colour that a
+ * greyscale conversion would flatten.
+ * ========================================================================== */
+
+@page {
+    size: A4;
+    margin: 2cm;
+}
+
+:root {
+    --background: #ffffff;
+    --foreground: #09090b;
+    --muted: #fafafa;
+    --muted-foreground: #71717a;
+    --border: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --primary: #18181b;
+    --accent: #2563eb;
+    --success: #16a34a;
+    --radius: 6px;
+}
+
+body {
+    font-family: "Inter", "Helvetica", "Arial", sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    color: var(--foreground);
+    background: var(--background);
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------ head */
+h1 {
+    font-size: 17pt;
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    color: var(--foreground);
+    border-bottom: 1px solid var(--border-strong);
+}
+
+h2 {
+    font-size: 12.5pt;
+    font-weight: 600;
+    margin: 22px 0 8px;
+    color: var(--foreground);
+}
+
+.header {
+    margin-bottom: 18px;
+}
+
+/* ----------------------------------------------------------------- boxes */
+.voucher-info,
+.reconciliation-info,
+.report-info,
+.summary,
+.third-party {
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+}
+.summary { border-left-color: var(--accent); }
+.third-party { border-left-color: var(--success); }
+
+.voucher-info p,
+.reconciliation-info p,
+.report-info p,
+.summary p,
+.third-party p { margin: 4px 0; }
+
+.description { margin-bottom: 18px; }
+.table-container { margin-bottom: 18px; }
+
+/* ----------------------------------------------------------------- table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+}
+
+thead {
+    background-color: var(--muted);
+    border-top: 1px solid var(--border-strong);
+    border-bottom: 1px solid var(--border-strong);
+}
+
+th {
+    padding: 8px 8px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9.5pt;
+    color: var(--muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 9.5pt;
+}
+
+tbody tr:nth-child(even) { background-color: #fcfcfc; }
+
+/* --------------------------------------------------------------- columns */
+.col-account-code { width: 15%; }
+.col-account-name { width: 35%; }
+.col-debit,
+.col-credit,
+.col-balance,
+.col-amount { width: 15%; text-align: right; }
+.col-date { width: 12%; }
+.col-reference { width: 15%; }
+.col-description { width: 38%; }
+.col-type { width: 10%; }
+
+/* ---------------------------------------------------------------- totals */
+.totals {
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-top: 18px;
+}
+.totals p { margin: 6px 0; font-size: 11pt; }
+
+/* ---------------------------------------------------------------- footer */
+.footer {
+    margin-top: 28px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 8.5pt;
+    color: var(--muted-foreground);
+    text-align: center;
+}

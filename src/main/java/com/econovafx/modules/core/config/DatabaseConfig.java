@@ -1,0 +1,485 @@
+package com.econovafx.modules.core.config;
+
+import com.econovafx.modules.core.config.AppConfig;
+import com.econovafx.modules.core.model.Company;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import io.ebean.Database;
+import io.ebean.DatabaseBuilder;
+import io.ebean.config.ClassLoadConfig;
+import io.ebean.config.CurrentTenantProvider;
+import io.ebean.config.TenantDataSourceProvider;
+import io.ebean.config.TenantMode;
+import io.ebean.config.dbplatform.DatabasePlatform;
+import io.ebean.migration.MigrationConfig;
+import io.ebean.migration.MigrationRunner;
+import io.ebean.platform.h2.H2Platform;
+import io.ebean.platform.postgres.PostgresPlatform;
+import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Configuración de base de datos con soporte multi-tenant nativo de Ebean. Usa
+ * TenantMode.DB con CurrentTenantProvider y TenantDataSourceProvider para
+ * gestionar bases de datos separadas por tenant de forma nativa en Ebean.
+ */
+@Singleton
+public class DatabaseConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
+
+    // Base de datos maestra (gestión de empresas).
+    // volatile + init lock: initializeMaster()/initializeMultiTenant() can be
+    // reached from the splash worker thread AND the JavaFX Application Thread
+    // (via DatabaseFactory when the Database bean is resolved).
+    private static volatile Database masterDatabase;
+
+    // Base de datos multi-tenant configurada nativamente
+    private static volatile Database tenantDatabase;
+
+    // Guards one-time initialization of masterDatabase / tenantDatabase
+    private static final Object INIT_LOCK = new Object();
+
+    // Cache de DataSources por empresa (tenant)
+    private static final ConcurrentHashMap<Long, DataSource> tenantDataSources = new ConcurrentHashMap<>();
+
+    // Variables para testing
+    public static boolean closeTenantDataSourceCalled = false;
+    public static Long lastClosedTenantId = null;
+
+    public DatabaseConfig() {
+        this.initialize();
+    }
+
+    /**
+     * Inicializa la configuración multi-tenant nativa de Ebean.
+     */
+    public static void initialize() {
+        initializeMaster();
+        initializeMultiTenant();
+    }
+
+    /**
+     * Inicializa solo la base de datos maestra, sin multi-tenant. Útil para
+     * tests que no requieren aislamiento de tenants.
+     */
+    public static void initializeMasterOnly() {
+        initializeMaster();
+    }
+
+    /**
+     * Opens the master database exactly once per JVM.
+     *
+     * <p>This MUST be idempotent. It used to be called unconditionally on every
+     * resolution of the {@code Database} bean (see DatabaseFactory), which built a
+     * second/third Ebean Database over the same H2 file while the earlier one was
+     * still serving connections. With {@code AUTO_SERVER=TRUE} on the URL, H2 gives
+     * each in-JVM open its own database instance, so everything the seeder wrote
+     * through the first instance became invisible: startup logged "No companies
+     * found" right after seeding, and login then failed with "user not found".
+     */
+    public static void initializeMaster() {
+        if (masterDatabase != null) {
+            logger.debug("Master database already initialized, reusing existing instance");
+            return;
+        }
+        synchronized (INIT_LOCK) {
+            if (masterDatabase != null) {
+                logger.debug("Master database already initialized, reusing existing instance");
+                return;
+            }
+            openMaster();
+        }
+    }
+
+    private static void openMaster() {
+        try {
+            logger.info("Opening master {} connection: {}", AppConfig.DB_TYPE, AppConfig.MASTER_DB_URL);
+            
+            // Create HikariCP DataSource
+            HikariConfig hikariConfig = new HikariConfig();
+            hikariConfig.setJdbcUrl(AppConfig.MASTER_DB_URL);
+            hikariConfig.setDriverClassName(AppConfig.MASTER_DB_DRIVER);
+            hikariConfig.setUsername(AppConfig.MASTER_DB_USERNAME);
+            hikariConfig.setPassword(AppConfig.MASTER_DB_PASSWORD);
+            hikariConfig.setMinimumIdle(1);
+            hikariConfig.setMaximumPoolSize(10);
+            hikariConfig.setPoolName("master");
+            
+            HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+
+            DatabaseBuilder builder = Database.builder();
+            builder.name("master")
+                    .dataSource(dataSource)
+                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
+                    .ddlGenerate(AppConfig.EBEAN_DDL_GENERATE)
+                    .ddlRun(AppConfig.EBEAN_DDL_RUN)
+                    .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
+                    .defaultDatabase(true);
+
+            Database masterDb = builder.build();
+            masterDatabase = masterDb;
+            logger.info("Master database initialized successfully with platform: {}", AppConfig.DB_TYPE);
+            
+            // Run migrations for master database if enabled (disabled when using DDL Generation)
+            if (AppConfig.EBEAN_MIGRATION_RUN && !AppConfig.EBEAN_DDL_GENERATE) {
+                runMasterMigrations(dataSource);
+            }
+        } catch (Exception e) {
+            logger.error("CRITICAL: Failed to initialize master database. Check your database configuration (driver: {}, url: {})", 
+                AppConfig.MASTER_DB_DRIVER, AppConfig.MASTER_DB_URL, e);
+            throw new RuntimeException("Failed to initialize master database: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Runs database migrations for the master database.
+     * @param dataSource The DataSource for the master database
+     */
+    private static void runMasterMigrations(DataSource dataSource) {
+        try {
+            MigrationConfig migrationConfig = new MigrationConfig();
+            migrationConfig.setMigrationPath("dbmigration/master");
+            migrationConfig.setDbUrl(AppConfig.MASTER_DB_URL);
+            migrationConfig.setDbUsername(AppConfig.MASTER_DB_USERNAME);
+            migrationConfig.setDbPassword(AppConfig.MASTER_DB_PASSWORD);
+            migrationConfig.setDbDriver(AppConfig.MASTER_DB_DRIVER);
+            
+            MigrationRunner runner = new MigrationRunner(migrationConfig);
+            runner.run(dataSource);
+            
+            logger.info("Master database migrations executed successfully");
+        } catch (Exception e) {
+            logger.error("Failed to execute master database migrations", e);
+            throw new RuntimeException("Master database migration failed", e);
+        }
+    }
+    
+    /**
+     * Selects the appropriate database platform based on configuration.
+     * @param dbType The database type ("h2" or "postgres")
+     * @return The appropriate DatabasePlatform instance
+     */
+    private static DatabasePlatform selectDatabasePlatform(String dbType) {
+        if ("postgres".equalsIgnoreCase(dbType)) {
+            logger.info("Using PostgreSQL database platform");
+            return new PostgresPlatform();
+        } else {
+            logger.info("Using H2 database platform");
+            return new H2Platform();
+        }
+    }
+
+    /**
+     * Inicializa la base de datos multi-tenant usando configuración nativa de
+     * Ebean. Configura TenantMode.DB con CurrentTenantProvider y
+     * TenantDataSourceProvider.
+     */
+    /**
+     * Builds the native multi-tenant Ebean database exactly once per JVM, for the
+     * same reason as {@link #initializeMaster()} — see that javadoc.
+     */
+    public static void initializeMultiTenant() {
+        if (tenantDatabase != null) {
+            logger.debug("Multi-tenant database already initialized, reusing existing instance");
+            return;
+        }
+        synchronized (INIT_LOCK) {
+            if (tenantDatabase != null) {
+                logger.debug("Multi-tenant database already initialized, reusing existing instance");
+                return;
+            }
+            openMultiTenant();
+        }
+    }
+
+    private static void openMultiTenant() {
+        try {
+            // CurrentTenantProvider: obtiene el tenant actual del contexto
+            CurrentTenantProvider tenantProvider = () -> {
+                Company currentTenant = TenantContext.getCurrentTenant();
+                return currentTenant != null ? currentTenant.getId() : null;
+            };
+
+            // TenantDataSourceProvider: obtiene el DataSource según el tenant
+            TenantDataSourceProvider dataSourceProvider = tenantId -> {
+                if (tenantId == null) {
+                    throw new IllegalStateException("No tenant ID provided");
+                }
+                Long companyId = (Long) tenantId;
+                return getOrCreateDataSource(companyId);
+            };
+
+            DatabaseBuilder builder = Database.builder();
+            builder.name("econova-multi-tenant")
+                    .register(false)
+                    .tenantMode(TenantMode.DB)
+                    .currentTenantProvider(tenantProvider)
+                    .tenantDataSourceProvider(dataSourceProvider)
+                    .databasePlatform(selectDatabasePlatform(AppConfig.DB_TYPE))
+                    .classLoadConfig(new ClassLoadConfig(Thread.currentThread().getContextClassLoader()))
+                    .ddlGenerate(AppConfig.EBEAN_DDL_GENERATE)
+                    .ddlRun(AppConfig.EBEAN_DDL_RUN);
+
+            tenantDatabase = builder.build();
+
+            logger.info("Multi-tenant database initialized successfully with TenantMode.DB and platform: {}", AppConfig.DB_TYPE);
+
+        } catch (Exception e) {
+            logger.error("CRITICAL: Failed to initialize multi-tenant database", e);
+            throw new RuntimeException("Multi-tenant database initialization failed: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Obtiene o crea un DataSource para un tenant específico.
+     *
+     * @param companyId ID de la empresa
+     * @return DataSource configurado para el tenant
+     */
+    private static DataSource getOrCreateDataSource(Long companyId) {
+        return tenantDataSources.computeIfAbsent(companyId, id -> {
+            Company company = getCompanyById(id);
+            if (company == null) {
+                throw new RuntimeException("Company not found for ID: " + id);
+            }
+
+            logger.info("Creating DataSource for tenant: {} ({})", company.getName(), company.getCode());
+
+            try {
+                // Determine driver and URL based on database type from config or company
+                String dbType = AppConfig.DB_TYPE;
+                String driver, url, username, password;
+                
+                // If company has explicit database URL, use it; otherwise build from config
+                if (company.getDatabaseUrl() != null && !company.getDatabaseUrl().isEmpty()) {
+                    url = company.getDatabaseUrl();
+                    // Infer driver from URL if not explicitly set
+                    if (url.startsWith("jdbc:postgresql:")) {
+                        driver = "org.postgresql.Driver";
+                    } else if (url.startsWith("jdbc:h2:")) {
+                        driver = "org.h2.Driver";
+                    } else {
+                        driver = company.getDatabaseDriver() != null ? company.getDatabaseDriver() : dbType.equals("postgres") ? "org.postgresql.Driver" : "org.h2.Driver";
+                    }
+                } else {
+                    // Build URL from configuration
+                    if ("postgres".equalsIgnoreCase(dbType)) {
+                        driver = "org.postgresql.Driver";
+                        // Derive a per-tenant database name so each company gets its own
+                        // PostgreSQL database (required by TenantMode.DB, which has no
+                        // tenant_id discriminator column).
+                        String tenantDatabaseName = String.format("%s_%s",
+                                AppConfig.POSTGRES_DATABASE,
+                                company.getCode());
+                        url = String.format("jdbc:postgresql://%s:%d/%s?sslmode=%s",
+                                AppConfig.POSTGRES_HOST,
+                                AppConfig.POSTGRES_PORT,
+                                tenantDatabaseName,
+                                AppConfig.POSTGRES_SSLMODE);
+                    } else {
+                        driver = "org.h2.Driver";
+                        // Removed AUTO_SERVER=TRUE to prevent hanging on single-process desktop app
+                        url = String.format("jdbc:h2:./db/tenant-%s;DB_CLOSE_DELAY=-1", company.getCode());
+                    }
+                }
+
+                if (company.getDatabaseUser() != null && !company.getDatabaseUser().isEmpty()) {
+                    username = company.getDatabaseUser();
+                    // Use company password if available, otherwise use config default
+                    password = company.getDatabasePassword() != null && !company.getDatabasePassword().isEmpty() 
+                            ? company.getDatabasePassword() 
+                            : (driver.contains("postgresql") ? AppConfig.POSTGRES_PASSWORD : "");
+                } else {
+                    username = driver.contains("postgresql") ? AppConfig.POSTGRES_USERNAME : "sa";
+                    password = driver.contains("postgresql") ? AppConfig.POSTGRES_PASSWORD : "";
+                }
+
+                // Create HikariCP DataSource
+                HikariConfig hikariConfig = new HikariConfig();
+                hikariConfig.setJdbcUrl(url);
+                hikariConfig.setDriverClassName(driver);
+                hikariConfig.setUsername(username);
+                hikariConfig.setPassword(password);
+                hikariConfig.setMinimumIdle(1);
+                hikariConfig.setMaximumPoolSize(10);
+                hikariConfig.setPoolName("econova-tenant-" + company.getCode());
+
+                HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+                logger.info("DataSource created successfully for: {} with driver: {}", company.getCode(), driver);
+
+                // Run migrations for this tenant database if enabled (disabled when using DDL Generation)
+                if (AppConfig.EBEAN_MIGRATION_RUN && !AppConfig.EBEAN_DDL_GENERATE) {
+                    runTenantMigrations(dataSource, company.getCode());
+                }
+
+                return dataSource;
+
+            } catch (Exception e) {
+                logger.error("Failed to create DataSource for {}", company.getCode(), e);
+                throw new RuntimeException("DataSource creation failed", e);
+            }
+        });
+    }
+    
+    /**
+     * Runs database migrations for a tenant database.
+     * @param dataSource The DataSource for the tenant database
+     * @param companyCode The company code used to identify migration path
+     */
+    private static void runTenantMigrations(DataSource dataSource, String companyCode) {
+        try {
+            MigrationConfig migrationConfig = new MigrationConfig();
+            migrationConfig.setMigrationPath("dbmigration/tenant");
+            
+            // Extract connection info from DataSource using metadata
+            try (java.sql.Connection conn = dataSource.getConnection()) {
+                java.sql.DatabaseMetaData meta = conn.getMetaData();
+                migrationConfig.setDbUrl(meta.getURL());
+                migrationConfig.setDbUsername(meta.getUserName());
+                
+                // Infer driver from URL
+                String url = meta.getURL();
+                if (url.startsWith("jdbc:postgresql:")) {
+                    migrationConfig.setDbDriver("org.postgresql.Driver");
+                } else if (url.startsWith("jdbc:h2:")) {
+                    migrationConfig.setDbDriver("org.h2.Driver");
+                }
+                
+                // Password needs to be obtained from config or passed separately
+                // For now, we rely on the DataSource already having the password configured
+                conn.close();
+            }
+            
+            MigrationRunner runner = new MigrationRunner(migrationConfig);
+            runner.run(dataSource);
+            
+            logger.info("Tenant database migrations executed successfully for: {}", companyCode);
+        } catch (Exception e) {
+            logger.error("Failed to execute tenant database migrations for {}", companyCode, e);
+            throw new RuntimeException("Tenant database migration failed for " + companyCode, e);
+        }
+    }
+
+    /**
+     * Obtiene una empresa por su ID desde la base de datos maestra.
+     *
+     * @param companyId ID de la empresa
+     * @return La empresa o null si no existe
+     */
+    private static Company getCompanyById(Long companyId) {
+        if (masterDatabase == null) {
+            initializeMaster();
+        }
+        return masterDatabase.find(Company.class, companyId);
+    }
+
+    /**
+     * Cambia el contexto al tenant especificado. Ebean automáticamente usará el
+     * DataSource correcto vía TenantDataSourceProvider.
+     *
+     * @param company La empresa a establecer como tenant activo
+     */
+    public static void switchToTenant(Company company) {
+        TenantContext.setCurrentTenant(company);
+        logger.debug("Switched to tenant: {} ({})", company.getCode(), company.getId());
+    }
+
+    /**
+     * Obtiene la base de datos maestra.
+     *
+     * @return La base de datos maestra
+     */
+    public static Database getMasterDatabase() {
+        if (masterDatabase == null) {
+            initializeMaster();
+        }
+        return masterDatabase;
+    }
+
+    /**
+     * Obtiene la base de datos multi-tenant.
+     *
+     * @return La base de datos multi-tenant
+     */
+    public static Database getTenantDatabase() {
+        if (tenantDatabase == null) {
+            initializeMultiTenant();
+        }
+        return tenantDatabase;
+    }
+
+    /**
+     * Obtiene el servidor de base de datos por defecto. Usa la base de datos
+     * maestra si no hay multi-tenant inicializado.
+     *
+     * @return La base de datos por defecto
+     */
+    public static Database getServer() {
+        // Always return master database if tenant database is not available
+        if (tenantDatabase == null && masterDatabase != null) {
+            return masterDatabase;
+        }
+
+        // If tenant database is initialized but no tenant context, use master
+        if (tenantDatabase != null && !TenantContext.hasTenant()) {
+            return masterDatabase != null ? masterDatabase : getTenantDatabase();
+        }
+
+        // If there's a tenant context, use tenant database
+        if (tenantDatabase != null && TenantContext.hasTenant()) {
+            return tenantDatabase;
+        }
+
+        // Fallback: initialize master and return it
+        if (masterDatabase == null) {
+            initializeMaster();
+        }
+        return masterDatabase;
+    }
+
+    /**
+     * Cierra el DataSource de un tenant específico.
+     *
+     * @param companyId ID de la empresa
+     */
+    public static void closeTenantDataSource(Long companyId) {
+        DataSource ds = tenantDataSources.remove(companyId);
+        if (ds != null) {
+            logger.info("DataSource closed for company ID: {}", companyId);
+        }
+        // Para testing
+        closeTenantDataSourceCalled = true;
+        lastClosedTenantId = companyId;
+    }
+
+    /**
+     * Cierra todas las conexiones de base de datos.
+     */
+    public static void shutdown() {
+        synchronized (INIT_LOCK) {
+            // Cerrar base de datos multi-tenant
+            if (tenantDatabase != null) {
+                tenantDatabase.shutdown();
+                tenantDatabase = null;
+                logger.info("Multi-tenant database shutdown complete");
+            }
+
+            // Cerrar base de datos maestra
+            if (masterDatabase != null) {
+                masterDatabase.shutdown();
+                masterDatabase = null;
+                logger.info("Master database shutdown complete");
+            }
+
+            // Limpiar cache de DataSources
+            tenantDataSources.clear();
+
+            logger.info("All databases and DataSources shutdown complete");
+        }
+    }
+}

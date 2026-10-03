@@ -1,0 +1,354 @@
+/* =============================================================================
+ * DASHBOARD - EconovaFX
+ * KPI cards, charts, filter bar and the recent-transactions table.
+ *
+ * shadcn stat card: one white surface + 1px hairline, colour carried only by a
+ * small tinted icon tile. Every KPI card here therefore looks identical on the
+ * outside; only the tile and the figure are tinted. That is what makes a
+ * dashboard read as a system instead of a pile of coloured boxes.
+ * ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * KPI CARDS
+ * --------------------------------------------------------------------------- */
+.card-assets,
+.card-liabilities,
+.card-equity,
+.card-balance,
+.card-profit {
+    -fx-background-color: -card;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, -shadow-xs, 2, 0, 0, 1);
+}
+
+.card-label {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+}
+
+.card-value {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+}
+
+.card-trend,
+.stat-trend {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+}
+.card-trend.trend-positive { -fx-text-fill: -success; }
+.card-trend.trend-negative { -fx-text-fill: -destructive; }
+.card-trend.trend-neutral  { -fx-text-fill: -muted-foreground; }
+
+/* ------------------------------------------------------------- icon tiles */
+.card-icon-bg,
+.stat-icon,
+.stat-icon-green,
+.stat-icon-blue,
+.stat-icon-amber,
+.stat-icon-purple,
+.stat-icon-red {
+    -fx-background-color: -muted;
+    -fx-background-radius: 8;
+    -fx-padding: 8;
+    -fx-alignment: center;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-pref-width: 40;
+    -fx-pref-height: 40;
+}
+.card-icon-bg       { -fx-background-color: #ecfdf5; }
+.card-icon-bg-red   { -fx-background-color: -red-50; }
+.card-icon-bg-blue  { -fx-background-color: -blue-50; }
+.card-icon-bg-green { -fx-background-color: #ecfdf5; }
+.card-icon-bg-amber { -fx-background-color: -amber-50; }
+
+.stat-icon-green  { -fx-background-color: #ecfdf5; }
+.stat-icon-red    { -fx-background-color: -red-50; }
+.stat-icon-blue   { -fx-background-color: -blue-50; }
+.stat-icon-amber  { -fx-background-color: -amber-50; }
+.stat-icon-purple { -fx-background-color: -purple-50; }
+
+/* -----------------------------------------------------------------------------
+ * CARDS (charts, quick form, KPI list)
+ * --------------------------------------------------------------------------- */
+.chart-card,
+.quick-form-card,
+.stats-card,
+.summary-card {
+    -fx-background-color: -card;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+    -fx-padding: 16;
+}
+
+.chart-title,
+.stats-title,
+.quick-form-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+.chart-title { -fx-padding: 0 0 2 0; }
+.quick-form-title,
+.stats-title { -fx-padding: 0 0 12 0; }
+
+.chart-subtitle {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 12px;
+    -fx-padding: 0 0 8 0;
+}
+
+.summary-card { -fx-padding: 14; }
+.summary-card:hover,
+.card-assets:hover,
+.card-liabilities:hover,
+.card-equity:hover,
+.card-balance:hover,
+.card-profit:hover {
+    -fx-border-color: -zinc-300;
+    -fx-effect: dropshadow(gaussian, -shadow-sm, 6, 0, 0, 2);
+}
+
+/* -----------------------------------------------------------------------------
+ * STAT LIST
+ * --------------------------------------------------------------------------- */
+.stat-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+}
+.stat-item:hover { -fx-background-color: -muted; }
+
+/* -----------------------------------------------------------------------------
+ * FILTER BAR
+ * --------------------------------------------------------------------------- */
+.filter-section {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 12 0;
+}
+
+.filter-date-picker {
+    -fx-background-color: -background;
+    -fx-border-color: -input;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-min-height: 32;
+    -fx-padding: 0;
+}
+.filter-date-picker:focused { -fx-border-color: -ring; }
+.filter-date-picker .arrow-button { -fx-background-color: transparent; -fx-padding: 0 6; }
+.filter-date-picker .arrow-button .arrow {
+    -fx-background-color: -muted-foreground;
+    -fx-pref-width: 8;
+    -fx-pref-height: 8;
+}
+
+.filter-btn,
+.refresh-btn,
+.view-all-btn {
+    -fx-background-color: -background;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-padding: 6 12;
+    -fx-min-height: 32;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -foreground;
+    -fx-cursor: hand;
+    -fx-graphic-gap: 8;
+}
+.filter-btn:hover,
+.refresh-btn:hover,
+.view-all-btn:hover { -fx-background-color: -muted; -fx-border-color: -input-hover; }
+.filter-btn:pressed,
+.refresh-btn:pressed,
+.view-all-btn:pressed { -fx-background-color: -muted-hover; }
+
+.clear-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-padding: 6 12;
+    -fx-min-height: 32;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -muted-foreground;
+    -fx-cursor: hand;
+    -fx-graphic-gap: 8;
+}
+.clear-btn:hover { -fx-background-color: -muted; -fx-text-fill: -foreground; }
+
+.submit-btn {
+    -fx-background-color: -primary;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color: -primary;
+    -fx-border-width: 1;
+    -fx-padding: 8 14;
+    -fx-min-height: 34;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -primary-foreground;
+    -fx-cursor: hand;
+    -fx-graphic-gap: 8;
+}
+.submit-btn:hover { -fx-background-color: -primary-hover; -fx-border-color: -primary-hover; }
+.submit-btn:pressed { -fx-background-color: -primary-pressed; }
+
+/* -----------------------------------------------------------------------------
+ * TRANSACTIONS TABLE
+ * --------------------------------------------------------------------------- */
+.transactions-table,
+.dialog-table {
+    -fx-background-color: -background;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+    -fx-cell-size: 36;
+    -fx-table-cell-border-color: transparent;
+    -fx-font-size: 13px;
+}
+
+.transactions-table .column-header-background,
+.dialog-table .column-header-background {
+    -fx-background-color: -muted;
+    -fx-background-radius: 7 7 0 0;
+    -fx-background-insets: 0;
+}
+.transactions-table .filler,
+.dialog-table .filler { -fx-background-color: -muted; }
+
+.transactions-table .column-header,
+.dialog-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-padding: 0;
+    -fx-size: 34;
+}
+.transactions-table .column-header .label,
+.dialog-table .column-header .label {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-alignment: center-left;
+    -fx-padding: 0 12;
+}
+
+.transactions-table .table-row-cell,
+.dialog-table .table-row-cell {
+    -fx-background-color: -background;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-cell-size: 36;
+}
+.transactions-table .table-row-cell:odd,
+.transactions-table .table-row-cell:even,
+.dialog-table .table-row-cell:odd,
+.dialog-table .table-row-cell:even { -fx-background-color: -background; }
+.transactions-table .table-row-cell:filled:hover,
+.dialog-table .table-row-cell:filled:hover { -fx-background-color: -muted; }
+.transactions-table .table-row-cell:filled:selected,
+.dialog-table .table-row-cell:filled:selected {
+    -fx-background-color: -muted;
+    -fx-table-cell-border-color: transparent;
+}
+
+.transactions-table .table-cell,
+.dialog-table .table-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0 12;
+    -fx-text-fill: -foreground;
+    -fx-font-size: 13px;
+    -fx-alignment: center-left;
+}
+
+/* -----------------------------------------------------------------------------
+ * STATUS BADGES - soft background, saturated text (shadcn badge)
+ * --------------------------------------------------------------------------- */
+.status-badge {
+    -fx-background-color: -muted;
+    -fx-background-radius: 9999;
+    -fx-padding: 3 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -secondary-foreground;
+    -fx-max-width: -1;
+}
+.status-badge.draft     { -fx-background-color: -warning-soft; -fx-text-fill: -amber-800; }
+.status-badge.published { -fx-background-color: -success-soft; -fx-text-fill: -success-hover; }
+.status-badge.reversed  { -fx-background-color: -danger-soft;  -fx-text-fill: -danger-hover; }
+
+/* -----------------------------------------------------------------------------
+ * CHARTS - neutral chrome, colour only on the data series
+ * --------------------------------------------------------------------------- */
+.chart-pie,
+.chart-bar,
+.chart-line,
+.chart-area {
+    -fx-padding: 0;
+    -fx-legend-side: right;
+}
+
+.axis {
+    -fx-tick-label-fill: -muted-foreground;
+    -fx-font-size: 11px;
+    -fx-tick-mark-visible: false;
+    -fx-tick-length: 0;
+    -fx-tick-label-gap: 6;
+}
+.axis-label {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 11px;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: -border;
+    -fx-stroke-width: 1;
+}
+.chart-vertical-grid-lines { -fx-stroke: transparent; }
+
+.zero-line {
+    -fx-stroke: -zinc-300;
+    -fx-stroke-width: 1;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 8 0 0 0;
+}
+.chart-legend-item {
+    -fx-text-fill: -secondary-foreground;
+    -fx-font-size: 11px;
+}
+
+.default-color0.chart-pie { -fx-background-color: -zinc-800; }
+.default-color1.chart-pie { -fx-background-color: -blue-600; }
+.default-color2.chart-pie { -fx-background-color: -amber-500; }
+
+.chart-pie .chart-pie-label {
+    -fx-fill: -foreground;
+    -fx-font-size: 11px;
+}
+
+.chart-bar .default-color0.chart-bar { -fx-bar-fill: -primary; }
+.chart-line .default-color0.chart-line {
+    -fx-stroke: -primary;
+    -fx-stroke-width: 2;
+}
+.chart-area .default-color0.chart-area { -fx-fill: -zinc-200; }
+.chart-area .default-color0.chart-area-overlay { -fx-fill: transparent; }

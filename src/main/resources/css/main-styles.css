@@ -1,0 +1,158 @@
+/* =============================================================================
+ * MAIN STYLES - EconovaFX
+ * Page composition: layout scaffolding, page headers, cards, section headers.
+ * Controls come from controls.css, colours from theme-tokens.css.
+ *
+ * Loaded on the main window as: theme-tokens -> main-styles -> sidebar ->
+ * dashboard -> primitives (utilities last so a Tailwind class always wins).
+ * ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * LAYOUT SCAFFOLDING
+ * --------------------------------------------------------------------------- */
+.root {
+    -fx-background-color: -zinc-50;
+}
+
+.border-pane,
+.stack-pane,
+.vbox,
+.hbox {
+    -fx-background-color: transparent;
+}
+
+.vbox { -fx-fill-width: true; }
+.hbox { -fx-fill-height: true; }
+
+.content-area {
+    -fx-background-color: -zinc-50;
+    -fx-padding: 0;
+    -fx-min-width: 600;
+    -fx-min-height: 400;
+}
+
+.workspace-content {
+    -fx-background-color: -zinc-50;
+    -fx-padding: 24;
+}
+
+.content-view,
+.content-wrapper,
+.main-view {
+    -fx-background-color: -zinc-50;
+    -fx-padding: 16;
+}
+
+.content-wrapper {
+    -fx-alignment: center;
+}
+
+.grid-pane,
+.flow-pane {
+    -fx-background-color: transparent;
+}
+
+/* -----------------------------------------------------------------------------
+ * PAGE HEADER
+ * shadcn "page title" + "description" pair, 24px / 32px below it.
+ * --------------------------------------------------------------------------- */
+.dashboard-header,
+.module-header,
+.section-header,
+.toolbar {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 4 0;
+}
+
+.dashboard-title,
+.page-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 22px;
+    -fx-font-weight: 600;
+}
+
+.dashboard-subtitle,
+.page-subtitle,
+.subtitle {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 14px;
+}
+
+.section-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+
+.timestamp {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 12px;
+}
+
+.toolbar {
+    -fx-alignment: center-left;
+}
+
+/* -----------------------------------------------------------------------------
+ * CARD
+ * shadcn card: surface + 1px hairline + 8px radius, no shadow.
+ * Padding is intentionally NOT set here - the FXML supplies it with p-2..p-6,
+ * and putting it in this rule would fight those utilities.
+ * --------------------------------------------------------------------------- */
+.card,
+.settings-panel,
+.stat-card {
+    -fx-background-color: -card;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+}
+
+.settings-panel,
+.stat-card {
+    -fx-padding: 20;
+}
+
+.card-header {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 12 0;
+}
+
+.divider {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 0;
+    -fx-max-height: 1;
+    -fx-pref-height: 1;
+    -fx-min-height: 1;
+}
+
+/* -----------------------------------------------------------------------------
+ * EMPTY / LOADING STATES
+ * --------------------------------------------------------------------------- */
+.loading-overlay {
+    -fx-background-color: rgba(250, 250, 250, 0.78);
+}
+.loading-content {
+    -fx-background-color: -card;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, -shadow-popover, 24, 0, 0, 10);
+    -fx-alignment: center;
+}
+.loading-label {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 14px;
+}
+
+/* -----------------------------------------------------------------------------
+ * WEB VIEW HOST
+ * --------------------------------------------------------------------------- */
+.web-view,
+.web-shell-body {
+    -fx-background-color: -zinc-50;
+}

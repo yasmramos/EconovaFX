@@ -1,0 +1,225 @@
+/* =============================================================================
+ * THEME TOKENS - EconovaFX
+ * Design language: shadcn/ui ("new york" flavour) on the Tailwind zinc scale.
+ *
+ * WHY THIS FILE IS SO COMMENTED
+ * JavaFX CSS has no variable substitution. A custom property defined on .root
+ * is only ever read back as a *value JavaFX can parse*, and the only value
+ * types JavaFX resolves from a looked-up property are colours (and the handful
+ * of -fx- properties listed in the CSS reference). So:
+ *
+ *   -fx-background-color: -zinc-100;   <- works (looked-up colour)
+ *   -fx-border-width: -border-width;  <- silently resolves to nothing
+ *
+ * Anything that is not a colour is therefore written literally where it is
+ * used and documented here as a comment. Do NOT reintroduce length tokens:
+ * they do not throw, they just quietly do nothing.
+ *
+ * Load order everywhere: theme-tokens.css -> controls.css -> screen css -> utilities.css.
+ * ========================================================================== */
+
+.root {
+    /* =========================================================================
+     * TYPOGRAPHY
+     * shadcn base: 14px, ~1.5 line height, system sans stack.
+     * JavaFX substitutes Segoe UI for Inter unless the font is installed.
+     * ========================================================================= */
+    -fx-font-family: "Inter", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", sans-serif;
+    -fx-font-size: 14px;
+
+    /* Font weight ramp (literals, for reference - JavaFX only honours
+       normal | bold | bolder | lighter in most builds, numeric works on 17+):
+       -fw-normal:   400
+       -fw-medium:   500
+       -fw-semibold: 600
+       -fw-bold:     700  */
+
+    /* Font size ramp:
+       -fs-2xs:  10px    (micro labels, table meta)
+       -fs-xs:   11px    (badges, helper text)
+       -fs-sm:   12px    (dense tables, secondary UI)
+       -fs-base: 14px    (everything - the shadcn default)
+       -fs-lg:   16px    (section titles, card values)
+       -fs-xl:   18px    (page subtitles)
+       -fs-2xl:  22px    (page titles)
+       -fs-3xl:  30px    (login brand, KPI heroes) */
+
+    /* =========================================================================
+     * ZINC - the neutral scale that carries the whole shadcn look.
+     * Nothing in the app should use a hue for structure; hue is reserved
+     * for meaning (success, warning, danger, info).
+     * ========================================================================= */
+    -zinc-0:   #ffffff;
+    -zinc-50:  #fafafa;
+    -zinc-100: #f4f4f5;
+    -zinc-200: #e4e4e7;
+    -zinc-300: #d4d4d8;
+    -zinc-400: #a1a1aa;
+    -zinc-500: #71717a;
+    -zinc-600: #52525b;
+    -zinc-700: #3f3f46;
+    -zinc-800: #27272a;
+    -zinc-900: #18181b;
+    -zinc-950: #09090b;
+
+    /* =========================================================================
+     * SEMANTIC SURFACE TOKENS - the shadcn CSS custom properties.
+     * ========================================================================= */
+    -background:           #ffffff;
+    -foreground:           #09090b;   /* zinc-950  */
+
+    -card:                 #ffffff;
+    -card-foreground:      #09090b;
+
+    -popover:              #ffffff;
+    -popover-foreground:   #09090b;
+
+    /* shadcn primary is NOT a brand blue - it is near-black (zinc-900) and the
+       accent colour only appears in focus rings, active nav and data viz. */
+    -primary:              #18181b;
+    -primary-hover:        #27272a;
+    -primary-pressed:      #3f3f46;
+    -primary-foreground:   #fafafa;
+    -primary-disabled:     #d4d4d8;
+
+    -secondary:            #f4f4f5;
+    -secondary-foreground: #18181b;
+    -secondary-hover:      #e4e4e7;
+
+    -muted:                #f4f4f5;
+    -muted-foreground:     #71717a;   /* zinc-500 */
+    -muted-hover:          #e4e4e7;
+
+    -accent:               #f4f4f5;
+    -accent-foreground:    #18181b;
+
+    -destructive:          #dc2626;
+    -destructive-hover:    #b91c1c;
+    -destructive-fore:     #fafafa;
+    -destructive-soft:     #fef2f2;
+
+    -border:               #e4e4e7;   /* zinc-200 - the shadcn hairline */
+    -input:                #e4e4e7;
+    -input-hover:          #d4d4d8;
+    -ring:                 #a1a1aa;   /* focus ring */
+
+    /* =========================================================================
+     * SEMANTIC STATUS COLOURS - muted surfaces + saturated foreground.
+     * Shadcn badges use a soft background with the strong hue as text.
+     * ========================================================================= */
+    -success:          #16a34a;
+    -success-hover:    #15803d;
+    -success-soft:     #f0fdf4;
+    -success-border:   #bbf7d0;
+
+    -warning:          #d97706;
+    -warning-hover:    #b45309;
+    -warning-soft:     #fffbeb;
+    -warning-border:   #fde68a;
+
+    -info:             #2563eb;
+    -info-hover:       #1d4ed8;
+    -info-soft:        #eff6ff;
+    -info-border:      #bfdbfe;
+
+    -danger:           #dc2626;
+    -danger-hover:     #b91c1c;
+    -danger-soft:      #fef2f2;
+    -danger-border:    #fecaca;
+
+    -purple:           #9333ea;
+    -purple-soft:      #faf5ff;
+    -purple-border:    #e9d5ff;
+
+    /* =========================================================================
+     * RAW HUE SCALES
+     * Only used by the Tailwind-compatible utilities in utilities.css so the
+     * legacy FXML class names (bg-blue-500, text-green-600, ...) keep working.
+     * ========================================================================= */
+    -blue-50:   #eff6ff;
+    -blue-100:  #dbeafe;
+    -blue-200:  #bfdbfe;
+    -blue-500:  #3b82f6;
+    -blue-600:  #2563eb;
+    -blue-700:  #1d4ed8;
+
+    -green-50:   #f0fdf4;
+    -green-100:  #dcfce7;
+    -green-500:  #22c55e;
+    -green-600:  #16a34a;
+    -green-700:  #15803d;
+
+    -emerald-50:  #ecfdf5;
+    -emerald-500: #10b981;
+    -emerald-600: #059669;
+
+    -red-50:   #fef2f2;
+    -red-100:  #fee2e2;
+    -red-500:  #ef4444;
+    -red-600:  #dc2626;
+    -red-700:  #b91c1c;
+
+    -amber-50:  #fffbeb;
+    -amber-100: #fef3c7;
+    -amber-500: #f59e0b;
+    -amber-600: #d97706;
+    -amber-700: #b45309;
+    -amber-800: #92400e;
+
+    -yellow-50:  #fefce8;
+    -yellow-100: #fef9c3;
+    -yellow-400: #facc15;
+    -yellow-600: #ca8a04;
+    -yellow-800: #854d0e;
+
+    -orange-50:  #fff7ed;
+    -orange-100: #ffedd5;
+    -orange-500: #f97316;
+    -orange-600: #ea580c;
+
+    -purple-50:  #faf5ff;
+    -purple-500: #a855f7;
+    -purple-600: #9333ea;
+
+    -cyan-50:   #ecfeff;
+    -cyan-500:  #06b6d4;
+    -cyan-600:  #0891b2;
+
+    /* Slate - kept only because a handful of FXML labels still ask for
+       text-slate-400/500/600/700/800. They resolve to the matching zinc. */
+    -slate-800: #18181b;
+    -slate-700: #27272a;
+    -slate-600: #3f3f46;
+    -slate-500: #52525b;
+    -slate-400: #a1a1aa;
+
+    /* =========================================================================
+     * SHADOWS - shadcn is almost shadowless; cards rely on the 1px border.
+     * ========================================================================= */
+    -shadow-xs: rgba(9, 9, 11, 0.05);
+    -shadow-sm: rgba(9, 9, 11, 0.08);
+    -shadow-md: rgba(9, 9, 11, 0.12);
+    -shadow-lg: rgba(9, 9, 11, 0.16);
+    -shadow-popover: rgba(9, 9, 11, 0.20);
+
+    /* =========================================================================
+     * OVERLAYS
+     * ========================================================================= */
+    -scrim:        rgba(9, 9, 11, 0.50);
+    -ring-wash:    rgba(9, 9, 11, 0.06);
+
+    /* =========================================================================
+     * GEOMETRY REFERENCE
+     * radius : controls 6px, cards 8px, modals 10px, pills 9999px
+     * spacing: 4 / 8 / 12 / 16 / 20 / 24 / 32
+     * height : controls 36px (h-9), compact 30px (h-8), dense 26px
+     * ========================================================================= */
+
+    /* =========================================================================
+     * BASE - Modena reads these to derive unstyled control chrome.
+     * ========================================================================= */
+    -fx-base: -zinc-50;
+    -fx-background: -zinc-50;
+    -fx-focus-color: -zinc-300;
+    -fx-text-fill: -foreground;
+}

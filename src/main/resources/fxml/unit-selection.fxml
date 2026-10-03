@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox fx:id="unitSelectionRoot" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="620.0" prefWidth="500.0"
+      styleClass="selection-dialog-container"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.modules.core.ui.controller.UnitSelectionController">
+
+    <padding>
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+    </padding>
+
+    <!-- Header Section -->
+    <VBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
+        <StackPane styleClass="selection-dialog-badge">
+            <FontIcon iconLiteral="mdi2o-office-building" iconSize="30" iconColor="#1e3c72"/>
+        </StackPane>
+        <Label text="Seleccionar unidad de negocio" styleClass="selection-dialog-title"/>
+        <Label fx:id="companyNameLabel" text="" styleClass="selection-dialog-subtitle" wrapText="true"/>
+    </VBox>
+
+    <Region prefHeight="25.0" VBox.vgrow="NEVER"/>
+
+    <!-- Unit List Card -->
+    <VBox alignment="CENTER" spacing="15.0" styleClass="selection-dialog-card" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        </padding>
+
+        <!-- Progress indicator while loading -->
+        <ProgressBar fx:id="progressBar" prefWidth="300.0" visible="false" managed="false"/>
+
+        <!-- Error message -->
+        <Label fx:id="errorLabel" styleClass="error-label" wrapText="true" visible="false" managed="false"/>
+
+        <!-- Empty state message - units are optional -->
+        <Label fx:id="emptyStateLabel" styleClass="empty-state-label" wrapText="true" visible="false" managed="false"
+               text="No se encontraron unidades de negocio para esta empresa.&#10;Puedes continuar sin seleccionar una unidad."/>
+
+        <!-- Unit ListView -->
+        <ListView fx:id="unitListView" prefHeight="250.0" styleClass="unit-list-view"/>
+
+        <!-- Selected unit info -->
+        <VBox fx:id="selectedUnitInfo" spacing="5.0" styleClass="selected-info-box" visible="false" managed="false">
+            <Label text="Seleccionada:" styleClass="info-label"/>
+            <Label fx:id="selectedUnitLabel" styleClass="selected-unit-name" wrapText="true"/>
+        </VBox>
+    </VBox>
+
+    <Region prefHeight="20.0" VBox.vgrow="NEVER"/>
+
+    <!-- Action Buttons -->
+    <HBox alignment="CENTER" spacing="15.0" VBox.vgrow="NEVER">
+        <Button fx:id="cancelButton" onAction="#handleCancel" prefHeight="40.0" prefWidth="120.0"
+                text="Cancelar" styleClass="cancel-button"/>
+        <Button fx:id="skipButton" onAction="#handleSkip" prefHeight="40.0" prefWidth="120.0"
+                text="Omitir" styleClass="skip-button"/>
+        <Button fx:id="selectButton" onAction="#handleSelect" prefHeight="40.0" prefWidth="150.0"
+                text="Seleccionar" styleClass="select-button" disable="true"/>
+    </HBox>
+
+    <Region prefHeight="10.0" VBox.vgrow="NEVER"/>
+
+    <!-- Footer -->
+    <Label text="Sistema multi-tenant - Selección a nivel de unidad de negocio" styleClass="selection-dialog-footer"/>
+</VBox>

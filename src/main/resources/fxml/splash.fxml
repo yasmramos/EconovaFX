@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.geometry.Insets?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<!-- Full-bleed coloured splash: brand gradient fills the whole window, the
+     branding sits directly on it (no card). -->
+<StackPane fx:id="rootPane" styleClass="splash-container"
+           prefWidth="620.0" prefHeight="340.0"
+           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.econovafx.modules.core.ui.view.SplashController">
+
+    <VBox alignment="CENTER" spacing="14.0" maxHeight="-Infinity" maxWidth="-Infinity"
+          StackPane.alignment="CENTER">
+
+        <StackPane styleClass="splash-logo-badge">
+            <FontIcon iconLiteral="mdi2b-bank" iconSize="46" styleClass="splash-logo-icon"/>
+        </StackPane>
+
+        <Label text="EconovaFX" styleClass="splash-title"/>
+        <Label text="Sistema Contable Profesional" styleClass="splash-subtitle"/>
+        <Label fx:id="versionLabel" styleClass="splash-version"/>
+
+        <VBox spacing="12.0" alignment="CENTER" styleClass="splash-progress-box">
+            <padding>
+                <Insets top="18"/>
+            </padding>
+            <ProgressBar fx:id="progressBar" prefWidth="380" progress="0"/>
+            <Label fx:id="statusLabel" text="Iniciando..." styleClass="splash-status"/>
+        </VBox>
+    </VBox>
+</StackPane>

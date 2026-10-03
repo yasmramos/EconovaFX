@@ -1,0 +1,63 @@
+/* =============================================================================
+ * SPLASH - EconovaFX
+ * Full-bleed brand-coloured screen (no card): deep blue gradient, white
+ * circular badge, white type and a white progress bar.
+ * ========================================================================== */
+
+.splash-container {
+    -fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);
+}
+
+/* White circular badge so it pops against the blue background. */
+.splash-logo-badge {
+    -fx-min-width: 96;
+    -fx-min-height: 96;
+    -fx-max-width: 96;
+    -fx-max-height: 96;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 9999;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 18, 0, 0, 6);
+}
+
+/* Bank icon inside the white badge. */
+.splash-logo-icon {
+    -fx-fill: #1e3c72;
+}
+
+/* ------------------------------------------------------------------ text */
+.splash-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 30px;
+    -fx-font-weight: 600;
+}
+
+.splash-subtitle {
+    -fx-text-fill: rgba(255, 255, 255, 0.80);
+    -fx-font-size: 14px;
+}
+
+.splash-version {
+    -fx-text-fill: rgba(255, 255, 255, 0.55);
+    -fx-font-size: 11px;
+}
+
+.splash-status {
+    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-font-size: 12px;
+}
+
+/* --------------------------------------------------------------- progress */
+.splash-container .progress-bar {
+    -fx-pref-height: 6;
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-radius: 9999;
+}
+.splash-container .progress-bar .track {
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-radius: 9999;
+}
+.splash-container .progress-bar .bar {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 9999;
+    -fx-background-insets: 0;
+}

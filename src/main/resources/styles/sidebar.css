@@ -1,0 +1,244 @@
+/* =============================================================================
+ * SIDEBAR / HEADER / SCROLL - EconovaFX
+ * The application shell: dark zinc navigation rail on the left, white workspace
+ * with a hairline header, scrollable content.
+ *
+ * The rail stays dark on purpose: every navigation FontIcon in main-view.fxml
+ * is hard-coded iconColor="WHITE", and a dark rail is also shadcn's own
+ * sidebar-dark variant.
+ * ========================================================================== */
+
+/* -----------------------------------------------------------------------------
+ * NAVIGATION RAIL
+ * --------------------------------------------------------------------------- */
+.sidebar-container,
+.sidebar {
+    -fx-background-color: -zinc-950;
+    -fx-padding: 16 12;
+    -fx-pref-width: 260;
+    -fx-max-width: 260;
+    -fx-min-width: 260;
+}
+
+.sidebar-brand {
+    -fx-background-color: transparent;
+    -fx-padding: 4 8 20 8;
+}
+
+.sidebar-section-title {
+    -fx-text-fill: -zinc-500;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-padding: 16 8 6 8;
+}
+
+.sidebar-menu-group {
+    -fx-background-color: transparent;
+}
+
+.sidebar-btn-wrapper {
+    -fx-background-color: transparent;
+}
+
+.sidebar-separator {
+    -fx-background-color: transparent;
+    -fx-border-color: -zinc-800;
+    -fx-border-width: 1 0 0 0;
+    -fx-max-height: 1;
+    -fx-pref-height: 1;
+    -fx-min-height: 1;
+    -fx-margin: 8 8 4 8;
+}
+
+.sidebar-submenu {
+    -fx-background-color: transparent;
+    -fx-padding: 2 0 2 14;
+}
+
+/* -------------------------------------------------------------- nav button */
+.button.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 8 10;
+    -fx-min-height: 34;
+    -fx-max-height: 34;
+    -fx-alignment: center-left;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -zinc-400;
+    -fx-graphic-gap: 10;
+}
+.button.sidebar-btn .label { -fx-text-fill: -zinc-400; }
+.button.sidebar-btn > .graphic > .FontIcon { -fx-fill: -zinc-400; }
+
+.button.sidebar-btn:hover {
+    -fx-background-color: #1c1c1f;
+    -fx-border-color: transparent;
+}
+.button.sidebar-btn:hover .label,
+.button.sidebar-btn:hover > .graphic > .FontIcon { -fx-text-fill: -zinc-100; -fx-fill: -zinc-100; }
+
+.button.sidebar-btn:armed {
+    -fx-background-color: -zinc-800;
+    -fx-border-color: -zinc-800;
+}
+.button.sidebar-btn:armed .label { -fx-text-fill: -zinc-50; }
+.button.sidebar-btn:armed > .graphic > .FontIcon { -fx-fill: -zinc-50; }
+
+/* Active route: a 3px white bar on the leading edge, shadcn style */
+.button.sidebar-btn-active {
+    -fx-background-color: -zinc-800;
+    -fx-border-color: -zinc-800;
+    -fx-text-fill: white;
+}
+.button.sidebar-btn-active .label { -fx-text-fill: white; }
+.button.sidebar-btn-active > .graphic > .FontIcon { -fx-fill: white; }
+.button.sidebar-btn-active:hover { -fx-background-color: -zinc-800; }
+
+.button.sidebar-submenu-btn {
+    -fx-padding: 6 10;
+    -fx-min-height: 30;
+    -fx-max-height: 30;
+    -fx-font-size: 13px;
+    -fx-font-weight: 400;
+}
+.button.sidebar-submenu-btn-active {
+    -fx-background-color: -zinc-800;
+    -fx-text-fill: white;
+}
+.button.sidebar-submenu-btn-active .label { -fx-text-fill: white; }
+.button.sidebar-submenu-btn-active > .graphic > .FontIcon { -fx-fill: white; }
+
+.sidebar-chevron-float {
+    -fx-fill: -zinc-500;
+    -fx-cursor: hand;
+    -fx-padding: 4;
+}
+.sidebar-chevron-float:hover { -fx-fill: -zinc-200; }
+
+/* Collapse toggle in the brand row */
+.btn-icon-toggle {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 6;
+    -fx-padding: 4;
+    -fx-min-width: 28;
+    -fx-pref-width: 28;
+    -fx-min-height: 28;
+    -fx-pref-height: 28;
+    -fx-cursor: hand;
+}
+.btn-icon-toggle > .graphic > .FontIcon { -fx-fill: -zinc-400; }
+.btn-icon-toggle:hover { -fx-background-color: #1c1c1f; }
+.btn-icon-toggle:hover > .graphic > .FontIcon { -fx-fill: -zinc-100; }
+
+/* ------------------------------------------------------------ collapsed rail */
+.sidebar-collapsed {
+    -fx-pref-width: 60;
+    -fx-max-width: 60;
+    -fx-min-width: 60;
+    -fx-padding: 12 8;
+}
+.sidebar-collapsed .button.sidebar-btn {
+    -fx-padding: 8;
+    -fx-alignment: center;
+    -fx-max-width: 44;
+}
+.sidebar-collapsed .button.sidebar-btn .label { -fx-max-width: 0; }
+.sidebar-collapsed .button.sidebar-btn-active { -fx-background-color: -zinc-800; }
+.sidebar-collapsed .button.sidebar-submenu-btn { -fx-display: none; }
+.sidebar-collapsed .sidebar-chevron-float { -fx-visibility: hidden; }
+.sidebar-collapsed .sidebar-submenu { -fx-padding: 0; }
+.sidebar-collapsed .sidebar-section-title,
+.sidebar-collapsed .sidebar-separator { -fx-max-width: 0; -fx-padding: 0; }
+
+/* -----------------------------------------------------------------------------
+ * SCROLLBARS (rail + workspace)
+ * --------------------------------------------------------------------------- */
+.sidebar-scroll,
+.content-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+}
+.sidebar-scroll > .viewport,
+.content-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+.sidebar-scroll > .scroll-bar:vertical,
+.content-scroll > .scroll-bar:vertical {
+    -fx-pref-width: 10;
+    -fx-background-color: transparent;
+}
+.sidebar-scroll > .scroll-bar:vertical > .thumb,
+.content-scroll > .scroll-bar:vertical > .thumb {
+    -fx-background-color: -zinc-300;
+    -fx-background-radius: 9999;
+    -fx-background-insets: 3;
+}
+.sidebar-scroll > .scroll-bar:vertical > .thumb:hover,
+.content-scroll > .scroll-bar:vertical > .thumb:hover {
+    -fx-background-color: -zinc-400;
+}
+.sidebar-scroll > .scroll-bar > .increment-button,
+.sidebar-scroll > .scroll-bar > .decrement-button,
+.content-scroll > .scroll-bar > .increment-button,
+.content-scroll > .scroll-bar > .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+/* -----------------------------------------------------------------------------
+ * HEADER - white surface, hairline bottom border, no shadow.
+ * --------------------------------------------------------------------------- */
+.header,
+.header-main {
+    -fx-background-color: -background;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 0 24;
+    -fx-min-height: 56;
+    -fx-pref-height: 56;
+    -fx-alignment: center-left;
+}
+
+.header-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.header-subtitle {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 12px;
+}
+
+.header-user {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 13px;
+    -fx-background-color: -muted;
+    -fx-background-radius: 9999;
+    -fx-padding: 5 12;
+}
+
+.header-logout {
+    -fx-background-color: transparent;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-padding: 6 12;
+    -fx-min-height: 32;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -foreground;
+    -fx-cursor: hand;
+}
+.header-logout .label { -fx-text-fill: -foreground; }
+.header-logout:hover { -fx-background-color: -muted; -fx-border-color: -input-hover; }
+.header-logout:pressed { -fx-background-color: -muted-hover; }
