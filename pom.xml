@@ -572,6 +572,7 @@
                             </nativeImageArgs>
                             <linkerArgs>
                                 <arg>management_ext.lib</arg>
+                                <arg>psapi.lib</arg>
                             </linkerArgs>
                             <bundlesList>
                                 <bundle>messages</bundle>
