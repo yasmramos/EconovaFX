@@ -7,7 +7,7 @@
 
 # Application Configuration
 app:
-  name: EconoNova FX (Test)
+  name: EconovaFX (Test)
   version: 1.0.0-TEST
   database:
     path: ./db/test

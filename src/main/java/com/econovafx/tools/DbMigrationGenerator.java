@@ -25,7 +25,7 @@ public class DbMigrationGenerator {
 
     public static void main(String[] args) {
         System.out.println("=== Ebean DB Migration Generator ===");
-        System.out.println("Generating migrations for EconoNova FX...");
+        System.out.println("Generating migrations for EconovaFX...");
         
         // Generate migrations for MASTER database (Company management)
         generateMasterMigrations();
