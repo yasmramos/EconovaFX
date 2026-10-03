@@ -1,4 +1,4 @@
-# 👤 EconoNova FX - User Guide
+# 👤 EconovaFX - User Guide
 
 ## 📖 Table of Contents
 
@@ -17,7 +17,7 @@
 
 ### Prerequisites
 
-Before installing EconoNova FX, ensure you have:
+Before installing EconovaFX, ensure you have:
 
 - **Java JDK 17** or higher ([Download](https://adoptium.net/))
 - **Maven 3.9+** (for building from source)

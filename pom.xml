@@ -10,7 +10,7 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>EconoNova FX - Accounting System</name>
+    <name>EconovaFX - Accounting System</name>
     <description>Modern accounting system built with JavaFX, Ebean ORM, and manual dependency injection</description>
 
     <properties>

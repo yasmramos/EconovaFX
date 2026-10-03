@@ -1,8 +1,8 @@
-# 🏗️ EconoNova FX - Architecture Documentation
+# 🏗️ EconovaFX - Architecture Documentation
 
 ## System Overview
 
-EconoNova FX is a modern accounting system built with **JavaFX 17** for the user interface and **Ebean ORM 17** for data persistence, designed to comply with Cuban accounting standards (Resolution 340/2004).
+EconovaFX is a modern accounting system built with **JavaFX 17** for the user interface and **Ebean ORM 17** for data persistence, designed to comply with Cuban accounting standards (Resolution 340/2004).
 
 ## 📐 Architecture Pattern
 
