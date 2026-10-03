@@ -57,35 +57,16 @@ class InventoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        inventoryService = new InventoryService();
-        // Inyectar mocks manualmente (ya que usamos @Inject en lugar de constructor)
-        try {
-            var field = InventoryService.class.getDeclaredField("itemRepository");
-            field.setAccessible(true);
-            field.set(inventoryService, itemRepository);
-
-            field = InventoryService.class.getDeclaredField("categoryRepository");
-            field.setAccessible(true);
-            field.set(inventoryService, categoryRepository);
-
-            field = InventoryService.class.getDeclaredField("movementRepository");
-            field.setAccessible(true);
-            field.set(inventoryService, movementRepository);
-
-            field = InventoryService.class.getDeclaredField("warehouseRepository");
-            field.setAccessible(true);
-            field.set(inventoryService, warehouseRepository);
-
-            field = InventoryService.class.getDeclaredField("transactionService");
-            field.setAccessible(true);
-            field.set(inventoryService, transactionService);
-
-            field = InventoryService.class.getDeclaredField("auditService");
-            field.setAccessible(true);
-            field.set(inventoryService, auditService);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        // InventoryService uses constructor injection (Avaje Inject wires a single
+        // constructor), so pass the mocks directly to the constructor.
+        inventoryService = new InventoryService(
+            itemRepository,
+            categoryRepository,
+            movementRepository,
+            warehouseRepository,
+            transactionService,
+            auditService
+        );
     }
 
     @Test
