@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   native-image-build-windows:
-    runs-on: windows-2022
+    runs-on: windows-11-arm
 
     steps:
     - uses: actions/checkout@v5
