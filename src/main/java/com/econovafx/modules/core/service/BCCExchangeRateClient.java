@@ -126,7 +126,7 @@ public class BCCExchangeRateClient {
                         .uri(URI.create(url))
                         .GET()
                         .header("Accept", "application/json")
-                        .header("User-Agent", "EconoNovaFX/1.0")
+                        .header("User-Agent", "EconovaFX/1.0")
                         .timeout(Duration.ofSeconds(timeoutSeconds))
                         .build();
 

@@ -21,8 +21,14 @@ import com.econovafx.modules.security.ui.controller.LoginController;
 import java.io.IOException;
 import java.util.Locale;
 import javafx.application.Application;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -33,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main application class for EconoNova FX Accounting System
+ * Main application class for EconovaFX Accounting System
  */
 public class App extends Application {
 
@@ -50,7 +56,7 @@ public class App extends Application {
 
     @Override
     public void init() throws Exception {
-        logger.info("Initializing EconoNova FX Application v{}", VERSION);
+        logger.info("Initializing EconovaFX Application v{}", VERSION);
         
         // Load Lato font from resources
         Font.loadFont(getClass().getResourceAsStream("/fonts/Lato-Regular.ttf"), 12);
@@ -171,9 +177,12 @@ public class App extends Application {
             splashController = loader.getController();
             
             Scene splashScene = new Scene(root);
+            // Brand-blue scene fill: anything peeking from behind the root (or the
+            // brief pre-CSS frame) shows brand colour instead of default white.
+            splashScene.setFill(Color.web("#1e3c72"));
             StyleSheets.apply(splashScene, "/css/splash.css");
             splashStage.setScene(splashScene);
-            splashStage.setTitle("EconoNova FX - Loading");
+            splashStage.setTitle("EconovaFX - Loading");
             splashStage.setResizable(false);
             splashStage.initStyle(StageStyle.UNDECORATED);
             splashStage.centerOnScreen();
@@ -207,7 +216,7 @@ public class App extends Application {
             
             loginStage = new Stage();
             loginStage.setScene(loginScene);
-            loginStage.setTitle("EconoNova FX - Login");
+            loginStage.setTitle("EconovaFX - Login");
             loginStage.setResizable(false);
             loginStage.initStyle(StageStyle.UNDECORATED);
             loginStage.show();
@@ -215,12 +224,23 @@ public class App extends Application {
             
             // Set callback for successful login
             loginController.setOnLoginSuccess(this::loadMainAppAndShowCompanySelection);
-            
-            // Close splash and show login
-            if (splashStage != null) {
+
+            // Dissolve the splash into the login: keep the splash on top and fade
+            // its whole window out so the login is revealed underneath. Fading the
+            // Stage (rather than the root node) avoids the white flash produced by
+            // the default white scene fill showing through the gradient.
+            if (splashStage != null && splashStage.isShowing()) {
+                Stage fadingSplash = splashStage;
+                fadingSplash.toFront();
+                Timeline dissolve = new Timeline(
+                        new KeyFrame(Duration.millis(450),
+                                new KeyValue(fadingSplash.opacityProperty(), 0.0, Interpolator.EASE_BOTH)));
+                dissolve.setOnFinished(ev -> fadingSplash.close());
+                dissolve.play();
+            } else if (splashStage != null) {
                 splashStage.close();
             }
-            
+
             logger.info("Login screen displayed successfully");
             
         } catch (IOException e) {
@@ -399,7 +419,7 @@ public class App extends Application {
                     "/styles/sidebar.css",
                     "/styles/dashboard.css");
 
-            primaryStage.setTitle("EconoNova FX - Accounting System");
+            primaryStage.setTitle("EconovaFX - Accounting System");
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(1024);
             primaryStage.setMinHeight(768);

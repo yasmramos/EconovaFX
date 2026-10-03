@@ -104,7 +104,7 @@ public class HelpController implements Initializable {
     private void handleReleaseNotes() {
         logger.debug("Showing release notes");
         showAlert(Alert.AlertType.INFORMATION, "Release Notes", 
-                "EconoNova FX v1.0.0\n\nInitial release with core accounting features.");
+                "EconovaFX v1.0.0\n\nInitial release with core accounting features.");
     }
     
     @FXML

@@ -397,7 +397,7 @@ public class ExportService {
                 "\n" + bundle.getString("report.voucher.third.party.type") + ": " + thirdParty.getType());
             Comment comment = drawing.createCellComment(anchor);
             comment.setString(richText);
-            comment.setAuthor("EconoNova FX");
+            comment.setAuthor("EconovaFX");
             
             // Data rows with running balance
             int rowNum = 1;

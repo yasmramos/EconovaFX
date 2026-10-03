@@ -6,8 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.StackPane;
-import javafx.animation.FadeTransition;
-import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
@@ -37,7 +35,7 @@ public class SplashController {
 
     @FXML
     public void initialize() {
-        versionLabel.setText("EconoNova FX v1.0.0");
+        versionLabel.setText("EconovaFX v1.0.0");
         progressBar.setProgress(0);
         statusLabel.setText("Iniciando aplicación...");
         
@@ -78,31 +76,20 @@ public class SplashController {
                 // Small pause before showing the main window
                 Thread.sleep(500);
                 
-                // Smooth transition to the main app
+                // Hand control back to App, which dissolves the splash window into
+                // the login window (see App#showLoginScreen). The dissolve fades the
+                // Stage itself, so the gradient is never replaced by the white scene
+                // fill the way a fade of the root node used to do.
                 javafx.application.Platform.runLater(() -> {
                     try {
-                        FadeTransition fadeOut = new FadeTransition(Duration.millis(800), rootPane);
-                        fadeOut.setFromValue(1.0);
-                        fadeOut.setToValue(0.0);
-                        fadeOut.setOnFinished(e -> {
-                            try {
-                                if (onInitializationComplete != null) {
-                                    logger.info("Executing initialization complete callback...");
-                                    onInitializationComplete.run();
-                                } else {
-                                    logger.error("ERROR: onInitializationComplete is null!");
-                                }
-                            } catch (Exception ex) {
-                                logger.error("Error executing callback: " + ex.getMessage(), ex);
-                            }
-                        });
-                        fadeOut.play();
-                    } catch (Exception e) {
-                        logger.error("Error in fade transition: " + e.getMessage(), e);
-                        // Try calling directly if animation fails
                         if (onInitializationComplete != null) {
+                            logger.info("Executing initialization complete callback...");
                             onInitializationComplete.run();
+                        } else {
+                            logger.error("ERROR: onInitializationComplete is null!");
                         }
+                    } catch (Exception ex) {
+                        logger.error("Error executing callback: " + ex.getMessage(), ex);
                     }
                 });
                 

@@ -187,7 +187,7 @@ public class MainViewController implements Initializable {
         javafx.application.Platform.runLater(() -> {
             try {
                 // Show welcome notification after dashboard is visible
-                NotificationService.showInfo(getStage(), "Welcome to EconoNova FX v1.0.0");
+                NotificationService.showInfo(getStage(), "Welcome to EconovaFX v1.0.0");
             } catch (Exception e) {
                 logger.error("Error showing welcome notification", e);
             }
@@ -515,7 +515,7 @@ public class MainViewController implements Initializable {
     private void showAbout() {
         logger.debug("Showing about");
         setActiveButton(btnAbout);
-        updateStatus("EconoNova FX v1.0.0");
+        updateStatus("EconovaFX v1.0.0");
     }
 
     @FXML

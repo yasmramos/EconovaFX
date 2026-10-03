@@ -165,7 +165,9 @@ public class CompanySelectionController {
         companyListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 selectedCompany = newVal;
-                selectedCompanyLabel.setText(selectedCompany.getName() + " - NIF: " + selectedCompany.getNif());
+                String nif = selectedCompany.getNif();
+                selectedCompanyLabel.setText(selectedCompany.getName()
+                        + (nif != null && !nif.isEmpty() ? " - NIF: " + nif : " - Cód: " + selectedCompany.getCode()));
                 selectedCompanyInfo.setVisible(true);
                 selectedCompanyInfo.setManaged(true);
                 selectButton.setDisable(false);

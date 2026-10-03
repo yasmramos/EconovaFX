@@ -43,7 +43,7 @@ public final class ConfigFileUtil {
         Path dir = ensureConfigDir();
         Path file = dir.resolve("econovafx.properties");
         try (OutputStream out = Files.newOutputStream(file, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-            props.store(out, "EconoNovaFX external configuration (created by setup assistant)");
+            props.store(out, "EconovaFX external configuration (created by setup assistant)");
         }
         logger.info("Saved external properties to {}", file);
         return file;
