@@ -32,11 +32,17 @@ public class DatabaseConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
 
-    // Base de datos maestra (gestión de empresas)
-    private static Database masterDatabase;
+    // Base de datos maestra (gestión de empresas).
+    // volatile + init lock: initializeMaster()/initializeMultiTenant() can be
+    // reached from the splash worker thread AND the JavaFX Application Thread
+    // (via DatabaseFactory when the Database bean is resolved).
+    private static volatile Database masterDatabase;
 
     // Base de datos multi-tenant configurada nativamente
-    private static Database tenantDatabase;
+    private static volatile Database tenantDatabase;
+
+    // Guards one-time initialization of masterDatabase / tenantDatabase
+    private static final Object INIT_LOCK = new Object();
 
     // Cache de DataSources por empresa (tenant)
     private static final ConcurrentHashMap<Long, DataSource> tenantDataSources = new ConcurrentHashMap<>();
@@ -65,7 +71,32 @@ public class DatabaseConfig {
         initializeMaster();
     }
 
+    /**
+     * Opens the master database exactly once per JVM.
+     *
+     * <p>This MUST be idempotent. It used to be called unconditionally on every
+     * resolution of the {@code Database} bean (see DatabaseFactory), which built a
+     * second/third Ebean Database over the same H2 file while the earlier one was
+     * still serving connections. With {@code AUTO_SERVER=TRUE} on the URL, H2 gives
+     * each in-JVM open its own database instance, so everything the seeder wrote
+     * through the first instance became invisible: startup logged "No companies
+     * found" right after seeding, and login then failed with "user not found".
+     */
     public static void initializeMaster() {
+        if (masterDatabase != null) {
+            logger.debug("Master database already initialized, reusing existing instance");
+            return;
+        }
+        synchronized (INIT_LOCK) {
+            if (masterDatabase != null) {
+                logger.debug("Master database already initialized, reusing existing instance");
+                return;
+            }
+            openMaster();
+        }
+    }
+
+    private static void openMaster() {
         try {
             logger.info("Opening master {} connection: {}", AppConfig.DB_TYPE, AppConfig.MASTER_DB_URL);
             
@@ -148,7 +179,25 @@ public class DatabaseConfig {
      * Ebean. Configura TenantMode.DB con CurrentTenantProvider y
      * TenantDataSourceProvider.
      */
+    /**
+     * Builds the native multi-tenant Ebean database exactly once per JVM, for the
+     * same reason as {@link #initializeMaster()} — see that javadoc.
+     */
     public static void initializeMultiTenant() {
+        if (tenantDatabase != null) {
+            logger.debug("Multi-tenant database already initialized, reusing existing instance");
+            return;
+        }
+        synchronized (INIT_LOCK) {
+            if (tenantDatabase != null) {
+                logger.debug("Multi-tenant database already initialized, reusing existing instance");
+                return;
+            }
+            openMultiTenant();
+        }
+    }
+
+    private static void openMultiTenant() {
         try {
             // CurrentTenantProvider: obtiene el tenant actual del contexto
             CurrentTenantProvider tenantProvider = () -> {
@@ -412,21 +461,25 @@ public class DatabaseConfig {
      * Cierra todas las conexiones de base de datos.
      */
     public static void shutdown() {
-        // Cerrar base de datos multi-tenant
-        if (tenantDatabase != null) {
-            tenantDatabase.shutdown();
-            logger.info("Multi-tenant database shutdown complete");
+        synchronized (INIT_LOCK) {
+            // Cerrar base de datos multi-tenant
+            if (tenantDatabase != null) {
+                tenantDatabase.shutdown();
+                tenantDatabase = null;
+                logger.info("Multi-tenant database shutdown complete");
+            }
+
+            // Cerrar base de datos maestra
+            if (masterDatabase != null) {
+                masterDatabase.shutdown();
+                masterDatabase = null;
+                logger.info("Master database shutdown complete");
+            }
+
+            // Limpiar cache de DataSources
+            tenantDataSources.clear();
+
+            logger.info("All databases and DataSources shutdown complete");
         }
-
-        // Cerrar base de datos maestra
-        if (masterDatabase != null) {
-            masterDatabase.shutdown();
-            logger.info("Master database shutdown complete");
-        }
-
-        // Limpiar cache de DataSources
-        tenantDataSources.clear();
-
-        logger.info("All databases and DataSources shutdown complete");
     }
 }

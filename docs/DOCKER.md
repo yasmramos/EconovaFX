@@ -1,8 +1,8 @@
-# 🐳 EconoNova FX - Docker Configuration (Future Enhancement)
+# 🐳 EconovaFX - Docker Configuration (Future Enhancement)
 
 ## Overview
 
-This document outlines the planned Docker configuration for EconoNova FX to support containerized deployment in production environments.
+This document outlines the planned Docker configuration for EconovaFX to support containerized deployment in production environments.
 
 ## Planned Architecture
 
@@ -66,7 +66,7 @@ FROM eclipse-temurin:17-jre-alpine
 
 LABEL maintainer="yasmramos95@gmail.com"
 LABEL version="0.1.0"
-LABEL description="EconoNova FX - Professional Accounting System"
+LABEL description="EconovaFX - Professional Accounting System"
 
 # Install dependencies
 RUN apk add --no-cache fontconfig ttf-dejavu

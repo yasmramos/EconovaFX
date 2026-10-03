@@ -4,11 +4,7 @@ import jakarta.inject.Singleton;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 /**
@@ -24,35 +20,40 @@ public class NotificationService {
     }
 
     public void showInfo(VBox container, String message) {
-        showNotification(container, message, Color.BLUE, "INFO");
+        showNotification(container, message, "notification-info", "INFO");
     }
 
     public void showSuccess(VBox container, String message) {
-        showNotification(container, message, Color.GREEN, "SUCCESS");
+        showNotification(container, message, "notification-success", "SUCCESS");
     }
 
     public void showWarning(VBox container, String message) {
-        showNotification(container, message, Color.ORANGE, "WARNING");
+        showNotification(container, message, "notification-warning", "WARNING");
     }
 
     public void showError(VBox container, String message) {
-        showNotification(container, message, Color.RED, "ERROR");
+        showNotification(container, message, "notification-error", "ERROR");
     }
 
-    private void showNotification(VBox container, String message, Color color, String type) {
+    /**
+     * Shows a notification. Its appearance comes from the {@code notification}
+     * and variant style classes (see utilities.css), so no colour is set in
+     * code and the banner matches the rest of the app.
+     *
+     * @param container the VBox that hosts the notification
+     * @param message   the message to display
+     * @param variant   style class selecting the accent colour
+     * @param type      short type label shown before the message
+     */
+    private void showNotification(VBox container, String message, String variant, String type) {
         Platform.runLater(() -> {
             if (container == null) {
                 return; // Skip if no container provided
             }
-            
+
             Label notification = new Label(type + ": " + message);
-            notification.setTextFill(Color.WHITE);
-            notification.setPadding(new javafx.geometry.Insets(10, 15, 10, 15));
             notification.setMaxWidth(Double.MAX_VALUE);
-            notification.setStyle("-fx-background-radius: 5px; -fx-font-weight: bold;");
-            
-            BackgroundFill bgFill = new BackgroundFill(color, CornerRadii.EMPTY, null);
-            notification.setBackground(new Background(bgFill));
+            notification.getStyleClass().addAll("notification", variant);
 
             container.getChildren().add(notification);
 

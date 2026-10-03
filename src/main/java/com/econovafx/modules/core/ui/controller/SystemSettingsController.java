@@ -5,6 +5,7 @@ import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.core.service.backup.BackupSchedulerService;
+import com.econovafx.modules.core.ui.util.StyleSheets;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -204,7 +205,7 @@ public class SystemSettingsController {
             loader.setResources(java.util.ResourceBundle.getBundle("i18n/messages"));
             VBox root = loader.load();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/css/theme-tokens.css").toExternalForm());
+            StyleSheets.apply(scene, "/css/dialog-styles.css", "/css/database-setup.css");
 
             Stage dialog = new Stage();
             dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);

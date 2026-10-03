@@ -28,7 +28,7 @@
 
     <!-- Active Rates Section -->
     <TitledPane text="Active Rates (Current)" expanded="true" VBox.vgrow="ALWAYS">
-        <graphic><FontIcon iconLiteral="mdi2c-currency-multiple" iconSize="16"/></graphic>
+        <graphic><FontIcon iconLiteral="mdi2c-cash-multiple" iconSize="16"/></graphic>
         <VBox spacing="10">
             <HBox alignment="CENTER_RIGHT" spacing="5">
                 <Label fx:id="lastUpdateLabel" styleClass="info-label"/>

@@ -1,14 +1,13 @@
 package com.econovafx.modules.billing.controller;
 
-import com.econovafx.controller.ThirdPartyTransactionsController;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
+import com.econovafx.modules.core.ui.util.StyleSheets;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
-import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -155,11 +154,12 @@ public class ThirdPartiesController implements Initializable {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
+                getStyleClass().removeAll("value-positive", "value-negative");
                 if (empty || item == null) {
                     setText(null);
                 } else {
                     setText(item ? "Active" : "Inactive");
-                    setStyle(item ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+                    getStyleClass().add(item ? "value-positive" : "value-negative");
                 }
             }
         });
@@ -321,7 +321,9 @@ public class ThirdPartiesController implements Initializable {
             // Create and show stage
             javafx.stage.Stage stage = new javafx.stage.Stage();
             stage.setTitle("Transactions - " + selected.getName());
-            stage.setScene(new javafx.scene.Scene(root, 900, 600));
+            javafx.scene.Scene transactionsScene = new javafx.scene.Scene(root, 900, 600);
+            StyleSheets.apply(transactionsScene, "/css/main-styles.css");
+            stage.setScene(transactionsScene);
             stage.initOwner(thirdPartiesTable.getScene().getWindow());
             stage.setResizable(true);
             
@@ -377,13 +379,11 @@ public class ThirdPartiesController implements Initializable {
             private final HBox pane = new HBox(5, btnEdit, btnDelete);
             
             {
-                btnEdit.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;");
-                btnEdit.setOnMouseEntered(e -> btnEdit.setStyle("-fx-background-color: #2563eb; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
-                btnEdit.setOnMouseExited(e -> btnEdit.setStyle("-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
-                
-                btnDelete.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;");
-                btnDelete.setOnMouseEntered(e -> btnDelete.setStyle("-fx-background-color: #dc2626; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
-                btnDelete.setOnMouseExited(e -> btnDelete.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-padding: 4 8; -fx-background-radius: 4; -fx-cursor: hand;"));
+                // Style comes from the shared row-action classes; the hover tint is a CSS
+                // pseudo-class, so the manual mouse handlers that used to
+                // re-apply setStyle() on every hover are gone.
+                btnEdit.getStyleClass().addAll("row-action", "row-action-info");
+                btnDelete.getStyleClass().addAll("row-action", "row-action-danger");
                 
                 btnEdit.setOnAction(event -> {
                     ThirdParty thirdParty = getTableView().getItems().get(getIndex());

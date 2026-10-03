@@ -31,23 +31,34 @@ public class InventoryService {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryService.class);
 
-    @Inject
-    public InventoryItemRepository itemRepository;
+    // Avaje Inject wires beans via a single constructor; it has no @Inject for fields,
+    // so all of these repositories were always null.
+    private final InventoryItemRepository itemRepository;
 
-    @Inject
-    public InventoryCategoryRepository categoryRepository;
+    private final InventoryCategoryRepository categoryRepository;
 
-    @Inject
-    public InventoryMovementRepository movementRepository;
+    private final InventoryMovementRepository movementRepository;
 
-    @Inject
-    public WarehouseRepository warehouseRepository;
+    private final WarehouseRepository warehouseRepository;
 
-    @Inject
-    public TransactionService transactionService;
+    private final TransactionService transactionService;
 
-    @Inject
-    public AuditService auditService;
+    private final AuditService auditService;
+
+    public InventoryService(
+            InventoryItemRepository itemRepository,
+            InventoryCategoryRepository categoryRepository,
+            InventoryMovementRepository movementRepository,
+            WarehouseRepository warehouseRepository,
+            TransactionService transactionService,
+            AuditService auditService) {
+        this.itemRepository = itemRepository;
+        this.categoryRepository = categoryRepository;
+        this.movementRepository = movementRepository;
+        this.warehouseRepository = warehouseRepository;
+        this.transactionService = transactionService;
+        this.auditService = auditService;
+    }
 
     /**
      * Calcula el costo de salida según el método de valoración del almacén.

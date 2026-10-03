@@ -5,7 +5,6 @@ import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
-import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -110,11 +109,12 @@ public class TransactionsController implements Initializable {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
+                getStyleClass().removeAll("value-positive", "value-warning");
                 if (empty || item == null) {
                     setText(null);
                 } else {
                     setText(item ? "Publicado" : "Borrador");
-                    setStyle(item ? "-fx-text-fill: #27ae60;" : "-fx-text-fill: #f39c12;");
+                    getStyleClass().add(item ? "value-positive" : "value-warning");
                 }
             }
         });

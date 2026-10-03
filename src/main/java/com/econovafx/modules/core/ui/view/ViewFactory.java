@@ -26,6 +26,7 @@ import com.econovafx.modules.accounting.controller.TransactionsController;
 import com.econovafx.modules.inventory.controller.InventoryController;
 import com.econovafx.modules.inventory.service.InventoryService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
+import com.econovafx.modules.core.ui.util.StyleSheets;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -276,9 +277,10 @@ public class ViewFactory {
             
             Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
-            
-            // Add custom styles
-            scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
+
+            // These forms live in their own UNDECORATED stage, so they need the
+            // full design system, not just the dialog sheet.
+            StyleSheets.apply(scene, "/css/dialog-styles.css");
             
             stage.setScene(scene);
             stage.setResizable(false);
@@ -309,9 +311,10 @@ public class ViewFactory {
             
             Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
-            
-            // Add custom styles
-            scene.getStylesheets().add(getClass().getResource("/styles/dialog-styles.css").toExternalForm());
+
+            // These forms live in their own UNDECORATED stage, so they need the
+            // full design system, not just the dialog sheet.
+            StyleSheets.apply(scene, "/css/dialog-styles.css");
             
             stage.setScene(scene);
             stage.setResizable(true);
@@ -433,11 +436,10 @@ public class ViewFactory {
 
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.setTitle("Configuración del Sistema");
-            stage.setScene(new Scene(root, 900, 650));
-            
-            // Add styles
-            stage.getScene().getStylesheets().add(getClass().getResource("/com/econovafx/ui/css/system-settings.css").toExternalForm());
-            
+            Scene settingsScene = new Scene(root, 900, 650);
+            StyleSheets.apply(settingsScene, "/com/econovafx/ui/css/system-settings.css");
+            stage.setScene(settingsScene);
+
             stage.show();
         } catch (IOException e) {
             logger.error("Error loading system settings view", e);

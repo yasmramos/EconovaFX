@@ -10,7 +10,7 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>EconoNova FX - Accounting System</name>
+    <name>EconovaFX - Accounting System</name>
     <description>Modern accounting system built with JavaFX, Ebean ORM, and manual dependency injection</description>
 
     <properties>
@@ -20,7 +20,7 @@
         <ebean.version>17.11.0</ebean.version>
         <h2.version>2.2.224</h2.version>
         <logback.version>1.4.14</logback.version>
-        <jacoco.version>0.8.13</jacoco.version>
+        <jacoco.version>0.8.15</jacoco.version>
         <testfx.version>4.0.17</testfx.version>
         <monocle.version>17.0.10</monocle.version>
         <!-- Default so Surefire's @{argLine} resolves even when JaCoCo is skipped -->
@@ -343,7 +343,12 @@
                         </goals>
                         <configuration>
                             <transformArgs>debug=1,version=149</transformArgs>
-                            <packages>com.econovafx.modules.core.model,com.econovafx.modules.accounting.model,com.econovafx.modules.billing.model,com.econovafx.modules.payroll.model,com.econovafx.modules.inventory.model,com.econovafx.modules.receivables.model,com.econovafx.modules.payables.model,com.econovafx.modules.bank.model,com.econovafx.modules.cash.model,com.econovafx.modules.assets.model,com.econovafx.modules.fixedassets.model,com.econovafx.modules.reporting.model,com.econovafx.modules.security.model</packages>
+                            <!-- No <packages> here on purpose: with an explicit list the
+                                 enhancer fails as soon as a package is removed or renamed
+                                 ("File not found .../target/classes/<package>"), and it
+                                 duplicated the ebean.packages list in
+                                 application.properties. Without it every class under
+                                 target/classes is scanned and entities are enhanced. -->
                         </configuration>
                     </execution>
                 </executions>
@@ -363,15 +368,34 @@
                 </configuration>
             </plugin>
 
-            <!-- Exec Maven Plugin -->
+            <!-- Exec Maven Plugin - run with: mvn exec:exec
+                 The configuration is intentionally at PLUGIN level, not inside an
+                 <execution> with id "default-cli". "default-cli" is the reserved id
+                 Maven uses for goals invoked from the command line, so that config
+                 gets applied to every direct invocation of this plugin (e.g. `mvn
+                 exec:java`) and fails with:
+                   "Unable to parse configuration ... for parameter arguments:
+                    Cannot store value into array: element type mismatch"
+                 because <classpath /> is a String for the exec goal but not for java. -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.6.4</version>
                 <configuration>
-                    <mainClass>com.econovafx.Launcher</mainClass>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-javaagent:${project.basedir}/lib/ebean-agent-${ebean.version}.jar</argument>
+                        <argument>-classpath</argument>
+                        <classpath />
+                        <argument>com.econovafx.Launcher</argument>
+                    </arguments>
                 </configuration>
             </plugin>
+
+            <!-- NOTE: com.econovafx.EbeanEntityRegister was removed. Entity classes are
+                 now discovered by Ebean from the ebean.packages property in
+                 src/main/resources/application.properties, so adding a new @Entity no
+                 longer requires editing a Java file by hand. -->
 
             <!-- JavaFX Maven Plugin -->
             <plugin>
@@ -381,8 +405,11 @@
                 <configuration>
                     <mainClass>com.econovafx.Launcher</mainClass>
                     <options>
-                        <!-- Ensure Ebean agent is loaded at runtime to enhance beans when necessary -->
-                        <option>-javaagent=${project.basedir}/lib/ebean-agent-${ebean.version}.jar</option>
+                        <!-- Ensure Ebean agent is loaded at runtime to enhance beans when necessary.
+                             NOTE: the java launcher only accepts the COLON form (-javaagent:path).
+                             The equals form (-javaagent=path) is a Surefire argLine convention and
+                             makes the JVM abort with "Unrecognized option: -javaagent=...". -->
+                        <option>-javaagent:${project.basedir}/lib/ebean-agent-${ebean.version}.jar</option>
 
                         <!-- Open entity model packages to Ebean for reflective access.
                              The module name is 'econovafx' (see module-info.java); the

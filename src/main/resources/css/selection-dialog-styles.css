@@ -1,166 +1,206 @@
-/* Selection Dialog Styles - Modern Web Dashboard Style */
+/* =============================================================================
+ * COMPANY / UNIT SELECTION - EconovaFX
+ * shadcn command-palette style picker: brand badge, search on top, scrollable
+ * list, and a muted "selected" summary box above the footer actions.
+ * ========================================================================== */
 
-/* Container */
 .selection-dialog-container {
-    -fx-background-color: linear-gradient(to bottom, #f5f7fa, #e8ecf1);
-    -fx-background-radius: 12px;
+    -fx-background-color: -zinc-50;
+    -fx-padding: 30;
+    -fx-alignment: center;
 }
 
-/* Title */
-.selection-dialog-title {
-    -fx-text-fill: #2c3e50;
-    -fx-font-size: 24px;
-}
-
-/* Subtitle */
-.selection-dialog-subtitle {
-    -fx-text-fill: #7f8c8d;
-    -fx-font-size: 13px;
-}
-
-/* Card */
 .selection-dialog-card {
-    -fx-background-color: white;
-    -fx-background-radius: 10px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
-    -fx-padding: 20px;
+    -fx-background-color: -card;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;   /* keep the hairline inside the rounded sheet */
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, -shadow-md, 16, 0, 0, 6);
 }
 
-/* Search Field */
-.search-field {
-    -fx-background-color: white;
-    -fx-background-radius: 6px;
-    -fx-border-color: #dee2e6;
-    -fx-border-radius: 6px;
-    -fx-border-width: 1px;
-    -fx-padding: 8px 12px;
+/* Circular brand chip that replaces the OS emoji. The emoji rendered
+   differently on every machine and forced an inline <Font> size in the FXML. */
+.selection-dialog-badge {
+    -fx-min-width: 64;
+    -fx-min-height: 64;
+    -fx-max-width: 64;
+    -fx-max-height: 64;
+    -fx-background-color: #e8eef8;   /* brand-blue tint */
+    -fx-background-radius: 9999;
+}
+
+.selection-dialog-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+}
+
+.selection-dialog-subtitle {
+    -fx-text-fill: -muted-foreground;
     -fx-font-size: 14px;
-    -fx-prompt-text-fill: #95a5a6;
 }
 
-.search-field:focused {
-    -fx-border-color: #2196F3;
-    -fx-effect: dropshadow(three-pass-box, rgba(33,150,243,0.3), 5, 0, 0, 0);
-}
-
-/* ListView */
+/* ------------------------------------------------------------------ list */
 .company-list-view,
 .unit-list-view {
-    -fx-background-color: #f8f9fa;
-    -fx-background-radius: 8px;
-    -fx-border-color: #dee2e6;
-    -fx-border-radius: 8px;
-    -fx-border-width: 1px;
+    -fx-background-color: -background;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;   /* same corner-tip fix as the card */
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 4;
 }
 
 .company-list-view .list-cell,
 .unit-list-view .list-cell {
-    -fx-background-color: white;
-    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-padding: 10 12;
     -fx-font-size: 14px;
-    -fx-text-fill: #2c3e50;
-    -fx-background-radius: 6px;
-    -fx-border-radius: 6px;
+    -fx-text-fill: -foreground;
 }
-
 .company-list-view .list-cell:hover,
-.unit-list-view .list-cell:hover {
-    -fx-background-color: #e3f2fd;
+.unit-list-view .list-cell:hover { -fx-background-color: -muted; }
+.company-list-view .list-cell:filled:selected,
+.unit-list-view .list-cell:filled:selected {
+    -fx-background-color: #e8eef8;
+    -fx-text-fill: #1e3c72;
 }
-
-.company-list-view .list-cell:selected,
-.unit-list-view .list-cell:selected {
-    -fx-background-color: #2196F3;
-    -fx-text-fill: white;
-}
-
+/* Row that was the active tenant on the previous run. */
 .company-list-view .list-cell.previously-selected,
 .unit-list-view .list-cell.previously-selected {
-    -fx-background-color: #e8f5e9;
-    -fx-border-color: #4caf50;
-    -fx-border-width: 0 0 0 3px;
+    -fx-background-color: -info-soft;
+    -fx-text-fill: -info-hover;
 }
 
-/* Buttons */
-.select-button {
-    -fx-background-color: linear-gradient(to right, #2196F3, #1976D2);
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
+/* ------------------------------------------------------- enriched company row */
+.company-cell {
+    -fx-padding: 8;
+    -fx-alignment: center-left;
+}
+
+.company-avatar { -fx-fill: #1e3c72; }
+
+.company-avatar-initials {
+    -fx-fill: #ffffff;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
     -fx-font-size: 14px;
-    -fx-background-radius: 6px;
-    -fx-cursor: hand;
+    -fx-font-weight: 700;
 }
 
-.select-button:hover {
-    -fx-background-color: linear-gradient(to right, #1976D2, #1565C0);
-    -fx-effect: dropshadow(three-pass-box, rgba(33,150,243,0.4), 10, 0, 0, 2);
-}
-
-.select-button:disabled {
-    -fx-background-color: #bdc3c7;
-    -fx-opacity: 0.7;
-}
-
-.cancel-button {
-    -fx-background-color: #ecf0f1;
-    -fx-text-fill: #7f8c8d;
+.company-name {
+    -fx-fill: -foreground;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
     -fx-font-size: 14px;
-    -fx-background-radius: 6px;
-    -fx-cursor: hand;
+    -fx-font-weight: 600;
 }
 
-.cancel-button:hover {
-    -fx-background-color: #bdc3c7;
-}
-
-.skip-button {
-    -fx-background-color: #fff3cd;
-    -fx-text-fill: #856404;
-    -fx-font-size: 14px;
-    -fx-background-radius: 6px;
-    -fx-cursor: hand;
-}
-
-.skip-button:hover {
-    -fx-background-color: #ffe69c;
-}
-
-/* Info Box */
-.selected-info-box {
-    -fx-background-color: #e8f5e9;
-    -fx-background-radius: 6px;
-    -fx-padding: 10px;
-    -fx-border-color: #4caf50;
-    -fx-border-radius: 6px;
-    -fx-border-width: 1px;
-}
-
-.info-label {
-    -fx-text-fill: #2e7d32;
-    -fx-font-weight: bold;
+.company-code {
+    -fx-fill: -muted-foreground;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
     -fx-font-size: 12px;
+}
+
+/* --------------------------------------------------------- summary box */
+.selected-info-box {
+    -fx-background-color: -muted;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 14 16;
+    -fx-alignment: center-left;
 }
 
 .selected-company-name,
 .selected-unit-name {
-    -fx-text-fill: #1b5e20;
-    -fx-font-size: 13px;
+    -fx-text-fill: -foreground;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
 }
 
-/* Empty State */
-.empty-state-label {
-    -fx-text-fill: #95a5a6;
-    -fx-font-size: 13px;
-    -fx-text-alignment: center;
+/* --------------------------------------------------------------- loading */
+.selection-dialog-card .progress-bar {
+    -fx-pref-height: 6;
+    -fx-background-color: -muted;
+    -fx-background-radius: 9999;
+}
+.selection-dialog-card .progress-bar .track {
+    -fx-background-color: -muted;
+    -fx-background-radius: 9999;
+}
+.selection-dialog-card .progress-bar .bar {
+    -fx-background-color: #1e3c72;
+    -fx-background-radius: 9999;
+    -fx-background-insets: 0;
 }
 
-/* Footer */
+/* Brand-blue focus for the search input (the default ring is neutral grey). */
+.selection-dialog-card .search-field:focused {
+    -fx-border-color: #1e3c72;
+    -fx-background-color: #ffffff;
+}
+
+/* ---------------------------------------------------------------- footer */
 .selection-dialog-footer {
-    -fx-text-fill: #bdc3c7;
-    -fx-font-size: 11px;
+    -fx-background-color: transparent;
+    -fx-padding: 4 0 0 0;
+    -fx-alignment: center-right;
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 12px;
 }
 
-/* Progress Bar */
-.progress-bar {
-    -fx-accent: #2196F3;
+/* --------------------------------------------------------------- buttons */
+/* Brand-blue primary, same surface treatment as the login button: on focus
+   only the ring changes so the button never jumps. */
+.select-button {
+    -fx-background-color: #1e3c72;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color: #1e3c72;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-padding: 9 18;
+    -fx-min-height: 38;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #ffffff;
+    -fx-cursor: hand;
 }
+.select-button .label { -fx-text-fill: #ffffff; }
+.select-button:focused {
+    -fx-background-color: #1e3c72;
+    -fx-border-color: #7c9bd1;
+}
+.select-button:hover { -fx-background-color: #2a5298; -fx-border-color: #2a5298; }
+.select-button:pressed { -fx-background-color: #16305c; -fx-border-color: #16305c; }
+.select-button:disabled { -fx-opacity: 0.5; -fx-cursor: default; }
+
+.cancel-button,
+.skip-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-padding: 9 14;
+    -fx-min-height: 38;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -muted-foreground;
+    -fx-cursor: hand;
+}
+.cancel-button:hover,
+.skip-button:hover { -fx-background-color: -muted; -fx-text-fill: -foreground; }
+.cancel-button .label,
+.skip-button .label { -fx-text-fill: -muted-foreground; }
+.cancel-button:hover .label,
+.skip-button:hover .label { -fx-text-fill: -foreground; }

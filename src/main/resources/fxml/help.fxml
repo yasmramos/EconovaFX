@@ -43,7 +43,7 @@
                     <graphic><FontIcon iconLiteral="mdi2y-youtube" iconSize="18"/></graphic>
                 </Hyperlink>
                 <Hyperlink fx:id="linkFAQ" onAction="#handleFAQ" text="Frequently Asked Questions">
-                    <graphic><FontIcon iconLiteral="mdi2q-question-answer" iconSize="18"/></graphic>
+                    <graphic><FontIcon iconLiteral="mdi2h-help-circle-outline" iconSize="18"/></graphic>
                 </Hyperlink>
             </VBox>
             

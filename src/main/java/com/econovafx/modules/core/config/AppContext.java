@@ -113,7 +113,7 @@ public final class AppContext {
         transactionEntryController = new TransactionEntryController(accountService, transactionService);
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
-        exchangeRatesController = new ExchangeRatesController();
+        exchangeRatesController = new ExchangeRatesController(exchangeRateService);
         
         // Get InventoryService and UserContext for InventoryController
         InventoryService inventoryService = beanScope.get(InventoryService.class);

@@ -25,7 +25,7 @@ public class DbMigrationGenerator {
 
     public static void main(String[] args) {
         System.out.println("=== Ebean DB Migration Generator ===");
-        System.out.println("Generating migrations for EconoNova FX...");
+        System.out.println("Generating migrations for EconovaFX...");
         
         // Generate migrations for MASTER database (Company management)
         generateMasterMigrations();
@@ -88,7 +88,6 @@ public class DbMigrationGenerator {
             .addPackage("com.econovafx.modules.payables.model")
             .addPackage("com.econovafx.modules.bank.model")
             .addPackage("com.econovafx.modules.cash.model")
-            .addPackage("com.econovafx.modules.assets.model")
             .addPackage("com.econovafx.modules.fixedassets.model")
             .addPackage("com.econovafx.modules.reporting.model")
             .addPackage("com.econovafx.modules.security.model");

@@ -111,7 +111,7 @@ public class AppConfig {
             logger.info("Loading application configuration with Avaje Config...");
             
             // Application
-            APP_NAME = Config.get("app.name", "EconoNova FX");
+            APP_NAME = Config.get("app.name", "EconovaFX");
             APP_VERSION = Config.get("app.version", "1.0.0");
             
             // Database Type and Configuration

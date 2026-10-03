@@ -1,4 +1,4 @@
-package com.econovafx.external.bc;
+package com.econovafx.modules.core.integration.bcc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

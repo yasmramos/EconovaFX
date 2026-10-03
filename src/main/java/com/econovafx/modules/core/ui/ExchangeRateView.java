@@ -1,4 +1,4 @@
-package com.econovafx.modules.core.ui.views;
+package com.econovafx.modules.core.ui;
 
 import com.econovafx.modules.core.model.ExchangeRate;
 import com.econovafx.modules.core.model.Currency;
@@ -9,7 +9,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Callback;
@@ -59,8 +58,7 @@ public class ExchangeRateView extends VBox {
 
         // Título
         Label title = new Label("Gestión de Tasas de Cambio");
-        title.setFont(new Font("Arial", 24));
-        title.setStyle("-fx-font-weight: bold;");
+        title.getStyleClass().addAll("text-2xl", "font-semibold");
 
         // Pestañas
         TabPane tabPane = new TabPane();
@@ -85,16 +83,16 @@ public class ExchangeRateView extends VBox {
         topPanel.setAlignment(Pos.CENTER_LEFT);
 
         statusLabel = new Label("Estado: Desconocido");
-        statusLabel.setStyle("-fx-text-fill: gray;");
-        
+        statusLabel.getStyleClass().add("text-muted");
+
         lastUpdateLabel = new Label("Última act.: --");
-        lastUpdateLabel.setStyle("-fx-font-style: italic;");
+        lastUpdateLabel.getStyleClass().add("text-muted");
 
         refreshButton = new Button();
         refreshButton.setGraphic(new FontIcon(MaterialDesignR.REFRESH));
         refreshButton.setText(" Actualizar desde BC");
         refreshButton.setOnAction(e -> handleRefreshFromBC());
-        refreshButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white; -fx-padding: 5 15;");
+        refreshButton.getStyleClass().addAll("btn", "btn-primary");
 
         topPanel.getChildren().addAll(statusLabel, new Separator(), lastUpdateLabel, new Region(), refreshButton);
 
@@ -212,23 +210,34 @@ public class ExchangeRateView extends VBox {
             if (rates != null && !rates.isEmpty()) {
                 activeRatesTable.setItems(FXCollections.observableArrayList(rates));
                 statusLabel.setText("Estado: Conectado (Local)");
-                statusLabel.setStyle("-fx-text-fill: green;");
-                
+                setStatusTrend("trend-positive");
+
                 LocalDateTime lastDate = rates.stream()
                     .map(ExchangeRate::getEffectiveDate)
                     .max(java.util.Comparator.naturalOrder())
                     .orElse(LocalDateTime.now());
-                    
+
                 lastUpdateLabel.setText("Última act.: " + lastDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
             } else {
                 statusLabel.setText("Estado: Sin datos locales");
-                statusLabel.setStyle("-fx-text-fill: orange;");
+                setStatusTrend("value-warning");
             }
         } catch (Exception e) {
             showError("Error cargando tasas activas: " + e.getMessage());
             statusLabel.setText("Estado: Error");
-            statusLabel.setStyle("-fx-text-fill: red;");
+            setStatusTrend("value-negative");
         }
+    }
+
+    /**
+     * Repaints the status label from a utility class instead of an inline style,
+     * which would otherwise override every stylesheet rule.
+     *
+     * @param styleClass one of trend-positive, value-warning, value-negative
+     */
+    private void setStatusTrend(String styleClass) {
+        statusLabel.getStyleClass().removeAll("trend-positive", "value-warning", "value-negative");
+        statusLabel.getStyleClass().add(styleClass);
     }
 
     private void handleRefreshFromBC() {
@@ -247,7 +256,7 @@ public class ExchangeRateView extends VBox {
                 javafx.application.Platform.runLater(() -> {
                     showError("Error al actualizar: " + e.getMessage());
                     statusLabel.setText("Estado: Fallo actualización");
-                    statusLabel.setStyle("-fx-text-fill: red;");
+                    setStatusTrend("value-negative");
                     refreshButton.setDisable(false);
                 });
             }
