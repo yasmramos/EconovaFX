@@ -91,3 +91,6 @@ Thumbs.db
 coverage/
 htmlcov/
 .coverage
+# Maven local settings (contains proxy credentials, never commit)
+settings.xml
+.mvn/settings.xml
