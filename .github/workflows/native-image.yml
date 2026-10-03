@@ -22,23 +22,25 @@ permissions:
 
 jobs:
   native-image-build-windows:
-    runs-on: windows-latest
+    runs-on: windows-2025
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
-    - name: Set up GraalVM JDK 21 (latest GraalVM for GluonFX)
+    - name: Set up GraalVM JDK 25 (latest GraalVM for GluonFX)
       uses: graalvm/setup-graalvm@v1
       with:
-        java-version: '21'
-        distribution: 'graalvm-community'
+        distribution: 'graalvm'
+        java-version: '25'
+        components: 'native-image'
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        native-image-job: 'true'
+        native-image-job-reports: 'true'
         cache: 'maven'
     
     - name: Verify GraalVM installation
       run: |
         echo "JAVA_HOME: $env:JAVA_HOME"
+        echo "GRAALVM_HOME: $env:GRAALVM_HOME"
         java --version
         native-image --version
     
@@ -60,7 +62,7 @@ jobs:
       shell: pwsh
     
     - name: Upload Native Image
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: econovafx-native-windows
         path: |
