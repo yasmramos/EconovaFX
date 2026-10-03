@@ -27,12 +27,11 @@ jobs:
     steps:
     - uses: actions/checkout@v5
     
-    - name: Set up GraalVM JDK 21 (latest GraalVM for GluonFX)
+    - name: Set up GraalVM JDK 25 (latest GraalVM for GluonFX)
       uses: graalvm/setup-graalvm@v1
       with:
-        version: 'latest'
-        java-version: '21'
-        distribution: 'graalvm-community'
+        distribution: 'graalvm'
+        java-version: '25'
         components: 'native-image'
         github-token: ${{ secrets.GITHUB_TOKEN }}
         native-image-job-reports: 'true'
