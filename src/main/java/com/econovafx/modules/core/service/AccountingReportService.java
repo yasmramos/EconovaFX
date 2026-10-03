@@ -1,4 +1,8 @@
-package com.econovafx.core.service;
+// The package must match the directory. It previously declared
+// com.econovafx.core.service while living under com/econovafx/modules/core/service,
+// which made the Avaje-generated DI class unresolvable at runtime
+// (java.lang.Error: Unresolved compilation problems).
+package com.econovafx.modules.core.service;
 
 import io.ebean.Database;
 import jakarta.inject.Inject;

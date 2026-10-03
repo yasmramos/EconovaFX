@@ -88,16 +88,15 @@ public class UnitSelectionController {
             @Override
             protected void updateItem(BusinessUnit unit, boolean empty) {
                 super.updateItem(unit, empty);
+                // previously-selected is a real class on the cell, so the highlight
+                // is styled by the stylesheet instead of an inline style.
+                getStyleClass().remove("previously-selected");
                 if (empty || unit == null) {
                     setText(null);
-                    setStyle("");
                 } else {
                     setText(unit.getName() + " (" + unit.getCode() + ")");
-                    // Highlight if previously selected
                     if (selectedUnit != null && selectedUnit.getId().equals(unit.getId())) {
-                        setStyle("-fx-background-color: #e3f2fd; -fx-font-weight: bold;");
-                    } else {
-                        setStyle("");
+                        getStyleClass().add("previously-selected");
                     }
                 }
             }
@@ -107,8 +106,8 @@ public class UnitSelectionController {
         unitListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 selectedUnit = newVal;
-                selectedUnitLabel.setText(selectedUnit.getName() + " - " + 
-                    (selectedUnit.getAddress() != null ? selectedUnit.getAddress() : "No address"));
+                selectedUnitLabel.setText(selectedUnit.getName() + " - " +
+                    (selectedUnit.getAddress() != null ? selectedUnit.getAddress() : "Sin dirección"));
                 selectedUnitInfo.setVisible(true);
                 selectedUnitInfo.setManaged(true);
                 selectButton.setDisable(false);
@@ -127,7 +126,7 @@ public class UnitSelectionController {
     public void setCompany(Company company) {
         this.currentCompany = company;
         if (company != null) {
-            companyNameLabel.setText("Company: " + company.getName());
+            companyNameLabel.setText("Empresa: " + company.getName());
             loadUnits();
         }
     }
@@ -179,7 +178,7 @@ public class UnitSelectionController {
                 logger.error("Error loading business units", e);
                 javafx.application.Platform.runLater(() -> {
                     setLoading(false);
-                    errorLabel.setText("Error loading units: " + e.getMessage());
+                    errorLabel.setText("Error al cargar las unidades: " + e.getMessage());
                     errorLabel.setVisible(true);
                     errorLabel.setManaged(true);
                     selectButton.setDisable(true);
@@ -192,9 +191,9 @@ public class UnitSelectionController {
     private void handleSelect() {
         if (selectedUnit == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Unit Selected");
+            alert.setTitle("Sin unidad seleccionada");
             alert.setHeaderText(null);
-            alert.setContentText("Please select a business unit to continue.");
+            alert.setContentText("Por favor, selecciona una unidad de negocio para continuar.");
             alert.showAndWait();
             return;
         }

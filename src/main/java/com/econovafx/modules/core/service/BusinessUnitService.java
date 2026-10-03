@@ -19,8 +19,13 @@ public class BusinessUnitService {
 
     private static final Logger logger = LoggerFactory.getLogger(BusinessUnitService.class);
 
-    @Inject
-    public BusinessUnitRepository businessUnitRepository;
+    // Avaje Inject wires beans via a single constructor; it has no @Inject for fields,
+    // so this repository was always null and every call threw an NPE.
+    private final BusinessUnitRepository businessUnitRepository;
+
+    public BusinessUnitService(BusinessUnitRepository businessUnitRepository) {
+        this.businessUnitRepository = businessUnitRepository;
+    }
 
     /**
      * Get all active business units for a company.

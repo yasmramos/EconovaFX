@@ -5,9 +5,9 @@ import com.econovafx.modules.core.security.AuthService;
 import com.econovafx.modules.core.security.SecurityUtil;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -24,9 +24,6 @@ public class LoginController {
 
     @FXML
     private VBox loginRoot;
-
-    @FXML
-    private ImageView logoImage;
 
     @FXML
     private TextField usernameField;
@@ -63,10 +60,10 @@ public class LoginController {
         logger.info("Initializing login controller");
         
         // Initialize fields
+        // The status widgets stay managed so their space is always reserved:
+        // showing the progress bar or an error must not move the button.
         errorLabel.setVisible(false);
-        errorLabel.setManaged(false);
         progressBar.setVisible(false);
-        progressBar.setManaged(false);
         
         // Setup drag functionality for undecorated window
         setupDraggableWindow();
@@ -84,8 +81,22 @@ public class LoginController {
             }
         });
 
-        // Focus username field by default
-        usernameField.requestFocus();
+        // Escape closes the (undecorated) login window from the keyboard.
+        loginRoot.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                handleClose();
+            }
+        });
+
+        // Keep the close button out of the focus traversal: while the form is
+        // disabled during authentication JavaFX would otherwise move focus onto
+        // it and show a focus ring.
+        closeButton.setFocusTraversable(false);
+
+        // Focus username field by default. The synchronous call is ignored
+        // because the scene is not shown yet, which left the close button
+        // focused and showing a focus ring on startup.
+        Platform.runLater(usernameField::requestFocus);
     }
 
     /**
@@ -183,17 +194,14 @@ public class LoginController {
     private void showError(String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
-        errorLabel.setManaged(true);
     }
 
     private void hideError() {
         errorLabel.setVisible(false);
-        errorLabel.setManaged(false);
     }
 
     private void setLoading(boolean loading) {
         progressBar.setVisible(loading);
-        progressBar.setManaged(loading);
         loginButton.setDisable(loading);
         usernameField.setDisable(loading);
         passwordField.setDisable(loading);

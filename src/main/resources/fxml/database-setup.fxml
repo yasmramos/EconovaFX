@@ -2,7 +2,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.core.ui.controller.DatabaseSetupController" spacing="18" alignment="TOP_CENTER" stylesheets="/css/theme-tokens.css,/css/dialog-styles.css,/css/database-setup.css" styleClass="database-setup-dialog">
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.core.ui.controller.DatabaseSetupController" spacing="18" alignment="TOP_CENTER" styleClass="database-setup-dialog">
     <padding>
         <Insets top="18" right="22" bottom="20" left="22" />
     </padding>

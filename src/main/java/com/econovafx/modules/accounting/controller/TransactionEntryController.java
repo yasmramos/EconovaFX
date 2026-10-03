@@ -133,7 +133,7 @@ public class TransactionEntryController implements Initializable {
             
             {
                 deleteButton.setGraphic(new FontIcon(MaterialDesignD.DELETE));
-                deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand;");
+                deleteButton.getStyleClass().addAll("icon-btn", "icon-btn-danger");
                 deleteButton.setOnAction(event -> {
                     EntryRow row = getTableView().getItems().get(getIndex());
                     entryRows.remove(row);
@@ -197,10 +197,11 @@ public class TransactionEntryController implements Initializable {
         BigDecimal difference = totalDebit.subtract(totalCredit);
         differenceLabel.setText(difference.toPlainString());
         
+        differenceLabel.getStyleClass().removeAll("value-positive", "value-negative");
         if (difference.compareTo(BigDecimal.ZERO) == 0) {
-            differenceLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
+            differenceLabel.getStyleClass().add("value-positive");
         } else {
-            differenceLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+            differenceLabel.getStyleClass().add("value-negative");
         }
     }
     

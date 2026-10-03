@@ -1,4 +1,4 @@
-# 📊 EconoNova FX - Sistema Contable Profesional
+# 📊 EconovaFX - Sistema Contable Profesional
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg?logo=java)](https://openjdk.java.net/)
 [![JavaFX](https://img.shields.io/badge/JavaFX-17.0.2-blue.svg?logo=javafx)](https://openjfx.io/)
@@ -384,7 +384,7 @@ SOFTWARE.
 - **Autor**: Yasmany Ramos García
 - **Email**: yasmramos95@gmail.com
 - **GitHub**: [@yasmramos](https://github.com/yasmramos)
-- **Proyecto**: [EconoNova FX](https://github.com/yasmramos/EconovaFX)
+- **Proyecto**: [EconovaFX](https://github.com/yasmramos/EconovaFX)
 
 ---
 

@@ -1,6 +1,6 @@
-# EconoNova FX Web UI
+# EconovaFX Web UI
 
-Modern web interface for EconoNova FX accounting system built with SvelteKit and Tailwind CSS.
+Modern web interface for EconovaFX accounting system built with SvelteKit and Tailwind CSS.
 
 ## Prerequisites
 

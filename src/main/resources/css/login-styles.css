@@ -1,128 +1,169 @@
-/* Login Screen Styles - Modern Web Dashboard Style */
+/* =============================================================================
+ * LOGIN - EconovaFX
+ * shadcn centred card on a neutral page: one hairline, one shadow, one button.
+ * ========================================================================== */
 
 .login-container {
-    -fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298, #1e3c72);
-    -fx-padding: 20;
+    /* Same brand gradient as the splash so the two screens feel like one
+       product: deep blue page with a white card floating on top. */
+    -fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);
+    -fx-padding: 30;
 }
 
+/* Circular brand badge, identical to the splash one: white disc with the bank
+   glyph in brand blue. (Replaces logo.svg because javafx.scene.image.Image
+   cannot render SVG and the logo silently never appeared.) */
+.login-logo-badge {
+    -fx-min-width: 76;
+    -fx-min-height: 76;
+    -fx-max-width: 76;
+    -fx-max-height: 76;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 9999;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 10, 0, 0, 3);
+}
+
+/* ---------------------------------------------------------------- brand */
 .login-title {
-    -fx-text-fill: white;
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-font-weight: 600;
 }
 
 .login-subtitle {
-    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: rgba(255, 255, 255, 0.80);
     -fx-font-size: 14px;
 }
 
+/* ----------------------------------------------------------------- card */
+/* Solid white shadcn card floating on the brand gradient. Both the background
+   and the 1px hairline declare the same radius (-fx-background-radius AND
+   -fx-border-radius); leaving the border radius at 0 keeps the border a sharp
+   rectangle whose corner tips poke out from behind the rounded sheet. */
 .login-card {
-    -fx-background-color: white;
-    -fx-background-radius: 15;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 20, 0, 0, 10);
-    -fx-padding: 30;
-    -fx-max-width: 350;
+    -fx-background-color: #ffffff;
+    -fx-border-color: rgba(30, 60, 114, 0.12);
+    -fx-border-width: 1;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 26, 0, 0, 10);
 }
 
 .input-group {
-    -fx-pref-width: 280;
+    -fx-background-color: transparent;
+    -fx-spacing: 6;
 }
 
-.input-label {
-    -fx-text-fill: #333;
+/* Scoped with .login-card so it outranks the generic .input-label in
+   utilities.css (loaded last). Dark zinc-700 reads clearly on the white card. */
+.login-card .input-label {
+    -fx-text-fill: #3f3f46;
     -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 0 5 0;
+    -fx-font-weight: 500;
 }
 
-.text-field, .password-field {
-    -fx-background-color: #f5f5f5;
-    -fx-border-color: #ddd;
+/* --------------------------------------------------------------- inputs */
+.login-card .text-field,
+.login-card .password-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e4e4e7;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
     -fx-border-radius: 8;
-    -fx-background-radius: 8;
-    -fx-padding: 12 15;
+    -fx-padding: 9 12;
+    -fx-min-height: 38;
     -fx-font-size: 14px;
-    -fx-pref-width: 280;
+    -fx-text-fill: #09090b;
+    -fx-prompt-text-fill: #a1a1aa;
+}
+.login-card .text-field:hover,
+.login-card .password-field:hover { -fx-border-color: #d4d4d8; }
+.login-card .text-field:focused,
+.login-card .password-field:focused {
+    -fx-border-color: #1e3c72;
+    -fx-background-color: #ffffff;
 }
 
-.text-field:focused, .password-field:focused {
-    -fx-background-color: white;
-    -fx-border-color: #2a5298;
-    -fx-effect: dropshadow(gaussian, rgba(42, 82, 152, 0.3), 10, 0, 0, 2);
+.login-card .progress-bar {
+    -fx-pref-width: 200;
+    -fx-pref-height: 6;
+    -fx-background-color: #e4e4e7;
+    -fx-background-radius: 9999;
+}
+.login-card .progress-bar .track {
+    -fx-background-color: #e4e4e7;
+    -fx-background-radius: 9999;
+}
+.login-card .progress-bar .bar {
+    -fx-background-color: #1e3c72;
+    -fx-background-radius: 9999;
+    -fx-background-insets: 0;
 }
 
-.text-field:hover, .password-field:hover {
-    -fx-border-color: #2a5298;
+/* Reserve one line for the error so showing it does not move the button. */
+.login-card .error-label {
+    -fx-min-height: 18;
 }
 
-.error-label {
-    -fx-text-fill: #d32f2f;
-    -fx-font-size: 12px;
-    -fx-wrap-text: true;
-    -fx-padding: 10;
-    -fx-background-color: #ffebee;
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
-    -fx-max-width: 280;
-}
-
+/* --------------------------------------------------------------- button */
+/* Brand-blue primary: the only saturated blue inside the card, so it reads as
+   the action. The focus state only swaps the ring (never the surface) so the
+   button cannot jump when clicked. */
 .login-button {
-    -fx-background-color: linear-gradient(to right, #2a5298, #1e3c72);
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
+    -fx-background-color: #1e3c72;
     -fx-background-radius: 8;
+    -fx-background-insets: 0;
+    -fx-border-color: #1e3c72;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-padding: 11 20;
+    -fx-min-height: 44;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(42, 82, 152, 0.4), 10, 0, 0, 2);
 }
-
-.login-button:hover {
-    -fx-background-color: linear-gradient(to right, #1e3c72, #2a5298);
-    -fx-effect: dropshadow(three-pass-box, rgba(42, 82, 152, 0.6), 15, 0, 0, 3);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
+.login-button .label { -fx-text-fill: #ffffff; }
+.login-button:focused {
+    /* Keep the blue surface on focus; only the ring changes. The generic
+       .button:focused rule would otherwise repaint it -ring-wash. */
+    -fx-background-color: #1e3c72;
+    -fx-border-color: #7c9bd1;
 }
-
-.login-button:pressed {
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
+.login-button:hover { -fx-background-color: #2a5298; -fx-border-color: #2a5298; }
+.login-button:pressed { -fx-background-color: #16305c; -fx-border-color: #16305c; }
 .login-button:disabled {
-    -fx-opacity: 0.6;
+    -fx-opacity: 0.5;
     -fx-cursor: default;
 }
 
+/* ------------------------------------------------------------ close btn */
+/* Ghost icon-only button (shadcn dialog close): 32px square, X glyph,
+   muted icon that darkens over a soft hover surface. */
 .close-button {
     -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-background-radius: 5;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-padding: 0;
+    -fx-min-width: 32;
+    -fx-pref-width: 32;
+    -fx-min-height: 32;
+    -fx-pref-height: 32;
     -fx-cursor: hand;
-    -fx-padding: 5 15;
+    -fx-alignment: center;
 }
+.close-button .close-icon { -fx-fill: rgba(255, 255, 255, 0.75); }
+.close-button:hover { -fx-background-color: rgba(255, 255, 255, 0.14); }
+.close-button:hover .close-icon { -fx-fill: #ffffff; }
+.close-button:pressed { -fx-background-color: rgba(255, 255, 255, 0.22); }
 
-.close-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-}
-
-.close-button:pressed {
-    -fx-background-color: rgba(255, 255, 255, 0.3);
-}
-
+/* ---------------------------------------------------------------- footer */
 .login-footer {
-    -fx-text-fill: rgba(255, 255, 255, 0.6);
-    -fx-font-size: 11px;
-    -fx-padding: 10 0 0 0;
-}
-
-/* Progress Bar Styling */
-.progress-bar .bar {
-    -fx-background-color: #2a5298;
-    -fx-padding: 8;
-}
-
-.progress-bar .track {
-    -fx-background-color: #e0e0e0;
-    -fx-background-radius: 4;
+    -fx-text-fill: rgba(255, 255, 255, 0.60);
+    -fx-font-size: 12px;
 }

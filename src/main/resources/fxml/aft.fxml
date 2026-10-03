@@ -11,7 +11,7 @@
       spacing="20"
       styleClass="bg-gray-50, p-6">
 
-    <Label text="Fixed Assets Management (AFT)" styleClass="text-2xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2b-building" iconSize="24"/></graphic></Label>
+    <Label text="Fixed Assets Management (AFT)" styleClass="text-2xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2o-office-building" iconSize="24"/></graphic></Label>
 
     <Separator/>
 

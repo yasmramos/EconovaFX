@@ -1,4 +1,7 @@
-package com.econovafx.controller;
+// The package must match the directory: FXMLLoader resolves this controller by its
+// fully-qualified name (see resources/com/econovafx/view/third-party-transactions.fxml,
+// fx:controller="com.econovafx.modules.billing.controller.ThirdPartyTransactionsController").
+package com.econovafx.modules.billing.controller;
 
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.accounting.model.Transaction;
@@ -103,13 +106,15 @@ public class ThirdPartyTransactionsController {
             BigDecimal balance = calculateThirdPartyBalance();
             totalBalanceLabel.setText(formatCurrency(balance));
             
-            // Color code the balance
+            // Colour code the balance. Uses the shared utility classes rather than
+            // setStyle(), because an inline style beats every stylesheet rule.
+            totalBalanceLabel.getStyleClass().removeAll("value-negative", "value-positive", "value-info");
             if (balance.compareTo(BigDecimal.ZERO) > 0) {
-                totalBalanceLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #dc2626;");
+                totalBalanceLabel.getStyleClass().add("value-negative");
             } else if (balance.compareTo(BigDecimal.ZERO) < 0) {
-                totalBalanceLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #059669;");
+                totalBalanceLabel.getStyleClass().add("value-positive");
             } else {
-                totalBalanceLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #6b7280;");
+                totalBalanceLabel.getStyleClass().add("value-info");
             }
         }
     }
@@ -215,13 +220,15 @@ public class ThirdPartyTransactionsController {
                     setText(null);
                 } else {
                     setText(formatCurrency(item));
-                    // Color code positive/negative balances
+                    // Colour-code positive/negative balances through the shared
+                    // utility classes; setStyle() would beat the stylesheets.
+                    getStyleClass().removeAll("value-negative", "value-positive", "value-info");
                     if (item.compareTo(BigDecimal.ZERO) > 0) {
-                        setStyle("-fx-text-fill: #dc2626; -fx-font-weight: bold;");
+                        getStyleClass().add("value-negative");
                     } else if (item.compareTo(BigDecimal.ZERO) < 0) {
-                        setStyle("-fx-text-fill: #059669; -fx-font-weight: bold;");
+                        getStyleClass().add("value-positive");
                     } else {
-                        setStyle("-fx-text-fill: #6b7280;");
+                        getStyleClass().add("value-info");
                     }
                 }
             }

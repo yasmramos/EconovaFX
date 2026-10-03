@@ -729,11 +729,12 @@ public class CashModuleController {
         BigDecimal difference = calculateDifference(currentReconciliation);
         txtDifference.setText(difference.toPlainString());
         
-        // Color code the difference
+        // Colour-code the difference through the shared utility classes
+        txtDifference.getStyleClass().removeAll("value-positive", "value-negative");
         if (difference.compareTo(BigDecimal.ZERO) == 0) {
-            txtDifference.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+            txtDifference.getStyleClass().add("value-positive");
         } else {
-            txtDifference.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            txtDifference.getStyleClass().add("value-negative");
         }
     }
     

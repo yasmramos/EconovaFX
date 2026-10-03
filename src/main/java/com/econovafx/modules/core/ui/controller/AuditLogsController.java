@@ -33,12 +33,17 @@ public class AuditLogsController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuditLogsController.class);
 
-    @Inject
-    public AuditService auditService;
+    // Avaje Inject wires beans via a single constructor; it has no @Inject for fields,
+    // so these were always null.
+    private final AuditService auditService;
 
-    @Inject
-    public NotificationService notificationService;
-    
+    private final NotificationService notificationService;
+
+    public AuditLogsController(AuditService auditService, NotificationService notificationService) {
+        this.auditService = auditService;
+        this.notificationService = notificationService;
+    }
+
     private Stage mainStage;
 
     // Filters
@@ -150,12 +155,12 @@ public class AuditLogsController {
             @Override
             protected void updateItem(Boolean success, boolean empty) {
                 super.updateItem(success, empty);
+                getStyleClass().removeAll("value-positive", "value-negative");
                 if (empty || success == null) {
                     setText(null);
-                    setStyle("");
                 } else {
                     setText(success ? "✓ Éxito" : "✗ Fallido");
-                    setStyle(success ? "-fx-text-fill: green;" : "-fx-text-fill: red;");
+                    getStyleClass().add(success ? "value-positive" : "value-negative");
                 }
             }
         });
@@ -170,7 +175,7 @@ public class AuditLogsController {
             private final Button detailBtn = new Button("Ver Detalle");
             
             {
-                detailBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+                detailBtn.getStyleClass().addAll("row-action", "row-action-info");
                 detailBtn.setOnAction(event -> {
                     AuditLog log = getTableView().getItems().get(getIndex());
                     showAuditLogDetails(log);

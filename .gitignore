@@ -65,6 +65,14 @@ target/jacoco.exec
 # Logs
 *.log
 
+# Local H2 databases (runtime data, never source)
+# The master DB and every tenant DB are created on first run and rewritten on
+# every run; committing them leaks real data and produces noisy diffs.
+db/
+*.mv.db
+*.trace.db
+*.lock.db
+
 # Environment variables
 .env
 .env.local

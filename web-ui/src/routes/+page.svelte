@@ -5,7 +5,7 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
   <div class="container mx-auto px-4 py-8">
     <header class="text-center mb-12">
-      <h1 class="text-4xl font-bold text-gray-800 mb-4">EconoNova FX Web UI</h1>
+      <h1 class="text-4xl font-bold text-gray-800 mb-4">EconovaFX Web UI</h1>
       <p class="text-lg text-gray-600">Modern accounting system interface built with SvelteKit and Tailwind CSS</p>
     </header>
 
@@ -51,7 +51,7 @@
     </main>
 
     <footer class="mt-12 text-center text-gray-500">
-      <p>&copy; 2024 EconoNova FX. All rights reserved.</p>
+      <p>&copy; 2024 EconovaFX. All rights reserved.</p>
     </footer>
   </div>
 </div>
