@@ -168,6 +168,8 @@ git config core.hooksPath .githooks
 mvn clean compile
 ```
 
+> **Requisito:** es necesario usar un JDK 21+ para compilar (recomendado JDK 25), ya que el compilador de Ebean requiere APIs disponibles desde Java 21. La aplicación resultante se ejecuta sobre JavaFX 17 / release 17.
+>
 > El agente de Ebean (`lib/ebean-agent-17.11.0.jar`) se descarga/copiará automáticamente a `lib/` durante el build vía `maven-dependency-plugin`.
 
 ### 4. Ejecutar Tests (Opcional pero recomendado)
@@ -342,7 +344,7 @@ La documentación completa está indexada en [`docs/README.md`](docs/README.md):
 ### Comandos Maven Útiles
 
 ```bash
-# Limpieza y compilación
+# Limpieza y compilación (requiere JDK 21+ para el compilador de Ebean)
 mvn clean compile
 
 # Ejecutar tests
