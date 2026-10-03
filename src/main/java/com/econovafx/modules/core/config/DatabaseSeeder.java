@@ -4,9 +4,11 @@ import com.econovafx.modules.accounting.model.FinancialStatementModel;
 import com.econovafx.modules.accounting.model.FinancialStatementRow;
 import com.econovafx.modules.accounting.repository.FinancialStatementModelRepository;
 import com.econovafx.modules.accounting.repository.FinancialStatementRowRepository;
+import com.econovafx.modules.core.model.BusinessUnit;
 import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.core.model.Currency;
 import com.econovafx.modules.core.model.User;
+import com.econovafx.modules.core.repository.BusinessUnitRepository;
 import com.econovafx.modules.core.repository.CompanyRepository;
 import com.econovafx.modules.core.repository.CurrencyRepository;
 import com.econovafx.modules.core.repository.UserRepository;
@@ -27,6 +29,7 @@ public class DatabaseSeeder {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final CurrencyRepository currencyRepository;
+    private final BusinessUnitRepository businessUnitRepository;
     private final PasswordService passwordService;
     private final FinancialStatementModelRepository financialStatementModelRepository;
     private final FinancialStatementRowRepository financialStatementRowRepository;
@@ -40,6 +43,7 @@ public class DatabaseSeeder {
         this.userRepository = new UserRepository(database);
         this.companyRepository = new CompanyRepository(database);
         this.currencyRepository = new CurrencyRepository(database);
+        this.businessUnitRepository = new BusinessUnitRepository(database);
         this.passwordService = new PasswordService();
         this.financialStatementModelRepository = new FinancialStatementModelRepository(database);
         this.financialStatementRowRepository = new FinancialStatementRowRepository(database);
@@ -63,6 +67,7 @@ public class DatabaseSeeder {
             // Now seed currencies, admin user, and financial statement rows in the tenant database
             seedCurrencies();
             seedAdminUser();
+            seedBusinessUnits(demoCompany);
             seedFinancialStatementRows();
         } else {
             logger.warn("Demo company not found, skipping tenant-specific seeding");
@@ -141,6 +146,34 @@ public class DatabaseSeeder {
         } else {
             logger.debug("Users already exist, skipping seeding");
         }
+    }
+
+    /**
+     * Seeds demo business units for the DEMO company so the multi-tenant
+     * unit-selection flow is available out of the box.
+     * Idempotent: does nothing when the company already has units.
+     */
+    private void seedBusinessUnits(Company demoCompany) {
+        if (!businessUnitRepository.findAllByCompanyId(demoCompany.getId()).isEmpty()) {
+            logger.debug("Business units already exist, skipping seeding");
+            return;
+        }
+
+        logger.info("Seeding demo business units...");
+        saveBusinessUnit("Casa Matriz", "UC-001", "123 Demo Street, Demo City",
+            "+1 555-123-4567", "central@econovafx.com", demoCompany);
+        saveBusinessUnit("Sucursal Centro", "UC-002", "456 Branch Avenue, Demo City",
+            "+1 555-987-6543", "centro@econovafx.com", demoCompany);
+        logger.info("Created 2 demo business units");
+    }
+
+    private void saveBusinessUnit(String name, String code, String address,
+                                  String phone, String email, Company company) {
+        BusinessUnit unit = new BusinessUnit(name, code, company);
+        unit.setAddress(address);
+        unit.setPhone(phone);
+        unit.setEmail(email);
+        businessUnitRepository.save(unit);
     }
 
     /**

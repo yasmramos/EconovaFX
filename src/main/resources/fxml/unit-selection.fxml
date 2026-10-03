@@ -6,7 +6,7 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox fx:id="unitSelectionRoot" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="560.0" prefWidth="500.0"
+      prefHeight="620.0" prefWidth="500.0"
       styleClass="selection-dialog-container"
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.modules.core.ui.controller.UnitSelectionController">
@@ -18,7 +18,7 @@
     <!-- Header Section -->
     <VBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
         <StackPane styleClass="selection-dialog-badge">
-            <FontIcon iconLiteral="mdi2b-building" iconSize="30" iconColor="#1e3c72"/>
+            <FontIcon iconLiteral="mdi2o-office-building" iconSize="30" iconColor="#1e3c72"/>
         </StackPane>
         <Label text="Seleccionar unidad de negocio" styleClass="selection-dialog-title"/>
         <Label fx:id="companyNameLabel" text="" styleClass="selection-dialog-subtitle" wrapText="true"/>
