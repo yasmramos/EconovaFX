@@ -56,7 +56,7 @@ jobs:
           Write-Host "GluonFX output directory not found" 
         }
         echo "=== Executable check ==="
-        Get-ChildItem -Recurse -Filter "EconoVAFX.exe" target\ 2>$null | Select-Object FullName
+        Get-ChildItem -Recurse -Filter "*.exe" target\ 2>$null | Select-Object FullName
       shell: pwsh
     
     - name: Upload Native Image
@@ -64,6 +64,6 @@ jobs:
       with:
         name: econovafx-native-windows
         path: |
-          target/gluonfx/x86_64-windows/EconoVAFX.exe
+          target/gluonfx/x86_64-windows/econovafx.exe
         retention-days: 14
         if-no-files-found: warn
