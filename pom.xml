@@ -571,8 +571,10 @@
                         <artifactId>gluonfx-maven-plugin</artifactId>
                         <version>1.0.29</version>
                         <configuration>
-                            <!-- Executable name (default derives from project <name>, which contains spaces) -->
-                            <name>${app.executable.name}</name>
+                            <!-- Executable name (no extension). Hardcoded to avoid falling back
+                                 to the Maven project <name>, which contains spaces. Override
+                                 with -Dapp.executable.name=<other> when needed. -->
+                            <name>econovafx</name>
                             <mainClass>com.econovafx.Launcher</mainClass>
                             <verbose>true</verbose>
                             <nativeImageArgs>
