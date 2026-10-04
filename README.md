@@ -300,6 +300,8 @@ export GRAALVM_HOME=/ruta/a/graalvm   # o dejarla detectar por JAVA_HOME
 mvn clean gluonfx:build -Pnative
 ```
 
+El ejecutable resultante se genera en `target/gluonfx/<target>/econovafx(.exe)`. Su nombre se controla con el parámetro `<name>` del plugin, parametrizado mediante la propiedad Maven `app.executable.name` (por defecto `econovafx`), en lugar de derivarse del `<name>` del proyecto Maven (`EconovaFX - Accounting System`), lo que evita rutas con espacios. Puedes cambiarlo puntualmente con `-Dapp.executable.name=otro-nombre`.
+
 En CI esto ocurre automáticamente en el workflow *Native Image Build (Windows)* usando `graalvm/setup-graalvm@v1` con el esquema nuevo (`distribution: 'graalvm'` + `java-version: '25'`). Los reflect/config resources nativos viven en `src/main/resources/META-INF/native-image/`.
 
 ---
