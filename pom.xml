@@ -16,6 +16,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
+        <!-- GluonFX native executable name (no extension; avoids spaces from project <name>) -->
+        <app.executable.name>econovafx</app.executable.name>
         <javafx.version>17.0.2</javafx.version>
         <ebean.version>17.11.0</ebean.version>
         <h2.version>2.2.224</h2.version>
@@ -561,6 +563,8 @@
                         <artifactId>gluonfx-maven-plugin</artifactId>
                         <version>1.0.29</version>
                         <configuration>
+                            <!-- Executable name (default derives from project <name>, which contains spaces) -->
+                            <name>${app.executable.name}</name>
                             <mainClass>com.econovafx.Launcher</mainClass>
                             <verbose>true</verbose>
                             <nativeImageArgs>
