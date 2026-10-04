@@ -300,6 +300,8 @@ export GRAALVM_HOME=/ruta/a/graalvm   # o dejarla detectar por JAVA_HOME
 mvn clean gluonfx:build -Pnative
 ```
 
+El ejecutable resultante se genera en `target/gluonfx/<target>/econovafx(.exe)`. Su nombre se controla con el parámetro `<name>` del plugin, parametrizado mediante la propiedad Maven `app.executable.name` (por defecto `econovafx`), en lugar de derivarse del `<name>` del proyecto Maven (`EconovaFX - Accounting System`), lo que evita rutas con espacios. Puedes cambiarlo puntualmente con `-Dapp.executable.name=otro-nombre`.
+
 En CI esto ocurre automáticamente en el workflow *Native Image Build (Windows)* usando `graalvm/setup-graalvm@v1` con el esquema nuevo (`distribution: 'graalvm'` + `java-version: '25'`). Los reflect/config resources nativos viven en `src/main/resources/META-INF/native-image/`.
 
 ---
@@ -411,15 +413,27 @@ mvn versions:display-dependency-updates
 
 ### Convenciones de Commits
 
-Usamos [Conventional Commits](https://www.conventionalcommits.org/):
+Usamos [Conventional Commits](https://www.conventionalcommits.org/) **en inglés** (validado por el hook `commit-msg`):
+
+```
+<type>[opcional scope]: <descripción en inglés, imperativo, sin punto final>
+```
 
 - `feat:` Nueva funcionalidad
 - `fix:` Corrección de bug
 - `docs:` Cambios en documentación
 - `style:` Formato, faltantes, etc.
 - `refactor:` Refactorización
+- `perf:` Mejora de rendimiento
 - `test:` Agregar/modificar tests
-- `chore:` Mantenimiento, dependencias
+- `build:` Build/sistema de dependencias (`pom.xml`)
+- `ci:` Configuración de CI
+- `chore:` Mantenimiento
+- `revert:` Reversión de commits
+
+Ejemplos: `feat(billing): add sequential invoice numbering`, `fix(accounting): prevent unbalanced journal entry`. Los cambios disruptivos usan `!` (p. ej. `feat(reporting)!: ...`).
+
+> 📖 Política completa de contribución (incluye idioma obligatorio en inglés para código, comentarios y documentación): [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ### Código de Conducta
 
