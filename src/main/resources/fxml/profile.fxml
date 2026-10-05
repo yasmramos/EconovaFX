@@ -29,11 +29,11 @@
         </VBox>
         
         <HBox spacing="10" alignment="CENTER">
-            <Button fx:id="btnEditProfile" onAction="#handleEditProfile" styleClass="btn, btn-primary">
+            <Button fx:id="btnEditProfile" onAction="#handleEditProfile" styleClass="btn, btn-primary" contentDisplay="LEFT">
                 <text>Edit Profile</text>
                 <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="16"/></graphic>
             </Button>
-            <Button fx:id="btnChangePassword" onAction="#handleChangePassword" styleClass="btn, btn-secondary">
+            <Button fx:id="btnChangePassword" onAction="#handleChangePassword" styleClass="btn, btn-secondary" contentDisplay="LEFT">
                 <text>Change Password</text>
                 <graphic><FontIcon iconLiteral="mdi2k-key" iconSize="16"/></graphic>
             </Button>

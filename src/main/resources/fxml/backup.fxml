@@ -20,7 +20,7 @@
         <Label text="Create Backup" styleClass="text-lg, font-semibold, text-slate-700"/>
         
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <Button fx:id="btnBackupNow" onAction="#handleBackupNow" styleClass="btn, btn-primary">
+            <Button fx:id="btnBackupNow" onAction="#handleBackupNow" styleClass="btn, btn-primary" contentDisplay="LEFT">
                 <text>Backup Now</text>
                 <graphic><FontIcon iconLiteral="mdi2c-content-save" iconSize="18"/></graphic>
             </Button>
@@ -42,7 +42,7 @@
         <Label text="Restore from Backup" styleClass="text-lg, font-semibold, text-slate-700"/>
         
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <Button fx:id="btnRestore" onAction="#handleRestore" styleClass="btn, btn-warning">
+            <Button fx:id="btnRestore" onAction="#handleRestore" styleClass="btn, btn-warning" contentDisplay="LEFT">
                 <text>Restore Backup</text>
                 <graphic><FontIcon iconLiteral="mdi2r-replay" iconSize="18"/></graphic>
             </Button>

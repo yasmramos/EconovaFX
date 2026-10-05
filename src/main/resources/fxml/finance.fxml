@@ -41,11 +41,11 @@
 
     <!-- Toolbar -->
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button fx:id="btnNewTransaction" graphicTextGap="8" onAction="#handleNewTransaction" styleClass="btn, btn-primary">
+        <Button fx:id="btnNewTransaction" graphicTextGap="8" onAction="#handleNewTransaction" styleClass="btn, btn-primary" contentDisplay="LEFT">
             <text>New Financial Transaction</text>
             <graphic><FontIcon iconLiteral="mdi2p-plus-circle" iconSize="18"/></graphic>
         </Button>
-        <Button fx:id="btnReport" graphicTextGap="8" onAction="#handleReport" styleClass="btn, btn-secondary">
+        <Button fx:id="btnReport" graphicTextGap="8" onAction="#handleReport" styleClass="btn, btn-secondary" contentDisplay="LEFT">
             <text>Financial Report</text>
             <graphic><FontIcon iconLiteral="mdi2f-file-document-outline" iconSize="18"/></graphic>
         </Button>

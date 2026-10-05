@@ -23,15 +23,15 @@
                styleClass="text-slate-600" wrapText="true"/>
         
         <HBox spacing="15" alignment="CENTER_LEFT">
-            <Button fx:id="btnVerPeriodos" graphicTextGap="8" onAction="#handleVerPeriodos" styleClass="btn, btn-primary">
+            <Button fx:id="btnVerPeriodos" graphicTextGap="8" onAction="#handleVerPeriodos" styleClass="btn, btn-primary" contentDisplay="LEFT">
                 <text>View Open Periods</text>
                 <graphic><FontIcon iconLiteral="mdi2c-chart-bar" iconSize="18"/></graphic>
             </Button>
-            <Button fx:id="btnCierreMensual" graphicTextGap="8" onAction="#handleCierreMensual" styleClass="btn, btn-warning">
+            <Button fx:id="btnCierreMensual" graphicTextGap="8" onAction="#handleCierreMensual" styleClass="btn, btn-warning" contentDisplay="LEFT">
                 <text>Execute Monthly Close</text>
                 <graphic><FontIcon iconLiteral="mdi2l-lock" iconSize="18"/></graphic>
             </Button>
-            <Button fx:id="btnCierreAnual" graphicTextGap="8" onAction="#handleCierreAnual" styleClass="btn, btn-danger">
+            <Button fx:id="btnCierreAnual" graphicTextGap="8" onAction="#handleCierreAnual" styleClass="btn, btn-danger" contentDisplay="LEFT">
                 <text>Execute Annual Close</text>
                 <graphic><FontIcon iconLiteral="mdi2c-calendar-clock" iconSize="18"/></graphic>
             </Button>

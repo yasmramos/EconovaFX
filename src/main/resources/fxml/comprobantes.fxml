@@ -14,19 +14,19 @@
             <Label styleClass="dashboard-subtitle" text="Accounting vouchers management" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
-        <Button fx:id="btnNewComprobante" onAction="#newComprobante" styleClass="submit-btn" graphicTextGap="8">
+        <Button fx:id="btnNewComprobante" onAction="#newComprobante" styleClass="submit-btn" graphicTextGap="8" contentDisplay="LEFT">
             <text>New Voucher</text>
             <graphic><FontIcon iconLiteral="mdi2p-plus" iconSize="18"/></graphic>
         </Button>
-        <Button fx:id="btnRefresh" onAction="#refreshData" styleClass="refresh-btn" graphicTextGap="8">
+        <Button fx:id="btnRefresh" onAction="#refreshData" styleClass="refresh-btn" graphicTextGap="8" contentDisplay="LEFT">
             <text>Refresh</text>
             <graphic><FontIcon iconLiteral="mdi2r-refresh" iconSize="18"/></graphic>
         </Button>
-        <Button fx:id="btnExportPdf" onAction="#exportToPdf" styleClass="action-btn" graphicTextGap="8">
+        <Button fx:id="btnExportPdf" onAction="#exportToPdf" styleClass="action-btn" graphicTextGap="8" contentDisplay="LEFT">
             <text>Export PDF</text>
             <graphic><FontIcon iconLiteral="mdi2f-file-pdf-box" iconSize="18"/></graphic>
         </Button>
-        <Button fx:id="btnExportExcel" onAction="#exportToExcel" styleClass="action-btn" graphicTextGap="8">
+        <Button fx:id="btnExportExcel" onAction="#exportToExcel" styleClass="action-btn" graphicTextGap="8" contentDisplay="LEFT">
             <text>Export Excel</text>
             <graphic><FontIcon iconLiteral="mdi2m-microsoft-excel" iconSize="18"/></graphic>
         </Button>
@@ -37,7 +37,7 @@
         <HBox spacing="12" alignment="CENTER_LEFT">
             <Label styleClass="filter-label" text="Date:"><graphic><FontIcon iconLiteral="mdi2c-calendar" iconSize="16"/></graphic></Label>
             <DatePicker fx:id="filterStartDate" promptText="Start date" styleClass="filter-date-picker" />
-            <Label styleClass="filter-label" text="—" />
+            <Label styleClass="filter-label" text="â€”" />
             <DatePicker fx:id="filterEndDate" promptText="End date" styleClass="filter-date-picker" />
             
             <Region HBox.hgrow="ALWAYS" />
@@ -48,11 +48,11 @@
             <Label styleClass="filter-label" text="Search:"><graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic></Label>
             <TextField fx:id="searchField" promptText="Number or description..." styleClass="form-input" prefWidth="250" />
             
-            <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8">
+            <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Filter</text>
                 <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
             </Button>
-            <Button onAction="#clearFilters" styleClass="clear-btn" graphicTextGap="8">
+            <Button onAction="#clearFilters" styleClass="clear-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Clear</text>
                 <graphic><FontIcon iconLiteral="mdi2d-delete-outline" iconSize="16"/></graphic>
             </Button>
@@ -148,19 +148,19 @@
         <HBox alignment="CENTER_LEFT" spacing="16">
             <Label styleClass="stats-title" text="Voucher Details"><graphic><FontIcon iconLiteral="mdi2c-clipboard-text" iconSize="18"/></graphic></Label>
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="btnEdit" onAction="#editComprobante" styleClass="submit-btn" graphicTextGap="8">
+            <Button fx:id="btnEdit" onAction="#editComprobante" styleClass="submit-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Edit</text>
                 <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="16"/></graphic>
             </Button>
-            <Button fx:id="btnPublish" onAction="#publishComprobante" styleClass="filter-btn" graphicTextGap="8">
+            <Button fx:id="btnPublish" onAction="#publishComprobante" styleClass="filter-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Post</text>
                 <graphic><FontIcon iconLiteral="mdi2c-check-circle" iconSize="16"/></graphic>
             </Button>
-            <Button fx:id="btnCancel" onAction="#cancelComprobante" styleClass="clear-btn" graphicTextGap="8">
+            <Button fx:id="btnCancel" onAction="#cancelComprobante" styleClass="clear-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Cancel</text>
                 <graphic><FontIcon iconLiteral="mdi2c-close-circle" iconSize="16"/></graphic>
             </Button>
-            <Button fx:id="btnCloseDetail" onAction="#closeDetail" styleClass="clear-btn" graphicTextGap="8">
+            <Button fx:id="btnCloseDetail" onAction="#closeDetail" styleClass="clear-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Close</text>
                 <graphic><FontIcon iconLiteral="mdi2c-close" iconSize="16"/></graphic>
             </Button>

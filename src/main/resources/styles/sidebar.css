@@ -39,6 +39,15 @@
 .sidebar-btn-wrapper {
     -fx-background-color: transparent;
 }
+/* StackPane centres a child that stays at its preferred width instead of
+ * stretching it, so a content-sized nav button lands in the middle of the rail
+ * and -fx-alignment: center-left has nothing to align. Asking for a wide
+ * preferred width makes the wrapper stretch it. JavaFX's CSS parser rejects
+ * exponent notation, so use a wide-but-finite bound (same as .btn-block). */
+.sidebar-btn-wrapper > .button.sidebar-btn {
+    -fx-pref-width: 100000;
+    -fx-max-width: 100000;
+}
 
 .sidebar-separator {
     -fx-background-color: transparent;
@@ -70,32 +79,35 @@
     -fx-font-weight: 500;
     -fx-text-fill: -zinc-400;
     -fx-graphic-gap: 10;
+    -fx-cursor: hand;
+    -fx-transition: -fx-background-color 0.15s ease, -fx-text-fill 0.15s ease;
 }
 .button.sidebar-btn .label { -fx-text-fill: -zinc-400; }
-.button.sidebar-btn > .graphic > .FontIcon { -fx-fill: -zinc-400; }
+.button.sidebar-btn > .ikonli-font-icon { -fx-fill: white; }
 
 .button.sidebar-btn:hover {
     -fx-background-color: #1c1c1f;
     -fx-border-color: transparent;
 }
 .button.sidebar-btn:hover .label,
-.button.sidebar-btn:hover > .graphic > .FontIcon { -fx-text-fill: -zinc-100; -fx-fill: -zinc-100; }
+.button.sidebar-btn:hover > .ikonli-font-icon { -fx-text-fill: -zinc-100; -fx-fill: white; }
 
 .button.sidebar-btn:armed {
     -fx-background-color: -zinc-800;
     -fx-border-color: -zinc-800;
 }
 .button.sidebar-btn:armed .label { -fx-text-fill: -zinc-50; }
-.button.sidebar-btn:armed > .graphic > .FontIcon { -fx-fill: -zinc-50; }
+.button.sidebar-btn:armed > .ikonli-font-icon { -fx-fill: white; }
 
-/* Active route: a 3px white bar on the leading edge, shadcn style */
+/* Active route: accent bar on the leading edge + subtle background */
 .button.sidebar-btn-active {
     -fx-background-color: -zinc-800;
-    -fx-border-color: -zinc-800;
+    -fx-border-color: transparent transparent transparent #3b82f6;
+    -fx-border-width: 0 0 0 3;
     -fx-text-fill: white;
 }
 .button.sidebar-btn-active .label { -fx-text-fill: white; }
-.button.sidebar-btn-active > .graphic > .FontIcon { -fx-fill: white; }
+.button.sidebar-btn-active > .ikonli-font-icon { -fx-fill: white; }
 .button.sidebar-btn-active:hover { -fx-background-color: -zinc-800; }
 
 .button.sidebar-submenu-btn {
@@ -104,13 +116,18 @@
     -fx-max-height: 30;
     -fx-font-size: 13px;
     -fx-font-weight: 400;
+    -fx-text-fill: -zinc-400;
 }
+.button.sidebar-submenu-btn .label { -fx-text-fill: -zinc-400; }
+.button.sidebar-submenu-btn > .ikonli-font-icon { -fx-fill: white; }
+.button.sidebar-submenu-btn:hover .label { -fx-text-fill: -zinc-100; }
+.button.sidebar-submenu-btn:hover > .ikonli-font-icon { -fx-fill: white; }
 .button.sidebar-submenu-btn-active {
     -fx-background-color: -zinc-800;
     -fx-text-fill: white;
 }
 .button.sidebar-submenu-btn-active .label { -fx-text-fill: white; }
-.button.sidebar-submenu-btn-active > .graphic > .FontIcon { -fx-fill: white; }
+.button.sidebar-submenu-btn-active > .ikonli-font-icon { -fx-fill: white; }
 
 .sidebar-chevron-float {
     -fx-fill: -zinc-500;
@@ -132,29 +149,53 @@
     -fx-pref-height: 28;
     -fx-cursor: hand;
 }
-.btn-icon-toggle > .graphic > .FontIcon { -fx-fill: -zinc-400; }
+.btn-icon-toggle > .ikonli-font-icon { -fx-fill: -zinc-400; }
 .btn-icon-toggle:hover { -fx-background-color: #1c1c1f; }
-.btn-icon-toggle:hover > .graphic > .FontIcon { -fx-fill: -zinc-100; }
+.btn-icon-toggle:hover > .ikonli-font-icon { -fx-fill: -zinc-100; }
 
 /* ------------------------------------------------------------ collapsed rail */
 .sidebar-collapsed {
-    -fx-pref-width: 60;
-    -fx-max-width: 60;
-    -fx-min-width: 60;
+    -fx-pref-width: 64;
+    -fx-max-width: 64;
+    -fx-min-width: 64;
     -fx-padding: 12 8;
 }
 .sidebar-collapsed .button.sidebar-btn {
     -fx-padding: 8;
     -fx-alignment: center;
-    -fx-max-width: 44;
+    -fx-max-width: 48;
+    -fx-min-width: 48;
 }
 .sidebar-collapsed .button.sidebar-btn .label { -fx-max-width: 0; }
-.sidebar-collapsed .button.sidebar-btn-active { -fx-background-color: -zinc-800; }
+.sidebar-collapsed .button.sidebar-btn-active {
+    -fx-background-color: -zinc-800;
+    -fx-border-color: transparent transparent transparent #3b82f6;
+    -fx-border-width: 0 0 0 3;
+}
 .sidebar-collapsed .button.sidebar-submenu-btn { -fx-display: none; }
 .sidebar-collapsed .sidebar-chevron-float { -fx-visibility: hidden; }
 .sidebar-collapsed .sidebar-submenu { -fx-padding: 0; }
 .sidebar-collapsed .sidebar-section-title,
 .sidebar-collapsed .sidebar-separator { -fx-max-width: 0; -fx-padding: 0; }
+.sidebar-collapsed .sidebar-brand .label { -fx-max-width: 0; }
+
+/* -----------------------------------------------------------------------------
+ * TOOLTIPS
+ * --------------------------------------------------------------------------- */
+.tooltip {
+    -fx-background-color: -zinc-800;
+    -fx-text-fill: -zinc-100;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-padding: 6 10;
+    -fx-background-radius: 6;
+    -fx-border-color: -zinc-700;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
+    -fx-show-delay: 100ms;
+    -fx-hide-delay: 200ms;
+}
 
 /* -----------------------------------------------------------------------------
  * SCROLLBARS (rail + workspace)

@@ -17,15 +17,15 @@
 
     <!-- Toolbar -->
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button fx:id="btnNuevo" graphicTextGap="8" onAction="#handleNuevo" styleClass="btn, btn-primary">
+        <Button fx:id="btnNuevo" graphicTextGap="8" onAction="#handleNuevo" styleClass="btn, btn-primary" contentDisplay="LEFT">
             <text>New Cost Center</text>
             <graphic><FontIcon iconLiteral="mdi2p-plus-circle" iconSize="18"/></graphic>
         </Button>
-        <Button fx:id="btnEditar" graphicTextGap="8" onAction="#handleEditar" styleClass="btn, btn-secondary">
+        <Button fx:id="btnEditar" graphicTextGap="8" onAction="#handleEditar" styleClass="btn, btn-secondary" contentDisplay="LEFT">
             <text>Edit</text>
             <graphic><FontIcon iconLiteral="mdi2p-pencil" iconSize="18"/></graphic>
         </Button>
-        <Button fx:id="btnEliminar" graphicTextGap="8" onAction="#handleEliminar" styleClass="btn, btn-danger">
+        <Button fx:id="btnEliminar" graphicTextGap="8" onAction="#handleEliminar" styleClass="btn, btn-danger" contentDisplay="LEFT">
             <text>Delete</text>
             <graphic><FontIcon iconLiteral="mdi2d-delete-outline" iconSize="18"/></graphic>
         </Button>

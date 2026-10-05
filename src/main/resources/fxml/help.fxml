@@ -18,7 +18,7 @@
     <!-- Search -->
     <HBox spacing="10" alignment="CENTER_LEFT">
         <TextField fx:id="txtSearch" prefWidth="400" promptText="Search for help topics..."/>
-        <Button fx:id="btnSearch" onAction="#handleSearch" styleClass="btn, btn-primary">
+        <Button fx:id="btnSearch" onAction="#handleSearch" styleClass="btn, btn-primary" contentDisplay="LEFT">
             <text>Search</text>
             <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="18"/></graphic>
         </Button>

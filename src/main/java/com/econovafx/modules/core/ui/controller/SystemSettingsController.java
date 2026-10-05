@@ -52,56 +52,72 @@ public class SystemSettingsController {
     @FXML
     private VBox rootContainer; // Main container for notifications
 
-    @FXML
+    // Estos controles NO viven en el FXML: los paneles de cada categoría se
+    // construyen por código en switchContent(), así que se instancian aquí.
     private TextField companyNameField;
-
-    @FXML
     private TextField taxIdField;
-
-    @FXML
     private TextArea addressField;
-
-    @FXML
     private TextField phoneField;
-
-    @FXML
     private TextField emailField;
-
-    @FXML
     private ImageView logoPreview;
-
-    @FXML
     private ComboBox<String> fiscalYearStartCombo;
-
-    @FXML
     private ComboBox<String> currencyCombo;
-
-    @FXML
     private ComboBox<String> inventoryMethodCombo;
-
-    @FXML
     private CheckBox autoBackupCheck;
-
-    @FXML
     private TextField backupPathField;
-
-    @FXML
     private Spinner<Integer> stockAlertSpinner;
-
-    @FXML
     private ComboBox<String> themeCombo;
-
-    @FXML
     private ComboBox<String> languageCombo;
-
 
     private ResourceBundle resources;
 
     @FXML
     public void initialize() {
+        createControls();
         setupSidebar();
         loadCurrentSettings();
         setupListeners();
+    }
+
+    /**
+     * Instancia los controles de los formularios. El FXML solo declara la
+     * estructura (header, sidebar y area de contenido); el contenido de cada
+     * categoria se arma dinamicamente.
+     */
+    private void createControls() {
+        companyNameField = new TextField();
+        taxIdField = new TextField();
+        addressField = new TextArea();
+        addressField.setPrefRowCount(3);
+        phoneField = new TextField();
+        emailField = new TextField();
+
+        logoPreview = new ImageView();
+        logoPreview.setFitWidth(120);
+        logoPreview.setFitHeight(120);
+        logoPreview.setPreserveRatio(true);
+
+        fiscalYearStartCombo = new ComboBox<>();
+        currencyCombo = new ComboBox<>();
+        inventoryMethodCombo = new ComboBox<>();
+        themeCombo = new ComboBox<>();
+        languageCombo = new ComboBox<>();
+
+        autoBackupCheck = new CheckBox();
+        backupPathField = new TextField();
+
+        stockAlertSpinner = new Spinner<>(0, 1000, 10);
+    }
+
+    /**
+     * Cierra la ventana de configuracion (boton "Cerrar" del header).
+     */
+    @FXML
+    private void closeWindow() {
+        if (rootContainer != null && rootContainer.getScene() != null
+                && rootContainer.getScene().getWindow() != null) {
+            rootContainer.getScene().getWindow().hide();
+        }
     }
 
     private void setupSidebar() {

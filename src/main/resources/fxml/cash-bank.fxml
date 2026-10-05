@@ -18,12 +18,12 @@
         <Label text="Cash &amp; Bank Management" styleClass="text-xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2c-cash-multiple" iconSize="24"/></graphic></Label>
         <Region HBox.hgrow="ALWAYS"/>
         <Button fx:id="btnNewMovement" graphicTextGap="8" onAction="#handleNewMovement" 
-                styleClass="btn, btn-primary">
+                styleClass="btn, btn-primary" contentDisplay="LEFT">
             <text>New Movement</text>
             <graphic><FontIcon iconLiteral="mdi2p-plus" iconSize="18"/></graphic>
         </Button>
         <Button fx:id="btnReconciliation" graphicTextGap="8" onAction="#handleReconciliation" 
-                styleClass="btn, btn-secondary" layoutX="200" layoutY="10">
+                styleClass="btn, btn-secondary" layoutX="200" layoutY="10" contentDisplay="LEFT">
             <text>Bank Reconciliation</text>
             <graphic><FontIcon iconLiteral="mdi2c-clipboard-check-outline" iconSize="18"/></graphic>
         </Button>
@@ -40,11 +40,11 @@
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <TextField fx:id="txtSearchBank" promptText="Search bank account..." 
                                HBox.hgrow="ALWAYS" onKeyTyped="#handleSearchBank"/>
-                    <Button graphicTextGap="8" onAction="#handleSearchBank">
+                    <Button graphicTextGap="8" onAction="#handleSearchBank" contentDisplay="LEFT">
                         <text>Search</text>
                         <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
                     </Button>
-                    <Button graphicTextGap="8" onAction="#handleAddBank" styleClass="btn, btn-primary">
+                    <Button graphicTextGap="8" onAction="#handleAddBank" styleClass="btn, btn-primary" contentDisplay="LEFT">
                         <text>Add Bank</text>
                         <graphic><FontIcon iconLiteral="mdi2p-plus" iconSize="16"/></graphic>
                     </Button>
@@ -72,11 +72,11 @@
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <TextField fx:id="txtSearchCash" promptText="Search cash box..." 
                                HBox.hgrow="ALWAYS" onKeyTyped="#handleSearchCash"/>
-                    <Button graphicTextGap="8" onAction="#handleSearchCash">
+                    <Button graphicTextGap="8" onAction="#handleSearchCash" contentDisplay="LEFT">
                         <text>Search</text>
                         <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
                     </Button>
-                    <Button graphicTextGap="8" onAction="#handleAddCashBox" styleClass="btn, btn-primary">
+                    <Button graphicTextGap="8" onAction="#handleAddCashBox" styleClass="btn, btn-primary" contentDisplay="LEFT">
                         <text>Add Cash Box</text>
                         <graphic><FontIcon iconLiteral="mdi2p-plus" iconSize="16"/></graphic>
                     </Button>
@@ -108,7 +108,7 @@
                     <DatePicker fx:id="dpMovementTo" promptText="To Date"/>
                     <ComboBox fx:id="cbMovementType" promptText="All Types" 
                               items="${FXCollections.observableArrayList('ALL', 'INCOME', 'EXPENSE', 'TRANSFER')}"/>
-                    <Button graphicTextGap="8" onAction="#handleFilterMovements">
+                    <Button graphicTextGap="8" onAction="#handleFilterMovements" contentDisplay="LEFT">
                         <text>Filter</text>
                         <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
                     </Button>
@@ -142,7 +142,7 @@
                     <Label text="To:"/>
                     <DatePicker fx:id="dpReconciliationTo"/>
                     <Button graphicTextGap="8" onAction="#handleStartReconciliation" 
-                            styleClass="btn, btn-primary">
+                            styleClass="btn, btn-primary" contentDisplay="LEFT">
                         <text>Start Reconciliation</text>
                         <graphic><FontIcon iconLiteral="mdi2c-chart-bar" iconSize="16"/></graphic>
                     </Button>
@@ -206,12 +206,12 @@
                         <HBox spacing="8" GridPane.columnSpan="4" GridPane.rowIndex="2" 
                               alignment="CENTER_RIGHT">
                             <Button graphicTextGap="8" onAction="#handleSaveReconciliation" 
-                                    styleClass="btn, btn-primary">
+                                    styleClass="btn, btn-primary" contentDisplay="LEFT">
                                 <text>Save</text>
                                 <graphic><FontIcon iconLiteral="mdi2c-content-save" iconSize="16"/></graphic>
                             </Button>
                             <Button graphicTextGap="8" onAction="#handlePostReconciliation" 
-                                    styleClass="btn, btn-success">
+                                    styleClass="btn, btn-success" contentDisplay="LEFT">
                                 <text>Post</text>
                                 <graphic><FontIcon iconLiteral="mdi2c-check-circle" iconSize="16"/></graphic>
                             </Button>

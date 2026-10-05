@@ -33,7 +33,7 @@
             <Label styleClass="dashboard-subtitle" text="Resumen financiero y transacciones recientes" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
-        <Button fx:id="refreshButton" onAction="#refreshDashboard" styleClass="refresh-btn">
+        <Button fx:id="refreshButton" onAction="#refreshDashboard" styleClass="refresh-btn" contentDisplay="LEFT">
             <graphic><FontIcon iconLiteral="mdi2r-refresh" iconSize="18"/></graphic>
             <text>Actualizar</text>
         </Button>
@@ -126,7 +126,7 @@
                 <VBox>
                     <Label styleClass="card-label" text="Utilidad del Mes" />
                     <Label fx:id="profitLabel" styleClass="value-success" text="\$ 0.00" />
-                    <Label fx:id="profitTrendLabel" styleClass="trend-neutral" text="▬ Equilibrio" />
+                    <Label fx:id="profitTrendLabel" styleClass="trend-neutral" text="â–¬ Equilibrio" />
                 </VBox>
             </HBox>
         </VBox>
@@ -145,7 +145,7 @@
 
         <!-- Pie Chart: Assets vs Liabilities -->
         <VBox styleClass="chart-card" GridPane.columnIndex="0">
-            <Label styleClass="chart-title" text="Distribución Financiera" />
+            <Label styleClass="chart-title" text="DistribuciÃ³n Financiera" />
             <Label styleClass="chart-subtitle" text="Activos vs Pasivos vs Patrimonio" />
             <PieChart fx:id="financialPieChart" prefHeight="280" />
         </VBox>
@@ -153,7 +153,7 @@
         <!-- Bar Chart: Monthly Activity -->
         <VBox styleClass="chart-card" GridPane.columnIndex="1">
             <Label styleClass="chart-title" text="Actividad Mensual" />
-            <Label styleClass="chart-subtitle" text="Ingresos vs Gastos (Últimos 6 meses)" />
+            <Label styleClass="chart-subtitle" text="Ingresos vs Gastos (Ãšltimos 6 meses)" />
             <BarChart fx:id="monthlyBarChart" prefHeight="280">
                 <xAxis>
                     <CategoryAxis label="Mes" side="BOTTOM" />
@@ -167,10 +167,10 @@
         <!-- Line Chart: Daily Cash Flow -->
         <VBox styleClass="chart-card" GridPane.columnIndex="2">
             <Label styleClass="chart-title" text="Flujo de Caja Diario" />
-            <Label styleClass="chart-subtitle" text="Últimos 30 días" />
+            <Label styleClass="chart-subtitle" text="Ãšltimos 30 dÃ­as" />
             <LineChart fx:id="cashFlowLineChart" prefHeight="280">
                 <xAxis>
-                    <CategoryAxis label="Día" side="BOTTOM" />
+                    <CategoryAxis label="DÃ­a" side="BOTTOM" />
                 </xAxis>
                 <yAxis>
                     <NumberAxis label="Monto" side="LEFT" />
@@ -185,20 +185,20 @@
     <!-- Recent Transactions with Filters -->
     <VBox styleClass="p-5" VBox.vgrow="ALWAYS">
         <HBox alignment="CENTER_LEFT" spacing="12" styleClass="filter-section">
-            <Label styleClass="filter-label" text="Período:"><graphic><FontIcon iconLiteral="mdi2c-calendar" iconSize="16"/></graphic></Label>
+            <Label styleClass="filter-label" text="PerÃ­odo:"><graphic><FontIcon iconLiteral="mdi2c-calendar" iconSize="16"/></graphic></Label>
             <DatePicker fx:id="filterStartDate" promptText="Fecha inicio" styleClass="filter-date-picker" />
-            <Label styleClass="filter-label" text="—" />
+            <Label styleClass="filter-label" text="â€”" />
             <DatePicker fx:id="filterEndDate" promptText="Fecha fin" styleClass="filter-date-picker" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8">
+            <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Filtrar</text>
                 <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
             </Button>
-            <Button onAction="#clearFilters" styleClass="clear-btn" graphicTextGap="8">
+            <Button onAction="#clearFilters" styleClass="clear-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Limpiar</text>
                 <graphic><FontIcon iconLiteral="mdi2d-delete-outline" iconSize="16"/></graphic>
             </Button>
-            <Button onAction="#viewAllTransactions" styleClass="view-all-btn" graphicTextGap="8">
+            <Button onAction="#viewAllTransactions" styleClass="view-all-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Ver Todas</text>
                 <graphic><FontIcon iconLiteral="mdi2f-file-document" iconSize="16"/></graphic>
             </Button>
@@ -207,11 +207,11 @@
         <TableView fx:id="recentTransactionsTable" styleClass="transactions-table" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="colDate" prefWidth="100" text="Fecha" />
-                <TableColumn fx:id="colNumber" prefWidth="80" text="Número" />
+                <TableColumn fx:id="colNumber" prefWidth="80" text="NÃºmero" />
                 <TableColumn fx:id="colType" prefWidth="100" text="Tipo" />
-                <TableColumn fx:id="colDescription" prefWidth="250" text="Descripción" />
-                <TableColumn fx:id="colDebit" prefWidth="120" text="Débito" />
-                <TableColumn fx:id="colCredit" prefWidth="120" text="Crédito" />
+                <TableColumn fx:id="colDescription" prefWidth="250" text="DescripciÃ³n" />
+                <TableColumn fx:id="colDebit" prefWidth="120" text="DÃ©bito" />
+                <TableColumn fx:id="colCredit" prefWidth="120" text="CrÃ©dito" />
                 <TableColumn fx:id="colStatus" prefWidth="100" text="Estado" />
             </columns>
             <columnResizePolicy>
@@ -230,7 +230,7 @@
 
         <!-- Quick Transaction -->
         <VBox styleClass="quick-form-card" GridPane.columnIndex="0">
-            <Label styleClass="quick-form-title" text="Nueva Transacción Rápida"><graphic><FontIcon iconLiteral="mdi2l-lightning-bolt" iconSize="18"/></graphic></Label>
+            <Label styleClass="quick-form-title" text="Nueva TransacciÃ³n RÃ¡pida"><graphic><FontIcon iconLiteral="mdi2l-lightning-bolt" iconSize="18"/></graphic></Label>
             <GridPane hgap="16" vgap="14">
                 <columnConstraints>
                     <ColumnConstraints percentWidth="30" />
@@ -240,8 +240,8 @@
                 <Label styleClass="form-label" text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="0"><graphic><FontIcon iconLiteral="mdi2s-shape-outline" iconSize="14"/></graphic></Label>
                 <ComboBox fx:id="quickTransactionType" styleClass="form-combo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                <Label styleClass="form-label" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="1"><graphic><FontIcon iconLiteral="mdi2p-pencil-outline" iconSize="14"/></graphic></Label>
-                <TextField fx:id="quickDescription" promptText="Descripción de la transacción" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label styleClass="form-label" text="DescripciÃ³n:" GridPane.columnIndex="0" GridPane.rowIndex="1"><graphic><FontIcon iconLiteral="mdi2p-pencil-outline" iconSize="14"/></graphic></Label>
+                <TextField fx:id="quickDescription" promptText="DescripciÃ³n de la transacciÃ³n" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                 <Label styleClass="form-label" text="Monto:" GridPane.columnIndex="0" GridPane.rowIndex="2"><graphic><FontIcon iconLiteral="mdi2c-cash-multiple" iconSize="14"/></graphic></Label>
                 <TextField fx:id="quickAmount" promptText="0.00" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -249,8 +249,8 @@
                 <Label styleClass="form-label" text="Cuenta:" GridPane.columnIndex="0" GridPane.rowIndex="3"><graphic><FontIcon iconLiteral="mdi2b-bank-outline" iconSize="14"/></graphic></Label>
                 <ComboBox fx:id="quickAccountSelect" promptText="Seleccione cuenta" styleClass="form-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                <Button onAction="#createQuickTransaction" styleClass="submit-btn" graphicTextGap="8" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
-                    <text>Crear Transacción</text>
+                <Button onAction="#createQuickTransaction" styleClass="submit-btn" graphicTextGap="8" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" contentDisplay="LEFT">
+                    <text>Crear TransacciÃ³n</text>
                     <graphic><FontIcon iconLiteral="mdi2c-check" iconSize="16"/></graphic>
                 </Button>
             <rowConstraints>
@@ -303,7 +303,7 @@
 
         <!-- Statistics -->
         <VBox styleClass="stats-card" GridPane.columnIndex="2">
-            <Label styleClass="stats-title" text="Estadísticas"><graphic><FontIcon iconLiteral="mdi2c-chart-pie" iconSize="18"/></graphic></Label>
+            <Label styleClass="stats-title" text="EstadÃ­sticas"><graphic><FontIcon iconLiteral="mdi2c-chart-pie" iconSize="18"/></graphic></Label>
             <VBox spacing="12">
                 <HBox alignment="CENTER_LEFT" spacing="12" styleClass="stat-item">
                     <HBox styleClass="stat-icon-blue">
