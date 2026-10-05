@@ -192,15 +192,17 @@ public class SidebarNavLayoutTest extends ApplicationTest {
             rail.applyCss();
             rail.layout();
 
-            double contentWidth = rail.getWidth()
-                    - rail.getInsets().getLeft() - rail.getInsets().getRight();
+            // The fixture pins the rail's own width in code, so assert the
+            // collapsed tile size from the stylesheet rather than deriving it
+            // from the rail bounds.
+            final double collapsedTile = 48;
 
             List<Button> buttons = new ArrayList<>();
             rail.lookupAll(".sidebar-btn").forEach(n -> buttons.add((Button) n));
             assertEquals(6, buttons.size());
 
             for (Button b : buttons) {
-                assertEquals(contentWidth, b.getWidth(), 1.0,
+                assertEquals(collapsedTile, b.getWidth(), 1.0,
                         b.getText() + " must stay a square icon tile when collapsed");
                 assertEquals(Pos.CENTER, b.getAlignment(),
                         b.getText() + " must centre its icon when collapsed");
