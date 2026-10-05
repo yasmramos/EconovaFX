@@ -33,7 +33,7 @@
             <Label styleClass="dashboard-subtitle" text="Resumen financiero y transacciones recientes" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
-        <Button fx:id="refreshButton" onAction="#refreshDashboard" styleClass="refresh-btn">
+        <Button fx:id="refreshButton" onAction="#refreshDashboard" styleClass="refresh-btn" contentDisplay="LEFT">
             <graphic><FontIcon iconLiteral="mdi2r-refresh" iconSize="18"/></graphic>
             <text>Actualizar</text>
         </Button>
@@ -190,15 +190,15 @@
             <Label styleClass="filter-label" text="—" />
             <DatePicker fx:id="filterEndDate" promptText="Fecha fin" styleClass="filter-date-picker" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8">
+            <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Filtrar</text>
                 <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
             </Button>
-            <Button onAction="#clearFilters" styleClass="clear-btn" graphicTextGap="8">
+            <Button onAction="#clearFilters" styleClass="clear-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Limpiar</text>
                 <graphic><FontIcon iconLiteral="mdi2d-delete-outline" iconSize="16"/></graphic>
             </Button>
-            <Button onAction="#viewAllTransactions" styleClass="view-all-btn" graphicTextGap="8">
+            <Button onAction="#viewAllTransactions" styleClass="view-all-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Ver Todas</text>
                 <graphic><FontIcon iconLiteral="mdi2f-file-document" iconSize="16"/></graphic>
             </Button>
@@ -227,41 +227,6 @@
             <ColumnConstraints percentWidth="33" />
             <ColumnConstraints percentWidth="33" />
         </columnConstraints>
-
-        <!-- Quick Transaction -->
-        <VBox styleClass="quick-form-card" GridPane.columnIndex="0">
-            <Label styleClass="quick-form-title" text="Nueva Transacción Rápida"><graphic><FontIcon iconLiteral="mdi2l-lightning-bolt" iconSize="18"/></graphic></Label>
-            <GridPane hgap="16" vgap="14">
-                <columnConstraints>
-                    <ColumnConstraints percentWidth="30" />
-                    <ColumnConstraints percentWidth="70" />
-                </columnConstraints>
-
-                <Label styleClass="form-label" text="Tipo:" GridPane.columnIndex="0" GridPane.rowIndex="0"><graphic><FontIcon iconLiteral="mdi2s-shape-outline" iconSize="14"/></graphic></Label>
-                <ComboBox fx:id="quickTransactionType" styleClass="form-combo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
-                <Label styleClass="form-label" text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="1"><graphic><FontIcon iconLiteral="mdi2p-pencil-outline" iconSize="14"/></graphic></Label>
-                <TextField fx:id="quickDescription" promptText="Descripción de la transacción" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-                <Label styleClass="form-label" text="Monto:" GridPane.columnIndex="0" GridPane.rowIndex="2"><graphic><FontIcon iconLiteral="mdi2c-cash-multiple" iconSize="14"/></graphic></Label>
-                <TextField fx:id="quickAmount" promptText="0.00" styleClass="form-input" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-
-                <Label styleClass="form-label" text="Cuenta:" GridPane.columnIndex="0" GridPane.rowIndex="3"><graphic><FontIcon iconLiteral="mdi2b-bank-outline" iconSize="14"/></graphic></Label>
-                <ComboBox fx:id="quickAccountSelect" promptText="Seleccione cuenta" styleClass="form-combo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-                <Button onAction="#createQuickTransaction" styleClass="submit-btn" graphicTextGap="8" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
-                    <text>Crear Transacción</text>
-                    <graphic><FontIcon iconLiteral="mdi2c-check" iconSize="16"/></graphic>
-                </Button>
-            <rowConstraints>
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-            </rowConstraints>
-            </GridPane>
-        </VBox>
 
         <!-- KPI Metrics -->
         <VBox styleClass="stats-card" GridPane.columnIndex="1">

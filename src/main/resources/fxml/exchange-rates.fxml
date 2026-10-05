@@ -20,7 +20,7 @@
         <Label text="Exchange Rates Management" styleClass="page-title"><graphic><FontIcon iconLiteral="mdi2c-currency-usd" iconSize="20"/></graphic></Label>
         <Region HBox.hgrow="ALWAYS"/>
         <Label fx:id="statusLabel" styleClass="status-label"/>
-        <Button graphicTextGap="8" onAction="#handleRefreshRates" styleClass="btn-primary">
+        <Button graphicTextGap="8" onAction="#handleRefreshRates" styleClass="btn-primary" contentDisplay="LEFT">
             <text>Update</text>
             <graphic><FontIcon iconLiteral="mdi2r-refresh" iconSize="16"/></graphic>
         </Button>
@@ -58,12 +58,12 @@
                 <DatePicker fx:id="toDatePicker" prefWidth="150"/>
                 <Label text="Currency:"/>
                 <ComboBox fx:id="currencyFilterCombo" prefWidth="120"/>
-                <Button graphicTextGap="8" onAction="#handleSearchHistory" styleClass="btn-secondary">
+                <Button graphicTextGap="8" onAction="#handleSearchHistory" styleClass="btn-secondary" contentDisplay="LEFT">
                     <text>Search</text>
                     <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>
                 </Button>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button graphicTextGap="8" onAction="#handleExportToCSV" styleClass="btn-success">
+                <Button graphicTextGap="8" onAction="#handleExportToCSV" styleClass="btn-success" contentDisplay="LEFT">
                     <text>Export CSV</text>
                     <graphic><FontIcon iconLiteral="mdi2f-file-document-outline" iconSize="16"/></graphic>
                 </Button>

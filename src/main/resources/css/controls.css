@@ -24,7 +24,8 @@
     -fx-text-fill: -foreground;
     -fx-cursor: hand;
     -fx-alignment: center;
-    -fx-content-display: center;
+    /* No -fx-content-display here: it is a real JavaFX property and would beat
+     * the contentDisplay="LEFT" that every icon button declares in markup. */
     -fx-graphic-gap: 8;
 }
 
@@ -48,7 +49,7 @@
     -fx-text-fill: -foreground;
 }
 
-.button > .graphic > .FontIcon {
+.button > .ikonli-font-icon {
     -fx-fill: -foreground;
 }
 
@@ -386,25 +387,25 @@
     -fx-cursor: hand;
     -fx-alignment: center;
 }
-.icon-btn > .graphic > .FontIcon { -fx-fill: -zinc-500; }
+.icon-btn > .ikonli-font-icon { -fx-fill: -zinc-500; }
 .icon-btn:hover { -fx-background-color: -muted; }
-.icon-btn:hover > .graphic > .FontIcon { -fx-fill: -foreground; }
+.icon-btn:hover > .ikonli-font-icon { -fx-fill: -foreground; }
 
 .icon-btn-info    { -fx-background-color: -info-soft; }
 .icon-btn-info:hover { -fx-background-color: -blue-100; }
-.icon-btn-info > .graphic > .FontIcon { -fx-fill: -info; }
+.icon-btn-info > .ikonli-font-icon { -fx-fill: -info; }
 
 .icon-btn-success { -fx-background-color: -success-soft; }
 .icon-btn-success:hover { -fx-background-color: -green-100; }
-.icon-btn-success > .graphic > .FontIcon { -fx-fill: -success; }
+.icon-btn-success > .ikonli-font-icon { -fx-fill: -success; }
 
 .icon-btn-danger  { -fx-background-color: -danger-soft; }
 .icon-btn-danger:hover { -fx-background-color: -red-100; }
-.icon-btn-danger > .graphic > .FontIcon { -fx-fill: -destructive; }
+.icon-btn-danger > .ikonli-font-icon { -fx-fill: -destructive; }
 
 .icon-btn-warning { -fx-background-color: -warning-soft; }
 .icon-btn-warning:hover { -fx-background-color: -amber-100; }
-.icon-btn-warning > .graphic > .FontIcon { -fx-fill: -warning; }
+.icon-btn-warning > .ikonli-font-icon { -fx-fill: -warning; }
 
 /* Same tint palette, but for actions that keep a visible label ("Edit",
    "Delete"). Identical rules to .icon-btn plus the padding a label needs. */
@@ -423,24 +424,24 @@
     -fx-graphic-gap: 6;
 }
 .row-action .label { -fx-text-fill: -zinc-600; }
-.row-action > .graphic > .FontIcon { -fx-fill: -zinc-500; }
+.row-action > .ikonli-font-icon { -fx-fill: -zinc-500; }
 .row-action:hover { -fx-background-color: -muted; }
 .row-action:hover .label,
-.row-action:hover > .graphic > .FontIcon { -fx-text-fill: -foreground; -fx-fill: -foreground; }
+.row-action:hover > .ikonli-font-icon { -fx-text-fill: -foreground; -fx-fill: -foreground; }
 
 .row-action-info    { -fx-background-color: -info-soft; }
 .row-action-info .label { -fx-text-fill: -info; }
-.row-action-info > .graphic > .FontIcon { -fx-fill: -info; }
+.row-action-info > .ikonli-font-icon { -fx-fill: -info; }
 .row-action-info:hover { -fx-background-color: -blue-100; }
 
 .row-action-success { -fx-background-color: -success-soft; }
 .row-action-success .label { -fx-text-fill: -success; }
-.row-action-success > .graphic > .FontIcon { -fx-fill: -success; }
+.row-action-success > .ikonli-font-icon { -fx-fill: -success; }
 .row-action-success:hover { -fx-background-color: -green-100; }
 
 .row-action-danger  { -fx-background-color: -danger-soft; }
 .row-action-danger .label { -fx-text-fill: -destructive; }
-.row-action-danger > .graphic > .FontIcon { -fx-fill: -destructive; }
+.row-action-danger > .ikonli-font-icon { -fx-fill: -destructive; }
 .row-action-danger:hover { -fx-background-color: -red-100; }
 
 /* =============================================================================

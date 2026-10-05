@@ -17,15 +17,15 @@
 
     <!-- Toolbar -->
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button fx:id="btnNewPayroll" graphicTextGap="8" onAction="#handleNewPayroll" styleClass="btn, btn-primary">
+        <Button fx:id="btnNewPayroll" graphicTextGap="8" onAction="#handleNewPayroll" styleClass="btn, btn-primary" contentDisplay="LEFT">
             <text>New Payroll Run</text>
             <graphic><FontIcon iconLiteral="mdi2p-plus-circle" iconSize="18"/></graphic>
         </Button>
-        <Button fx:id="btnEmployees" graphicTextGap="8" onAction="#handleEmployees" styleClass="btn, btn-secondary">
+        <Button fx:id="btnEmployees" graphicTextGap="8" onAction="#handleEmployees" styleClass="btn, btn-secondary" contentDisplay="LEFT">
             <text>Employees</text>
             <graphic><FontIcon iconLiteral="mdi2a-account-group" iconSize="18"/></graphic>
         </Button>
-        <Button fx:id="btnReports" graphicTextGap="8" onAction="#handleReports" styleClass="btn, btn-info">
+        <Button fx:id="btnReports" graphicTextGap="8" onAction="#handleReports" styleClass="btn, btn-info" contentDisplay="LEFT">
             <text>Reports</text>
             <graphic><FontIcon iconLiteral="mdi2f-file-document-outline" iconSize="18"/></graphic>
         </Button>

@@ -138,11 +138,20 @@ module econovafx {
     exports com.econovafx.modules.finance.controller to javafx.fxml;
     opens com.econovafx.modules.finance.controller to javafx.fxml;
 
+    exports com.econovafx.modules.fixedassets.controller to javafx.fxml;
+    opens com.econovafx.modules.fixedassets.controller to javafx.fxml;
+
     exports com.econovafx.modules.inventory.controller to javafx.fxml;
     opens com.econovafx.modules.inventory.controller to javafx.fxml;
 
+    exports com.econovafx.modules.inventory.ui to javafx.fxml;
+    opens com.econovafx.modules.inventory.ui to javafx.fxml;
+
     exports com.econovafx.modules.payroll.controller to javafx.fxml;
     opens com.econovafx.modules.payroll.controller to javafx.fxml;
+
+    exports com.econovafx.modules.reporting.controller to javafx.fxml;
+    opens com.econovafx.modules.reporting.controller to javafx.fxml;
 
     exports com.econovafx.modules.security.ui.controller to javafx.fxml;
     opens com.econovafx.modules.security.ui.controller to javafx.fxml;
