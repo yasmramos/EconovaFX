@@ -182,6 +182,37 @@ public class SidebarNavLayoutTest extends ApplicationTest {
     }
 
     /**
+     * The wide preferred width on .sidebar-btn must not leak into the collapsed
+     * rail, where the label is hidden and each item is a 48px icon square.
+     */
+    @Test
+    public void collapsedRailKeepsIconOnlyButtons() {
+        rail.getStyleClass().add("sidebar-collapsed");
+        try {
+            rail.applyCss();
+            rail.layout();
+
+            double contentWidth = rail.getWidth()
+                    - rail.getInsets().getLeft() - rail.getInsets().getRight();
+
+            List<Button> buttons = new ArrayList<>();
+            rail.lookupAll(".sidebar-btn").forEach(n -> buttons.add((Button) n));
+            assertEquals(6, buttons.size());
+
+            for (Button b : buttons) {
+                assertEquals(contentWidth, b.getWidth(), 1.0,
+                        b.getText() + " must stay a square icon tile when collapsed");
+                assertEquals(Pos.CENTER, b.getAlignment(),
+                        b.getText() + " must centre its icon when collapsed");
+            }
+        } finally {
+            rail.getStyleClass().remove("sidebar-collapsed");
+            rail.applyCss();
+            rail.layout();
+        }
+    }
+
+    /**
      * The wrapped buttons must fill their StackPane; a centred content-sized
      * button is what pushed the chevron rows into the middle of the rail.
      */
