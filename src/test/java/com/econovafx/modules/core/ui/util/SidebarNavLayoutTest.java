@@ -156,6 +156,32 @@ public class SidebarNavLayoutTest extends ApplicationTest {
     }
 
     /**
+     * A nav item must span the whole rail, not just its own text. A button that
+     * stays at its preferred width also makes -fx-alignment: center-left a no-op.
+     */
+    @Test
+    public void everyNavButtonFillsTheRail() {
+        double contentWidth = rail.getWidth()
+                - rail.getInsets().getLeft() - rail.getInsets().getRight();
+
+        List<Button> buttons = new ArrayList<>();
+        rail.lookupAll(".sidebar-btn").forEach(n -> buttons.add((Button) n));
+
+        for (Button b : buttons) {
+            System.out.printf(
+                    "%-16s width=%8.1f  pref=%8.1f  min=%6.1f  max=%s%n",
+                    b.getText(), b.getWidth(), b.prefWidth(-1),
+                    b.getMinWidth(),
+                    b.getMaxWidth() == Double.MAX_VALUE ? "Infinity" : String.valueOf(b.getMaxWidth()));
+        }
+
+        for (Button b : buttons) {
+            assertEquals(contentWidth, b.getWidth(), 1.0,
+                    b.getText() + " must span the full rail width");
+        }
+    }
+
+    /**
      * The wrapped buttons must fill their StackPane; a centred content-sized
      * button is what pushed the chevron rows into the middle of the rail.
      */
