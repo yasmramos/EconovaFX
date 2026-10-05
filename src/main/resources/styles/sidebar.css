@@ -162,6 +162,10 @@
 .sidebar-collapsed .button.sidebar-btn {
     -fx-padding: 8;
     -fx-alignment: center;
+    /* The preferred width has to come back down too: a VBox clamps to
+     * max-width, but .sidebar-btn-wrapper is a StackPane and will stretch a
+     * child past it, which left the chevron buttons full-rail wide. */
+    -fx-pref-width: 48;
     -fx-max-width: 48;
     -fx-min-width: 48;
 }
