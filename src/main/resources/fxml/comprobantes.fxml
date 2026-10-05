@@ -37,7 +37,7 @@
         <HBox spacing="12" alignment="CENTER_LEFT">
             <Label styleClass="filter-label" text="Date:"><graphic><FontIcon iconLiteral="mdi2c-calendar" iconSize="16"/></graphic></Label>
             <DatePicker fx:id="filterStartDate" promptText="Start date" styleClass="filter-date-picker" />
-            <Label styleClass="filter-label" text="â€”" />
+            <Label styleClass="filter-label" text="—" />
             <DatePicker fx:id="filterEndDate" promptText="End date" styleClass="filter-date-picker" />
             
             <Region HBox.hgrow="ALWAYS" />

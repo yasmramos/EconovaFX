@@ -39,8 +39,8 @@
                     <Label text="Sistema Contable" styleClass="text-slate-400, text-xs, mt-1"/>
                 </VBox>
 
-                <!-- MÃ“DULOS Section -->
-                <Label text="MÃ“DULOS" styleClass="sidebar-section-title"/>
+                <!-- MÓDULOS Section -->
+                <Label text="MÓDULOS" styleClass="sidebar-section-title"/>
 
                 <Button fx:id="btnDashboard" onAction="#showDashboard" styleClass="btn, btn-ghost, sidebar-btn" contentDisplay="LEFT">
                     <tooltip>
@@ -126,9 +126,9 @@
                     <text>Inventarios</text>
                 </Button>
                 <Button fx:id="btnNominas" onAction="#showNominas" styleClass="btn, btn-ghost, sidebar-btn" contentDisplay="LEFT">
-                    <tooltip><Tooltip text="NÃ³minas"/></tooltip>
+                    <tooltip><Tooltip text="Nóminas"/></tooltip>
                     <graphic><FontIcon iconLiteral="mdi2a-account-group" iconSize="20"/></graphic>
-                    <text>NÃ³minas</text>
+                    <text>Nóminas</text>
                 </Button>
                 <Button fx:id="btnWebUI" onAction="#showWebUI" styleClass="btn, btn-ghost, sidebar-btn" contentDisplay="LEFT">
                     <tooltip><Tooltip text="Web UI"/></tooltip>
@@ -145,9 +145,9 @@
                 <VBox styleClass="sidebar-menu-group">
                     <StackPane styleClass="sidebar-btn-wrapper">
                         <Button fx:id="btnSettings" onAction="#toggleSettingsMenu" styleClass="btn, btn-ghost, sidebar-btn" contentDisplay="LEFT">
-                            <tooltip><Tooltip text="ConfiguraciÃ³n"/></tooltip>
+                            <tooltip><Tooltip text="Configuración"/></tooltip>
                             <graphic><FontIcon iconLiteral="mdi2c-cog" iconSize="20"/></graphic>
-                            <text>ConfiguraciÃ³n</text>
+                            <text>Configuración</text>
                         </Button>
                         <FontIcon fx:id="settingsChevron" iconLiteral="mdi2c-chevron-down" iconSize="16" iconColor="WHITE" StackPane.alignment="CENTER_RIGHT" styleClass="sidebar-chevron-float"/>
                     </StackPane>
@@ -194,11 +194,11 @@
                     <HBox styleClass="header-main" alignment="CENTER_LEFT" fillHeight="true" spacing="16">
                         <VBox alignment="CENTER_LEFT" spacing="4">
                             <Label text="Espacio de trabajo" styleClass="header-title"/>
-                            <Label text="GestiÃ³n contable y financiera" styleClass="header-subtitle"/>
+                            <Label text="Gestión contable y financiera" styleClass="header-subtitle"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Label fx:id="currentUserLabel" text="Usuario: Admin" styleClass="header-user"/>
-                        <Button text="Cerrar sesiÃ³n" onAction="#handleLogout" styleClass="header-logout"/>
+                        <Button text="Cerrar sesión" onAction="#handleLogout" styleClass="header-logout"/>
                     </HBox>
                 </top>
 

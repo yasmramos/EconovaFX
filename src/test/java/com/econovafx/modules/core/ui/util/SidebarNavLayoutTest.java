@@ -14,8 +14,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.testfx.api.FxToolkit;
@@ -23,6 +21,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,15 +30,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Regression guard for the navigation rail geometry.
  *
- * <p>Two bugs are covered here:
+ * <p>Four bugs are covered here:
  * <ul>
  *   <li>A nav button that keeps its preferred width makes
- *       {@code -fx-alignment: center-left} a no-op, and the icon lands in the
+ *       {@code -fx-alignment: center-left} a no-op, so the icon lands in the
  *       middle of the rail instead of at its left edge.</li>
  *   <li>{@code .sidebar-btn-wrapper} is a StackPane, which centres a child that
  *       stays at its preferred width. Without a wide preferred width the wrapped
  *       buttons (the ones with a chevron) drifted to the centre of the rail.</li>
+ *   <li>A StackPane stretches a child past its {@code max-width}, so the
+ *       collapsed rail has to lower the preferred width as well or the chevron
+ *       buttons stay full-rail wide.</li>
+ *   <li>The base {@code .button} rule once forced {@code contentDisplay}, which
+ *       beat the markup and stacked the icon on top of the label.</li>
  * </ul>
+ *
+ * <p>Every measurement is taken on the JavaFX thread right after the tree is
+ * laid out and rendered; each test builds its own scene so results never depend
+ * on the order the other tests happen to run in.
  */
 public class SidebarNavLayoutTest extends ApplicationTest {
 
@@ -52,15 +60,186 @@ public class SidebarNavLayoutTest extends ApplicationTest {
             "/css/utilities.css"
     };
 
-    private VBox rail;
+    private static final int EXPANDED_RAIL = 260;
+    private static final int COLLAPSED_RAIL = 64;
+
+    private Stage stage;
+
+    /** What the stylesheets produced for one nav button, read after layout. */
+    private record Measurement(
+            String text,
+            double width,
+            double parentWidth,
+            Pos alignment,
+            ContentDisplay contentDisplay,
+            boolean hasGraphic,
+            double iconOffset) {
+    }
+
+    private record Snapshot(double railContentWidth, List<Measurement> buttons) {
+    }
 
     @Override
     public void start(Stage stage) {
-        rail = new VBox();
+        this.stage = stage;
+    }
+
+    @Test
+    public void everyNavButtonIsLeftAligned() throws Exception {
+        Snapshot snapshot = snapshot(false);
+        assertEquals(6, snapshot.buttons().size(), "expected six nav buttons in the fixture");
+
+        for (Measurement m : snapshot.buttons()) {
+            assertEquals(Pos.CENTER_LEFT, m.alignment(),
+                    m.text() + " must inherit -fx-alignment: center-left");
+            assertEquals(ContentDisplay.LEFT, m.contentDisplay(),
+                    m.text() + " must place the icon left of the label");
+            assertTrue(m.hasGraphic(), m.text() + " must keep its graphic");
+        }
+    }
+
+    /**
+     * A nav item spans the whole rail, not just its own text. Without this the
+     * button keeps its preferred width, which leaves -fx-alignment: center-left
+     * with nothing to align.
+     */
+    @Test
+    public void everyNavButtonFillsTheRail() throws Exception {
+        Snapshot snapshot = snapshot(false);
+
+        for (Measurement m : snapshot.buttons()) {
+            assertEquals(snapshot.railContentWidth(), m.width(), 1.0,
+                    m.text() + " must span the full rail width");
+        }
+    }
+
+    /** The chevron buttons must fill their wrapper rather than sit centred. */
+    @Test
+    public void wrappedButtonsStretchToTheirWrapper() throws Exception {
+        Snapshot snapshot = snapshot(false);
+
+        List<Measurement> wrapped = snapshot.buttons().stream()
+                .filter(m -> Math.abs(m.parentWidth() - m.width()) > 1.0)
+                .toList();
+        assertTrue(wrapped.isEmpty(),
+                "these buttons do not fill their container, so center-left cannot "
+                        + "apply: " + wrapped.stream().map(Measurement::text).toList());
+    }
+
+    /** Every nav icon must start at the same left edge, icon beside label. */
+    @Test
+    public void everyNavIconSharesTheSameLeftEdge() throws Exception {
+        Snapshot snapshot = snapshot(false);
+
+        double reference = Double.NaN;
+        String referenceLabel = "";
+        for (Measurement m : snapshot.buttons()) {
+            if (Double.isNaN(reference)) {
+                reference = m.iconOffset();
+                referenceLabel = m.text();
+            } else {
+                assertEquals(reference, m.iconOffset(), 1.5,
+                        m.text() + " icon is " + m.iconOffset()
+                                + "px from the button's left edge but "
+                                + referenceLabel + " is " + reference + "px");
+            }
+            assertTrue(m.iconOffset() < 16,
+                    m.text() + " icon should sit near the left padding, was at "
+                            + m.iconOffset() + "px");
+        }
+    }
+
+    /**
+     * The wide preferred width on .sidebar-btn must not survive into the
+     * collapsed rail, where the label is hidden and each item becomes a 48px
+     * icon tile.
+     */
+    @Test
+    public void collapsedRailKeepsIconOnlyButtons() throws Exception {
+        Snapshot snapshot = snapshot(true);
+
+        assertEquals(48, snapshot.railContentWidth(), 1.0,
+                "a 64px rail with \"12 8\" padding leaves a 48px content column");
+        for (Measurement m : snapshot.buttons()) {
+            assertEquals(48, m.width(), 1.0,
+                    m.text() + " must stay a square icon tile when collapsed");
+            assertEquals(Pos.CENTER, m.alignment(),
+                    m.text() + " must centre its icon when collapsed");
+        }
+    }
+
+    // ---------------------------------------------------------------- fixture
+
+    private Snapshot snapshot(boolean collapsed) throws Exception {
+        AtomicReference<Snapshot> result = new AtomicReference<>();
+        FxToolkit.setupFixture(() -> {
+            VBox rail = buildRail(collapsed);
+            install(rail, collapsed ? COLLAPSED_RAIL : EXPANDED_RAIL, 620);
+
+            double contentWidth = rail.getWidth()
+                    - rail.getInsets().getLeft() - rail.getInsets().getRight();
+
+            List<Measurement> buttons = new ArrayList<>();
+            for (Button b : rail.lookupAll(".sidebar-btn")) {
+                Node graphic = (Node) b.getGraphic();
+                double offset = Double.NaN;
+                if (graphic != null) {
+                    offset = graphic.localToScene(graphic.getBoundsInLocal()).getMinX()
+                            - b.localToScene(b.getBoundsInLocal()).getMinX();
+                }
+                double parentWidth = b.getParent() == null
+                        ? Double.NaN
+                        : b.getParent().getBoundsInLocal().getWidth();
+                buttons.add(new Measurement(
+                        b.getText(),
+                        b.getWidth(),
+                        parentWidth,
+                        b.getAlignment(),
+                        b.getContentDisplay(),
+                        graphic != null,
+                        offset));
+            }
+            result.set(new Snapshot(contentWidth, List.copyOf(buttons)));
+        });
+        Snapshot snapshot = result.get();
+        assertNotNull(snapshot, "the fixture never ran on the JavaFX thread");
+        return snapshot;
+    }
+
+    /**
+     * Puts the rail on screen with the project's stylesheets and settles layout,
+     * so measurements come from a rendered tree rather than pre-layout state.
+     */
+    private void install(VBox rail, double width, double height) {
+        ScrollPane scroll = new ScrollPane(rail);
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.getStyleClass().add("sidebar-scroll");
+
+        Scene scene = new Scene(scroll, width, height);
+        for (String sheet : STYLESHEETS) {
+            java.net.URL url = getClass().getResource(sheet);
+            assertNotNull(url, "missing stylesheet " + sheet);
+            scene.getStylesheets().add(url.toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.show();
+        rail.applyCss();
+        rail.layout();
+    }
+
+    /** Mirrors the navigation nesting of main-view.fxml. */
+    private VBox buildRail(boolean collapsed) {
+        VBox rail = new VBox();
         rail.getStyleClass().addAll("sidebar-container", "bg-slate-800");
-        rail.setPrefWidth(260);
-        rail.setMinWidth(260);
-        rail.setMaxWidth(260);
+        if (collapsed) {
+            rail.getStyleClass().add("sidebar-collapsed");
+        } else {
+            // Matches the explicit width main-view.fxml puts on the rail.
+            rail.setPrefWidth(EXPANDED_RAIL);
+            rail.setMinWidth(EXPANDED_RAIL);
+            rail.setMaxWidth(EXPANDED_RAIL);
+        }
 
         Label section = new Label("MODULOS");
         section.getStyleClass().add("sidebar-section-title");
@@ -81,19 +260,7 @@ public class SidebarNavLayoutTest extends ApplicationTest {
         rail.getChildren().add(wrappedGroup("Configuracion", "mdi2c-cog", 20));
         rail.getChildren().add(nav("Ayuda", "mdi2h-help-circle", 20));
 
-        ScrollPane scroll = new ScrollPane(rail);
-        scroll.setFitToWidth(true);
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.getStyleClass().add("sidebar-scroll");
-
-        Scene scene = new Scene(scroll, 260, 620);
-        for (String sheet : STYLESHEETS) {
-            java.net.URL url = getClass().getResource(sheet);
-            assertNotNull(url, "missing stylesheet " + sheet);
-            scene.getStylesheets().add(url.toExternalForm());
-        }
-        stage.setScene(scene);
-        stage.show();
+        return rail;
     }
 
     private static Button nav(String text, String icon, int size) {
@@ -120,144 +287,5 @@ public class SidebarNavLayoutTest extends ApplicationTest {
         group.getStyleClass().add("sidebar-menu-group");
         group.getChildren().add(wrap);
         return group;
-    }
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        FxToolkit.registerPrimaryStage();
-        FxToolkit.setupApplication(SidebarNavLayoutTest.TestApp.class);
-    }
-
-    @AfterEach
-    public void tearDown() throws Exception {
-        FxToolkit.cleanupStages();
-    }
-
-    public static class TestApp extends javafx.application.Application {
-        @Override
-        public void start(Stage stage) {
-            // scene is built by the test itself
-        }
-    }
-
-    @Test
-    public void everyNavButtonIsLeftAligned() {
-        List<Button> buttons = new ArrayList<>();
-        rail.lookupAll(".sidebar-btn").forEach(n -> buttons.add((Button) n));
-        assertEquals(6, buttons.size(), "expected six nav buttons in the fixture");
-
-        for (Button b : buttons) {
-            assertEquals(Pos.CENTER_LEFT, b.getAlignment(),
-                    b.getText() + " must inherit -fx-alignment: center-left");
-            assertEquals(ContentDisplay.LEFT, b.getContentDisplay(),
-                    b.getText() + " must place the icon left of the label");
-            assertNotNull(b.getGraphic(), b.getText() + " must keep its graphic");
-        }
-    }
-
-    /**
-     * A nav item must span the whole rail, not just its own text. A button that
-     * stays at its preferred width also makes -fx-alignment: center-left a no-op.
-     */
-    @Test
-    public void everyNavButtonFillsTheRail() {
-        double contentWidth = rail.getWidth()
-                - rail.getInsets().getLeft() - rail.getInsets().getRight();
-
-        List<Button> buttons = new ArrayList<>();
-        rail.lookupAll(".sidebar-btn").forEach(n -> buttons.add((Button) n));
-
-        for (Button b : buttons) {
-            System.out.printf(
-                    "%-16s width=%8.1f  pref=%8.1f  min=%6.1f  max=%s%n",
-                    b.getText(), b.getWidth(), b.prefWidth(-1),
-                    b.getMinWidth(),
-                    b.getMaxWidth() == Double.MAX_VALUE ? "Infinity" : String.valueOf(b.getMaxWidth()));
-        }
-
-        for (Button b : buttons) {
-            assertEquals(contentWidth, b.getWidth(), 1.0,
-                    b.getText() + " must span the full rail width");
-        }
-    }
-
-    /**
-     * The wide preferred width on .sidebar-btn must not leak into the collapsed
-     * rail, where the label is hidden and each item is a 48px icon square.
-     */
-    @Test
-    public void collapsedRailKeepsIconOnlyButtons() {
-        rail.getStyleClass().add("sidebar-collapsed");
-        try {
-            rail.applyCss();
-            rail.layout();
-
-            // The fixture pins the rail's own width in code, so assert the
-            // collapsed tile size from the stylesheet rather than deriving it
-            // from the rail bounds.
-            final double collapsedTile = 48;
-
-            List<Button> buttons = new ArrayList<>();
-            rail.lookupAll(".sidebar-btn").forEach(n -> buttons.add((Button) n));
-            assertEquals(6, buttons.size());
-
-            for (Button b : buttons) {
-                assertEquals(collapsedTile, b.getWidth(), 1.0,
-                        b.getText() + " must stay a square icon tile when collapsed");
-                assertEquals(Pos.CENTER, b.getAlignment(),
-                        b.getText() + " must centre its icon when collapsed");
-            }
-        } finally {
-            rail.getStyleClass().remove("sidebar-collapsed");
-            rail.applyCss();
-            rail.layout();
-        }
-    }
-
-    /**
-     * The wrapped buttons must fill their StackPane; a centred content-sized
-     * button is what pushed the chevron rows into the middle of the rail.
-     */
-    @Test
-    public void wrappedButtonsStretchToTheRail() {
-        int checked = 0;
-        for (Node wrapper : rail.lookupAll(".sidebar-btn-wrapper")) {
-            double wrapperWidth = wrapper.getBoundsInLocal().getWidth();
-            for (Node child : ((javafx.scene.Parent) wrapper).getChildrenUnmodifiable()) {
-                if (child instanceof Button button) {
-                    assertEquals(wrapperWidth, button.getWidth(), 1.0,
-                            button.getText() + " must stretch across its wrapper");
-                    checked++;
-                }
-            }
-        }
-        assertEquals(2, checked, "both chevron buttons should have been checked");
-    }
-
-    /** Every nav icon must start at the same left edge, icon beside label. */
-    @Test
-    public void everyNavIconSharesTheSameLeftEdge() {
-        List<Button> buttons = new ArrayList<>();
-        rail.lookupAll(".sidebar-btn").forEach(n -> buttons.add((Button) n));
-
-        double reference = Double.NaN;
-        String referenceLabel = "";
-        for (Button b : buttons) {
-            Node graphic = (Node) b.getGraphic();
-            double offset = graphic.localToScene(graphic.getBoundsInLocal()).getMinX()
-                    - b.localToScene(b.getBoundsInLocal()).getMinX();
-            if (Double.isNaN(reference)) {
-                reference = offset;
-                referenceLabel = b.getText();
-            } else {
-                assertEquals(reference, offset, 1.5,
-                        b.getText() + " icon is " + offset
-                                + "px from the button's left edge but "
-                                + referenceLabel + " is " + reference + "px");
-            }
-            assertTrue(offset < 16,
-                    b.getText() + " icon should sit near the left padding, was at "
-                            + offset + "px");
-        }
     }
 }
