@@ -39,15 +39,6 @@
 .sidebar-btn-wrapper {
     -fx-background-color: transparent;
 }
-/* StackPane centres a child that stays at its preferred width instead of
- * stretching it, so a content-sized nav button lands in the middle of the rail
- * and -fx-alignment: center-left has nothing to align. Asking for a wide
- * preferred width makes the wrapper stretch it. JavaFX's CSS parser rejects
- * exponent notation, so use a wide-but-finite bound (same as .btn-block). */
-.sidebar-btn-wrapper > .button.sidebar-btn {
-    -fx-pref-width: 100000;
-    -fx-max-width: 100000;
-}
 
 .sidebar-separator {
     -fx-background-color: transparent;
@@ -74,6 +65,14 @@
     -fx-padding: 8 10;
     -fx-min-height: 34;
     -fx-max-height: 34;
+    /* A nav item spans the rail, not just its own text. Without this the button
+     * keeps its preferred width, which leaves -fx-alignment: center-left with
+     * nothing to align, and inside .sidebar-btn-wrapper (a StackPane) it lands
+     * in the middle of the rail instead of at its edge. JavaFX's CSS parser
+     * rejects exponent notation, so use a wide-but-finite bound (as .btn-block
+     * does). .sidebar-collapsed overrides max-width back down to 48. */
+    -fx-pref-width: 100000;
+    -fx-max-width: 100000;
     -fx-alignment: center-left;
     -fx-font-size: 14px;
     -fx-font-weight: 500;
