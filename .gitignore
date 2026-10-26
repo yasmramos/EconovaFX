@@ -94,3 +94,13 @@ htmlcov/
 # Maven local settings (contains proxy credentials, never commit)
 settings.xml
 .mvn/settings.xml
+
+# Generated artifacts (dev runtime)
+db/
+docs/images/
+export_pdf/
+src/main/resources/web/
+web-ui/node_modules/
+web-ui/package-lock.json
+web-ui/.svelte-kit/
+
