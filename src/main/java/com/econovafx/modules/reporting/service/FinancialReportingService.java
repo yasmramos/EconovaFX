@@ -19,7 +19,8 @@ import java.util.*;
 
 /**
  * Service for generating financial reports required by Resolution 340/2004.
- * Implements Balance Sheet, Income Statement, Cash Flow, and Trial Balance generation.
+ * Implements Balance Sheet, Income Statement, Cash Flow, and Trial Balance
+ * generation.
  */
 @Component
 public class FinancialReportingService {
@@ -30,8 +31,8 @@ public class FinancialReportingService {
 
     @Inject
     public FinancialReportingService(FinancialReportRepository reportRepository,
-                                     AccountRepository accountRepository,
-                                     TransactionRepository transactionRepository) {
+            AccountRepository accountRepository,
+            TransactionRepository transactionRepository) {
         this.reportRepository = reportRepository;
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
@@ -39,6 +40,7 @@ public class FinancialReportingService {
 
     /**
      * Generate a Balance Sheet report.
+     *
      * @param startDate start date of the period
      * @param endDate end date of the period
      * @param fiscalYear fiscal year
@@ -54,75 +56,76 @@ public class FinancialReportingService {
         report.setFinal(false);
 
         List<ReportLine> lines = new ArrayList<>();
-        
+
         // Get all asset accounts
         List<Account> assetAccounts = accountRepository.findByType(AccountType.ASSET);
         BigDecimal totalAssets = BigDecimal.ZERO;
-        
+
         for (Account account : assetAccounts) {
             BigDecimal balance = calculateAccountBalance(account, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getCode(),
-                    account.getName(),
-                    balance.compareTo(BigDecimal.ZERO) > 0 ? balance.doubleValue() : 0.0,
-                    balance.compareTo(BigDecimal.ZERO) < 0 ? balance.abs().doubleValue() : 0.0,
-                    balance.doubleValue()
+                        account.getCode(),
+                        account.getName(),
+                        balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO,
+                        balance.compareTo(BigDecimal.ZERO) < 0 ? balance.abs() : BigDecimal.ZERO,
+                        balance
                 ));
                 totalAssets = totalAssets.add(balance);
             }
         }
-        
+
         // Add total assets line
-        lines.add(new ReportLine("", "TOTAL ASSETS", totalAssets.doubleValue(), 0.0, totalAssets.doubleValue()));
-        
+        lines.add(new ReportLine("", "TOTAL ASSETS", totalAssets, BigDecimal.ZERO, totalAssets));
+
         // Get liability and equity accounts
         List<Account> liabilityAccounts = accountRepository.findByType(AccountType.LIABILITY);
         List<Account> equityAccounts = accountRepository.findByType(AccountType.EQUITY);
-        
+
         BigDecimal totalLiabilities = BigDecimal.ZERO;
         for (Account account : liabilityAccounts) {
             BigDecimal balance = calculateAccountBalance(account, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getCode(),
-                    account.getName(),
-                    0.0,
-                    balance.doubleValue(),
-                    balance.negate().doubleValue()
+                        account.getCode(),
+                        account.getName(),
+                        BigDecimal.ZERO,
+                        balance,
+                        balance.negate()
                 ));
                 totalLiabilities = totalLiabilities.add(balance);
             }
         }
-        
+
         BigDecimal totalEquity = BigDecimal.ZERO;
         for (Account account : equityAccounts) {
             BigDecimal balance = calculateAccountBalance(account, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getCode(),
-                    account.getName(),
-                    0.0,
-                    balance.doubleValue(),
-                    balance.negate().doubleValue()
+                        account.getCode(),
+                        account.getName(),
+                        BigDecimal.ZERO,
+                        balance,
+                        balance.negate()
                 ));
                 totalEquity = totalEquity.add(balance);
             }
         }
-        
-        lines.add(new ReportLine("", "TOTAL LIABILITIES", 0.0, totalLiabilities.doubleValue(), totalLiabilities.negate().doubleValue()));
-        lines.add(new ReportLine("", "TOTAL EQUITY", 0.0, totalEquity.doubleValue(), totalEquity.negate().doubleValue()));
-        lines.add(new ReportLine("", "TOTAL LIABILITIES + EQUITY", 0.0, totalLiabilities.add(totalEquity).doubleValue(), 
-            totalLiabilities.add(totalEquity).negate().doubleValue()));
+
+        lines.add(new ReportLine("", "TOTAL LIABILITIES", BigDecimal.ZERO, totalLiabilities, totalLiabilities.negate()));
+        lines.add(new ReportLine("", "TOTAL EQUITY", BigDecimal.ZERO, totalEquity, totalEquity.negate()));
+        lines.add(new ReportLine("", "TOTAL LIABILITIES + EQUITY", BigDecimal.ZERO, totalLiabilities.add(totalEquity),
+                totalLiabilities.add(totalEquity).negate()));
 
         report.setLines(lines);
         report.setGeneratedData("Balance Sheet generated successfully");
-        
+
         return reportRepository.save(report);
     }
 
     /**
      * Generate an Income Statement report.
+     *
      * @param startDate start date of the period
      * @param endDate end date of the period
      * @param fiscalYear fiscal year
@@ -138,61 +141,62 @@ public class FinancialReportingService {
         report.setFinal(false);
 
         List<ReportLine> lines = new ArrayList<>();
-        
+
         // Get revenue accounts
         List<Account> revenueAccounts = accountRepository.findByType(AccountType.REVENUE);
         BigDecimal totalRevenue = BigDecimal.ZERO;
-        
+
         for (Account account : revenueAccounts) {
             BigDecimal balance = calculateAccountBalancePeriod(account, startDate, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getCode(),
-                    account.getName(),
-                    0.0,
-                    balance.doubleValue(),
-                    balance.negate().doubleValue()
+                        account.getCode(),
+                        account.getName(),
+                        BigDecimal.ZERO,
+                        balance,
+                        balance.negate()
                 ));
                 totalRevenue = totalRevenue.add(balance);
             }
         }
-        
-        lines.add(new ReportLine("", "TOTAL REVENUE", 0.0, totalRevenue.doubleValue(), totalRevenue.negate().doubleValue()));
-        
+
+        lines.add(new ReportLine("", "TOTAL REVENUE", BigDecimal.ZERO, totalRevenue, totalRevenue.negate()));
+
         // Get expense accounts
         List<Account> expenseAccounts = accountRepository.findByType(AccountType.EXPENSE);
         BigDecimal totalExpenses = BigDecimal.ZERO;
-        
+
         for (Account account : expenseAccounts) {
             BigDecimal balance = calculateAccountBalancePeriod(account, startDate, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
                 lines.add(new ReportLine(
-                    account.getCode(),
-                    account.getName(),
-                    balance.doubleValue(),
-                    0.0,
-                    balance.doubleValue()
+                        account.getCode(),
+                        account.getName(),
+                        balance,
+                        BigDecimal.ZERO,
+                        balance
                 ));
                 totalExpenses = totalExpenses.add(balance);
             }
         }
-        
-        lines.add(new ReportLine("", "TOTAL EXPENSES", totalExpenses.doubleValue(), 0.0, totalExpenses.doubleValue()));
-        
+
+        lines.add(new ReportLine("", "TOTAL EXPENSES", totalExpenses, BigDecimal.ZERO, totalExpenses));
+
         BigDecimal netIncome = totalRevenue.subtract(totalExpenses);
-        lines.add(new ReportLine("", "NET INCOME/(LOSS)", 
-            netIncome.compareTo(BigDecimal.ZERO) < 0 ? netIncome.abs().doubleValue() : 0.0,
-            netIncome.compareTo(BigDecimal.ZERO) >= 0 ? netIncome.doubleValue() : 0.0,
-            netIncome.doubleValue()));
+        lines.add(new ReportLine("", "NET INCOME/(LOSS)",
+                netIncome.compareTo(BigDecimal.ZERO) < 0 ? netIncome.abs() : BigDecimal.ZERO,
+                netIncome.compareTo(BigDecimal.ZERO) >= 0 ? netIncome : BigDecimal.ZERO,
+                netIncome));
 
         report.setLines(lines);
         report.setGeneratedData("Income Statement generated successfully");
-        
+
         return reportRepository.save(report);
     }
 
     /**
      * Generate a Trial Balance report.
+     *
      * @param endDate end date of the period
      * @param fiscalYear fiscal year
      * @return generated FinancialReport entity
@@ -208,40 +212,41 @@ public class FinancialReportingService {
 
         List<ReportLine> lines = new ArrayList<>();
         List<Account> allAccounts = accountRepository.findAll();
-        
+
         BigDecimal totalDebits = BigDecimal.ZERO;
         BigDecimal totalCredits = BigDecimal.ZERO;
-        
+
         for (Account account : allAccounts) {
             BigDecimal balance = calculateAccountBalance(account, endDate);
             if (balance.compareTo(BigDecimal.ZERO) != 0) {
-                double debit = balance.compareTo(BigDecimal.ZERO) > 0 ? balance.doubleValue() : 0.0;
-                double credit = balance.compareTo(BigDecimal.ZERO) < 0 ? balance.abs().doubleValue() : 0.0;
-                
+                BigDecimal debit = balance.compareTo(BigDecimal.ZERO) > 0 ? balance : BigDecimal.ZERO;
+                BigDecimal credit = balance.compareTo(BigDecimal.ZERO) < 0 ? balance.abs() : BigDecimal.ZERO;
+
                 lines.add(new ReportLine(
-                    account.getCode(),
-                    account.getName(),
-                    debit,
-                    credit,
-                    balance.doubleValue()
+                        account.getCode(),
+                        account.getName(),
+                        debit,
+                        credit,
+                        balance
                 ));
-                
-                totalDebits = totalDebits.add(BigDecimal.valueOf(debit));
-                totalCredits = totalCredits.add(BigDecimal.valueOf(credit));
+
+                totalDebits = totalDebits.add(debit);
+                totalCredits = totalCredits.add(credit);
             }
         }
-        
-        lines.add(new ReportLine("", "TOTALS", totalDebits.doubleValue(), totalCredits.doubleValue(), 
-            totalDebits.subtract(totalCredits).doubleValue()));
+
+        lines.add(new ReportLine("", "TOTALS", totalDebits, totalCredits,
+                totalDebits.subtract(totalCredits)));
 
         report.setLines(lines);
         report.setGeneratedData("Trial Balance generated successfully - Debits: " + totalDebits + ", Credits: " + totalCredits);
-        
+
         return reportRepository.save(report);
     }
 
     /**
      * Generate a Cash Flow Statement report.
+     *
      * @param startDate start date of the period
      * @param endDate end date of the period
      * @param fiscalYear fiscal year
@@ -257,16 +262,16 @@ public class FinancialReportingService {
         report.setFinal(false);
 
         List<ReportLine> lines = new ArrayList<>();
-        
+
         // Find cash and bank accounts - filter by code prefix for cash accounts
         List<Account> allAccounts = accountRepository.findAll();
         BigDecimal operatingCashFlow = BigDecimal.ZERO;
         BigDecimal investingCashFlow = BigDecimal.ZERO;
         BigDecimal financingCashFlow = BigDecimal.ZERO;
-        
+
         // Simplified cash flow calculation based on transaction analysis
         List<Transaction> transactions = transactionRepository.findByDateRange(startDate, endDate);
-        
+
         for (Transaction transaction : transactions) {
             // Analyze transaction type and categorize cash flow
             // This is a simplified implementation - real implementation would need more detailed analysis
@@ -284,41 +289,43 @@ public class FinancialReportingService {
                 }
             }
         }
-        
-        lines.add(new ReportLine("", "Cash Flow from Operating Activities", operatingCashFlow.doubleValue(), 0.0, operatingCashFlow.doubleValue()));
-        lines.add(new ReportLine("", "Cash Flow from Investing Activities", investingCashFlow.doubleValue(), 0.0, investingCashFlow.doubleValue()));
-        lines.add(new ReportLine("", "Cash Flow from Financing Activities", financingCashFlow.doubleValue(), 0.0, financingCashFlow.doubleValue()));
-        
+
+        lines.add(new ReportLine("", "Cash Flow from Operating Activities", operatingCashFlow, BigDecimal.ZERO, operatingCashFlow));
+        lines.add(new ReportLine("", "Cash Flow from Investing Activities", investingCashFlow, BigDecimal.ZERO, investingCashFlow));
+        lines.add(new ReportLine("", "Cash Flow from Financing Activities", financingCashFlow, BigDecimal.ZERO, financingCashFlow));
+
         BigDecimal netCashFlow = operatingCashFlow.add(investingCashFlow).add(financingCashFlow);
-        lines.add(new ReportLine("", "NET CASH FLOW", netCashFlow.doubleValue(), 0.0, netCashFlow.doubleValue()));
+        lines.add(new ReportLine("", "NET CASH FLOW", netCashFlow, BigDecimal.ZERO, netCashFlow));
 
         report.setLines(lines);
         report.setGeneratedData("Cash Flow Statement generated successfully");
-        
+
         return reportRepository.save(report);
     }
 
     /**
      * Finalize a report, making it immutable.
+     *
      * @param reportId ID of the report to finalize
      * @return finalized report
      */
     @Transactional
     public FinancialReport finalizeReport(Long reportId) {
         FinancialReport report = reportRepository.findById(reportId)
-            .orElseThrow(() -> new RuntimeException("Report not found with id: " + reportId));
-        
+                .orElseThrow(() -> new RuntimeException("Report not found with id: " + reportId));
+
         if (report.isFinal()) {
             throw new IllegalStateException("Report is already finalized");
         }
-        
+
         report.setFinal(true);
         return reportRepository.save(report);
     }
 
     /**
-     * Calculate account balance up to a specific date.
-     * Resolution 340/2004 compliance: Calculates real balance from posted transactions.
+     * Calculate account balance up to a specific date. Resolution 340/2004
+     * compliance: Calculates real balance from posted transactions.
+     *
      * @param account the account
      * @param endDate end date for calculation
      * @return account balance
@@ -326,11 +333,11 @@ public class FinancialReportingService {
     private BigDecimal calculateAccountBalance(Account account, LocalDate endDate) {
         // Get all posted transactions up to endDate
         List<Transaction> transactions = transactionRepository.findPostedByDateRange(
-            LocalDate.MIN, endDate);
-        
+                LocalDate.MIN, endDate);
+
         BigDecimal balance = BigDecimal.ZERO;
         AccountType type = account.getType();
-        
+
         for (Transaction transaction : transactions) {
             for (TransactionEntry entry : transaction.getEntries()) {
                 if (entry.getAccount().getId().equals(account.getId())) {
@@ -342,11 +349,11 @@ public class FinancialReportingService {
                             balance = balance.subtract(entry.getDebitAmount());
                         }
                     }
-                    
+
                     // Apply credit amounts
                     if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                        if (type == AccountType.LIABILITY || type == AccountType.EQUITY || 
-                            type == AccountType.REVENUE) {
+                        if (type == AccountType.LIABILITY || type == AccountType.EQUITY
+                                || type == AccountType.REVENUE) {
                             balance = balance.add(entry.getCreditAmount());
                         } else {
                             balance = balance.subtract(entry.getCreditAmount());
@@ -355,13 +362,14 @@ public class FinancialReportingService {
                 }
             }
         }
-        
+
         return balance;
     }
 
     /**
-     * Calculate account balance for a specific period.
-     * Resolution 340/2004 compliance: Calculates balance from posted transactions within period.
+     * Calculate account balance for a specific period. Resolution 340/2004
+     * compliance: Calculates balance from posted transactions within period.
+     *
      * @param account the account
      * @param startDate start date of the period
      * @param endDate end date of the period
@@ -370,10 +378,10 @@ public class FinancialReportingService {
     private BigDecimal calculateAccountBalancePeriod(Account account, LocalDate startDate, LocalDate endDate) {
         // Get all posted transactions within the period
         List<Transaction> transactions = transactionRepository.findPostedByDateRange(startDate, endDate);
-        
+
         BigDecimal balance = BigDecimal.ZERO;
         AccountType type = account.getType();
-        
+
         for (Transaction transaction : transactions) {
             for (TransactionEntry entry : transaction.getEntries()) {
                 if (entry.getAccount().getId().equals(account.getId())) {
@@ -385,11 +393,11 @@ public class FinancialReportingService {
                             balance = balance.subtract(entry.getDebitAmount());
                         }
                     }
-                    
+
                     // Apply credit amounts
                     if (entry.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                        if (type == AccountType.LIABILITY || type == AccountType.EQUITY || 
-                            type == AccountType.REVENUE) {
+                        if (type == AccountType.LIABILITY || type == AccountType.EQUITY
+                                || type == AccountType.REVENUE) {
                             balance = balance.add(entry.getCreditAmount());
                         } else {
                             balance = balance.subtract(entry.getCreditAmount());
@@ -398,12 +406,13 @@ public class FinancialReportingService {
                 }
             }
         }
-        
+
         return balance;
     }
 
     /**
      * Get all reports.
+     *
      * @return list of all reports
      */
     public List<FinancialReport> getAllReports() {
@@ -412,6 +421,7 @@ public class FinancialReportingService {
 
     /**
      * Get report by ID.
+     *
      * @param id the report ID
      * @return optional containing the report
      */

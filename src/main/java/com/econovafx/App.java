@@ -391,10 +391,9 @@ public class App extends Application {
         try {
             logger.info("Loading main application view...");
             
-            // Close login dialog
-            if (loginStage != null) {
-                loginStage.close();
-            }
+            // NO cerramos el login todavía: se mantiene visible y animando
+            // mientras la ventana principal se construye (evita bloqueo con
+            // pantalla vacía durante ~10s). Se cierra tras primaryStage.show().
             
             ViewFactory viewFactory = context.getViewFactory();
             MainViewController mainController = new MainViewController(
@@ -433,6 +432,11 @@ public class App extends Application {
             scene.getRoot().setOpacity(1.0);
             
             primaryStage.show(); // Explicitly show the primary stage
+            
+            // Ahora sí: cierra el login ya con la app principal en pantalla
+            if (loginStage != null) {
+                loginStage.close();
+            }
             
             logger.info("Main application window displayed successfully");
             logger.info("Application started successfully");

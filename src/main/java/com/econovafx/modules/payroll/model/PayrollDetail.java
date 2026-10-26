@@ -349,8 +349,8 @@ public class PayrollDetail {
         @Column(name = "amount", precision = 12, scale = 2)
         private BigDecimal amount = BigDecimal.ZERO;
 
-        @Column(name = "quantity", columnDefinition = "DOUBLE")
-        private Double quantity;
+        @Column(name = "quantity", precision = 12, scale = 4)
+        private BigDecimal quantity;
 
         @Column(name = "rate", precision = 12, scale = 4)
         private BigDecimal rate;
@@ -395,11 +395,11 @@ public class PayrollDetail {
             this.amount = amount;
         }
 
-        public Double getQuantity() {
+        public BigDecimal getQuantity() {
             return quantity;
         }
 
-        public void setQuantity(Double quantity) {
+        public void setQuantity(BigDecimal quantity) {
             this.quantity = quantity;
         }
 

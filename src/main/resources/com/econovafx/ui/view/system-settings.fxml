@@ -17,7 +17,6 @@
             <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
             <Label text="⚙️ Configuración del Sistema" styleClass="header-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Cerrar" onAction="#closeWindow" styleClass="close-button"/>
         </HBox>
         
         <Separator/>

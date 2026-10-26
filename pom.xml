@@ -316,6 +316,15 @@
                     </includes>
                     <excludes>
                         <exclude>**/MainViewVisualTest.java</exclude>
+                        <!-- GUI/visual tests launch the JavaFX toolkit and are slow;
+                             excluded from the default unit run. Run them with:
+                             mvn test -Pvisual-tests -->
+                        <exclude>**/SidebarNavLayoutTest.java</exclude>
+                        <exclude>**/SystemSettingsFxmlSmokeTest.java</exclude>
+                        <exclude>**/NotificationToastVisualTest.java</exclude>
+                        <exclude>**/ModernDialogVisualTest.java</exclude>
+                        <exclude>**/DashboardCardsVisualTest.java</exclude>
+                        <exclude>**/DashboardControllerTest.java</exclude>
                     </excludes>
                     <forkCount>1</forkCount>
                     <useModulePath>false</useModulePath>
@@ -329,6 +338,9 @@
                 <version>3.12.1</version>
                 <configuration>
                     <release>17</release>
+                    <compilerArgs>
+                        <arg>-Xlint</arg>
+                    </compilerArgs>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>io.avaje</groupId>
@@ -690,6 +702,30 @@
                                 <list>com.econovafx.modules.reporting.controller.FinancialReportingController</list>
                             </reflectionList>
                             <appIdentifier>econovafx</appIdentifier>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Visual/GUI tests (TestFX): slow, launch the JavaFX toolkit.
+             Run with: mvn test -Pvisual-tests -->
+        <profile>
+            <id>visual-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.2.5</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*Test.java</include>
+                                <include>**/*Tests.java</include>
+                            </includes>
+                            <forkCount>1</forkCount>
+                            <useModulePath>false</useModulePath>
+                            <argLine>-Xmx1024m -Dtestfx.robot=glass -Dtestfx.headless=true -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw -Dprism.text=t2k -Djava.awt.headless=true @{argLine}</argLine>
                         </configuration>
                     </plugin>
                 </plugins>
