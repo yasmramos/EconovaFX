@@ -180,7 +180,8 @@ public class SidebarNavLayoutTest extends ApplicationTest {
                     - rail.getInsets().getLeft() - rail.getInsets().getRight();
 
             List<Measurement> buttons = new ArrayList<>();
-            for (Button b : rail.lookupAll(".sidebar-btn")) {
+            for (Node n : rail.lookupAll(".sidebar-btn")) {
+                Button b = (Button) n;
                 Node graphic = (Node) b.getGraphic();
                 double offset = Double.NaN;
                 if (graphic != null) {
