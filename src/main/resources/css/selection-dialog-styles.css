@@ -29,7 +29,7 @@
     -fx-min-height: 64;
     -fx-max-width: 64;
     -fx-max-height: 64;
-    -fx-background-color: #e8eef8;   /* brand-blue tint */
+    -fx-background-color: -brand-tint;   /* brand-blue tint */
     -fx-background-radius: 9999;
 }
 
@@ -69,8 +69,8 @@
 .unit-list-view .list-cell:hover { -fx-background-color: -muted; }
 .company-list-view .list-cell:filled:selected,
 .unit-list-view .list-cell:filled:selected {
-    -fx-background-color: #e8eef8;
-    -fx-text-fill: #1e3c72;
+    -fx-background-color: -brand-tint;
+    -fx-text-fill: -brand;
 }
 /* Row that was the active tenant on the previous run. */
 .company-list-view .list-cell.previously-selected,
@@ -85,10 +85,10 @@
     -fx-alignment: center-left;
 }
 
-.company-avatar { -fx-fill: #1e3c72; }
+.company-avatar { -fx-fill: -brand; }
 
 .company-avatar-initials {
-    -fx-fill: #ffffff;
+    -fx-fill: -brand-fg;
     -fx-font-family: "Inter", "Segoe UI", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: 700;
@@ -138,15 +138,15 @@
     -fx-background-radius: 9999;
 }
 .selection-dialog-card .progress-bar .bar {
-    -fx-background-color: #1e3c72;
+    -fx-background-color: -brand;
     -fx-background-radius: 9999;
     -fx-background-insets: 0;
 }
 
 /* Brand-blue focus for the search input (the default ring is neutral grey). */
 .selection-dialog-card .search-field:focused {
-    -fx-border-color: #1e3c72;
-    -fx-background-color: #ffffff;
+    -fx-border-color: -brand;
+    -fx-background-color: -card;
 }
 
 /* ---------------------------------------------------------------- footer */
@@ -162,26 +162,26 @@
 /* Brand-blue primary, same surface treatment as the login button: on focus
    only the ring changes so the button never jumps. */
 .select-button {
-    -fx-background-color: #1e3c72;
+    -fx-background-color: -brand;
     -fx-background-radius: 6;
     -fx-background-insets: 0;
-    -fx-border-color: #1e3c72;
+    -fx-border-color: -brand;
     -fx-border-width: 1;
     -fx-border-radius: 6;
     -fx-padding: 9 18;
     -fx-min-height: 38;
     -fx-font-size: 14px;
     -fx-font-weight: 500;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: -brand-fg;
     -fx-cursor: hand;
 }
-.select-button .label { -fx-text-fill: #ffffff; }
+.select-button .label { -fx-text-fill: -brand-fg; }
 .select-button:focused {
-    -fx-background-color: #1e3c72;
-    -fx-border-color: #7c9bd1;
+    -fx-background-color: -brand;
+    -fx-border-color: -brand-ring;
 }
-.select-button:hover { -fx-background-color: #2a5298; -fx-border-color: #2a5298; }
-.select-button:pressed { -fx-background-color: #16305c; -fx-border-color: #16305c; }
+.select-button:hover { -fx-background-color: -brand-hover; -fx-border-color: -brand-hover; }
+.select-button:pressed { -fx-background-color: -brand-pressed; -fx-border-color: -brand-pressed; }
 .select-button:disabled { -fx-opacity: 0.5; -fx-cursor: default; }
 
 .cancel-button,

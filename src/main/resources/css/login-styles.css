@@ -1,12 +1,13 @@
 /* =============================================================================
  * LOGIN - EconovaFX
- * shadcn centred card on a neutral page: one hairline, one shadow, one button.
+ * shadcn centred card on a brand gradient: one hairline, one shadow, one button.
+ * Every colour is a token from theme-tokens.css so the screen follows the theme.
  * ========================================================================== */
 
 .login-container {
     /* Same brand gradient as the splash so the two screens feel like one
-       product: deep blue page with a white card floating on top. */
-    -fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);
+       product: deep blue page with a card floating on top. */
+    -fx-background-color: linear-gradient(to bottom right, -brand, -brand-alt);
     -fx-padding: 30;
 }
 
@@ -18,38 +19,38 @@
     -fx-min-height: 76;
     -fx-max-width: 76;
     -fx-max-height: 76;
-    -fx-background-color: #ffffff;
+    -fx-background-color: -brand-fg;
     -fx-background-radius: 9999;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 10, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, -shadow-lg, 10, 0, 0, 3);
 }
 
 /* ---------------------------------------------------------------- brand */
 .login-title {
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: -brand-fg;
     -fx-font-size: 24px;
     -fx-font-weight: 600;
 }
 
 .login-subtitle {
-    -fx-text-fill: rgba(255, 255, 255, 0.80);
+    -fx-text-fill: -brand-fg-muted;
     -fx-font-size: 14px;
 }
 
 /* ----------------------------------------------------------------- card */
-/* Solid white shadcn card floating on the brand gradient. Both the background
-   and the 1px hairline declare the same radius (-fx-background-radius AND
-   -fx-border-radius); leaving the border radius at 0 keeps the border a sharp
-   rectangle whose corner tips poke out from behind the rounded sheet. */
+/* shadcn card floating on the brand gradient. Both the background and the 1px
+   hairline declare the same radius (-fx-background-radius AND -fx-border-radius);
+   leaving the border radius at 0 keeps the border a sharp rectangle whose corner
+   tips poke out from behind the rounded sheet. */
 .login-card {
-    -fx-background-color: #ffffff;
-    -fx-border-color: rgba(30, 60, 114, 0.12);
+    -fx-background-color: -card;
+    -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 16;
     -fx-border-radius: 16;
     -fx-background-insets: 0;
     -fx-border-insets: 0;
     -fx-padding: 25;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 26, 0, 0, 10);
+    -fx-effect: dropshadow(gaussian, -shadow-popover, 26, 0, 0, 10);
 }
 
 .input-group {
@@ -58,9 +59,9 @@
 }
 
 /* Scoped with .login-card so it outranks the generic .input-label in
-   utilities.css (loaded last). Dark zinc-700 reads clearly on the white card. */
+   utilities.css (loaded last). */
 .login-card .input-label {
-    -fx-text-fill: #3f3f46;
+    -fx-text-fill: -fg-body;
     -fx-font-size: 13px;
     -fx-font-weight: 500;
 }
@@ -68,37 +69,37 @@
 /* --------------------------------------------------------------- inputs */
 .login-card .text-field,
 .login-card .password-field {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e4e4e7;
+    -fx-background-color: -card;
+    -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
     -fx-padding: 9 12;
     -fx-min-height: 38;
     -fx-font-size: 14px;
-    -fx-text-fill: #09090b;
-    -fx-prompt-text-fill: #a1a1aa;
+    -fx-text-fill: -foreground;
+    -fx-prompt-text-fill: -muted-foreground;
 }
 .login-card .text-field:hover,
-.login-card .password-field:hover { -fx-border-color: #d4d4d8; }
+.login-card .password-field:hover { -fx-border-color: -input-hover; }
 .login-card .text-field:focused,
 .login-card .password-field:focused {
-    -fx-border-color: #1e3c72;
-    -fx-background-color: #ffffff;
+    -fx-border-color: -brand;
+    -fx-background-color: -card;
 }
 
 .login-card .progress-bar {
     -fx-pref-width: 200;
     -fx-pref-height: 6;
-    -fx-background-color: #e4e4e7;
+    -fx-background-color: -muted;
     -fx-background-radius: 9999;
 }
 .login-card .progress-bar .track {
-    -fx-background-color: #e4e4e7;
+    -fx-background-color: -muted;
     -fx-background-radius: 9999;
 }
 .login-card .progress-bar .bar {
-    -fx-background-color: #1e3c72;
+    -fx-background-color: -brand;
     -fx-background-radius: 9999;
     -fx-background-insets: 0;
 }
@@ -113,28 +114,28 @@
    the action. The focus state only swaps the ring (never the surface) so the
    button cannot jump when clicked. */
 .login-button {
-    -fx-background-color: #1e3c72;
+    -fx-background-color: -brand;
     -fx-background-radius: 8;
     -fx-background-insets: 0;
-    -fx-border-color: #1e3c72;
+    -fx-border-color: -brand;
     -fx-border-width: 1;
     -fx-border-radius: 8;
     -fx-padding: 11 20;
     -fx-min-height: 44;
     -fx-font-size: 14px;
     -fx-font-weight: 600;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: -brand-fg;
     -fx-cursor: hand;
 }
-.login-button .label { -fx-text-fill: #ffffff; }
+.login-button .label { -fx-text-fill: -brand-fg; }
 .login-button:focused {
     /* Keep the blue surface on focus; only the ring changes. The generic
        .button:focused rule would otherwise repaint it -ring-wash. */
-    -fx-background-color: #1e3c72;
-    -fx-border-color: #7c9bd1;
+    -fx-background-color: -brand;
+    -fx-border-color: -brand-ring;
 }
-.login-button:hover { -fx-background-color: #2a5298; -fx-border-color: #2a5298; }
-.login-button:pressed { -fx-background-color: #16305c; -fx-border-color: #16305c; }
+.login-button:hover { -fx-background-color: -brand-hover; -fx-border-color: -brand-hover; }
+.login-button:pressed { -fx-background-color: -brand-pressed; -fx-border-color: -brand-pressed; }
 .login-button:disabled {
     -fx-opacity: 0.5;
     -fx-cursor: default;
@@ -142,7 +143,7 @@
 
 /* ------------------------------------------------------------ close btn */
 /* Ghost icon-only button (shadcn dialog close): 32px square, X glyph,
-   muted icon that darkens over a soft hover surface. */
+   muted icon that brightens over a soft hover surface. */
 .close-button {
     -fx-background-color: transparent;
     -fx-background-radius: 8;
@@ -157,13 +158,13 @@
     -fx-cursor: hand;
     -fx-alignment: center;
 }
-.close-button .close-icon { -fx-fill: rgba(255, 255, 255, 0.75); }
-.close-button:hover { -fx-background-color: rgba(255, 255, 255, 0.14); }
-.close-button:hover .close-icon { -fx-fill: #ffffff; }
-.close-button:pressed { -fx-background-color: rgba(255, 255, 255, 0.22); }
+.close-button .close-icon { -fx-fill: -brand-fg-icon; }
+.close-button:hover { -fx-background-color: -brand-hover-wash; }
+.close-button:hover .close-icon { -fx-fill: -brand-fg; }
+.close-button:pressed { -fx-background-color: -brand-press-wash; }
 
 /* ---------------------------------------------------------------- footer */
 .login-footer {
-    -fx-text-fill: rgba(255, 255, 255, 0.60);
+    -fx-text-fill: -brand-fg-faint;
     -fx-font-size: 12px;
 }

@@ -5,7 +5,7 @@
  * ========================================================================== */
 
 .splash-container {
-    -fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);
+    -fx-background-color: linear-gradient(to bottom right, -brand, -brand-alt);
 }
 
 /* White circular badge so it pops against the blue background. */
@@ -14,50 +14,50 @@
     -fx-min-height: 96;
     -fx-max-width: 96;
     -fx-max-height: 96;
-    -fx-background-color: #ffffff;
+    -fx-background-color: -brand-fg;
     -fx-background-radius: 9999;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 18, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, -shadow-lg, 18, 0, 0, 6);
 }
 
 /* Bank icon inside the white badge. */
 .splash-logo-icon {
-    -fx-fill: #1e3c72;
+    -fx-fill: -brand;
 }
 
 /* ------------------------------------------------------------------ text */
 .splash-title {
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: -brand-fg;
     -fx-font-size: 30px;
     -fx-font-weight: 600;
 }
 
 .splash-subtitle {
-    -fx-text-fill: rgba(255, 255, 255, 0.80);
+    -fx-text-fill: -brand-fg-muted;
     -fx-font-size: 14px;
 }
 
 .splash-version {
-    -fx-text-fill: rgba(255, 255, 255, 0.55);
+    -fx-text-fill: -brand-fg-ghost;
     -fx-font-size: 11px;
 }
 
 .splash-status {
-    -fx-text-fill: rgba(255, 255, 255, 0.85);
+    -fx-text-fill: -brand-fg-strong;
     -fx-font-size: 12px;
 }
 
 /* --------------------------------------------------------------- progress */
 .splash-container .progress-bar {
     -fx-pref-height: 6;
-    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-color: -brand-track;
     -fx-background-radius: 9999;
 }
 .splash-container .progress-bar .track {
-    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-color: -brand-track;
     -fx-background-radius: 9999;
 }
 .splash-container .progress-bar .bar {
-    -fx-background-color: #ffffff;
+    -fx-background-color: -brand-fg;
     -fx-background-radius: 9999;
     -fx-background-insets: 0;
 }

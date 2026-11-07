@@ -67,7 +67,7 @@
     -fx-cursor: hand;
 }
 .sidebar-button .label { -fx-text-fill: -zinc-400; }
-.sidebar-button:hover { -fx-background-color: #1c1c1f; }
+.sidebar-button:hover { -fx-background-color: -zinc-900; }
 .sidebar-button:hover .label { -fx-text-fill: -zinc-100; }
 .sidebar-button:focused {
     -fx-background-color: -zinc-800;

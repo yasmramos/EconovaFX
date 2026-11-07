@@ -139,12 +139,50 @@
 
     -danger:           #dc2626;
     -danger-hover:     #b91c1c;
+    -danger-pressed:   #991b1b;
     -danger-soft:      #fef2f2;
     -danger-border:    #fecaca;
 
     -purple:           #9333ea;
     -purple-soft:      #faf5ff;
     -purple-border:    #e9d5ff;
+
+    /* =========================================================================
+     * BRAND - the one place a saturated blue is allowed: the full-bleed
+     * splash/login screens, the brand badges and the auth primary action.
+     * Everything else in the app is zinc; these tokens keep that identity in
+     * one place so the two auth screens cannot drift apart.
+     * ========================================================================= */
+    -brand:            #1e3c72;
+    -brand-alt:        #2a5298;
+    -brand-hover:      #2a5298;
+    -brand-pressed:    #16305c;
+    -brand-ring:       #7c9bd1;
+    -brand-tint:       #e8eef8;
+
+    /* White foregrounds and washes that sit on the brand surface. */
+    -brand-fg:         #ffffff;
+    -brand-fg-strong:  rgba(255, 255, 255, 0.85);
+    -brand-fg-muted:   rgba(255, 255, 255, 0.80);
+    -brand-fg-icon:    rgba(255, 255, 255, 0.75);
+    -brand-fg-faint:   rgba(255, 255, 255, 0.60);
+    -brand-fg-ghost:   rgba(255, 255, 255, 0.55);
+    -brand-hover-wash: rgba(255, 255, 255, 0.14);
+    -brand-press-wash: rgba(255, 255, 255, 0.22);
+    -brand-track:      rgba(255, 255, 255, 0.25);
+
+    /* =========================================================================
+     * DATA SERIES - the categorical palette used by the charts. Chromatic and
+     * fixed in both themes: these are the only hues allowed to carry meaning
+     * inside the neutral chrome.
+     * ========================================================================= */
+    -series-1: #3b82f6;
+    -series-2: #10b981;
+    -series-3: #f59e0b;
+    -series-4: #8b5cf6;
+    -series-5: #ef4444;
+    /* Area charts fill under the line with the first series at low opacity. */
+    -series-1-wash: rgba(59, 130, 246, 0.125);
 
     /* =========================================================================
      * RAW HUE SCALES
@@ -222,6 +260,10 @@
      * ========================================================================= */
     -scrim:        rgba(9, 9, 11, 0.50);
     -ring-wash:    rgba(9, 9, 11, 0.06);
+    /* Veils sit over a surface while it loads: one over the page canvas, one
+       over a card/popover. Both flip with the theme. */
+    -page-veil:    rgba(250, 250, 250, 0.78);
+    -card-veil:    rgba(255, 255, 255, 0.80);
 
     /* =========================================================================
      * GEOMETRY REFERENCE
@@ -313,12 +355,19 @@
 
     -danger:           #ef4444;
     -danger-hover:     #dc2626;
+    -danger-pressed:   #b91c1c;
     -danger-soft:      #450a0a;
     -danger-border:    #7f1d1d;
 
     -purple:           #a855f7;
     -purple-soft:      #3b0764;
     -purple-border:    #6b21a8;
+
+    /* The brand gradient is already dark; in dark mode it drops a step further
+       so the themed card still separates from the backdrop. */
+    -brand:            #101a33;
+    -brand-alt:        #16233d;
+    -brand-tint:       #16233d;
 
     /* Overlays are darker and more opaque so they still read on a dark base. */
     -shadow-xs:     rgba(0, 0, 0, 0.30);
@@ -328,6 +377,8 @@
     -shadow-popover: rgba(0, 0, 0, 0.65);
     -scrim:         rgba(0, 0, 0, 0.70);
     -ring-wash:     rgba(250, 250, 250, 0.08);
+    -page-veil:     rgba(9, 9, 11, 0.78);
+    -card-veil:     rgba(24, 24, 27, 0.80);
 
     /* Modena base, flipped. */
     -fx-base: -zinc-900;
