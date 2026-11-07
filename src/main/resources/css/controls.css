@@ -136,7 +136,7 @@
     -fx-font-weight: 500;
 }
 .btn-danger:hover { -fx-background-color: -destructive-hover; -fx-border-color: -destructive-hover; }
-.btn-danger:pressed { -fx-background-color: #991b1b; }
+.btn-danger:pressed { -fx-background-color: -danger-pressed; }
 .btn-danger .label { -fx-text-fill: -destructive-fore; }
 
 .btn-success {

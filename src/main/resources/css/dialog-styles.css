@@ -213,7 +213,7 @@
  * LOADING STATE
  * --------------------------------------------------------------------------- */
 .dialog-loading-overlay {
-    -fx-background-color: rgba(255, 255, 255, 0.80);
+    -fx-background-color: -card-veil;
 }
 .dialog-loading-content {
     -fx-background-color: -popover;

@@ -47,15 +47,29 @@ styling the JavaFX app.
 
 - Colours live only in `src/main/resources/css/theme-tokens.css` as looked-up
   tokens (`-card`, `-border`, `-muted`, `-zinc-*`, ...). Never hard-code a hex
-  value in another stylesheet or in FXML.
-- Style sheets are composed in this order: `theme-tokens` -> `main-styles` ->
-  `sidebar` -> `dashboard` -> `utilities` (utilities last so a Tailwind-style
-  class always wins). Apply them through `StyleSheets`, never by hand.
+  value in another stylesheet or in FXML. `StyleTokenDisciplineTest` fails the
+  build if a raw hex/`rgba()` shows up in any JavaFX sheet. The only exceptions
+  are `theme-tokens.css` itself and `templates/reports/*` (plain HTML/CSS for
+  the WebView and OpenHTMLToPDF, a different rendering engine).
+- Style sheets are composed in this order: `theme-tokens` -> `controls` -> the
+  screen's own sheets (`main-styles`, `sidebar`, `dashboard`, `dialog`,
+  `login`...) -> `utilities` (utilities last so a Tailwind-style class always
+  wins). Apply them through `StyleSheets`, never by hand.
+- Token families:
+  - structure: `-page` (page canvas), `-card`, `-popover`, `-border`, `-muted`.
+  - text ramp: `-foreground`, `-muted-foreground`, `-fg-strong` / `-fg-body` /
+    `-fg-subtle` / `-fg-faint` (behind the legacy `text-gray-*` / `text-slate-*`
+    utilities). `bg-white` maps to `-card`, not to the page.
+  - scroll bars: `-thumb` / `-thumb-hover`.
+  - brand: `-brand` / `-brand-alt` (gradient), `-brand-hover`, `-brand-pressed`,
+    `-brand-ring`, `-brand-tint`, and the `-brand-fg*` / `-brand-*-wash` /
+    `-brand-track` foregrounds. Used only by the splash/login screens, the
+    brand badges and the auth primary action.
+  - data series: `-series-1..5` and `-series-1-wash` (chart palette; fixed in
+    both themes because the hue carries meaning).
+  - loading veils: `-page-veil` / `-card-veil`.
 - The raw `-zinc-*` scale does **not** flip with the theme. Structural chrome
-  must use semantic tokens that do: `-page` (page canvas), `-thumb` /
-  `-thumb-hover` (scroll bars), `-fg-strong` / `-fg-body` / `-fg-subtle` /
-  `-fg-faint` (the body-text ramp behind the legacy `text-gray-*` /
-  `text-slate-*` utilities). `bg-white` maps to `-card`, not to the page.
+  must use semantic tokens that do (`-page`, `-thumb`, `-fg-*`, `-card`).
 - Dark mode redefines the same tokens under `.root.dark`. `ThemeManager`
   toggles that class on the scene root and persists the choice with
   `java.util.prefs.Preferences` (never `ConfigFileUtil.saveProperties`, which
@@ -63,6 +77,7 @@ styling the JavaFX app.
 - Modena leaks on some controls; reset them explicitly. The chart frame/plot
   area and the progress indicator both needed this (see `dashboard.css`,
   `controls.css`).
-- Regression tests for tokens/controls live in
-  `ChartsAndThemeTest` (run with `-Pvisual-tests`).
+- Regression tests for tokens/controls live in `ChartsAndThemeTest` and
+  `StyleTokenDisciplineTest` (the latter runs in the default suite; the former
+  with `-Pvisual-tests`).
 

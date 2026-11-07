@@ -66,12 +66,12 @@
     -fx-font-weight: 600;
 }
 .trend-badge-positive {
-    -fx-background-color: #ecfdf5;
-    -fx-text-fill: #059669;
+    -fx-background-color: -success-soft;
+    -fx-text-fill: -success;
 }
 .trend-badge-negative {
-    -fx-background-color: #fef2f2;
-    -fx-text-fill: #dc2626;
+    -fx-background-color: -danger-soft;
+    -fx-text-fill: -danger;
 }
 .trend-badge-neutral {
     -fx-background-color: -muted;
@@ -95,13 +95,13 @@
     -fx-pref-width: 40;
     -fx-pref-height: 40;
 }
-.card-icon-bg       { -fx-background-color: #ecfdf5; }
+.card-icon-bg       { -fx-background-color: -success-soft; }
 .card-icon-bg-red   { -fx-background-color: -red-50; }
 .card-icon-bg-blue  { -fx-background-color: -blue-50; }
-.card-icon-bg-green { -fx-background-color: #ecfdf5; }
+.card-icon-bg-green { -fx-background-color: -success-soft; }
 .card-icon-bg-amber { -fx-background-color: -amber-50; }
 
-.stat-icon-green  { -fx-background-color: #ecfdf5; }
+.stat-icon-green  { -fx-background-color: -success-soft; }
 .stat-icon-red    { -fx-background-color: -red-50; }
 .stat-icon-blue   { -fx-background-color: -blue-50; }
 .stat-icon-amber  { -fx-background-color: -amber-50; }
@@ -300,19 +300,21 @@
 
 .transactions-table .table-row-cell,
 .dialog-table .table-row-cell {
-    -fx-background-color: -background;
+    -fx-background-color: -card;
     -fx-border-color: transparent transparent -border transparent;
     -fx-cell-size: 36;
 }
+/* Card/white base with a page-tinted odd row: same as the old white/zinc-50
+   pair in light, and a real zebra instead of two identical dark surfaces. */
 .transactions-table .table-row-cell:odd,
-.dialog-table .table-row-cell:odd { -fx-background-color: #fafafa; }
+.dialog-table .table-row-cell:odd { -fx-background-color: -page; }
 .transactions-table .table-row-cell:even,
-.dialog-table .table-row-cell:even { -fx-background-color: -background; }
+.dialog-table .table-row-cell:even { -fx-background-color: -card; }
 .transactions-table .table-row-cell:filled:hover,
-.dialog-table .table-row-cell:filled:hover { -fx-background-color: #f0f0f0; }
+.dialog-table .table-row-cell:filled:hover { -fx-background-color: -muted; }
 .transactions-table .table-row-cell:filled:selected,
 .dialog-table .table-row-cell:filled:selected {
-    -fx-background-color: #e5e7eb;
+    -fx-background-color: -muted-hover;
     -fx-table-cell-border-color: transparent;
 }
 
@@ -338,9 +340,9 @@
     -fx-text-fill: -secondary-foreground;
     -fx-max-width: -1;
 }
-.status-badge.draft     { -fx-background-color: #fef3c7; -fx-text-fill: #92400e; }
-.status-badge.published { -fx-background-color: #d1fae5; -fx-text-fill: #065f46; }
-.status-badge.reversed  { -fx-background-color: #fee2e2;  -fx-text-fill: #991b1b; }
+.status-badge.draft     { -fx-background-color: -warning-soft; -fx-text-fill: -warning; }
+.status-badge.published { -fx-background-color: -success-soft; -fx-text-fill: -success; }
+.status-badge.reversed  { -fx-background-color: -danger-soft;  -fx-text-fill: -danger-hover; }
 
 /* -----------------------------------------------------------------------------
  * CHARTS - neutral chrome, colour only on the data series
@@ -407,11 +409,11 @@
 }
 
 /* Vibrant pie chart colors */
-.default-color0.chart-pie { -fx-background-color: #3b82f6; }
-.default-color1.chart-pie { -fx-background-color: #10b981; }
-.default-color2.chart-pie { -fx-background-color: #f59e0b; }
-.default-color3.chart-pie { -fx-background-color: #8b5cf6; }
-.default-color4.chart-pie { -fx-background-color: #ef4444; }
+.default-color0.chart-pie { -fx-background-color: -series-1; }
+.default-color1.chart-pie { -fx-background-color: -series-2; }
+.default-color2.chart-pie { -fx-background-color: -series-3; }
+.default-color3.chart-pie { -fx-background-color: -series-4; }
+.default-color4.chart-pie { -fx-background-color: -series-5; }
 
 .chart-pie .chart-pie-label {
     -fx-fill: -foreground;
@@ -420,22 +422,22 @@
 }
 
 /* Bar chart with gradient effect */
-.chart-bar .default-color0.chart-bar { -fx-bar-fill: #3b82f6; }
-.chart-bar .default-color1.chart-bar { -fx-bar-fill: #10b981; }
+.chart-bar .default-color0.chart-bar { -fx-bar-fill: -series-1; }
+.chart-bar .default-color1.chart-bar { -fx-bar-fill: -series-2; }
 
 /* Line chart with smooth curves */
 .chart-line .default-color0.chart-line {
-    -fx-stroke: #3b82f6;
+    -fx-stroke: -series-1;
     -fx-stroke-width: 2.5;
     -fx-stroke-line-cap: round;
     -fx-stroke-line-join: round;
 }
 .chart-line .default-color1.chart-line {
-    -fx-stroke: #10b981;
+    -fx-stroke: -series-2;
     -fx-stroke-width: 2.5;
     -fx-stroke-line-cap: round;
     -fx-stroke-line-join: round;
 }
 
-.chart-area .default-color0.chart-area { -fx-fill: #3b82f620; }
+.chart-area .default-color0.chart-area { -fx-fill: -series-1-wash; }
 .chart-area .default-color0.chart-area-overlay { -fx-fill: transparent; }
