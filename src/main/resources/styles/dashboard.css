@@ -217,7 +217,7 @@
     -fx-font-weight: 500;
     -fx-text-fill: -foreground;
     -fx-cursor: hand;
-    -fx-graphic-gap: 8;
+    -fx-graphic-text-gap: 8;
 }
 .filter-btn:hover,
 .refresh-btn:hover,
@@ -237,7 +237,7 @@
     -fx-font-weight: 500;
     -fx-text-fill: -muted-foreground;
     -fx-cursor: hand;
-    -fx-graphic-gap: 8;
+    -fx-graphic-text-gap: 8;
 }
 .clear-btn:hover { -fx-background-color: -muted; -fx-text-fill: -foreground; }
 
@@ -253,7 +253,7 @@
     -fx-font-weight: 500;
     -fx-text-fill: -primary-foreground;
     -fx-cursor: hand;
-    -fx-graphic-gap: 8;
+    -fx-graphic-text-gap: 8;
 }
 .submit-btn:hover { -fx-background-color: -primary-hover; -fx-border-color: -primary-hover; }
 .submit-btn:pressed { -fx-background-color: -primary-pressed; }

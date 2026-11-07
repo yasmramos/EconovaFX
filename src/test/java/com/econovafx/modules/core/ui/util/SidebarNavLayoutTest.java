@@ -188,9 +188,12 @@ public class SidebarNavLayoutTest extends ApplicationTest {
                     offset = graphic.localToScene(graphic.getBoundsInLocal()).getMinX()
                             - b.localToScene(b.getBoundsInLocal()).getMinX();
                 }
-                double parentWidth = b.getParent() == null
-                        ? Double.NaN
-                        : b.getParent().getBoundsInLocal().getWidth();
+                double parentWidth = Double.NaN;
+                if (b.getParent() instanceof Region parent) {
+                    parentWidth = parent.getWidth()
+                            - parent.getInsets().getLeft()
+                            - parent.getInsets().getRight();
+                }
                 buttons.add(new Measurement(
                         b.getText(),
                         b.getWidth(),

@@ -77,7 +77,7 @@
     -fx-font-size: 14px;
     -fx-font-weight: 500;
     -fx-text-fill: -zinc-400;
-    -fx-graphic-gap: 10;
+    -fx-graphic-text-gap: 10;
     -fx-cursor: hand;
     -fx-transition: -fx-background-color 0.15s ease, -fx-text-fill 0.15s ease;
 }
