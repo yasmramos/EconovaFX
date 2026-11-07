@@ -6,8 +6,8 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "copy": "cp -r build/* ../src/main/resources/web/",
-    "postbuild": "npm run copy"
+    "copy": "node -e \"console.log('skip - copy handled by plugin')\"",
+    "postbuild": "node copy.js"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.1",

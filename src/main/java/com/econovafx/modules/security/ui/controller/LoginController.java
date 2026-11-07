@@ -158,7 +158,13 @@ public class LoginController {
                         hideError();
                         
                         if (onLoginSuccess != null) {
-                            onLoginSuccess.run();
+                            // Feedback visible ANTES del bloqueo: la carga de
+                            // módulos corre en el hilo de UI y congelaría el
+                            // repaint si se hiciera en el mismo pulso.
+                            progressBar.setVisible(true);
+                            progressBar.setProgress(-1); // indeterminada
+                            loginButton.setText("Cargando módulos...");
+                            javafx.application.Platform.runLater(onLoginSuccess);
                         }
                     } else {
                         showError("Invalid username or email or password. Please try again.");

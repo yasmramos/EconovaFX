@@ -26,7 +26,7 @@
     -fx-alignment: center;
     /* No -fx-content-display here: it is a real JavaFX property and would beat
      * the contentDisplay="LEFT" that every icon button declares in markup. */
-    -fx-graphic-gap: 8;
+    -fx-graphic-text-gap: 8;
 }
 
 /* Focus is a ring, not a fat border - shadcn --ring */
@@ -421,7 +421,7 @@
     -fx-font-weight: 500;
     -fx-cursor: hand;
     -fx-alignment: center;
-    -fx-graphic-gap: 6;
+    -fx-graphic-text-gap: 6;
 }
 .row-action .label { -fx-text-fill: -zinc-600; }
 .row-action > .ikonli-font-icon { -fx-fill: -zinc-500; }
@@ -783,4 +783,211 @@
 
 .scroll-bar .increment-button > .arrow,
 .scroll-bar .decrement-button > .arrow { -fx-opacity: 0; }
+
+/* =============================================================================
+ * 11. TAB PANE - shadcn "tabs": a muted track, the active tab a white pill with
+ * a hairline, the content a white surface flush beneath it.
+ * ========================================================================== */
+.tab-pane {
+    -fx-background-color: transparent;
+    -fx-tab-min-width: 0;
+    -fx-tab-min-height: 32;
+    -fx-tab-max-height: 32;
+}
+
+.tab-pane > .tab-header-area {
+    -fx-padding: 0;
+}
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: -muted;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: transparent;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 6 14;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab .tab-label {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab:hover .tab-label {
+    -fx-text-fill: -foreground;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: -background;
+    -fx-effect: dropshadow(gaussian, -shadow-xs, 2, 0, 0, 1);
+}
+.tab-pane > .tab-header-area > .headers-region > .tab:selected .tab-label {
+    -fx-text-fill: -foreground;
+    -fx-font-weight: 600;
+}
+/* Modena paints a focus ring on the selected tab; the pill is the affordance. */
+.tab-pane > .tab-header-area > .headers-region > .tab .focus-indicator {
+    -fx-border-color: transparent;
+}
+.tab-pane > .tab-content-area {
+    -fx-background-color: -background;
+    -fx-border-color: -border;
+    -fx-border-width: 0 1 1 1;
+    -fx-background-radius: 0 0 8 8;
+}
+
+/* =============================================================================
+ * 12. TITLED PANE - standalone: a shadcn card whose title row is separated from
+ * the body by the same hairline.
+ * ========================================================================== */
+.titled-pane {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+.titled-pane > .title {
+    -fx-background-color: -card;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 10 14;
+}
+.titled-pane:expanded > .title {
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-radius: 8 8 0 0;
+    -fx-border-color: -border -border transparent -border;
+}
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: -muted-foreground;
+}
+.titled-pane > .content {
+    -fx-background-color: -card;
+    -fx-border-color: -border;
+    -fx-border-width: 0 1 1 1;
+    -fx-background-radius: 0 0 8 8;
+    -fx-border-radius: 0 0 8 8;
+    -fx-padding: 14;
+}
+
+/* Inside an Accordion the panes read as rows of one bordered card, each row
+ * split by a hairline - rounding every row would double the borders. */
+.accordion {
+    -fx-background-color: transparent;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+.accordion > .titled-pane {
+    -fx-background-color: transparent;
+}
+.accordion > .titled-pane > .title {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 10 14;
+}
+.accordion > .titled-pane:expanded > .title {
+    -fx-border-color: transparent transparent -border transparent;
+}
+.accordion > .titled-pane > .content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 10 14 14 14;
+}
+
+/* =============================================================================
+ * 13. TREE VIEW - the same surface as the table: white, hairline, rounded.
+ * ========================================================================== */
+.tree-view {
+    -fx-background-color: -background;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+    -fx-padding: 4;
+}
+.tree-view .tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -foreground;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-padding: 5 6;
+}
+.tree-view .tree-cell:filled:hover { -fx-background-color: -muted; }
+.tree-view .tree-cell:filled:selected {
+    -fx-background-color: -secondary;
+    -fx-text-fill: -foreground;
+}
+.tree-view .tree-cell > .tree-disclosure-node > .arrow {
+    -fx-background-color: -muted-foreground;
+}
+
+/* =============================================================================
+ * 14. HYPERLINK - the link affordance: info hue, underline only on hover.
+ * ========================================================================== */
+.hyperlink {
+    -fx-text-fill: -info;
+    -fx-border-color: transparent;
+    -fx-underline: false;
+    -fx-padding: 2 0;
+    -fx-cursor: hand;
+}
+.hyperlink:hover { -fx-underline: true; -fx-text-fill: -info-hover; }
+.hyperlink:focused {
+    -fx-border-color: -info-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-padding: 2 4;
+}
+
+/* =============================================================================
+ * 15. SPLIT PANE - a hairline divider, no fat grip.
+ * ========================================================================== */
+.split-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.split-pane > .split-pane-divider {
+    -fx-background-color: -border;
+    -fx-padding: 0 1 0 1;
+}
+.split-pane:vertical > .split-pane-divider {
+    -fx-padding: 1 0 1 0;
+}
+
+/* =============================================================================
+ * 16. STATUS TEXT + EXPORT ACTIONS
+ * Kept here (not in utilities.css) so a screen sheet such as splash.css can
+ * still override .status-label - utilities loads last and would win instead.
+ * ========================================================================== */
+.status-label {
+    -fx-text-fill: -muted-foreground;
+    -fx-font-size: 13px;
+}
+
+/* Secondary "export" action: the outline variant, icon + label. */
+.action-btn {
+    -fx-background-color: -background;
+    -fx-border-color: -border;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-padding: 8 14;
+    -fx-min-height: 36;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -foreground;
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 8;
+}
+.action-btn .label { -fx-text-fill: -foreground; }
+.action-btn:hover { -fx-background-color: -muted; -fx-border-color: -input-hover; }
+.action-btn:pressed { -fx-background-color: -muted-hover; }
 

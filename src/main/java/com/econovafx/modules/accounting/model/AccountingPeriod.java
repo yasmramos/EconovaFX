@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class AccountingPeriod extends BaseEntity {
 
     @Column(nullable = false, length = 50)
-    private String name; // e.g., "Fiscal Year 2024", "January 2024"
+    private String name; // e.g., "Fiscal Year 2026", "January 2026"
 
     @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate startDate;

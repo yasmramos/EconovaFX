@@ -14,10 +14,12 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import netscape.javascript.JSException;
 
 /**
- * Controller for the Web UI view that embeds SvelteKit application in JavaFX WebView.
- * Loads the web interface from a local HTTP server to avoid CORS issues with ES modules.
+ * Controller for the Web UI view that embeds SvelteKit application in JavaFX
+ * WebView. Loads the web interface from a local HTTP server to avoid CORS
+ * issues with ES modules.
  */
 @Component
 public class WebViewController implements Initializable {
@@ -33,6 +35,7 @@ public class WebViewController implements Initializable {
 
     /**
      * Constructor with dependency injection.
+     *
      * @param localWebServer The local web server instance
      */
     @Inject
@@ -72,25 +75,26 @@ public class WebViewController implements Initializable {
     }
 
     /**
-     * Inject a Java bridge object into the JavaScript context.
-     * This allows the SvelteKit app to call Java methods.
+     * Inject a Java bridge object into the JavaScript context. This allows the
+     * SvelteKit app to call Java methods.
      */
     private void injectJavaBridge() {
         try {
             JSObject window = (JSObject) webEngine.executeScript("window");
-            
+
             // Create a bridge object that JS can call
             JavaBridge bridge = new JavaBridge();
             window.setMember("javaBridge", bridge);
-            
+
             logger.info("Java bridge injected into JavaScript context");
-        } catch (Exception e) {
+        } catch (JSException e) {
             logger.warn("Could not inject Java bridge: {}", e.getMessage());
         }
     }
 
     /**
      * Execute JavaScript code in the web view.
+     *
      * @param script The JavaScript code to execute
      * @return The result of the script execution, or null
      */
@@ -114,9 +118,10 @@ public class WebViewController implements Initializable {
      * Bridge class exposed to JavaScript for Java-JS communication.
      */
     public class JavaBridge {
-        
+
         /**
          * Example method that can be called from JavaScript.
+         *
          * @param message Message from JS
          * @return Response message
          */
@@ -127,6 +132,7 @@ public class WebViewController implements Initializable {
 
         /**
          * Get application version.
+         *
          * @return Version string
          */
         public String getVersion() {
@@ -135,19 +141,15 @@ public class WebViewController implements Initializable {
 
         /**
          * Log a message from JavaScript to Java logger.
+         *
          * @param level Log level (info, warn, error)
          * @param message Log message
          */
         public void log(String level, String message) {
             switch (level.toLowerCase()) {
-                case "error":
-                    logger.error("[JS] {}", message);
-                    break;
-                case "warn":
-                    logger.warn("[JS] {}", message);
-                    break;
-                default:
-                    logger.info("[JS] {}", message);
+                case "error" -> logger.error("[JS] {}", message);
+                case "warn" -> logger.warn("[JS] {}", message);
+                default -> logger.info("[JS] {}", message);
             }
         }
     }

@@ -2,6 +2,7 @@ package com.econovafx.modules.reporting.model;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Column;
+import java.math.BigDecimal;
 
 /**
  * Represents a line item in a financial report.
@@ -16,18 +17,18 @@ public class ReportLine {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "debit_amount", columnDefinition = "DOUBLE")
-    private Double debitAmount;
+    @Column(name = "debit_amount", precision = 19, scale = 4)
+    private BigDecimal debitAmount;
 
-    @Column(name = "credit_amount", columnDefinition = "DOUBLE")
-    private Double creditAmount;
+    @Column(name = "credit_amount", precision = 19, scale = 4)
+    private BigDecimal creditAmount;
 
-    @Column(name = "balance", columnDefinition = "DOUBLE")
-    private Double balance;
+    @Column(name = "balance", precision = 19, scale = 4)
+    private BigDecimal balance;
 
     public ReportLine() {}
 
-    public ReportLine(String accountCode, String description, Double debitAmount, Double creditAmount, Double balance) {
+    public ReportLine(String accountCode, String description, BigDecimal debitAmount, BigDecimal creditAmount, BigDecimal balance) {
         this.accountCode = accountCode;
         this.description = description;
         this.debitAmount = debitAmount;
@@ -39,10 +40,10 @@ public class ReportLine {
     public void setAccountCode(String accountCode) { this.accountCode = accountCode; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public Double getDebitAmount() { return debitAmount; }
-    public void setDebitAmount(Double debitAmount) { this.debitAmount = debitAmount; }
-    public Double getCreditAmount() { return creditAmount; }
-    public void setCreditAmount(Double creditAmount) { this.creditAmount = creditAmount; }
-    public Double getBalance() { return balance; }
-    public void setBalance(Double balance) { this.balance = balance; }
+    public BigDecimal getDebitAmount() { return debitAmount; }
+    public void setDebitAmount(BigDecimal debitAmount) { this.debitAmount = debitAmount; }
+    public BigDecimal getCreditAmount() { return creditAmount; }
+    public void setCreditAmount(BigDecimal creditAmount) { this.creditAmount = creditAmount; }
+    public BigDecimal getBalance() { return balance; }
+    public void setBalance(BigDecimal balance) { this.balance = balance; }
 }
