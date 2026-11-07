@@ -241,11 +241,11 @@
 .dialog-scroll .content { -fx-background-color: transparent; }
 .dialog-scroll .scroll-bar:vertical { -fx-pref-width: 10; }
 .dialog-scroll .scroll-bar .thumb {
-    -fx-background-color: -zinc-300;
+    -fx-background-color: -thumb;
     -fx-background-radius: 9999;
     -fx-background-insets: 3;
 }
-.dialog-scroll .scroll-bar .thumb:hover { -fx-background-color: -zinc-400; }
+.dialog-scroll .scroll-bar .thumb:hover { -fx-background-color: -thumb-hover; }
 .dialog-scroll .scroll-bar:vertical > .increment-button,
 .dialog-scroll .scroll-bar:vertical > .decrement-button { -fx-opacity: 0; -fx-pref-height: 0; }
 

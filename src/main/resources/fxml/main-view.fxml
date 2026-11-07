@@ -198,6 +198,14 @@
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Label fx:id="currentUserLabel" text="Usuario: Admin" styleClass="header-user"/>
+                        <Button fx:id="btnThemeToggle" onAction="#handleToggleTheme" styleClass="header-icon-btn" contentDisplay="LEFT">
+                            <tooltip>
+                                <Tooltip text="Cambiar tema"/>
+                            </tooltip>
+                            <graphic>
+                                <FontIcon fx:id="themeToggleIcon" iconLiteral="mdi2w-weather-night" iconSize="18"/>
+                            </graphic>
+                        </Button>
                         <Button text="Cerrar sesión" onAction="#handleLogout" styleClass="header-logout"/>
                     </HBox>
                 </top>

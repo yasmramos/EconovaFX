@@ -548,12 +548,18 @@
     -fx-background-radius: 9999;
 }
 
+/* A ring, not a disc: Modena paints a filled 32x32 square with a blue arc, so
+   the surface and both arcs are reset to the tokens. */
 .progress-indicator {
-    -fx-background-color: -primary;
+    -fx-background-color: transparent;
     -fx-pref-width: 32;
     -fx-pref-height: 32;
     -fx-padding: 3;
 }
+.progress-indicator .determinate-indicator > .indicator { -fx-background-color: -muted; }
+.progress-indicator .determinate-indicator > .progress  { -fx-background-color: -primary; }
+.progress-indicator .percentage { -fx-fill: -muted-foreground; -fx-font-size: 11px; }
+.progress-indicator .spinner .path { -fx-stroke: -primary; -fx-stroke-width: 2; }
 
 /* =============================================================================
  * 6. TABLE VIEW - hairline rows, muted header, hover wash. No zebra banding.
@@ -610,7 +616,7 @@
 
 /* Placeholder shown inside a cell that is intentionally disabled because its
    parent row value is missing (accounting entry grid). */
-.table-empty-cell { -fx-background-color: -zinc-50; }
+.table-empty-cell { -fx-background-color: -page; }
 .table-view .table-row-cell:odd,
 .table-view .table-row-cell:even,
 .data-table .table-row-cell:odd,
@@ -704,11 +710,11 @@
 
 .scroll-bar .track { -fx-background-color: transparent; }
 .scroll-bar .thumb {
-    -fx-background-color: -zinc-300;
+    -fx-background-color: -thumb;
     -fx-background-radius: 9999;
     -fx-background-insets: 3;
 }
-.scroll-bar .thumb:hover { -fx-background-color: -zinc-400; }
+.scroll-bar .thumb:hover { -fx-background-color: -thumb-hover; }
 .scroll-bar:vertical .thumb { -fx-pref-width: 10; }
 .scroll-bar:horizontal .thumb { -fx-pref-height: 10; }
 

@@ -9,13 +9,13 @@
 /* =============================================================================
  * 11. UTILITIES - background surfaces
  * ========================================================================== */
-.bg-white      { -fx-background-color: -background; }
-.bg-gray-50    { -fx-background-color: -zinc-50; }
-.bg-gray-100   { -fx-background-color: -zinc-100; }
+.bg-white      { -fx-background-color: -card; }
+.bg-gray-50    { -fx-background-color: -muted; }
+.bg-gray-100   { -fx-background-color: -muted; }
 .bg-gray-500   { -fx-background-color: -zinc-500; }
 .bg-gray-600   { -fx-background-color: -zinc-600; }
 .bg-slate-800  { -fx-background-color: -zinc-950; }
-.background    { -fx-background-color: -zinc-50; }
+.background    { -fx-background-color: -page; }
 .bg-transparent { -fx-background-color: transparent; }
 
 .bg-blue-50     { -fx-background-color: -blue-50; }
@@ -45,14 +45,14 @@
 .text-black      { -fx-text-fill: -foreground; }
 .text-gray-300   { -fx-text-fill: -zinc-300; }
 .text-gray-500   { -fx-text-fill: -muted-foreground; }
-.text-gray-600   { -fx-text-fill: -zinc-600; }
-.text-gray-700   { -fx-text-fill: -zinc-700; }
-.text-gray-800   { -fx-text-fill: -zinc-800; }
-.text-slate-400  { -fx-text-fill: -zinc-400; }
-.text-slate-500  { -fx-text-fill: -zinc-500; }
-.text-slate-600  { -fx-text-fill: -zinc-600; }
-.text-slate-700  { -fx-text-fill: -zinc-700; }
-.text-slate-800  { -fx-text-fill: -zinc-800; }
+.text-gray-600   { -fx-text-fill: -fg-subtle; }
+.text-gray-700   { -fx-text-fill: -fg-body; }
+.text-gray-800   { -fx-text-fill: -fg-strong; }
+.text-slate-400  { -fx-text-fill: -fg-faint; }
+.text-slate-500  { -fx-text-fill: -muted-foreground; }
+.text-slate-600  { -fx-text-fill: -fg-subtle; }
+.text-slate-700  { -fx-text-fill: -fg-body; }
+.text-slate-800  { -fx-text-fill: -fg-strong; }
 .text-blue-600   { -fx-text-fill: -blue-600; }
 .text-green-600  { -fx-text-fill: -green-600; }
 .text-green-800  { -fx-text-fill: -green-700; }

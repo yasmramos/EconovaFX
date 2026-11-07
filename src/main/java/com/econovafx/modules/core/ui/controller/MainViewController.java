@@ -4,6 +4,7 @@ import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.service.UserService;
 import com.econovafx.modules.core.ui.util.NotificationService;
+import com.econovafx.modules.core.ui.util.ThemeManager;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.animation.RotateTransition;
@@ -138,6 +140,12 @@ public class MainViewController implements Initializable {
     @FXML
     private Button btnToggleSidebar;
 
+    @FXML
+    private Button btnThemeToggle;
+
+    @FXML
+    private FontIcon themeToggleIcon;
+
     private boolean sidebarCollapsed = false;
     private static final double SIDEBAR_EXPANDED_WIDTH = 260;
     private static final double SIDEBAR_COLLAPSED_WIDTH = 64;
@@ -186,6 +194,7 @@ public class MainViewController implements Initializable {
         // Defer welcome notification to ensure scene is fully ready
         javafx.application.Platform.runLater(() -> {
             try {
+                syncThemeIcon(ThemeManager.isDark());
                 // Show welcome notification after dashboard is visible
                 NotificationService.showInfo(getStage(), "Welcome to EconovaFX v1.0.0");
             } catch (Exception e) {
@@ -641,6 +650,24 @@ public class MainViewController implements Initializable {
     private void handleLogout() {
         logger.info("User logged out");
         NotificationService.showInfo(getStage(), "Logging out...");
+    }
+
+    @FXML
+    private void handleToggleTheme() {
+        Scene scene = contentArea != null ? contentArea.getScene() : null;
+        if (scene == null) {
+            return;
+        }
+        boolean dark = ThemeManager.toggle(scene);
+        syncThemeIcon(dark);
+    }
+
+    private void syncThemeIcon(boolean dark) {
+        if (themeToggleIcon == null) {
+            return;
+        }
+        // Show the theme the click will switch *to*.
+        themeToggleIcon.setIconLiteral(dark ? "mdi2w-weather-sunny" : "mdi2w-weather-night");
     }
     
     private void updateStatus(String message) {

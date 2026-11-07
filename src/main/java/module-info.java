@@ -1,6 +1,7 @@
 module econovafx {
     requires java.base;
     requires java.net.http;
+    requires java.prefs;
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.fxml;

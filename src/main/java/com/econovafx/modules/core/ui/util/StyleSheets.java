@@ -70,6 +70,7 @@ public final class StyleSheets {
             }
         }
         addTo(scene.getStylesheets(), UTILITIES);
+        ThemeManager.applyTo(scene);
     }
 
     /**
@@ -89,6 +90,7 @@ public final class StyleSheets {
             }
         }
         addTo(root.getStylesheets(), UTILITIES);
+        ThemeManager.applyTo(root);
     }
 
     private static void addTo(javafx.collections.ObservableList<String> target, String resource) {

@@ -103,6 +103,21 @@
     -input-hover:          #d4d4d8;
     -ring:                 #a1a1aa;   /* focus ring */
 
+    /* Structural chrome that is neither a surface nor a hairline: the page
+       canvas behind cards, and the scroll-bar thumb. They get their own tokens
+       because the raw zinc scale does not flip with the theme. */
+    -page:                 #fafafa;   /* zinc-50  */
+    -thumb:                #d4d4d8;   /* zinc-300 */
+    -thumb-hover:          #a1a1aa;   /* zinc-400 */
+
+    /* Body-text ramp for the legacy gray/slate utility classes. Same values as
+       the raw scale in light, inverted in dark so text stays readable on the
+       flipped surfaces. */
+    -fg-strong:            #27272a;   /* zinc-800 */
+    -fg-body:              #3f3f46;   /* zinc-700 */
+    -fg-subtle:            #52525b;   /* zinc-600 */
+    -fg-faint:             #a1a1aa;   /* zinc-400 */
+
     /* =========================================================================
      * SEMANTIC STATUS COLOURS - muted surfaces + saturated foreground.
      * Shadcn badges use a soft background with the strong hue as text.
@@ -221,5 +236,102 @@
     -fx-base: -zinc-50;
     -fx-background: -zinc-50;
     -fx-focus-color: -zinc-300;
+    -fx-text-fill: -foreground;
+}
+
+/* =============================================================================
+ * DARK THEME - the same shadcn tokens on the dark end of the zinc scale.
+ *
+ * Applied by adding the "dark" style class to the scene root (see ThemeManager).
+ * Only the semantic tokens are redefined here; the raw hue scales and the
+ * geometry notes above stay shared, so a rule that reads -background or -border
+ * flips with the theme for free. Specificity: .root.dark (0,2,0) beats .root
+ * (0,1,0), so these values win without !important.
+ * ========================================================================== */
+.root.dark {
+    -background:           #09090b;   /* zinc-950 */
+    -foreground:           #fafafa;   /* zinc-50  */
+
+    -card:                 #18181b;   /* zinc-900 */
+    -card-foreground:      #fafafa;
+
+    -popover:              #18181b;
+    -popover-foreground:   #fafafa;
+
+    /* In dark, shadcn inverts primary: the "brand" becomes near-white. */
+    -primary:              #fafafa;
+    -primary-hover:        #e4e4e7;
+    -primary-pressed:      #d4d4d8;
+    -primary-foreground:   #18181b;
+    -primary-disabled:     #3f3f46;
+
+    -secondary:            #27272a;   /* zinc-800 */
+    -secondary-foreground: #fafafa;
+    -secondary-hover:      #3f3f46;
+
+    -muted:                #27272a;
+    -muted-foreground:     #a1a1aa;   /* zinc-400 */
+    -muted-hover:          #3f3f46;
+
+    -accent:               #27272a;
+    -accent-foreground:    #fafafa;
+
+    -destructive:          #ef4444;
+    -destructive-hover:    #dc2626;
+    -destructive-fore:     #fafafa;
+    -destructive-soft:     #450a0a;
+
+    -border:               #27272a;
+    -input:                #27272a;
+    -input-hover:          #3f3f46;
+    -ring:                 #52525b;
+
+    -page:                 #09090b;   /* zinc-950 */
+    -thumb:                #3f3f46;   /* zinc-700 */
+    -thumb-hover:          #52525b;   /* zinc-600 */
+
+    -fg-strong:            #e4e4e7;   /* zinc-200 */
+    -fg-body:              #d4d4d8;   /* zinc-300 */
+    -fg-subtle:            #a1a1aa;   /* zinc-400 */
+    -fg-faint:             #71717a;   /* zinc-500 */
+
+    /* Status colours keep their hue but drop to the darker, low-glare step. */
+    -success:          #22c55e;
+    -success-hover:    #16a34a;
+    -success-soft:     #052e16;
+    -success-border:   #14532d;
+
+    -warning:          #f59e0b;
+    -warning-hover:    #d97706;
+    -warning-soft:     #451a03;
+    -warning-border:   #78350f;
+
+    -info:             #3b82f6;
+    -info-hover:       #2563eb;
+    -info-soft:        #172554;
+    -info-border:      #1e3a8a;
+
+    -danger:           #ef4444;
+    -danger-hover:     #dc2626;
+    -danger-soft:      #450a0a;
+    -danger-border:    #7f1d1d;
+
+    -purple:           #a855f7;
+    -purple-soft:      #3b0764;
+    -purple-border:    #6b21a8;
+
+    /* Overlays are darker and more opaque so they still read on a dark base. */
+    -shadow-xs:     rgba(0, 0, 0, 0.30);
+    -shadow-sm:     rgba(0, 0, 0, 0.40);
+    -shadow-md:     rgba(0, 0, 0, 0.50);
+    -shadow-lg:     rgba(0, 0, 0, 0.60);
+    -shadow-popover: rgba(0, 0, 0, 0.65);
+    -scrim:         rgba(0, 0, 0, 0.70);
+    -ring-wash:     rgba(250, 250, 250, 0.08);
+
+    /* Modena base, flipped. */
+    -fx-base: -zinc-900;
+    -fx-background: -zinc-950;
+    -fx-focus-color: -zinc-600;
     -fx-text-fill: -foreground;
 }
