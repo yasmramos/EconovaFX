@@ -5,7 +5,7 @@
  * ========================================================================== */
 
 .selection-dialog-container {
-    -fx-background-color: -zinc-50;
+    -fx-background-color: -page;
     -fx-padding: 30;
     -fx-alignment: center;
 }

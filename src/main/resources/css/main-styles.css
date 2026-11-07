@@ -11,7 +11,7 @@
  * LAYOUT SCAFFOLDING
  * --------------------------------------------------------------------------- */
 .root {
-    -fx-background-color: -zinc-50;
+    -fx-background-color: -page;
 }
 
 .border-pane,
@@ -25,21 +25,21 @@
 .hbox { -fx-fill-height: true; }
 
 .content-area {
-    -fx-background-color: -zinc-50;
+    -fx-background-color: -page;
     -fx-padding: 0;
     -fx-min-width: 600;
     -fx-min-height: 400;
 }
 
 .workspace-content {
-    -fx-background-color: -zinc-50;
+    -fx-background-color: -page;
     -fx-padding: 24;
 }
 
 .content-view,
 .content-wrapper,
 .main-view {
-    -fx-background-color: -zinc-50;
+    -fx-background-color: -page;
     -fx-padding: 16;
 }
 
@@ -154,5 +154,5 @@
  * --------------------------------------------------------------------------- */
 .web-view,
 .web-shell-body {
-    -fx-background-color: -zinc-50;
+    -fx-background-color: -page;
 }

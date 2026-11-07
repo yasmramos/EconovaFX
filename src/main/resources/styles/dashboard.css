@@ -31,7 +31,7 @@
 .card-equity:hover,
 .card-balance:hover,
 .card-profit:hover {
-    -fx-border-color: -zinc-300;
+    -fx-border-color: -input-hover;
     -fx-effect: dropshadow(gaussian, -shadow-md, 8, 0, 0, 4);
     -fx-translate-y: -2;
 }
@@ -147,7 +147,7 @@
 .card-equity:hover,
 .card-balance:hover,
 .card-profit:hover {
-    -fx-border-color: -zinc-300;
+    -fx-border-color: -input-hover;
     -fx-effect: dropshadow(gaussian, -shadow-sm, 6, 0, 0, 2);
 }
 
@@ -353,6 +353,27 @@
     -fx-legend-side: right;
 }
 
+/* Modena paints the chart frame and plot area with -fx-background, which is
+   zinc-50 here - a grey box behind every chart. Reset both to transparent so
+   the card surface shows through, and keep only the hairline axis. */
+.chart {
+    -fx-background-color: transparent;
+    -fx-padding: 8;
+}
+.chart-content { -fx-padding: 4; }
+.chart-plot-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.chart-title {
+    -fx-text-fill: -foreground;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 0 0 8 0;
+}
+.axis .axis-line { -fx-stroke: -border; }
+.chart-legend-item-symbol { -fx-background-radius: 3; }
+
 .axis {
     -fx-tick-label-fill: -muted-foreground;
     -fx-font-size: 11px;
@@ -372,7 +393,7 @@
 .chart-vertical-grid-lines { -fx-stroke: transparent; }
 
 .zero-line {
-    -fx-stroke: -zinc-300;
+    -fx-stroke: -input-hover;
     -fx-stroke-width: 1;
 }
 

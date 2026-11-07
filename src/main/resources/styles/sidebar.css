@@ -220,13 +220,13 @@
 }
 .sidebar-scroll > .scroll-bar:vertical > .thumb,
 .content-scroll > .scroll-bar:vertical > .thumb {
-    -fx-background-color: -zinc-300;
+    -fx-background-color: -thumb;
     -fx-background-radius: 9999;
     -fx-background-insets: 3;
 }
 .sidebar-scroll > .scroll-bar:vertical > .thumb:hover,
 .content-scroll > .scroll-bar:vertical > .thumb:hover {
-    -fx-background-color: -zinc-400;
+    -fx-background-color: -thumb-hover;
 }
 .sidebar-scroll > .scroll-bar > .increment-button,
 .sidebar-scroll > .scroll-bar > .decrement-button,
@@ -286,3 +286,18 @@
 .header-logout .label { -fx-text-fill: -foreground; }
 .header-logout:hover { -fx-background-color: -muted; -fx-border-color: -input-hover; }
 .header-logout:pressed { -fx-background-color: -muted-hover; }
+
+/* Icon-only header action (theme toggle): square, quiet until hover. */
+.header-icon-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 6;
+    -fx-padding: 6;
+    -fx-min-width: 32;
+    -fx-min-height: 32;
+    -fx-cursor: hand;
+}
+.header-icon-btn > .ikonli-font-icon { -fx-fill: -muted-foreground; }
+.header-icon-btn:hover { -fx-background-color: -muted; }
+.header-icon-btn:hover > .ikonli-font-icon { -fx-fill: -foreground; }
+.header-icon-btn:pressed { -fx-background-color: -muted-hover; }
