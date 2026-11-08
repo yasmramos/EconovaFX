@@ -68,9 +68,18 @@ styling the JavaFX app.
 - Colours live only in `src/main/resources/css/theme-tokens.css` as looked-up
   tokens (`-card`, `-border`, `-muted`, `-zinc-*`, ...). Never hard-code a hex
   value in another stylesheet or in FXML. `StyleTokenDisciplineTest` fails the
-  build if a raw hex/`rgba()` shows up in any JavaFX sheet. The only exceptions
-  are `theme-tokens.css` itself and `templates/reports/*` (plain HTML/CSS for
-  the WebView and OpenHTMLToPDF, a different rendering engine).
+  build if a raw hex/`rgba()` shows up in any JavaFX sheet *or* in any FXML. The
+  only exceptions are `theme-tokens.css` itself and `templates/reports/*` (plain
+  HTML/CSS for the WebView and OpenHTMLToPDF, a different rendering engine).
+- Icons take their colour from a token class, never from an `iconColor="#..."`
+  attribute. That attribute is an inline property, so it beats every stylesheet
+  and pins the icon to the light palette - it will not flip in dark mode. Use
+  `.icon-success` / `.icon-warning` / `.icon-info` / `.icon-danger` /
+  `.icon-purple` / `.icon-muted` (see the ICONS section of `controls.css`); the
+  chip that hosts the icon (`card-icon-bg*`, `stat-icon-*`) already carries the
+  matching soft background. `.icon-brand` is the fixed deep blue for the
+  always-white login badge; `.icon-brand-ink` is the themable ink for a
+  `-brand-tint` surface.
 - Style sheets are composed in this order: `theme-tokens` -> `controls` -> the
   screen's own sheets (`main-styles`, `sidebar`, `dashboard`, `dialog`,
   `login`...) -> `utilities` (utilities last so a Tailwind-style class always

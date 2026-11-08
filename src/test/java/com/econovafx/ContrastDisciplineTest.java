@@ -88,6 +88,9 @@ class ContrastDisciplineTest {
             Pair.text("-purple", "-card"),
             Pair.text("-purple", "-purple-soft"),
 
+            // Brand ink sits on the brand badge tint.
+            Pair.text("-brand-ink", "-brand-tint"),
+
             // Status hue as a solid fill, under its own foreground.
             Pair.text("-success-foreground", "-success"),
             Pair.text("-warning-foreground", "-warning"),

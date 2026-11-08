@@ -1,9 +1,16 @@
 package com.econovafx.modules.core.service;
 
 import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.AccountType;
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.model.TransactionEntry;
+import com.econovafx.modules.accounting.model.TransactionStatus;
+import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.bank.model.BankReconciliation;
+import io.ebean.Database;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -138,6 +145,94 @@ public class ExportServicePdfTest {
         assertTrue(pdfFile.length() > 0, "PDF file should not be empty");
         
         System.out.println("Income Statement PDF generated: " + pdfFile.getAbsolutePath());
+    }
+
+    @Test
+    public void testBalanceSheetPdf_UsesRealPostedBalances() throws IOException {
+        Database db = io.ebean.DB.getDefault();
+        TransactionRepository transactionRepository = new TransactionRepository(db);
+        AccountRepository accountRepository = new AccountRepository(db);
+        ExportService service = new ExportService(transactionRepository);
+
+        try {
+            db.sqlUpdate("SET REFERENTIAL_INTEGRITY FALSE").execute();
+        } catch (Exception ignored) {
+        }
+        try { db.sqlUpdate("DELETE FROM transaction_entries").execute(); } catch (Exception ignored) {}
+        try { db.sqlUpdate("DELETE FROM transactions").execute(); } catch (Exception ignored) {}
+        try { db.sqlUpdate("DELETE FROM accounts").execute(); } catch (Exception ignored) {}
+        try { db.sqlUpdate("SET REFERENTIAL_INTEGRITY TRUE").execute(); } catch (Exception ignored) {}
+
+        Account cash = persistAccount(accountRepository, "1100", "Caja", AccountType.ASSET);
+        Account revenue = persistAccount(accountRepository, "4000", "Ventas", AccountType.REVENUE);
+        postTransaction(transactionRepository, "TXN-2026-000101", LocalDate.now(),
+                cash, new BigDecimal("1234.56"), revenue, new BigDecimal("1234.56"));
+
+        List<Account> accounts = List.of(cash, revenue);
+        byte[] pdf = service.exportBalanceSheetToPdf(accounts, LocalDate.now().minusDays(1), LocalDate.now());
+        String text = extractText(pdf);
+
+        assertTrue(text.contains("1234.56"),
+                "Balance Sheet PDF must show the posted balance, not zeros. Got:\n" + text);
+    }
+
+    @Test
+    public void testIncomeStatementPdf_UsesRealPeriodBalances() throws IOException {
+        Database db = io.ebean.DB.getDefault();
+        TransactionRepository transactionRepository = new TransactionRepository(db);
+        AccountRepository accountRepository = new AccountRepository(db);
+        ExportService service = new ExportService(transactionRepository);
+
+        try {
+            db.sqlUpdate("SET REFERENTIAL_INTEGRITY FALSE").execute();
+        } catch (Exception ignored) {
+        }
+        try { db.sqlUpdate("DELETE FROM transaction_entries").execute(); } catch (Exception ignored) {}
+        try { db.sqlUpdate("DELETE FROM transactions").execute(); } catch (Exception ignored) {}
+        try { db.sqlUpdate("DELETE FROM accounts").execute(); } catch (Exception ignored) {}
+        try { db.sqlUpdate("SET REFERENTIAL_INTEGRITY TRUE").execute(); } catch (Exception ignored) {}
+
+        Account cash = persistAccount(accountRepository, "1100", "Caja", AccountType.ASSET);
+        Account revenue = persistAccount(accountRepository, "4000", "Ventas", AccountType.REVENUE);
+        postTransaction(transactionRepository, "TXN-2026-000102", LocalDate.now(),
+                cash, new BigDecimal("987.65"), revenue, new BigDecimal("987.65"));
+
+        List<Account> accounts = List.of(cash, revenue);
+        byte[] pdf = service.exportIncomeStatementToPdf(accounts, LocalDate.now().minusDays(1), LocalDate.now());
+        String text = extractText(pdf);
+
+        assertTrue(text.contains("987.65"),
+                "Income Statement PDF must show the posted balance, not zeros. Got:\n" + text);
+    }
+
+    private Account persistAccount(AccountRepository repository, String code, String name, AccountType type) {
+        Account account = new Account(code, name, type);
+        account.setBalance(BigDecimal.ZERO);
+        repository.save(account);
+        return account;
+    }
+
+    private void postTransaction(TransactionRepository repository, String number, LocalDate date,
+                                 Account debitAccount, BigDecimal amount,
+                                 Account creditAccount, BigDecimal creditAmount) {
+        Transaction transaction = new Transaction();
+        transaction.setNumber(number);
+        transaction.setDate(date);
+        transaction.setType("INCOME");
+        transaction.setDescription("Export test " + number);
+        transaction.setReference("REF-" + number);
+        transaction.setStatus(TransactionStatus.POSTED);
+        transaction.setTotalDebit(amount);
+        transaction.setTotalCredit(creditAmount);
+        transaction.addEntry(new TransactionEntry(transaction, debitAccount, amount, BigDecimal.ZERO));
+        transaction.addEntry(new TransactionEntry(transaction, creditAccount, BigDecimal.ZERO, creditAmount));
+        repository.save(transaction);
+    }
+
+    private String extractText(byte[] pdfContent) throws IOException {
+        try (PDDocument document = PDDocument.load(pdfContent)) {
+            return new PDFTextStripper().getText(document);
+        }
     }
 
     /**

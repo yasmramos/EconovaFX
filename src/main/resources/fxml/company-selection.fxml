@@ -18,7 +18,7 @@
     <!-- Header Section -->
     <VBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
         <StackPane styleClass="selection-dialog-badge">
-            <FontIcon iconLiteral="mdi2b-bank" iconSize="30" iconColor="#1e3c72"/>
+            <FontIcon iconLiteral="mdi2b-bank" iconSize="30" styleClass="icon-brand-ink"/>
         </StackPane>
         <Label text="Seleccionar empresa" styleClass="selection-dialog-title"/>
         <Label text="Elige la empresa con la que quieres trabajar" styleClass="selection-dialog-subtitle" wrapText="true"/>

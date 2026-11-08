@@ -72,7 +72,7 @@
         <VBox styleClass="summary-card, card-assets" GridPane.columnIndex="0">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg">
-                    <FontIcon iconLiteral="mdi2f-file-document" iconSize="32" iconColor="#10B981"/>
+                    <FontIcon iconLiteral="mdi2f-file-document" iconSize="32" styleClass="icon-success"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Total Vouchers" />
@@ -85,7 +85,7 @@
         <VBox styleClass="summary-card, card-equity" GridPane.columnIndex="1">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-blue">
-                    <FontIcon iconLiteral="mdi2c-check-circle" iconSize="32" iconColor="#3B82F6"/>
+                    <FontIcon iconLiteral="mdi2c-check-circle" iconSize="32" styleClass="icon-info"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Posted" />
@@ -98,7 +98,7 @@
         <VBox styleClass="summary-card, card-balance" GridPane.columnIndex="2">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-amber">
-                    <FontIcon iconLiteral="mdi2f-file-edit-outline" iconSize="32" iconColor="#F59E0B"/>
+                    <FontIcon iconLiteral="mdi2f-file-edit-outline" iconSize="32" styleClass="icon-warning"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Draft" />
@@ -111,7 +111,7 @@
         <VBox styleClass="summary-card, card-liabilities" GridPane.columnIndex="3">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-red">
-                    <FontIcon iconLiteral="mdi2c-close-circle" iconSize="32" iconColor="#EF4444"/>
+                    <FontIcon iconLiteral="mdi2c-close-circle" iconSize="32" styleClass="icon-danger"/>
                 </VBox>
                 <VBox>
                     <Label styleClass="card-label" text="Cancelled" />

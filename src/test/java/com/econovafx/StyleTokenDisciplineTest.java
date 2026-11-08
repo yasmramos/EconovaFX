@@ -29,6 +29,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *   <li>{@code templates/reports/*} - plain HTML/CSS for the WebView and
  *       OpenHTMLToPDF, a different rendering engine with its own print palette.</li>
  * </ul>
+ *
+ * <p>The same rule is applied to FXML. An {@code iconColor="#..."} attribute is
+ * an inline property, so it beats every stylesheet and freezes that icon on the
+ * light palette. The sheets cannot fix it - the markup has to name a token class
+ * instead (see the ICONS section of {@code controls.css}).
  */
 class StyleTokenDisciplineTest {
 
@@ -72,6 +77,34 @@ class StyleTokenDisciplineTest {
         assertTrue(offenders.isEmpty(),
                 "these stylesheets hard-code a colour instead of using a token from"
                         + " theme-tokens.css, so they will not follow the theme:\n  "
+                        + String.join("\n  ", offenders));
+    }
+
+    @Test
+    void fxmlUsesTokenClassesNotRawColourAttributes() throws IOException {
+        List<String> offenders = new ArrayList<>();
+        int checked = 0;
+
+        try (Stream<Path> files = Files.walk(CSS_ROOT)) {
+            for (Path fxml : files.filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".fxml"))
+                    .toList()) {
+                checked++;
+                List<String> lines = Files.readAllLines(fxml);
+                for (int i = 0; i < lines.size(); i++) {
+                    Matcher matcher = RAW_COLOUR.matcher(lines.get(i));
+                    if (matcher.find()) {
+                        offenders.add(relative(fxml) + ":" + (i + 1) + " -> " + lines.get(i).strip());
+                    }
+                }
+            }
+        }
+
+        assertTrue(checked > 0, "no FXML found; the scan itself is broken");
+        assertTrue(offenders.isEmpty(),
+                "these FXML files set a raw colour (iconColor=\"#...\") that beats the"
+                        + " stylesheets and will not flip in dark mode; use a token class"
+                        + " such as .icon-success or .icon-brand instead:\n  "
                         + String.join("\n  ", offenders));
     }
 

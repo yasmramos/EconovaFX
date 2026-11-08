@@ -40,6 +40,10 @@
                         <text>Finalizar</text>
                         <graphic><FontIcon iconLiteral="mdi2c-check-decagram" iconSize="18"/></graphic>
                     </Button>
+                    <Button fx:id="btnExportStatement" onAction="#onExportStatement" styleClass="btn, btn-secondary" graphicTextGap="8" contentDisplay="LEFT">
+                        <text>Exportar PDF</text>
+                        <graphic><FontIcon iconLiteral="mdi2f-file-pdf-box" iconSize="18"/></graphic>
+                    </Button>
                 </HBox>
 
                 <Label fx:id="statementStatusLabel" styleClass="text-slate-500" wrapText="true"/>
