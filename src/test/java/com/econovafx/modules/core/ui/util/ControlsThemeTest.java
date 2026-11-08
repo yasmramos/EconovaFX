@@ -151,6 +151,27 @@ public class ControlsThemeTest extends ApplicationTest {
         });
     }
 
+    @Test
+    public void focusedSolidButtonKeepsItsFillAndShowsTheRing() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            Button primary = new Button("Guardar");
+            primary.getStyleClass().add("btn-primary");
+
+            VBox root = showWithDesignSystem(primary);
+            primary.requestFocus();
+            root.applyCss();
+            root.layout();
+
+            assertTrue(primary.isFocused(), "the button must take focus for this to mean anything");
+            // .button:focused sets the translucent ring wash; without the
+            // per-variant override a focused solid button turns into a ghost.
+            assertEquals(Color.web("#18181b"), fillOf(primary),
+                    "a focused primary button must keep its solid fill");
+            assertEquals(Color.web("#71717a"), strokeOf(primary),
+                    "the focus ring must still be drawn");
+        });
+    }
+
     private VBox showWithDesignSystem(Region control) {
         VBox root = new VBox(control);
         Scene scene = new Scene(root, 800, 600);
@@ -164,5 +185,11 @@ public class ControlsThemeTest extends ApplicationTest {
         assertNotNull(region.getBackground(), "region must have a background");
         assertTrue(!region.getBackground().getFills().isEmpty(), "region must have a fill");
         return region.getBackground().getFills().get(0).getFill();
+    }
+
+    private static Paint strokeOf(Region region) {
+        assertNotNull(region.getBorder(), "region must have a border");
+        assertTrue(!region.getBorder().getStrokes().isEmpty(), "region must have a stroke");
+        return region.getBorder().getStrokes().get(0).getTopStroke();
     }
 }

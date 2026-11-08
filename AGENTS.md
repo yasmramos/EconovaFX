@@ -94,12 +94,14 @@ styling the JavaFX app.
   - A status hue that is also a solid fill (`.btn-success`, ...) gets a matching
     `-*-foreground` token rather than literal `white`, so the ink flips in dark
     mode (dark ink on the lighter dark-mode fill).
-  - Solid fills declare `-fx-border-color` after `.button:focused`, which wins,
-    so they would show no focus. They get an outer `-fx-effect` glow instead,
-    which sits on the surrounding surface where `-ring` clears 3:1.
-- `.check-box`, `.radio-button` and `.toggle-button` focus with the same outer
-  glow; their selected fill is `-primary` (near-white in dark), so a border ring
-  would disappear against it.
+- `.button:focused` sets `-fx-background-color: -ring-wash` for the outline
+  variants. It carries a pseudo-class, so it outranks a plain variant class and
+  would turn a focused solid button into a ghost; each solid variant re-states
+  its fill under `:focused` to keep it. The ring border stays, and it reads
+  against the page even where the fill is near-white.
+- `.check-box`, `.radio-button` and `.toggle-button` focus with an outer
+  `-fx-effect` glow rather than a border ring: their selected fill is `-primary`
+  (near-white in dark), where a border ring would disappear against it.
 - Regression tests for tokens/controls live in `ChartsAndThemeTest` and
   `StyleTokenDisciplineTest` (the latter runs in the default suite; the former
   with `-Pvisual-tests`). `StyleShapeDisciplineTest` and
