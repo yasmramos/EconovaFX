@@ -35,7 +35,7 @@
 
 .selection-dialog-title {
     -fx-text-fill: -foreground;
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-font-weight: 600;
 }
 
@@ -123,7 +123,7 @@
 .selected-company-name,
 .selected-unit-name {
     -fx-text-fill: -foreground;
-    -fx-font-size: 15px;
+    -fx-font-size: 14px;
     -fx-font-weight: 600;
 }
 

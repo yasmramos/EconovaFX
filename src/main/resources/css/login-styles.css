@@ -27,7 +27,7 @@
 /* ---------------------------------------------------------------- brand */
 .login-title {
     -fx-text-fill: -brand-fg;
-    -fx-font-size: 24px;
+    -fx-font-size: 22px;
     -fx-font-weight: 600;
 }
 
@@ -45,8 +45,8 @@
     -fx-background-color: -card;
     -fx-border-color: -border;
     -fx-border-width: 1;
-    -fx-background-radius: 16;
-    -fx-border-radius: 16;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
     -fx-background-insets: 0;
     -fx-border-insets: 0;
     -fx-padding: 25;

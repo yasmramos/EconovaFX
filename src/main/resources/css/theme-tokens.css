@@ -295,6 +295,11 @@
     /* =========================================================================
      * GEOMETRY REFERENCE
      * radius : controls 6px, cards 8px, modals 10px, pills 9999px
+     *          the full scale is 0 / 4 / 6 / 8 / 10 / 12 / 9999 - every
+     *          -fx-background-radius and -fx-border-radius has to be a step
+     *          (RadiusDisciplineTest fails the build otherwise). 4 is the
+     *          nested radius a control takes inside a 8px popover with 4px
+     *          padding; 12 is the large surface (dashboard hero, login card).
      * spacing: 4 / 8 / 12 / 16 / 20 / 24 / 32
      * height : controls 36px (h-9), compact 30px (h-8), dense 26px
      * ========================================================================= */
