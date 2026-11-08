@@ -57,10 +57,10 @@ public class UiMotionTest extends ApplicationTest {
             stage.setScene(new Scene(new StackPane(node), 200, 200));
             stage.show();
             UiMotion.enter(node);
+            // Same-runnable read: a separate runnable can observe a frame later.
+            assertEquals(0.0, node.getOpacity(), 0.001, "enter starts from transparent");
+            assertTrue(node.getTranslateY() > 0, "enter starts slightly below its resting spot");
         });
-
-        assertEquals(0.0, opacity(node), 0.001, "enter starts from transparent");
-        assertTrue(translateY(node) > 0, "enter starts slightly below its resting spot");
 
         await(() -> opacity(node) == 1.0 && translateY(node) == 0.0,
                 "the entrance must settle at full opacity and zero offset");
@@ -91,9 +91,12 @@ public class UiMotionTest extends ApplicationTest {
             stage.setScene(new Scene(new VBox(a, b, c), 200, 200));
             stage.show();
             UiMotion.enterStaggered(List.of(a, b, c));
+            // Read the start state in the same runnable that kicks the animation.
+            // From another runnable a frame may already have advanced on a busy
+            // machine, which is exactly how this flaked in CI.
+            assertEquals(0.0, a.getOpacity(), 0.001, "the stagger starts hidden");
+            assertTrue(a.getTranslateY() > 0, "the stagger starts below its resting spot");
         });
-
-        assertEquals(0.0, opacity(a), 0.001);
 
         await(() -> opacity(a) == 1.0 && opacity(b) == 1.0 && opacity(c) == 1.0
                         && translateY(a) == 0.0 && translateY(c) == 0.0,

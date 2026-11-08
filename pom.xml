@@ -327,6 +327,7 @@
                         <exclude>**/DashboardControllerTest.java</exclude>
                         <exclude>**/ControlsThemeTest.java</exclude>
                         <exclude>**/ChartsAndThemeTest.java</exclude>
+                        <exclude>**/UiMotionTest.java</exclude>
                     </excludes>
                     <forkCount>1</forkCount>
                     <useModulePath>false</useModulePath>
