@@ -14,6 +14,7 @@
 .button {
     -fx-background-color: -background;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-background-insets: 0;
     -fx-border-color: -border;
     -fx-border-width: 1;
@@ -74,6 +75,7 @@
     -fx-border-color: -primary;
     -fx-border-width: 1;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-text-fill: -primary-foreground;
     -fx-padding: 8 14;
     -fx-min-height: 36;
@@ -222,6 +224,7 @@
     -fx-border-color: -input;
     -fx-border-width: 1;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-padding: 8 12;
     -fx-min-height: 36;
     -fx-font-size: 14px;
@@ -273,6 +276,7 @@
     -fx-border-color: -input;
     -fx-border-width: 1;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-padding: 8 12;
     -fx-min-height: 36;
     -fx-font-size: 14px;
@@ -321,6 +325,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-effect: dropshadow(gaussian, -shadow-popover, 20, 0, 0, 8);
     -fx-padding: 4;
 }
@@ -457,6 +462,7 @@
 .check-box > .box {
     -fx-background-color: -background;
     -fx-background-radius: 4;
+    -fx-border-radius: 4;
     -fx-border-color: -input-hover;
     -fx-border-width: 1;
     -fx-padding: 3;
@@ -492,6 +498,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-padding: 6 12;
     -fx-min-height: 32;
     -fx-font-size: 13px;
@@ -529,6 +536,7 @@
     -fx-border-color: -primary;
     -fx-border-width: 2;
     -fx-background-radius: 100;
+    -fx-border-radius: 100;
     -fx-pref-width: 16;
     -fx-pref-height: 16;
     -fx-effect: dropshadow(gaussian, -shadow-sm, 3, 0, 0, 1);
@@ -571,6 +579,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-background-insets: 0;
     -fx-cell-size: 36;
     -fx-table-cell-border-color: transparent;
@@ -581,7 +590,7 @@
 .data-table .column-header-background,
 .table-view-modern .column-header-background {
     -fx-background-color: -muted;
-    -fx-background-radius: 7 7 0 0;
+    -fx-background-radius: 8 8 0 0;
     -fx-background-insets: 0;
 }
 .table-view .filler,
@@ -658,7 +667,7 @@
 .table-view .corner,
 .table-view-modern .corner {
     -fx-background-color: -muted;
-    -fx-background-radius: 7 0 0 0;
+    -fx-background-radius: 8 0 0 0;
 }
 
 /* ========================================================================== */
@@ -669,6 +678,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-background-insets: 0;
     -fx-padding: 4;
 }
@@ -743,6 +753,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-effect: dropshadow(gaussian, -shadow-popover, 20, 0, 0, 8);
     -fx-padding: 4;
 }
@@ -917,6 +928,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-background-insets: 0;
     -fx-padding: 4;
 }
@@ -985,6 +997,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-padding: 8 14;
     -fx-min-height: 36;
     -fx-font-size: 14px;

@@ -188,6 +188,7 @@
 .skip-button {
     -fx-background-color: transparent;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-background-insets: 0;
     -fx-border-color: transparent;
     -fx-border-width: 1;

@@ -7,6 +7,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 10;
+    -fx-border-radius: 10;
     -fx-background-insets: 0;
     -fx-effect: dropshadow(gaussian, -shadow-popover, 32, 0, 0, 14);
 }
@@ -32,6 +33,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-padding: 12 14;
 }
 

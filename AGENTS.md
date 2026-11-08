@@ -77,7 +77,14 @@ styling the JavaFX app.
 - Modena leaks on some controls; reset them explicitly. The chart frame/plot
   area and the progress indicator both needed this (see `dashboard.css`,
   `controls.css`).
+- A rounded surface with a visible border must declare `-fx-border-radius` equal
+  to its `-fx-background-radius`, or JavaFX paints a square hairline that pokes
+  out of the rounded corners (the "corner tip"). `StyleShapeDisciplineTest`
+  fails the build otherwise. A rule that paints one hairline edge on purpose
+  (a table header's bottom rule) is exempt because its border is not uniform.
+- Table radii are 8, so the header's top corners are `8 8 0 0` (and the corner
+  cell `8 0 0 0`); they used to say 7 and left a 1px ledge.
 - Regression tests for tokens/controls live in `ChartsAndThemeTest` and
   `StyleTokenDisciplineTest` (the latter runs in the default suite; the former
-  with `-Pvisual-tests`).
+  with `-Pvisual-tests`). `StyleShapeDisciplineTest` runs in the default suite.
 

@@ -201,6 +201,7 @@
     -fx-border-color: -input;
     -fx-border-width: 1;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-padding: 8 12;
     -fx-min-height: 36;
     -fx-font-size: 14px;
