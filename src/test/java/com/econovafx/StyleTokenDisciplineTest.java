@@ -31,9 +31,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * </ul>
  *
  * <p>The same rule is applied to FXML. An {@code iconColor="#..."} attribute is
- * an inline property, so it beats every stylesheet and freezes that icon on the
- * light palette. The sheets cannot fix it - the markup has to name a token class
- * instead (see the ICONS section of {@code controls.css}).
+ * an inline property, and the user-agent origin of a stylesheet outranks it: as
+ * soon as any rule matches the node - and the base {@code .ikonli-font-icon}
+ * rule always does - the attribute is dropped. So it is not just a raw colour,
+ * it is dead code that reads as if it still paints the glyph. The markup has to
+ * name a token class instead (see the ICONS section of {@code controls.css}).
  */
 class StyleTokenDisciplineTest {
 
@@ -47,6 +49,14 @@ class StyleTokenDisciplineTest {
 
     private static final Pattern RAW_COLOUR = Pattern.compile(
             "#[0-9a-fA-F]{3,8}\\b|rgba?\\s*\\(");
+
+    /**
+     * {@code iconColor} can only ever hold a literal, and any stylesheet rule
+     * outranks it, so in FXML it is always either a raw colour or dead code.
+     * {@link #RAW_COLOUR} misses the named spellings ({@code WHITE}), so the
+     * attribute itself is the thing to flag.
+     */
+    private static final Pattern INLINE_ICON_COLOUR = Pattern.compile("iconColor\\s*=");
 
     /**
      * The status palette has semantic twins that flip with the theme
@@ -102,9 +112,16 @@ class StyleTokenDisciplineTest {
                 checked++;
                 List<String> lines = Files.readAllLines(fxml);
                 for (int i = 0; i < lines.size(); i++) {
-                    Matcher matcher = RAW_COLOUR.matcher(lines.get(i));
+                    String line = lines.get(i);
+                    Matcher matcher = RAW_COLOUR.matcher(line);
                     if (matcher.find()) {
-                        offenders.add(relative(fxml) + ":" + (i + 1) + " -> " + lines.get(i).strip());
+                        offenders.add(relative(fxml) + ":" + (i + 1) + " -> " + line.strip());
+                        continue;
+                    }
+                    if (INLINE_ICON_COLOUR.matcher(line).find()) {
+                        offenders.add(relative(fxml) + ":" + (i + 1)
+                                + " -> iconColor is outranked by any stylesheet rule, so it"
+                                + " paints nothing; use a token class instead: " + line.strip());
                     }
                 }
             }
@@ -112,9 +129,10 @@ class StyleTokenDisciplineTest {
 
         assertTrue(checked > 0, "no FXML found; the scan itself is broken");
         assertTrue(offenders.isEmpty(),
-                "these FXML files set a raw colour (iconColor=\"#...\") that beats the"
-                        + " stylesheets and will not flip in dark mode; use a token class"
-                        + " such as .icon-success or .icon-brand instead:\n  "
+                "these FXML files set a colour on a glyph that no stylesheet rule can"
+                        + " honour - iconColor is dropped the moment a rule matches the node,"
+                        + " and a raw literal would freeze the icon on the light palette; use"
+                        + " a token class such as .icon-success or .icon-brand instead:\n  "
                         + String.join("\n  ", offenders));
     }
 

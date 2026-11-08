@@ -107,7 +107,14 @@ class ContrastDisciplineTest {
             // ever drawn on a neutral surface - solid fills get an outer glow.
             Pair.ring("-ring", "-card"),
             Pair.ring("-ring", "-page"),
-            Pair.ring("-ring", "-muted")
+            Pair.ring("-ring", "-muted"),
+
+            // The navigation rail is -zinc-950 in both themes, so its text must
+            // come from the raw zinc scale rather than a semantic token (which
+            // would resolve to a value tuned for a white page in light mode).
+            Pair.text("-zinc-400", "-zinc-950"),   // nav label, section title
+            Pair.text("-zinc-100", "-zinc-900"),   // nav label on hover
+            Pair.text("-zinc-50", "-zinc-800")     // nav label on the active row
     );
 
     @Test
