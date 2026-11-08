@@ -81,9 +81,11 @@ styling the JavaFX app.
 - Colours live only in `src/main/resources/css/theme-tokens.css` as looked-up
   tokens (`-card`, `-border`, `-muted`, `-zinc-*`, ...). Never hard-code a hex
   value in another stylesheet or in FXML. `StyleTokenDisciplineTest` fails the
-  build if a raw hex/`rgba()` shows up in any JavaFX sheet *or* in any FXML. The
-  only exceptions are `theme-tokens.css` itself and `templates/reports/*` (plain
-  HTML/CSS for the WebView and OpenHTMLToPDF, a different rendering engine).
+  build if a raw hex/`rgba()` **or a CSS colour keyword** (`white`, `black`,
+  ...) shows up in any JavaFX sheet *or* in any FXML. `transparent` is a
+  structural value and stays allowed. The only exceptions are
+  `theme-tokens.css` itself and `templates/reports/*` (plain HTML/CSS for the
+  WebView and OpenHTMLToPDF, a different rendering engine).
 - Icons take their colour from a token class, never from an `iconColor="..."`
   attribute. That attribute is an inline property, and the user-agent origin of a
   stylesheet outranks it: the base `.ikonli-font-icon { -fx-fill: ... }` rule

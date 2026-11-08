@@ -118,7 +118,7 @@ class ContrastDisciplineTest {
             // would resolve to a value tuned for a white page in light mode).
             Pair.text("-zinc-400", "-zinc-950"),   // nav label, section title
             Pair.text("-zinc-100", "-zinc-900"),   // nav label on hover
-            Pair.text("-zinc-50", "-zinc-800"),    // nav label on the active row
+            Pair.text("-zinc-0", "-zinc-800"),     // nav label on the active row
 
             // The chart palette does not flip with the theme, so every series
             // hue must clear the 3:1 non-text target against BOTH card surfaces:

@@ -1,11 +1,16 @@
 /* =============================================================================
  * SYSTEM SETTINGS - EconovaFX
- * A miniature of the main shell: zinc rail on the left, white content on the
- * right, one hairline between them.
+ * A miniature of the main shell: zinc rail on the left, content on the right,
+ * one hairline between them.
+ *
+ * The content canvas is -page, not a raw -zinc-50: the raw scale does not flip
+ * with the theme, so a literal there left the whole window a light slab in dark
+ * mode while the header and panels flipped around it. The rail is -zinc-950 by
+ * design in both themes, so its text stays on the raw zinc steps.
  * ========================================================================== */
 
 .root-container {
-    -fx-background-color: -zinc-50;
+    -fx-background-color: -page;
 }
 
 /* ---------------------------------------------------------------- header */
@@ -41,7 +46,7 @@
 .close-button:hover { -fx-background-color: -muted; -fx-text-fill: -foreground; }
 
 .main-content {
-    -fx-background-color: -zinc-50;
+    -fx-background-color: -page;
 }
 
 /* ----------------------------------------------------------------- rail */
@@ -74,11 +79,11 @@
     -fx-background-color: -zinc-800;
     -fx-border-color: -zinc-800;
 }
-.sidebar-button:focused .label { -fx-text-fill: white; }
+.sidebar-button:focused .label { -fx-text-fill: -zinc-0; }
 
 /* --------------------------------------------------------------- content */
 .content-area {
-    -fx-background-color: -zinc-50;
+    -fx-background-color: -page;
 }
 
 .settings-panel {

@@ -51,6 +51,18 @@ class StyleTokenDisciplineTest {
             "#[0-9a-fA-F]{3,8}\\b|rgba?\\s*\\(");
 
     /**
+     * JavaFX also accepts the CSS colour keywords ({@code white}, {@code black},
+     * ...), which {@link #RAW_COLOUR} misses. {@code white} had quietly crept
+     * back into three sheets as a literal - it works in light and is wrong the
+     * moment a surface flips. {@code transparent} is a keyword too but it is a
+     * structural value, not a palette entry, so it is allowed everywhere.
+     */
+    private static final Pattern RAW_NAMED_COLOUR = Pattern.compile(
+            "(?<![\\w#-])(white|black|silver|gray|grey|maroon|red|purple|fuchsia|"
+                    + "green|lime|olive|yellow|navy|blue|teal|aqua|orange)(?![\\w-])",
+            Pattern.CASE_INSENSITIVE);
+
+    /**
      * {@code iconColor} can only ever hold a literal, and any stylesheet rule
      * outranks it, so in FXML it is always either a raw colour or dead code.
      * {@link #RAW_COLOUR} misses the named spellings ({@code WHITE}), so the
@@ -83,11 +95,16 @@ class StyleTokenDisciplineTest {
                 }
                 checked++;
 
-                List<String> lines = Files.readAllLines(css);
-                for (int i = 0; i < lines.size(); i++) {
-                    Matcher matcher = RAW_COLOUR.matcher(lines.get(i));
-                    if (matcher.find()) {
-                        offenders.add(rel + ":" + (i + 1) + " -> " + lines.get(i).strip());
+                // Comments are blanked first: the sheets talk *about* colours
+                // ("white shadcn card"), and a keyword scan would flag that prose.
+                List<String> raw = Files.readAllLines(css);
+                List<String> stripped = stripComments(String.join("\n", raw)).lines().toList();
+                for (int i = 0; i < stripped.size(); i++) {
+                    String line = stripped.get(i);
+                    Matcher hex = RAW_COLOUR.matcher(line);
+                    Matcher named = RAW_NAMED_COLOUR.matcher(line);
+                    if (hex.find() || named.find()) {
+                        offenders.add(rel + ":" + (i + 1) + " -> " + raw.get(i).strip());
                     }
                 }
             }
@@ -98,6 +115,16 @@ class StyleTokenDisciplineTest {
                 "these stylesheets hard-code a colour instead of using a token from"
                         + " theme-tokens.css, so they will not follow the theme:\n  "
                         + String.join("\n  ", offenders));
+    }
+
+    /**
+     * Blanks out CSS comments while keeping every newline, so the line numbers of
+     * the returned text still line up with the original file.
+     */
+    private static String stripComments(String source) {
+        return Pattern.compile("/\\*.*?\\*/", Pattern.DOTALL)
+                .matcher(source)
+                .replaceAll(m -> m.group().replaceAll("[^\\n]", " "));
     }
 
     @Test

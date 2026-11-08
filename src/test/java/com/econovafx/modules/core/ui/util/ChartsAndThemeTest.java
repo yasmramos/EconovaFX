@@ -196,6 +196,43 @@ public class ChartsAndThemeTest extends ApplicationTest {
     }
 
     @Test
+    public void systemSettingsCanvasFlipsWithTheTheme() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            Region container = new Region();
+            container.getStyleClass().add("root-container");
+            Region mainContent = new Region();
+            mainContent.getStyleClass().add("main-content");
+            Region contentArea = new Region();
+            contentArea.getStyleClass().add("content-area");
+            VBox root = new VBox(container, mainContent, contentArea);
+
+            Scene scene = new Scene(root, 800, 600);
+            StyleSheets.apply(scene, "/com/econovafx/ui/css/system-settings.css");
+            stage.setScene(scene);
+            stage.show();
+            root.applyCss();
+            root.layout();
+
+            // The window canvas must come from -page, not a raw -zinc-50: the raw
+            // scale does not flip, which left the whole window a light slab in
+            // dark mode while the header and panels flipped around it.
+            for (Region region : new Region[]{container, mainContent, contentArea}) {
+                assertEquals(Color.web("#fafafa"), fillOf(region),
+                        region.getStyleClass() + " must be the light page canvas");
+            }
+
+            ThemeManager.toggle(scene);
+            root.applyCss();
+            root.layout();
+
+            for (Region region : new Region[]{container, mainContent, contentArea}) {
+                assertEquals(Color.web("#09090b"), fillOf(region),
+                        region.getStyleClass() + " must flip to the dark page canvas");
+            }
+        });
+    }
+
+    @Test
     public void chartSeriesUseTheTokenPaletteNotTheModenaDefaults() throws Exception {
         FxToolkit.setupFixture(() -> {
             BarChart<String, Number> bar = new BarChart<>(new CategoryAxis(), new NumberAxis());
