@@ -1048,12 +1048,15 @@
 
 /* =============================================================================
  * ICONS
- * Ikonli FontIcon paints from -fx-icon-color. An iconColor="#..." attribute in
- * FXML is an inline property, so it beats every stylesheet and freezes the
- * icon on the light palette - it never flips in dark mode and it drifts from
- * the token ramp. Colour an icon with one of these classes instead; the chip
- * that hosts it (card-icon-bg*, stat-icon-*) already carries the matching soft
- * background.
+ * Ikonli FontIcon paints from -fx-fill (its own -fx-icon-color is only a
+ * fallback). Colour an icon with one of the classes below; the chip that hosts
+ * it (card-icon-bg*, stat-icon-*) already carries the matching soft background.
+ *
+ * Never colour an icon with an iconColor="#..." / iconColor="WHITE" attribute in
+ * FXML. It looks authoritative, but the user-agent origin of a stylesheet
+ * outranks it, so the moment any rule matches the node the attribute is silently
+ * dropped. A base rule below always matches, which makes such an attribute dead
+ * code that only misleads the next reader - name a token class instead.
  *
  * A FontIcon is a Text node, and Text paints from -fx-fill, not -fx-text-fill.
  * Without a base rule every glyph that names no icon class inherits nothing and

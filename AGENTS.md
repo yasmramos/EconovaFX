@@ -71,15 +71,23 @@ styling the JavaFX app.
   build if a raw hex/`rgba()` shows up in any JavaFX sheet *or* in any FXML. The
   only exceptions are `theme-tokens.css` itself and `templates/reports/*` (plain
   HTML/CSS for the WebView and OpenHTMLToPDF, a different rendering engine).
-- Icons take their colour from a token class, never from an `iconColor="#..."`
-  attribute. That attribute is an inline property, so it beats every stylesheet
-  and pins the icon to the light palette - it will not flip in dark mode. Use
-  `.icon-success` / `.icon-warning` / `.icon-info` / `.icon-danger` /
-  `.icon-purple` / `.icon-muted` (see the ICONS section of `controls.css`); the
-  chip that hosts the icon (`card-icon-bg*`, `stat-icon-*`) already carries the
-  matching soft background. `.icon-brand` is the fixed deep blue for the
-  always-white login badge; `.icon-brand-ink` is the themable ink for a
-  `-brand-tint` surface.
+- Icons take their colour from a token class, never from an `iconColor="..."`
+  attribute. That attribute is an inline property, and the user-agent origin of a
+  stylesheet outranks it: the base `.ikonli-font-icon { -fx-fill: ... }` rule
+  always matches, so the attribute is dropped and the glyph is painted by the
+  sheet. It is dead code that reads as if it still worked, and a literal value
+  would pin the icon to the light palette anyway. Use `.icon-success` /
+  `.icon-warning` / `.icon-info` / `.icon-danger` / `.icon-purple` /
+  `.icon-muted` (see the ICONS section of `controls.css`); the chip that hosts
+  the icon (`card-icon-bg*`, `stat-icon-*`) already carries the matching soft
+  background. `.icon-brand` is the fixed deep blue for the always-white login
+  badge; `.icon-brand-ink` is the themable ink for a `-brand-tint` surface.
+  `StyleTokenDisciplineTest` fails the build on any `iconColor` attribute.
+- The navigation rail (`.sidebar-container`, `.sidebar-*`) is `-zinc-950` in
+  both themes, so its text must come from the raw zinc scale, never from a
+  semantic token: `-fg-faint`/`-muted-foreground`/`-foreground` resolve to a
+  value tuned for a white page in light mode and drop under 4.5:1 on the dark
+  rail. Use `-zinc-400` or lighter. `ContrastDisciplineTest` locks those pairs.
 - A `FontIcon` is a `Text` node and an `SVGPath` is a `Shape`: both paint from
   `-fx-fill`, **not** `-fx-text-fill`. A `text-*` utility therefore cannot
   colour a glyph - it silently leaves it on the default black, which is

@@ -31,12 +31,12 @@
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <Button fx:id="btnToggleSidebar" onAction="#toggleSidebar" styleClass="btn-icon-toggle" contentDisplay="LEFT">
                             <graphic>
-                                <FontIcon iconLiteral="mdi2c-chevron-left" iconSize="20" iconColor="WHITE"/>
+                                <FontIcon iconLiteral="mdi2c-chevron-left" iconSize="20"/>
                             </graphic>
                         </Button>
                         <Label text="EconovaFX" styleClass="text-white, text-xl, font-bold"/>
                     </HBox>
-                    <Label text="Sistema Contable" styleClass="text-slate-400, text-xs, mt-1"/>
+                    <Label text="Sistema Contable" styleClass="sidebar-brand-subtitle, text-xs, mt-1"/>
                 </VBox>
 
                 <!-- MÓDULOS Section -->
@@ -64,7 +64,7 @@
                             </graphic>
                             <text>Contabilidad</text>
                         </Button>
-                        <FontIcon fx:id="contabilidadChevron" iconLiteral="mdi2c-chevron-down" iconSize="16" iconColor="WHITE" StackPane.alignment="CENTER_RIGHT" styleClass="sidebar-chevron-float"/>
+                        <FontIcon fx:id="contabilidadChevron" iconLiteral="mdi2c-chevron-down" iconSize="16" StackPane.alignment="CENTER_RIGHT" styleClass="sidebar-chevron-float"/>
                     </StackPane>
                     <VBox fx:id="contabilidadSubmenu" visible="false" managed="false" styleClass="sidebar-submenu">
                         <Button fx:id="btnComprobantes" onAction="#showComprobantes" styleClass="btn, btn-ghost, sidebar-btn, sidebar-submenu-btn" contentDisplay="LEFT">
@@ -149,7 +149,7 @@
                             <graphic><FontIcon iconLiteral="mdi2c-cog" iconSize="20"/></graphic>
                             <text>Configuración</text>
                         </Button>
-                        <FontIcon fx:id="settingsChevron" iconLiteral="mdi2c-chevron-down" iconSize="16" iconColor="WHITE" StackPane.alignment="CENTER_RIGHT" styleClass="sidebar-chevron-float"/>
+                        <FontIcon fx:id="settingsChevron" iconLiteral="mdi2c-chevron-down" iconSize="16" StackPane.alignment="CENTER_RIGHT" styleClass="sidebar-chevron-float"/>
                     </StackPane>
                 </VBox>
                 <VBox fx:id="settingsSubmenu" visible="false" managed="false" styleClass="sidebar-submenu">
