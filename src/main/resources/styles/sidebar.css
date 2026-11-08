@@ -91,31 +91,31 @@
     -fx-cursor: hand;
 }
 .button.sidebar-btn .label { -fx-text-fill: -zinc-400; }
-.button.sidebar-btn > .ikonli-font-icon { -fx-fill: white; }
+.button.sidebar-btn > .ikonli-font-icon { -fx-fill: -zinc-0; }
 
 .button.sidebar-btn:hover {
     -fx-background-color: -zinc-900;
     -fx-border-color: transparent;
 }
 .button.sidebar-btn:hover .label,
-.button.sidebar-btn:hover > .ikonli-font-icon { -fx-text-fill: -zinc-100; -fx-fill: white; }
+.button.sidebar-btn:hover > .ikonli-font-icon { -fx-text-fill: -zinc-100; -fx-fill: -zinc-0; }
 
 .button.sidebar-btn:armed {
     -fx-background-color: -zinc-800;
     -fx-border-color: -zinc-800;
 }
 .button.sidebar-btn:armed .label { -fx-text-fill: -zinc-50; }
-.button.sidebar-btn:armed > .ikonli-font-icon { -fx-fill: white; }
+.button.sidebar-btn:armed > .ikonli-font-icon { -fx-fill: -zinc-0; }
 
 /* Active route: accent bar on the leading edge + subtle background */
 .button.sidebar-btn-active {
     -fx-background-color: -zinc-800;
     -fx-border-color: transparent transparent transparent -series-1;
     -fx-border-width: 0 0 0 3;
-    -fx-text-fill: white;
+    -fx-text-fill: -zinc-0;
 }
-.button.sidebar-btn-active .label { -fx-text-fill: white; }
-.button.sidebar-btn-active > .ikonli-font-icon { -fx-fill: white; }
+.button.sidebar-btn-active .label { -fx-text-fill: -zinc-0; }
+.button.sidebar-btn-active > .ikonli-font-icon { -fx-fill: -zinc-0; }
 .button.sidebar-btn-active:hover { -fx-background-color: -zinc-800; }
 
 .button.sidebar-submenu-btn {
@@ -127,15 +127,15 @@
     -fx-text-fill: -zinc-400;
 }
 .button.sidebar-submenu-btn .label { -fx-text-fill: -zinc-400; }
-.button.sidebar-submenu-btn > .ikonli-font-icon { -fx-fill: white; }
+.button.sidebar-submenu-btn > .ikonli-font-icon { -fx-fill: -zinc-0; }
 .button.sidebar-submenu-btn:hover .label { -fx-text-fill: -zinc-100; }
-.button.sidebar-submenu-btn:hover > .ikonli-font-icon { -fx-fill: white; }
+.button.sidebar-submenu-btn:hover > .ikonli-font-icon { -fx-fill: -zinc-0; }
 .button.sidebar-submenu-btn-active {
     -fx-background-color: -zinc-800;
-    -fx-text-fill: white;
+    -fx-text-fill: -zinc-0;
 }
-.button.sidebar-submenu-btn-active .label { -fx-text-fill: white; }
-.button.sidebar-submenu-btn-active > .ikonli-font-icon { -fx-fill: white; }
+.button.sidebar-submenu-btn-active .label { -fx-text-fill: -zinc-0; }
+.button.sidebar-submenu-btn-active > .ikonli-font-icon { -fx-fill: -zinc-0; }
 
 .sidebar-chevron-float {
     -fx-fill: -zinc-400;

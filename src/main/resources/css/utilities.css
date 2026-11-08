@@ -34,7 +34,7 @@
 .bg-purple-50   { -fx-background-color: -purple-soft; }
 
 /* Fill (icons, shapes) */
-.fill-white      { -fx-fill: white; -fx-text-fill: white; }
+.fill-white      { -fx-fill: -zinc-0; -fx-text-fill: -zinc-0; }
 .fill-yellow-600 { -fx-fill: -warning; -fx-text-fill: -warning; }
 .fill-red-600    { -fx-fill: -danger; -fx-text-fill: -danger; }
 .fill-green-600  { -fx-fill: -success; -fx-text-fill: -success; }
@@ -43,7 +43,7 @@
 /* =============================================================================
  * 12. UTILITIES - text colour
  * ========================================================================== */
-.text-white      { -fx-text-fill: white; }
+.text-white      { -fx-text-fill: -zinc-0; }
 .text-black      { -fx-text-fill: -foreground; }
 .text-gray-300   { -fx-text-fill: -zinc-300; }
 .text-gray-500   { -fx-text-fill: -muted-foreground; }
