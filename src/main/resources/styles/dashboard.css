@@ -415,7 +415,7 @@
     -fx-font-size: 11px;
 }
 
-/* Vibrant pie chart colors */
+/* Pie slices carry the same categorical palette. */
 .default-color0.chart-pie { -fx-background-color: -series-1; }
 .default-color1.chart-pie { -fx-background-color: -series-2; }
 .default-color2.chart-pie { -fx-background-color: -series-3; }
@@ -428,23 +428,50 @@
     -fx-font-weight: 500;
 }
 
-/* Bar chart with gradient effect */
-.chart-bar .default-color0.chart-bar { -fx-bar-fill: -series-1; }
-.chart-bar .default-color1.chart-bar { -fx-bar-fill: -series-2; }
+/* Categorical palette for the data series. Modena keys its own colours off a
+   compound selector on the series node itself (".default-color0.chart-bar"),
+   so the descendant form used here before - ".chart-bar .default-color0.chart-bar"
+   - never matched: there is no .chart-bar ancestor, the node carries both
+   classes. Every series therefore fell through to the Modena palette, whose
+   first colour is an orange, and only the first two series were styled at all.
+   The same compound form is used here, and all five tokens are covered so a
+   third series no longer borrows a Modena hue. */
+.default-color0.chart-bar { -fx-bar-fill: -series-1; }
+.default-color1.chart-bar { -fx-bar-fill: -series-2; }
+.default-color2.chart-bar { -fx-bar-fill: -series-3; }
+.default-color3.chart-bar { -fx-bar-fill: -series-4; }
+.default-color4.chart-bar { -fx-bar-fill: -series-5; }
 
-/* Line chart with smooth curves */
-.chart-line .default-color0.chart-line {
-    -fx-stroke: -series-1;
+.default-color0.chart-series-line { -fx-stroke: -series-1; }
+.default-color1.chart-series-line { -fx-stroke: -series-2; }
+.default-color2.chart-series-line { -fx-stroke: -series-3; }
+.default-color3.chart-series-line { -fx-stroke: -series-4; }
+.default-color4.chart-series-line { -fx-stroke: -series-5; }
+
+.chart-series-line,
+.chart-series-area-line {
     -fx-stroke-width: 2.5;
     -fx-stroke-line-cap: round;
     -fx-stroke-line-join: round;
 }
-.chart-line .default-color1.chart-line {
-    -fx-stroke: -series-2;
-    -fx-stroke-width: 2.5;
-    -fx-stroke-line-cap: round;
-    -fx-stroke-line-join: round;
-}
 
-.chart-area .default-color0.chart-area { -fx-fill: -series-1-wash; }
-.chart-area .default-color0.chart-area-overlay { -fx-fill: transparent; }
+/* A line symbol is a filled dot ringed by the card colour, so it reads on top
+   of the stroke. Modena rings it with literal white, which glares in dark. */
+.default-color0.chart-line-symbol { -fx-background-color: -series-1, -card; }
+.default-color1.chart-line-symbol { -fx-background-color: -series-2, -card; }
+.default-color2.chart-line-symbol { -fx-background-color: -series-3, -card; }
+.default-color3.chart-line-symbol { -fx-background-color: -series-4, -card; }
+.default-color4.chart-line-symbol { -fx-background-color: -series-5, -card; }
+
+/* Area charts stack two shapes: the line, and the wash beneath it. */
+.default-color0.chart-series-area-line { -fx-stroke: -series-1; }
+.default-color1.chart-series-area-line { -fx-stroke: -series-2; }
+.default-color2.chart-series-area-line { -fx-stroke: -series-3; }
+.default-color3.chart-series-area-line { -fx-stroke: -series-4; }
+.default-color4.chart-series-area-line { -fx-stroke: -series-5; }
+
+.default-color0.chart-series-area-fill { -fx-fill: -series-1-wash; }
+.default-color1.chart-series-area-fill { -fx-fill: -series-2-wash; }
+.default-color2.chart-series-area-fill { -fx-fill: -series-3-wash; }
+.default-color3.chart-series-area-fill { -fx-fill: -series-4-wash; }
+.default-color4.chart-series-area-fill { -fx-fill: -series-5-wash; }
