@@ -20,6 +20,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 12;
+    -fx-border-radius: 12;
     -fx-background-insets: 0;
     -fx-padding: 20;
     -fx-effect: dropshadow(gaussian, -shadow-xs, 2, 0, 0, 1);
@@ -118,6 +119,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 12;
+    -fx-border-radius: 12;
     -fx-background-insets: 0;
     -fx-padding: 20;
     -fx-effect: dropshadow(gaussian, -shadow-xs, 2, 0, 0, 1);
@@ -192,6 +194,7 @@
     -fx-border-color: -input;
     -fx-border-width: 1;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-min-height: 32;
     -fx-padding: 0;
 }
@@ -208,6 +211,7 @@
 .view-all-btn {
     -fx-background-color: -background;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-background-insets: 0;
     -fx-border-color: -border;
     -fx-border-width: 1;
@@ -229,6 +233,7 @@
 .clear-btn {
     -fx-background-color: transparent;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-border-color: transparent;
     -fx-border-width: 1;
     -fx-padding: 6 12;
@@ -244,6 +249,7 @@
 .submit-btn {
     -fx-background-color: -primary;
     -fx-background-radius: 6;
+    -fx-border-radius: 6;
     -fx-background-insets: 0;
     -fx-border-color: -primary;
     -fx-border-width: 1;
@@ -267,6 +273,7 @@
     -fx-border-color: -border;
     -fx-border-width: 1;
     -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-background-insets: 0;
     -fx-cell-size: 36;
     -fx-table-cell-border-color: transparent;
@@ -276,7 +283,7 @@
 .transactions-table .column-header-background,
 .dialog-table .column-header-background {
     -fx-background-color: -muted;
-    -fx-background-radius: 7 7 0 0;
+    -fx-background-radius: 8 8 0 0;
     -fx-background-insets: 0;
 }
 .transactions-table .filler,
