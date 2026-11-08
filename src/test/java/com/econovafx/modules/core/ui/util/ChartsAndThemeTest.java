@@ -215,7 +215,7 @@ public class ChartsAndThemeTest extends ApplicationTest {
             // (".chart-bar .default-color0.chart-bar") never did, and every bar
             // fell back to Modena's orange. The bar now paints our own wash ->
             // token sheen, so its lower stop must sit on the matching -series.
-            Color[] expected = {Color.web("#3b82f6"), Color.web("#10b981"), Color.web("#f59e0b")};
+            Color[] expected = {Color.web("#3b82f6"), Color.web("#059669"), Color.web("#d97706")};
             for (int i = 0; i < 3; i++) {
                 Node series = seriesNode(bar, ".default-color" + i + ".chart-bar");
                 Paint fill = fillOfNode(series);
