@@ -144,39 +144,56 @@
 .btn-success {
     -fx-background-color: -success;
     -fx-border-color: -success;
-    -fx-text-fill: white;
+    -fx-text-fill: -success-foreground;
     -fx-font-weight: 500;
 }
 .btn-success:hover { -fx-background-color: -success-hover; -fx-border-color: -success-hover; }
-.btn-success .label { -fx-text-fill: white; }
+.btn-success .label { -fx-text-fill: -success-foreground; }
 
 .btn-warning {
     -fx-background-color: -warning;
     -fx-border-color: -warning;
-    -fx-text-fill: white;
+    -fx-text-fill: -warning-foreground;
     -fx-font-weight: 500;
 }
 .btn-warning:hover { -fx-background-color: -warning-hover; -fx-border-color: -warning-hover; }
-.btn-warning .label { -fx-text-fill: white; }
+.btn-warning .label { -fx-text-fill: -warning-foreground; }
 
 .btn-info {
     -fx-background-color: -info;
     -fx-border-color: -info;
-    -fx-text-fill: white;
+    -fx-text-fill: -info-foreground;
     -fx-font-weight: 500;
 }
 .btn-info:hover { -fx-background-color: -info-hover; -fx-border-color: -info-hover; }
-.btn-info .label { -fx-text-fill: white; }
+.btn-info .label { -fx-text-fill: -info-foreground; }
 
 .button-danger { -fx-background-color: -destructive; -fx-border-color: -destructive; -fx-text-fill: -destructive-fore; }
 .button-danger:hover { -fx-background-color: -destructive-hover; -fx-border-color: -destructive-hover; }
 .button-danger .label { -fx-text-fill: -destructive-fore; }
-.button-success { -fx-background-color: -success; -fx-border-color: -success; -fx-text-fill: white; }
+.button-success { -fx-background-color: -success; -fx-border-color: -success; -fx-text-fill: -success-foreground; }
 .button-success:hover { -fx-background-color: -success-hover; }
-.button-warning { -fx-background-color: -warning; -fx-border-color: -warning; -fx-text-fill: white; }
+.button-warning { -fx-background-color: -warning; -fx-border-color: -warning; -fx-text-fill: -warning-foreground; }
 .button-warning:hover { -fx-background-color: -warning-hover; }
-.button-info { -fx-background-color: -info; -fx-border-color: -info; -fx-text-fill: white; }
+.button-info { -fx-background-color: -info; -fx-border-color: -info; -fx-text-fill: -info-foreground; }
 .button-info:hover { -fx-background-color: -info-hover; }
+
+/* A solid fill declares its own -fx-border-color after .button:focused, so it
+   wins and the button would show no focus at all. Give these an outer glow: it
+   sits on the surrounding surface, where -ring clears 3:1, unlike a border
+   drawn against the near-white primary fill in dark mode. */
+.btn-primary:focused,
+.button-primary:focused,
+.btn-danger:focused,
+.btn-success:focused,
+.btn-warning:focused,
+.btn-info:focused,
+.button-danger:focused,
+.button-success:focused,
+.button-warning:focused,
+.button-info:focused {
+    -fx-effect: dropshadow(gaussian, -ring, 3, 0.6, 0, 0);
+}
 
 /* ------------------------------------------------------------------- sizes */
 .btn-sm {
@@ -468,6 +485,10 @@
     -fx-padding: 3;
 }
 .check-box:hover > .box { -fx-border-color: -ring; }
+/* Focus is an outer glow so it reads on every surface in both themes - the
+   selected box is filled -primary (near-white in dark), where a border ring
+   would vanish. */
+.check-box:focused > .box { -fx-effect: dropshadow(gaussian, -ring, 2, 0.7, 0, 0); }
 .check-box:indeterminate > .box,
 .check-box:selected > .box {
     -fx-background-color: -primary;
@@ -490,6 +511,7 @@
     -fx-padding: 4;
 }
 .radio-button:hover > .dot { -fx-border-color: -ring; }
+.radio-button:focused > .dot { -fx-effect: dropshadow(gaussian, -ring, 2, 0.7, 0, 0); }
 .radio-button:selected > .dot { -fx-background-color: -primary; -fx-border-color: -primary; }
 .radio-button > .dot > .indicator { -fx-background-color: -primary-foreground; }
 
@@ -507,6 +529,7 @@
     -fx-cursor: hand;
 }
 .toggle-button:hover { -fx-background-color: -secondary-hover; }
+.toggle-button:focused { -fx-effect: dropshadow(gaussian, -ring, 2, 0.7, 0, 0); }
 .toggle-button:armed { -fx-background-color: -primary; -fx-border-color: -primary; -fx-text-fill: -primary-foreground; }
 .toggle-button:armed .label { -fx-text-fill: -primary-foreground; }
 
