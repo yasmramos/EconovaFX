@@ -1054,7 +1054,17 @@
  * the token ramp. Colour an icon with one of these classes instead; the chip
  * that hosts it (card-icon-bg*, stat-icon-*) already carries the matching soft
  * background.
+ *
+ * A FontIcon is a Text node, and Text paints from -fx-fill, not -fx-text-fill.
+ * Without a base rule every glyph that names no icon class inherits nothing and
+ * falls back to black - invisible on the dark surfaces. Give every glyph the
+ * foreground ink here; the contextual rules (`.button > .ikonli-font-icon`,
+ * `.sidebar-*`) and the utility classes below override it. A `.text-*` class
+ * cannot colour a glyph, so never put one on a FontIcon or an SVGPath.
  * ========================================================================== */
+.ikonli-font-icon,
+SVGPath { -fx-fill: -foreground; }
+
 .icon-success { -fx-icon-color: -success; -fx-fill: -success; }
 .icon-warning { -fx-icon-color: -warning; -fx-fill: -warning; }
 .icon-info    { -fx-icon-color: -info;    -fx-fill: -info; }

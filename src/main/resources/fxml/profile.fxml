@@ -19,7 +19,7 @@
     <!-- Profile Card -->
     <VBox styleClass="card, bg-white, p-6" spacing="20" alignment="CENTER">
         <StackPane>
-            <FontIcon iconLiteral="mdi2a-account-circle" iconSize="80" styleClass="text-gray-300"/>
+            <FontIcon iconLiteral="mdi2a-account-circle" iconSize="80" styleClass="icon-muted"/>
         </StackPane>
         
         <VBox spacing="10" alignment="CENTER">

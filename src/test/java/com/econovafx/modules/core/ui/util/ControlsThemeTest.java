@@ -1,5 +1,6 @@
 package com.econovafx.modules.core.ui.util;
 
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 
@@ -44,6 +46,11 @@ public class ControlsThemeTest extends ApplicationTest {
 
     @BeforeEach
     public void setUp() throws Exception {
+        // ThemeManager persists the choice in Preferences; start every test from
+        // light so the suite does not depend on method order or a previous run.
+        if (ThemeManager.isDark()) {
+            ThemeManager.toggle(new Scene(new VBox(), 1, 1));
+        }
         FxToolkit.registerPrimaryStage();
         FxToolkit.setupApplication(TestApp.class);
     }
@@ -172,7 +179,33 @@ public class ControlsThemeTest extends ApplicationTest {
         });
     }
 
-    private VBox showWithDesignSystem(Region control) {
+    @Test
+    public void unclassedGlyphFallsBackToForegroundInBothThemes() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            FontIcon icon = new FontIcon("mdi2a-account-circle");
+            icon.setIconSize(24);
+
+            VBox root = showWithDesignSystem(icon);
+            root.applyCss();
+            root.layout();
+            // A FontIcon is a Text node: it paints from -fx-fill. Without a base
+            // rule it stayed black and vanished on the dark surfaces.
+            assertEquals(Color.web("#09090b"), icon.getFill(),
+                    "an unclassed glyph must take the foreground ink");
+
+            ThemeManager.toggle(stage.getScene());
+            root.applyCss();
+            root.layout();
+            assertEquals(Color.web("#fafafa"), icon.getFill(),
+                    "the glyph ink must flip with the theme");
+
+            // ThemeManager persists the choice; restore light so the next test
+            // in the suite does not inherit the dark palette.
+            ThemeManager.toggle(stage.getScene());
+        });
+    }
+
+    private VBox showWithDesignSystem(Node control) {
         VBox root = new VBox(control);
         Scene scene = new Scene(root, 800, 600);
         StyleSheets.apply(scene);

@@ -80,6 +80,14 @@ styling the JavaFX app.
   matching soft background. `.icon-brand` is the fixed deep blue for the
   always-white login badge; `.icon-brand-ink` is the themable ink for a
   `-brand-tint` surface.
+- A `FontIcon` is a `Text` node and an `SVGPath` is a `Shape`: both paint from
+  `-fx-fill`, **not** `-fx-text-fill`. A `text-*` utility therefore cannot
+  colour a glyph - it silently leaves it on the default black, which is
+  invisible on the dark surfaces. `controls.css` gives every `.ikonli-font-icon`
+  and `SVGPath` a base `-fx-fill: -foreground` so an unclassed glyph still
+  flips with the theme; colour a glyph with an `.icon-*` / `.fill-*` class, and
+  `StyleTokenDisciplineTest` fails the build if a `text-*` class lands on a
+  `FontIcon` or `SVGPath`.
 - Style sheets are composed in this order: `theme-tokens` -> `controls` -> the
   screen's own sheets (`main-styles`, `sidebar`, `dashboard`, `dialog`,
   `login`...) -> `utilities` (utilities last so a Tailwind-style class always

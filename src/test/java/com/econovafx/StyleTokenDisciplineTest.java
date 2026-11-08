@@ -157,6 +157,106 @@ class StyleTokenDisciplineTest {
                         + String.join("\n  ", offenders));
     }
 
+    @Test
+    void glyphsAreColouredByIconClassesNotTextUtilities() throws IOException {
+        java.util.Set<String> textColourUtilities = textColourUtilities();
+        List<String> offenders = new ArrayList<>();
+        int checked = 0;
+
+        try (Stream<Path> files = Files.walk(CSS_ROOT)) {
+            for (Path fxml : files.filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".fxml"))
+                    .toList()) {
+                String source = Files.readString(fxml);
+                for (Glyph glyph : Glyph.parse(source)) {
+                    checked++;
+                    // A FontIcon is a Text node and an SVGPath is a Shape: both
+                    // paint from -fx-fill. A .text-* colour utility only sets
+                    // -fx-text-fill, so it leaves the glyph on the default black
+                    // - invisible on dark surfaces. Colour glyphs with an
+                    // .icon-* or .fill-* class instead.
+                    if (hasTextColourUtility(glyph.styleClass(), textColourUtilities)) {
+                        offenders.add(relative(fxml) + " line " + glyph.line()
+                                + ": " + glyph.oneLine());
+                    }
+                }
+            }
+        }
+
+        assertTrue(checked > 0, "no glyphs found; the scan itself is broken");
+        assertTrue(offenders.isEmpty(),
+                "these FontIcon/SVGPath nodes carry a text-* colour class, which cannot"
+                        + " paint a glyph (-fx-text-fill does not apply to Text or Shape);"
+                        + " use an .icon-* or .fill-* class:\n  "
+                        + String.join("\n  ", offenders));
+    }
+
+    /** A FontIcon or SVGPath open tag, whose styleClass may sit on a later line. */
+    private record Glyph(String styleClass, String oneLine, int line) {
+
+        private static final Pattern TAG = Pattern.compile("<(FontIcon|SVGPath)\\b[^>]*>");
+        private static final Pattern CLASS_ATTR = Pattern.compile("styleClass=\"([^\"]*)\"");
+
+        static List<Glyph> parse(String source) {
+            List<Glyph> glyphs = new ArrayList<>();
+            Matcher tag = TAG.matcher(source);
+            while (tag.find()) {
+                String body = tag.group();
+                Matcher classAttr = CLASS_ATTR.matcher(body);
+                String styleClass = classAttr.find() ? classAttr.group(1) : "";
+                glyphs.add(new Glyph(styleClass, body.strip(),
+                        (int) source.substring(0, tag.start()).lines().count()));
+            }
+            return glyphs;
+        }
+    }
+
+    /**
+     * The {@code .text-*} utilities that actually set {@code -fx-text-fill},
+     * read from the sheets themselves. A type-scale class such as
+     * {@code .text-sm} sets {@code -fx-font-size} instead and is harmless on a
+     * glyph, so it must not be flagged; a colour class silently fails.
+     */
+    private static java.util.Set<String> textColourUtilities() throws IOException {
+        java.util.Set<String> names = new java.util.HashSet<>();
+        try (Stream<Path> files = Files.walk(CSS_ROOT)) {
+            for (Path css : files.filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".css"))
+                    .toList()) {
+                if (ALLOWED.stream().anyMatch(relative(css)::contains)) {
+                    continue;
+                }
+                String sheet = Files.readString(css).replaceAll("/\\*.*?\\*/", " ");
+                Matcher rule = CSS_RULE.matcher(sheet);
+                while (rule.find()) {
+                    if (!rule.group(2).contains("-fx-text-fill")) {
+                        continue;
+                    }
+                    Matcher cls = CLASS_IN_SELECTOR.matcher(rule.group(1));
+                    while (cls.find()) {
+                        if (cls.group(1).startsWith("text-")) {
+                            names.add(cls.group(1));
+                        }
+                    }
+                }
+            }
+        }
+        assertTrue(!names.isEmpty(), "no .text-* colour utilities found; the scan is broken");
+        return names;
+    }
+
+    private static boolean hasTextColourUtility(String styleClass, java.util.Set<String> names) {
+        for (String token : styleClass.split("[,\\s]+")) {
+            if (names.contains(token)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static final Pattern CSS_RULE = Pattern.compile("([^{}]+)\\{([^}]*)}");
+    private static final Pattern CLASS_IN_SELECTOR = Pattern.compile("\\.([a-z][a-z0-9-]*)");
+
     private static String relative(Path path) {
         return path.toString().replace('\\', '/');
     }
