@@ -110,7 +110,7 @@ public class AccountingClosuresController implements Initializable {
     private void setupActionColumn() {
         colAcciones.setCellFactory(param -> new TableCell<AccountingPeriod, Void>() {
             private final HBox hbox = new HBox(5);
-            private final Button btnView = createActionButton("Ver", "bg-blue-500");
+            private final Button btnView = createActionButton("Ver", "btn-info");
 
             {
                 hbox.getChildren().add(btnView);
@@ -133,9 +133,9 @@ public class AccountingClosuresController implements Initializable {
         });
     }
 
-    private Button createActionButton(String text, String colorClass) {
+    private Button createActionButton(String text, String variantClass) {
         Button button = new Button(text);
-        button.getStyleClass().addAll(colorClass, "text-white", "px-2", "py-1", "rounded-md", "cursor-hand");
+        button.getStyleClass().addAll("btn", "btn-sm", variantClass);
         return button;
     }
 

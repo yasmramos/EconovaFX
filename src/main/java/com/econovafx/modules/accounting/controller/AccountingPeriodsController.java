@@ -76,9 +76,9 @@ public class AccountingPeriodsController {
     private void setupActionColumn() {
         colActions.setCellFactory(param -> new TableCell<>() {
             private final HBox hbox = new HBox(5);
-            private final Button btnClose = createActionButton("Close", "bg-orange-500");
-            private final Button btnReopen = createActionButton("Reopen", "bg-blue-500");
-            private final Button btnLock = createActionButton("Lock", "bg-red-500");
+            private final Button btnClose = createActionButton("Close", "btn-warning");
+            private final Button btnReopen = createActionButton("Reopen", "btn-info");
+            private final Button btnLock = createActionButton("Lock", "btn-danger");
 
             {
                 hbox.getChildren().addAll(btnClose, btnReopen, btnLock);
@@ -119,9 +119,9 @@ public class AccountingPeriodsController {
         });
     }
 
-    private Button createActionButton(String text, String colorClass) {
+    private Button createActionButton(String text, String variantClass) {
         Button button = new Button(text);
-        button.getStyleClass().addAll(colorClass, "text-white", "px-2", "py-1", "rounded-md", "cursor-hand");
+        button.getStyleClass().addAll("btn", "btn-sm", variantClass);
         return button;
     }
 

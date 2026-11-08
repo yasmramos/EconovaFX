@@ -132,18 +132,21 @@
     -success:          #15803d;   /* green-700 */
     -success-hover:    #166534;   /* green-800 */
     -success-soft:     #f0fdf4;
+    -success-soft-hover: #e9fbef;   /* a visible hover step that keeps AA on -success */
     -success-border:   #bbf7d0;
     -success-foreground: #fafafa;
 
     -warning:          #b45309;   /* amber-700 */
     -warning-hover:    #92400e;   /* amber-800 */
     -warning-soft:     #fffbeb;
+    -warning-soft-hover: #fef8e7;   /* keeps AA on -warning */
     -warning-border:   #fde68a;
     -warning-foreground: #fafafa;
 
     -info:             #2563eb;   /* blue-600 */
     -info-hover:       #1d4ed8;   /* blue-700 */
     -info-soft:        #eff6ff;
+    -info-soft-hover:  #e8f0fe;   /* keeps AA on -info */
     -info-border:      #bfdbfe;
     -info-foreground:  #fafafa;
 
@@ -151,6 +154,7 @@
     -danger-hover:     #991b1b;
     -danger-pressed:   #7f1d1d;
     -danger-soft:      #fef2f2;
+    -danger-soft-hover: #fee2e2;   /* red-100 */
     -danger-border:    #fecaca;
 
     -purple:           #9333ea;
@@ -358,18 +362,21 @@
     -success:          #22c55e;
     -success-hover:    #16a34a;
     -success-soft:     #052e16;
+    -success-soft-hover: #0a3d1e;   /* lighter than the soft surface, keeps AA */
     -success-border:   #14532d;
     -success-foreground: #18181b;
 
     -warning:          #f59e0b;
     -warning-hover:    #d97706;
     -warning-soft:     #451a03;
+    -warning-soft-hover: #4d2205;   /* keeps AA on -warning */
     -warning-border:   #78350f;
     -warning-foreground: #18181b;
 
     -info:             #60a5fa;   /* blue-400 - 4.5:1 on the dark card */
     -info-hover:       #3b82f6;
     -info-soft:        #172554;
+    -info-soft-hover:  #1b2b60;   /* keeps AA on -info */
     -info-border:      #1e3a8a;
     -info-foreground:  #18181b;
 
@@ -378,6 +385,7 @@
     -danger-pressed:   #ef4444;   /* the dark ink needs the fill to stay this
                                      light; red-600 would drop it to 3.7:1 */
     -danger-soft:      #450a0a;
+    -danger-soft-hover: #4f0d0d;   /* keeps AA on -danger */
     -danger-border:    #7f1d1d;
 
     -purple:           #c084fc;   /* purple-400 - 4.5:1 on the dark card */

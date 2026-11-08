@@ -38,7 +38,7 @@
         <HBox spacing="10" alignment="CENTER_RIGHT">
             <Button text="Ver Detalles" onAction="#viewTransactionDetails" styleClass="btn, btn-info"/>
             <Button text="Publicar" onAction="#postTransaction" styleClass="btn, btn-success"/>
-            <Button text="Reversar" onAction="#reverseTransaction" styleClass="bg-amber-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-amber-600"/>
+            <Button text="Reversar" onAction="#reverseTransaction" styleClass="btn, btn-warning"/>
             <Button text="Eliminar" onAction="#deleteTransaction" styleClass="btn, btn-danger"/>
         </HBox>
     </VBox>

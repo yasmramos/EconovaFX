@@ -54,6 +54,16 @@
     -fx-fill: -foreground;
 }
 
+/* A glyph drawn on a solid fill follows that fill's foreground token. Without
+ * this, an icon hard-coded white stays white on the light warning/info fills
+ * that dark mode uses, and disappears. Both the Ikonli FontIcon and the plain
+ * SVGPath graphic are covered. */
+.btn-primary > .ikonli-font-icon, .btn-primary SVGPath { -fx-fill: -primary-foreground; }
+.btn-info    > .ikonli-font-icon, .btn-info    SVGPath { -fx-fill: -info-foreground; }
+.btn-success > .ikonli-font-icon, .btn-success SVGPath { -fx-fill: -success-foreground; }
+.btn-warning > .ikonli-font-icon, .btn-warning SVGPath { -fx-fill: -warning-foreground; }
+.btn-danger  > .ikonli-font-icon, .btn-danger  SVGPath { -fx-fill: -destructive-fore; }
+
 /* Default hover lives before the colour hovers below so a coloured button can
  * override it. Only surface colours live here, never -fx-opacity, so that
  * per-colour hovers compose cleanly. */
@@ -216,14 +226,14 @@
 
 /* A generic affordance for coloured Tailwind buttons, defined before the
  * per-colour hovers so those win on equal specificity. */
-.bg-blue-500:hover   { -fx-background-color: -blue-600; }
-.bg-green-500:hover  { -fx-background-color: -green-600; }
-.bg-red-500:hover    { -fx-background-color: -red-600; }
+.bg-blue-500:hover   { -fx-background-color: -info-hover; }
+.bg-green-500:hover  { -fx-background-color: -success-hover; }
+.bg-red-500:hover    { -fx-background-color: -danger-hover; }
 .bg-gray-500:hover   { -fx-background-color: -zinc-600; }
 .bg-gray-600:hover   { -fx-background-color: -zinc-700; }
-.bg-orange-500:hover { -fx-background-color: -orange-600; }
-.bg-amber-500:hover  { -fx-background-color: -amber-600; }
-.bg-emerald-500:hover{ -fx-background-color: -emerald-600; }
+.bg-orange-500:hover { -fx-background-color: -warning-hover; }
+.bg-amber-500:hover  { -fx-background-color: -warning-hover; }
+.bg-emerald-500:hover{ -fx-background-color: -success-hover; }
 
 /* =============================================================================
  * 2. TEXT INPUTS
@@ -406,24 +416,24 @@
     -fx-cursor: hand;
     -fx-alignment: center;
 }
-.icon-btn > .ikonli-font-icon { -fx-fill: -zinc-500; }
+.icon-btn > .ikonli-font-icon { -fx-fill: -muted-foreground; }
 .icon-btn:hover { -fx-background-color: -muted; }
 .icon-btn:hover > .ikonli-font-icon { -fx-fill: -foreground; }
 
 .icon-btn-info    { -fx-background-color: -info-soft; }
-.icon-btn-info:hover { -fx-background-color: -blue-100; }
+.icon-btn-info:hover { -fx-background-color: -info-soft-hover; }
 .icon-btn-info > .ikonli-font-icon { -fx-fill: -info; }
 
 .icon-btn-success { -fx-background-color: -success-soft; }
-.icon-btn-success:hover { -fx-background-color: -green-100; }
+.icon-btn-success:hover { -fx-background-color: -success-soft-hover; }
 .icon-btn-success > .ikonli-font-icon { -fx-fill: -success; }
 
 .icon-btn-danger  { -fx-background-color: -danger-soft; }
-.icon-btn-danger:hover { -fx-background-color: -red-100; }
+.icon-btn-danger:hover { -fx-background-color: -danger-soft-hover; }
 .icon-btn-danger > .ikonli-font-icon { -fx-fill: -destructive; }
 
 .icon-btn-warning { -fx-background-color: -warning-soft; }
-.icon-btn-warning:hover { -fx-background-color: -amber-100; }
+.icon-btn-warning:hover { -fx-background-color: -warning-soft-hover; }
 .icon-btn-warning > .ikonli-font-icon { -fx-fill: -warning; }
 
 /* Same tint palette, but for actions that keep a visible label ("Edit",
@@ -442,8 +452,8 @@
     -fx-alignment: center;
     -fx-graphic-text-gap: 6;
 }
-.row-action .label { -fx-text-fill: -zinc-600; }
-.row-action > .ikonli-font-icon { -fx-fill: -zinc-500; }
+.row-action .label { -fx-text-fill: -fg-subtle; }
+.row-action > .ikonli-font-icon { -fx-fill: -muted-foreground; }
 .row-action:hover { -fx-background-color: -muted; }
 .row-action:hover .label,
 .row-action:hover > .ikonli-font-icon { -fx-text-fill: -foreground; -fx-fill: -foreground; }
@@ -451,17 +461,17 @@
 .row-action-info    { -fx-background-color: -info-soft; }
 .row-action-info .label { -fx-text-fill: -info; }
 .row-action-info > .ikonli-font-icon { -fx-fill: -info; }
-.row-action-info:hover { -fx-background-color: -blue-100; }
+.row-action-info:hover { -fx-background-color: -info-soft-hover; }
 
 .row-action-success { -fx-background-color: -success-soft; }
 .row-action-success .label { -fx-text-fill: -success; }
 .row-action-success > .ikonli-font-icon { -fx-fill: -success; }
-.row-action-success:hover { -fx-background-color: -green-100; }
+.row-action-success:hover { -fx-background-color: -success-soft-hover; }
 
 .row-action-danger  { -fx-background-color: -danger-soft; }
 .row-action-danger .label { -fx-text-fill: -destructive; }
 .row-action-danger > .ikonli-font-icon { -fx-fill: -destructive; }
-.row-action-danger:hover { -fx-background-color: -red-100; }
+.row-action-danger:hover { -fx-background-color: -danger-soft-hover; }
 
 /* =============================================================================
  * 3. SELECTION CONTROLS
@@ -1045,14 +1055,14 @@
  * that hosts it (card-icon-bg*, stat-icon-*) already carries the matching soft
  * background.
  * ========================================================================== */
-.icon-success { -fx-icon-color: -success; }
-.icon-warning { -fx-icon-color: -warning; }
-.icon-info    { -fx-icon-color: -info; }
-.icon-danger  { -fx-icon-color: -danger; }
-.icon-purple  { -fx-icon-color: -purple; }
-.icon-muted   { -fx-icon-color: -muted-foreground; }
+.icon-success { -fx-icon-color: -success; -fx-fill: -success; }
+.icon-warning { -fx-icon-color: -warning; -fx-fill: -warning; }
+.icon-info    { -fx-icon-color: -info;    -fx-fill: -info; }
+.icon-danger  { -fx-icon-color: -danger;  -fx-fill: -danger; }
+.icon-purple  { -fx-icon-color: -purple;  -fx-fill: -purple; }
+.icon-muted   { -fx-icon-color: -muted-foreground; -fx-fill: -muted-foreground; }
 /* On the always-white login badge: a fixed deep blue, in both themes. */
-.icon-brand   { -fx-icon-color: -brand; }
+.icon-brand   { -fx-icon-color: -brand;   -fx-fill: -brand; }
 /* On a -brand-tint surface, which flips: the ink must flip with it. */
-.icon-brand-ink { -fx-icon-color: -brand-ink; }
+.icon-brand-ink { -fx-icon-color: -brand-ink; -fx-fill: -brand-ink; }
 

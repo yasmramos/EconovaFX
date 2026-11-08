@@ -88,6 +88,12 @@ class ContrastDisciplineTest {
             Pair.text("-purple", "-card"),
             Pair.text("-purple", "-purple-soft"),
 
+            // The hover step of a soft chip must stay readable too.
+            Pair.text("-success", "-success-soft-hover"),
+            Pair.text("-warning", "-warning-soft-hover"),
+            Pair.text("-info", "-info-soft-hover"),
+            Pair.text("-danger", "-danger-soft-hover"),
+
             // Brand ink sits on the brand badge tint.
             Pair.text("-brand-ink", "-brand-tint"),
 
