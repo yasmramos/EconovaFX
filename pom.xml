@@ -10,8 +10,11 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>EconovaFX - Accounting System</name>
-    <description>Modern accounting system built with JavaFX, Ebean ORM, and manual dependency injection</description>
+    <!-- The product name lives in <description>. <name> is what GluonFX turns into the
+         native executable name (it calls setAppName(project.getName())), so it is driven
+         by app.executable.name - see the properties block. -->
+    <name>${app.executable.name}</name>
+    <description>EconovaFX - Accounting System: modern accounting system built with JavaFX, Ebean ORM, and manual dependency injection</description>
 
     <licenses>
         <license>
@@ -24,7 +27,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <!-- GluonFX native executable name (no extension; avoids spaces from project <name>) -->
+        <!-- Native executable name, no extension. GluonFX names the binary after the
+             Maven project <name> and exposes no parameter to override it, so <name>
+             references this property. Override per-run with -Dapp.executable.name=<other>. -->
         <app.executable.name>econovafx</app.executable.name>
         <javafx.version>17.0.2</javafx.version>
         <ebean.version>17.11.0</ebean.version>
@@ -586,10 +591,10 @@
                         <artifactId>gluonfx-maven-plugin</artifactId>
                         <version>1.0.29</version>
                         <configuration>
-                            <!-- Executable name (no extension). Hardcoded to avoid falling back
-                                 to the Maven project <name>, which contains spaces. Override
-                                 with -Dapp.executable.name=<other> when needed. -->
-                            <name>econovafx</name>
+                            <!-- No parameter here names the binary: the plugin calls
+                                 clientConfig.setAppName(project.getName()), so the executable
+                                 takes the project <name>, which is set to
+                                 ${app.executable.name} in the properties block. -->
                             <mainClass>com.econovafx.Launcher</mainClass>
                             <verbose>true</verbose>
                             <nativeImageArgs>

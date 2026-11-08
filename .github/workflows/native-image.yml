@@ -65,7 +65,10 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: econovafx-native-windows
-        path: |
-          target/gluonfx/x86_64-windows/econovafx.exe
+        # Glob, not a fixed name: the executable is named after the Maven project
+        # <name> (see pom.xml). The top level holds only the app binary; the
+        # helper .exe files live under gvm/tmp and are not matched here.
+        path: target/gluonfx/x86_64-windows/*.exe
         retention-days: 14
-        if-no-files-found: warn
+        # Fail the job instead of passing green with nothing attached.
+        if-no-files-found: error
