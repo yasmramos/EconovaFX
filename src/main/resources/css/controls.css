@@ -575,6 +575,12 @@
     -fx-background-color: -primary;
     -fx-background-radius: 9999;
 }
+/* The base .bar rule above would also catch the indeterminate state and flatten
+   Modena's sweeping gradient into a solid block. Re-state the sweep in -primary
+   so an indeterminate bar still reads as "working". */
+.progress-bar:indeterminate .bar {
+    -fx-background-color: linear-gradient(to left, transparent, -primary);
+}
 
 /* A ring, not a disc: Modena paints a filled 32x32 square with a blue arc, so
    the surface and both arcs are reset to the tokens. */

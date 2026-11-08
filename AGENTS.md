@@ -65,7 +65,7 @@ styling the JavaFX app.
     `-brand-ring`, `-brand-tint`, and the `-brand-fg*` / `-brand-*-wash` /
     `-brand-track` foregrounds. Used only by the splash/login screens, the
     brand badges and the auth primary action.
-  - data series: `-series-1..5` and `-series-1-wash` (chart palette; fixed in
+  - data series: `-series-1..5` and `-series-1..5-wash` (chart palette; fixed in
     both themes because the hue carries meaning).
   - loading veils: `-page-veil` / `-card-veil`.
 - The raw `-zinc-*` scale does **not** flip with the theme. Structural chrome
@@ -77,6 +77,26 @@ styling the JavaFX app.
 - Modena leaks on some controls; reset them explicitly. The chart frame/plot
   area and the progress indicator both needed this (see `dashboard.css`,
   `controls.css`).
+- Modena paints its chart series with a **compound** selector on the series node
+  itself (`.default-color0.chart-bar`, `.default-color0.chart-series-line`,
+  `.default-color0.chart-series-area-fill`). A descendant selector
+  (`.chart-bar .default-color0.chart-bar`) matches nothing - the node carries
+  both classes, there is no `.chart-bar` ancestor - so every series silently
+  falls back to Modena's own palette and the tokens are ignored. `dashboard.css`
+  uses the compound form and covers all five `-series-*`. Bar and line symbols
+  are ringed with `-card` rather than Modena's literal white, which glares in
+  dark.
+- The legend swatch of a bar/pie chart carries the `.chart-bar` / `.chart-pie`
+  class on itself, and Modena sizes it via `.bar-legend-symbol` /
+  `.pie-legend-symbol.chart-pie { -fx-padding: 8px }`. A blanket
+  `-fx-padding: 0` on those chart classes therefore also hit the swatch and
+  collapsed it to 0x0 - a legend of bare text, no colour key. Do not pad the
+  chart classes; the swatch is a `.chart-bar` too, so it also picks up the bar
+  gradient, which keeps it consistent with the bars.
+- Bars carry their own `-fx-background-color` sheen (`-series-N-wash` to
+  `-series-N`) instead of relying on Modena's five-stop `derive()` of
+  `-fx-bar-fill`. Keep `-fx-bar-fill` set as well: the legend swatch and any
+  code reading the bar colour fall back to it.
 - A rounded surface with a visible border must declare `-fx-border-radius` equal
   to its `-fx-background-radius`, or JavaFX paints a square hairline that pokes
   out of the rounded corners (the "corner tip"). `StyleShapeDisciplineTest`

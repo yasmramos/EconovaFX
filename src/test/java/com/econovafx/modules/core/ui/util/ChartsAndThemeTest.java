@@ -1,16 +1,23 @@
 package com.econovafx.modules.core.ui.util;
 
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
@@ -186,6 +193,169 @@ public class ChartsAndThemeTest extends ApplicationTest {
             assertEquals(Color.web("#18181b"), fillOf(card), "dark card surface");
             assertEquals(Color.web("#d4d4d8"), title.getTextFill(), "dark body text");
         });
+    }
+
+    @Test
+    public void chartSeriesUseTheTokenPaletteNotTheModenaDefaults() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            BarChart<String, Number> bar = new BarChart<>(new CategoryAxis(), new NumberAxis());
+            for (int i = 0; i < 3; i++) {
+                XYChart.Series<String, Number> s = new XYChart.Series<>();
+                s.setName("S" + i);
+                s.getData().add(new XYChart.Data<>("Ene", 10 + i));
+                bar.getData().add(s);
+            }
+
+            VBox root = show(new VBox(bar));
+            root.applyCss();
+            root.layout();
+
+            // The series node carries "default-color0" and "chart-bar" on itself,
+            // so only a compound selector matches. The old descendant selector
+            // (".chart-bar .default-color0.chart-bar") never did, and every bar
+            // fell back to Modena's orange. The bar now paints our own wash ->
+            // token sheen, so its lower stop must sit on the matching -series.
+            Color[] expected = {Color.web("#3b82f6"), Color.web("#10b981"), Color.web("#f59e0b")};
+            for (int i = 0; i < 3; i++) {
+                Node series = seriesNode(bar, ".default-color" + i + ".chart-bar");
+                Paint fill = fillOfNode(series);
+                assertTrue(fill instanceof LinearGradient,
+                        "bar series " + i + " should keep our sheen, got " + fill);
+                LinearGradient g = (LinearGradient) fill;
+                assertColorNear(expected[i], g.getStops().get(1).getColor(), 0.02);
+            }
+        });
+    }
+
+    @Test
+    public void legendSwatchKeepsItsSizeForBarAndPie() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            BarChart<String, Number> bar = new BarChart<>(new CategoryAxis(), new NumberAxis());
+            XYChart.Series<String, Number> s = new XYChart.Series<>();
+            s.setName("S");
+            s.getData().add(new XYChart.Data<>("Ene", 10));
+            bar.getData().add(s);
+            bar.setLegendVisible(true);
+
+            PieChart pie = new PieChart();
+            pie.getData().add(new PieChart.Data("A", 1));
+
+            VBox root = show(new VBox(bar, pie));
+            root.applyCss();
+            root.layout();
+
+            // The legend swatch for a bar/pie chart carries .chart-bar / .chart-pie
+            // on itself. A blanket ".chart-bar { -fx-padding: 0 }" on the chart
+            // class also hit the swatch and overrode Modena's .bar-legend-symbol
+            // sizing, collapsing it to 0x0 - a legend of bare text, no colour key.
+            for (javafx.scene.Parent chart : new javafx.scene.Parent[]{bar, pie}) {
+                Node swatch = chart.lookup(".chart-legend-item-symbol");
+                assertNotNull(swatch, "the legend swatch must resolve");
+                Region r = (Region) swatch;
+                assertTrue(r.getLayoutBounds().getWidth() > 4 && r.getLayoutBounds().getHeight() > 4,
+                        "the legend swatch must keep a visible size, was " + r.getLayoutBounds());
+            }
+        });
+    }
+
+    @Test
+    public void lineAndAreaSeriesStrokeAndFillUseTheTokens() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            LineChart<String, Number> line = new LineChart<>(new CategoryAxis(), new NumberAxis());
+            XYChart.Series<String, Number> lineSeries = new XYChart.Series<>();
+            lineSeries.setName("L");
+            lineSeries.getData().add(new XYChart.Data<>("Ene", 5));
+            line.getData().add(lineSeries);
+
+            AreaChart<String, Number> area = new AreaChart<>(new CategoryAxis(), new NumberAxis());
+            XYChart.Series<String, Number> areaSeries = new XYChart.Series<>();
+            areaSeries.setName("A");
+            areaSeries.getData().add(new XYChart.Data<>("Ene", 7));
+            area.getData().add(areaSeries);
+
+            VBox root = show(new VBox(line, area));
+            root.applyCss();
+            root.layout();
+
+            assertEquals(Color.web("#3b82f6"),
+                    strokeOf(seriesNode(line, ".chart-series-line.default-color0")),
+                    "the line series must stroke -series-1, not Modena's CHART_COLOR_1");
+            assertEquals(Color.web("#3b82f6"),
+                    strokeOf(seriesNode(area, ".chart-series-area-line.default-color0")),
+                    "the area line must stroke -series-1");
+            assertEquals(Color.web("#3b82f6", 0.125),
+                    fillOfNode(seriesNode(area, ".chart-series-area-fill.default-color0")),
+                    "the area wash must be -series-1-wash");
+        });
+    }
+
+    @Test
+    public void indeterminateProgressBarKeepsItsSweepNotAFlatBlock() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            ProgressBar bar = new ProgressBar(-1);
+
+            VBox root = show(new VBox(bar));
+            root.applyCss();
+            root.layout();
+
+            Region fill = (Region) bar.lookup(".bar");
+            assertNotNull(fill, ".bar must resolve");
+            // The base ".progress-bar .bar" rule paints a flat -primary fill and
+            // would otherwise flatten Modena's sweeping indeterminate gradient.
+            assertTrue(fillOf(fill) instanceof LinearGradient,
+                    "an indeterminate bar must keep a sweeping gradient, not a flat block");
+        });
+    }
+
+    @Test
+    public void scrollBarThumbFollowsTheTheme() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            ScrollBar bar = new ScrollBar();
+            bar.setOrientation(Orientation.VERTICAL);
+
+            VBox root = show(new VBox(bar));
+            root.applyCss();
+            root.layout();
+
+            Region thumb = (Region) bar.lookup(".thumb");
+            assertNotNull(thumb, ".thumb must resolve");
+            assertEquals(Color.web("#d4d4d8"), fillOf(thumb), "light thumb is -thumb (zinc-300)");
+
+            ThemeManager.toggle(root.getScene());
+            root.applyCss();
+            root.layout();
+            assertEquals(Color.web("#3f3f46"), fillOf(thumb), "dark thumb flips to -thumb (zinc-700)");
+        });
+    }
+
+    private Node seriesNode(Region chart, String selector) {
+        Node node = chart.lookup(selector);
+        assertNotNull(node, selector + " must resolve");
+        return node;
+    }
+
+    private static Paint fillOfNode(Node node) {
+        if (node instanceof Region region) {
+            return fillOf(region);
+        }
+        if (node instanceof javafx.scene.shape.Shape shape) {
+            return shape.getFill();
+        }
+        throw new AssertionError("node has no fill: " + node);
+    }
+
+    private static void assertColorNear(Color expected, Color actual, double tolerance) {
+        assertTrue(Math.abs(expected.getRed() - actual.getRed()) <= tolerance
+                        && Math.abs(expected.getGreen() - actual.getGreen()) <= tolerance
+                        && Math.abs(expected.getBlue() - actual.getBlue()) <= tolerance,
+                "expected " + expected + " but was " + actual);
+    }
+
+    private static Color strokeOf(Node node) {
+        assertTrue(node instanceof javafx.scene.shape.Shape, "expected a shape, got " + node);
+        Paint stroke = ((javafx.scene.shape.Shape) node).getStroke();
+        assertTrue(stroke instanceof Color, "expected a flat stroke colour, got " + stroke);
+        return (Color) stroke;
     }
 
     private VBox show(Region control) {

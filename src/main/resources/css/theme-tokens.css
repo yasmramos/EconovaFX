@@ -191,8 +191,12 @@
     -series-3: #f59e0b;
     -series-4: #8b5cf6;
     -series-5: #ef4444;
-    /* Area charts fill under the line with the first series at low opacity. */
+    /* Area charts fill under the line with a wash of the series hue. */
     -series-1-wash: rgba(59, 130, 246, 0.125);
+    -series-2-wash: rgba(16, 185, 129, 0.125);
+    -series-3-wash: rgba(245, 158, 11, 0.125);
+    -series-4-wash: rgba(139, 92, 246, 0.125);
+    -series-5-wash: rgba(239, 68, 68, 0.125);
 
     /* =========================================================================
      * RAW HUE SCALES
