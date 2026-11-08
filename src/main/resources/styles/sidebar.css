@@ -79,7 +79,6 @@
     -fx-text-fill: -zinc-400;
     -fx-graphic-text-gap: 10;
     -fx-cursor: hand;
-    -fx-transition: -fx-background-color 0.15s ease, -fx-text-fill 0.15s ease;
 }
 .button.sidebar-btn .label { -fx-text-fill: -zinc-400; }
 .button.sidebar-btn > .ikonli-font-icon { -fx-fill: white; }

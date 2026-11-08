@@ -10,6 +10,7 @@ import com.econovafx.modules.accounting.service.TransactionService.TransactionEn
 import com.econovafx.modules.core.exception.ValidationException;
 import com.econovafx.modules.core.model.SystemConfiguration;
 import com.econovafx.modules.core.service.SystemConfigService;
+import com.econovafx.modules.core.ui.util.UiMotion;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import javafx.application.Platform;
@@ -27,6 +28,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
@@ -107,6 +109,18 @@ public class DashboardController implements Initializable {
     private Label expensesTrendLabel;
     @FXML
     private Label profitTrendLabel;
+
+    // KPI cards (used for the entrance stagger and hover lift)
+    @FXML
+    private VBox cardAssets;
+    @FXML
+    private VBox cardLiabilities;
+    @FXML
+    private VBox cardEquity;
+    @FXML
+    private VBox cardBalance;
+    @FXML
+    private VBox cardProfit;
 
     // Transaction Table
     @FXML
@@ -197,6 +211,7 @@ public class DashboardController implements Initializable {
         cashFlowLineChart.setAnimated(false);
         
         initializeTableColumns();
+        installCardMotion();
         
         // Only load data if tenant is already selected (e.g., returning to dashboard)
         // Otherwise, wait for onCompanySelected() to be called after company selection
@@ -283,6 +298,15 @@ public class DashboardController implements Initializable {
         }
         quickAccountSelect.setItems(accountNames);
         quickAccountSelect.setValue("Seleccione una cuenta...");
+    }
+
+    private void installCardMotion() {
+        List<VBox> cards = Arrays.asList(cardAssets, cardLiabilities, cardEquity, cardBalance, cardProfit);
+        cards.removeIf(Objects::isNull);
+        UiMotion.enterStaggered(cards);
+        for (VBox card : cards) {
+            UiMotion.installHoverLift(card, 2);
+        }
     }
 
     private void initializeDatePickerDefaults() {

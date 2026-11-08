@@ -50,7 +50,7 @@
         </columnConstraints>
 
         <!-- Total Assets Card -->
-        <VBox styleClass="card-assets" GridPane.columnIndex="0">
+        <VBox fx:id="cardAssets" styleClass="card-assets" GridPane.columnIndex="0">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg">
                     <FontIcon iconLiteral="mdi2c-cash" iconSize="32" iconColor="#10B981"/>
@@ -67,7 +67,7 @@
         </VBox>
 
         <!-- Total Liabilities Card -->
-        <VBox styleClass="card-liabilities" GridPane.columnIndex="1">
+        <VBox fx:id="cardLiabilities" styleClass="card-liabilities" GridPane.columnIndex="1">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-red">
                     <FontIcon iconLiteral="mdi2l-label-outline" iconSize="32" iconColor="#EF4444"/>
@@ -84,7 +84,7 @@
         </VBox>
 
         <!-- Total Equity Card -->
-        <VBox styleClass="card-equity" GridPane.columnIndex="2">
+        <VBox fx:id="cardEquity" styleClass="card-equity" GridPane.columnIndex="2">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-blue">
                     <FontIcon iconLiteral="mdi2b-bank" iconSize="32" iconColor="#3B82F6"/>
@@ -101,7 +101,7 @@
         </VBox>
 
         <!-- Balance Card -->
-        <VBox styleClass="card-balance" GridPane.columnIndex="3">
+        <VBox fx:id="cardBalance" styleClass="card-balance" GridPane.columnIndex="3">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-amber">
                     <FontIcon iconLiteral="mdi2s-scale-balance" iconSize="32" iconColor="#F59E0B"/>
@@ -118,7 +118,7 @@
         </VBox>
         
         <!-- Profit Card (New KPI) -->
-        <VBox styleClass="card-profit" GridPane.columnIndex="4">
+        <VBox fx:id="cardProfit" styleClass="card-profit" GridPane.columnIndex="4">
             <HBox alignment="CENTER_LEFT" spacing="16">
                 <VBox styleClass="card-icon-bg-green">
                     <FontIcon iconLiteral="mdi2t-trending-up" iconSize="32" iconColor="#10B981"/>
