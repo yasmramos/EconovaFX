@@ -42,8 +42,8 @@
 
     <!-- Action Buttons -->
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Cancelar" onAction="#cancel" styleClass="bg-gray-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-gray-600"/>
-        <Button text="Guardar" onAction="#save" styleClass="bg-green-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-green-600"/>
+        <Button text="Cancelar" onAction="#cancel" styleClass="btn, btn-secondary"/>
+        <Button text="Guardar" onAction="#save" styleClass="btn, btn-success"/>
     </HBox>
     
 </VBox>

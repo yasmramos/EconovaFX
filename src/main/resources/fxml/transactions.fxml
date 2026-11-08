@@ -15,8 +15,8 @@
         <Region HBox.hgrow="ALWAYS"/>
         <DatePicker fx:id="fromDatePicker" promptText="Desde" styleClass="rounded-md"/>
         <DatePicker fx:id="toDatePicker" promptText="Hasta" styleClass="rounded-md"/>
-        <Button text="Filtrar" onAction="#filterTransactions" styleClass="bg-blue-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-blue-600"/>
-        <Button text="Nueva Transacción" onAction="#newTransaction" styleClass="bg-green-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-green-600"/>
+        <Button text="Filtrar" onAction="#filterTransactions" styleClass="btn, btn-info"/>
+        <Button text="Nueva Transacción" onAction="#newTransaction" styleClass="btn, btn-success"/>
     </HBox>
     
     <!-- Transactions Table -->
@@ -36,10 +36,10 @@
 
         <!-- Action Buttons -->
         <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="Ver Detalles" onAction="#viewTransactionDetails" styleClass="bg-blue-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-blue-600"/>
-            <Button text="Publicar" onAction="#postTransaction" styleClass="bg-green-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-green-600"/>
+            <Button text="Ver Detalles" onAction="#viewTransactionDetails" styleClass="btn, btn-info"/>
+            <Button text="Publicar" onAction="#postTransaction" styleClass="btn, btn-success"/>
             <Button text="Reversar" onAction="#reverseTransaction" styleClass="bg-amber-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-amber-600"/>
-            <Button text="Eliminar" onAction="#deleteTransaction" styleClass="bg-red-500, text-white, px-4, py-2, rounded-md, cursor-hand, hover:bg-red-600"/>
+            <Button text="Eliminar" onAction="#deleteTransaction" styleClass="btn, btn-danger"/>
         </HBox>
     </VBox>
     

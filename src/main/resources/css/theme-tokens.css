@@ -169,6 +169,8 @@
     -brand-pressed:    #16305c;
     -brand-ring:       #7c9bd1;
     -brand-tint:       #e8eef8;
+    /* Ink for an icon drawn on a brand surface (-brand-tint badge, brand card). */
+    -brand-ink:        #1e3c72;
 
     /* White foregrounds and washes that sit on the brand surface. */
     -brand-fg:         #ffffff;
@@ -387,6 +389,8 @@
     -brand:            #101a33;
     -brand-alt:        #16233d;
     -brand-tint:       #16233d;
+    /* Lifted brand ink so it still reads on the dark tint (7:1). */
+    -brand-ink:        #8fb0e0;
 
     /* Overlays are darker and more opaque so they still read on a dark base. */
     -shadow-xs:     rgba(0, 0, 0, 0.30);

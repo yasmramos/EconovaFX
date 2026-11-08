@@ -97,16 +97,16 @@
     -fx-pref-height: 40;
 }
 .card-icon-bg       { -fx-background-color: -success-soft; }
-.card-icon-bg-red   { -fx-background-color: -red-50; }
-.card-icon-bg-blue  { -fx-background-color: -blue-50; }
+.card-icon-bg-red   { -fx-background-color: -danger-soft; }
+.card-icon-bg-blue  { -fx-background-color: -info-soft; }
 .card-icon-bg-green { -fx-background-color: -success-soft; }
-.card-icon-bg-amber { -fx-background-color: -amber-50; }
+.card-icon-bg-amber { -fx-background-color: -warning-soft; }
 
 .stat-icon-green  { -fx-background-color: -success-soft; }
-.stat-icon-red    { -fx-background-color: -red-50; }
-.stat-icon-blue   { -fx-background-color: -blue-50; }
-.stat-icon-amber  { -fx-background-color: -amber-50; }
-.stat-icon-purple { -fx-background-color: -purple-50; }
+.stat-icon-red    { -fx-background-color: -danger-soft; }
+.stat-icon-blue   { -fx-background-color: -info-soft; }
+.stat-icon-amber  { -fx-background-color: -warning-soft; }
+.stat-icon-purple { -fx-background-color: -purple-soft; }
 
 /* -----------------------------------------------------------------------------
  * CARDS (charts, quick form, KPI list)

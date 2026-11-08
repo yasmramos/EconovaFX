@@ -31,7 +31,7 @@
     <!-- Logo/Title Section -->
     <VBox alignment="CENTER" spacing="15.0" VBox.vgrow="NEVER">
         <StackPane styleClass="login-logo-badge">
-            <FontIcon iconLiteral="mdi2b-bank" iconSize="38" iconColor="#1e3c72"/>
+            <FontIcon iconLiteral="mdi2b-bank" iconSize="38" styleClass="icon-brand"/>
         </StackPane>
         <Label text="%login.title" styleClass="login-title"/>
         <Label text="%login.subtitle" styleClass="login-subtitle"/>

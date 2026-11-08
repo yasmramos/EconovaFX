@@ -336,7 +336,8 @@ public class FinancialReportingViewController implements Initializable {
 
     private void setStatus(Label label, String message, boolean error) {
         label.setText(message);
-        label.setStyle(error ? "-fx-text-fill: #dc2626;" : "-fx-text-fill: #16a34a;");
+        label.getStyleClass().removeAll("value-negative", "value-positive");
+        label.getStyleClass().add(error ? "value-negative" : "value-positive");
     }
 
     private String format(BigDecimal value) {
