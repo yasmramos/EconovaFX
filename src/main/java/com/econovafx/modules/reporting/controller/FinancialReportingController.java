@@ -67,6 +67,17 @@ public class FinancialReportingController {
     }
 
     /**
+     * Generate a Statement of Changes in Equity report.
+     * @param startDate start date of the period
+     * @param endDate end date of the period
+     * @param fiscalYear fiscal year
+     * @return generated FinancialReport entity
+     */
+    public FinancialReport generateChangesInEquityStatement(LocalDate startDate, LocalDate endDate, Integer fiscalYear) {
+        return reportingService.generateChangesInEquityStatement(startDate, endDate, fiscalYear);
+    }
+
+    /**
      * Finalize a report.
      * @param id ID of the report to finalize
      * @return finalized report

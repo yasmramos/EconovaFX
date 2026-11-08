@@ -3,6 +3,9 @@ package com.econovafx.modules.reporting.service;
 import com.econovafx.modules.accounting.model.*;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
+import com.econovafx.modules.reporting.model.FinancialReport;
+import com.econovafx.modules.reporting.model.ReportLine;
+import com.econovafx.modules.reporting.repository.FinancialReportRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -30,11 +34,14 @@ class FinancialReportingServiceTest {
     @Mock
     private TransactionRepository transactionRepository;
 
+    @Mock
+    private FinancialReportRepository reportRepository;
+
     private FinancialReportingService service;
 
     @BeforeEach
     void setUp() {
-        service = new FinancialReportingService(null, accountRepository, transactionRepository);
+        service = new FinancialReportingService(reportRepository, accountRepository, transactionRepository);
     }
 
     @Test
@@ -176,10 +183,50 @@ class FinancialReportingServiceTest {
         assertEquals(BigDecimal.ZERO, balance);
     }
 
+    @Test
+    void testGenerateChangesInEquityStatement() {
+        Account equity = new Account("3000", "Capital", AccountType.EQUITY);
+        equity.setId(10L);
+        Account rev = new Account("4000", "Ingresos", AccountType.REVENUE);
+        rev.setId(11L);
+        Account exp = new Account("5000", "Gastos", AccountType.EXPENSE);
+        exp.setId(12L);
+
+        LocalDate start = LocalDate.of(2026, 1, 1);
+        LocalDate end = LocalDate.of(2026, 12, 31);
+
+        when(accountRepository.findByType(AccountType.EQUITY)).thenReturn(List.of(equity));
+        when(accountRepository.findByType(AccountType.REVENUE)).thenReturn(List.of(rev));
+        when(accountRepository.findByType(AccountType.EXPENSE)).thenReturn(List.of(exp));
+
+        Transaction opening = createPostedTransaction(LocalDate.of(2025, 12, 15), equity,
+                BigDecimal.ZERO, BigDecimal.valueOf(5000));
+        when(transactionRepository.findPostedByDateRange(LocalDate.MIN, start.minusDays(1)))
+                .thenReturn(List.of(opening));
+
+        Transaction revenueTx = createPostedTransaction(LocalDate.of(2026, 6, 1), rev,
+                BigDecimal.ZERO, BigDecimal.valueOf(2000));
+        Transaction expenseTx = createPostedTransaction(LocalDate.of(2026, 7, 1), exp,
+                BigDecimal.valueOf(500), BigDecimal.ZERO);
+        when(transactionRepository.findPostedByDateRange(start, end))
+                .thenReturn(List.of(revenueTx, expenseTx));
+
+        when(reportRepository.save(any(FinancialReport.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        FinancialReport report = service.generateChangesInEquityStatement(start, end, 2026);
+
+        assertEquals(FinancialReport.ReportType.CHANGES_IN_EQUITY, report.getReportType());
+        List<ReportLine> lines = report.getLines();
+        assertEquals(3, lines.size());
+        assertEquals(0, lines.get(0).getCreditAmount().compareTo(BigDecimal.valueOf(5000)));
+        assertEquals(0, lines.get(1).getCreditAmount().compareTo(BigDecimal.valueOf(1500)));
+        assertEquals(0, lines.get(2).getCreditAmount().compareTo(BigDecimal.valueOf(6500)));
+    }
+
     /**
      * Helper method to create a POSTED transaction
      */
-    private Transaction createPostedTransaction(LocalDate date, Account account, 
+    private Transaction createPostedTransaction(LocalDate date, Account account,
                                                  BigDecimal debitAmount, BigDecimal creditAmount) {
         Transaction tx = new Transaction();
         tx.setDate(date);

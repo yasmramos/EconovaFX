@@ -1,8 +1,10 @@
 package com.econovafx.modules.accounting.service;
 
 import com.econovafx.modules.accounting.model.*;
+import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.accounting.repository.ClosingEntryRepository;
+import com.econovafx.modules.accounting.repository.DocumentSequenceRepository;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.exception.EntityNotFoundException;
@@ -35,18 +37,21 @@ public class TransactionService {
     private final AuditService auditService;
     private final AccountingPeriodService accountingPeriodService;
     private final ClosingEntryRepository closingEntryRepository;
+    private final DocumentSequenceRepository documentSequenceRepository;
     
     @Inject
     public TransactionService(TransactionRepository transactionRepository,
                              AccountRepository accountRepository,
                              AuditService auditService,
                              AccountingPeriodService accountingPeriodService,
-                             ClosingEntryRepository closingEntryRepository) {
+                             ClosingEntryRepository closingEntryRepository,
+                             DocumentSequenceRepository documentSequenceRepository) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
         this.auditService = auditService;
         this.accountingPeriodService = accountingPeriodService;
         this.closingEntryRepository = closingEntryRepository;
+        this.documentSequenceRepository = documentSequenceRepository;
     }
     
     public Optional<Transaction> getTransactionById(Long id) {
@@ -141,6 +146,88 @@ public class TransactionService {
      */
     public Transaction createTransaction(Transaction transaction, List<TransactionEntryData> entries) {
         return createTransaction(transaction, entries, "system");
+    }
+
+    /**
+     * Updates a draft transaction, replacing its header data and accounting entries.
+     * Only DRAFT transactions may be modified: once posted, corrections must go
+     * through a reversal so the audit trail stays intact.
+     *
+     * @param transactionId the transaction to update
+     * @param headerDate new date (required)
+     * @param description new description (required)
+     * @param thirdParty new third party, or {@code null} to clear it
+     * @param entries the new set of entries (must balance)
+     * @param username user performing the change, for the audit log
+     * @return the updated transaction
+     */
+    public Transaction updateTransaction(Long transactionId,
+                                         LocalDate headerDate,
+                                         String description,
+                                         ThirdParty thirdParty,
+                                         List<TransactionEntryData> entries,
+                                         String username) {
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> EntityNotFoundException.notFound("Transaction", transactionId));
+
+        if (!transaction.getStatus().canModify()) {
+            auditService.logFailure(username, AuditLog.OperationType.UPDATE, "Transaction", transactionId,
+                    "Update transaction - invalid status",
+                    "Cannot modify transaction in status: " + transaction.getStatus().getDescription()
+                            + ". Posted transactions must be reversed instead.");
+            throw ValidationException.cannotDeletePostedTransaction();
+        }
+
+        validateTransaction(headerDate, entries);
+
+        String before = buildTransactionJson(transaction);
+
+        transaction.setDate(headerDate);
+        transaction.setDescription(description);
+        transaction.setThirdParty(thirdParty);
+
+        transaction.getEntries().clear();
+        for (TransactionEntryData entryData : entries) {
+            Account account = accountRepository.findById(entryData.getAccountId())
+                    .orElseThrow(() -> EntityNotFoundException.notFound("Account", entryData.getAccountId()));
+
+            TransactionEntry entry = new TransactionEntry();
+            entry.setAccount(account);
+            entry.setDebitAmount(entryData.getDebitAmount().setScale(4, java.math.RoundingMode.HALF_UP));
+            entry.setCreditAmount(entryData.getCreditAmount().setScale(4, java.math.RoundingMode.HALF_UP));
+            entry.setDescription(entryData.getDescription());
+            transaction.addEntry(entry);
+        }
+
+        transaction.recalculateTotals();
+
+        if (transaction.getTotalDebit().compareTo(transaction.getTotalCredit()) != 0) {
+            String errorMsg = "Transaction is not balanced. Debit: " + transaction.getTotalDebit()
+                    + ", Credit: " + transaction.getTotalCredit();
+            auditService.logFailure(username, AuditLog.OperationType.UPDATE, "Transaction", transactionId,
+                    "Update transaction - validation failed", errorMsg);
+            throw ValidationException.unbalancedTransaction(transaction.getTotalDebit(), transaction.getTotalCredit());
+        }
+
+        transaction.setTotalDebit(transaction.getTotalDebit().setScale(4, java.math.RoundingMode.HALF_UP));
+        transaction.setTotalCredit(transaction.getTotalCredit().setScale(4, java.math.RoundingMode.HALF_UP));
+
+        transactionRepository.update(transaction);
+
+        auditService.logWithValues(username, AuditLog.OperationType.UPDATE, "Transaction", transactionId,
+                "Updated transaction: " + transaction.getNumber(), before, buildTransactionJson(transaction));
+
+        logger.info("Transaction updated: {}", transaction.getNumber());
+        return transaction;
+    }
+
+    private void validateTransaction(LocalDate date, List<TransactionEntryData> entries) {
+        if (date == null) {
+            throw new ValidationException("date", "Transaction date cannot be null");
+        }
+        if (entries == null || entries.size() < 2) {
+            throw new ValidationException("entries", "Transaction must have at least 2 entries");
+        }
     }
     
     /**
@@ -305,10 +392,45 @@ public class TransactionService {
         }
     }
     
-    private String generateTransactionNumber() {
-        long count = transactionRepository.count() + 1;
-        return "TXN-" + LocalDate.now().getYear() + "-" + 
-               String.format("%06d", count);
+    /**
+     * Generates the next consecutive voucher number for the current year.
+     * Resolution 340/2004 requires strictly sequential, never reused numbering,
+     * so the value comes from a persistent monotonic counter keyed by year
+     * (deleting a voucher must not free its number) and is seeded from the
+     * highest number already present when the counter is created for the first
+     * time. The loop guards against gaps left by numbers created outside this
+     * service.
+     */
+    private synchronized String generateTransactionNumber() {
+        String prefix = "TXN-" + LocalDate.now().getYear() + "-";
+
+        DocumentSequence sequence = documentSequenceRepository.findByKey(prefix);
+        long next;
+        if (sequence == null) {
+            String maxNumber = transactionRepository.findMaxNumberByPrefix(prefix);
+            long seed = 1L;
+            if (maxNumber != null && maxNumber.length() > prefix.length()) {
+                try {
+                    seed = Long.parseLong(maxNumber.substring(prefix.length())) + 1;
+                } catch (NumberFormatException e) {
+                    logger.warn("Unexpected voucher number format '{}', restarting sequence at 1", maxNumber);
+                }
+            }
+            next = seed;
+            sequence = new DocumentSequence(prefix, next);
+        } else {
+            next = sequence.getLastValue() + 1;
+            sequence.setLastValue(next);
+        }
+
+        String candidate = prefix + String.format("%06d", next);
+        while (transactionRepository.existsByNumber(candidate)) {
+            next++;
+            candidate = prefix + String.format("%06d", next);
+        }
+        sequence.setLastValue(next);
+        documentSequenceRepository.save(sequence);
+        return candidate;
     }
     
     /**

@@ -15,7 +15,8 @@ public class FinancialStatementModel extends BaseEntity {
     public enum ModelType {
         BALANCE_SHEET,
         INCOME_STATEMENT,
-        CASH_FLOW;
+        CASH_FLOW,
+        CHANGES_IN_EQUITY;
 
         @DbEnumValue(storage = DbEnumType.VARCHAR)
         public String toValue() {

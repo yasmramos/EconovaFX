@@ -62,11 +62,13 @@ public class TransactionRepository {
      */
     public List<Transaction> findPostedByDateRange(LocalDate startDate, LocalDate endDate) {
         return database.find(Transaction.class)
+                .fetch("entries")
+                .fetch("entries.account")
                 .where()
                 .ge("date", startDate)
                 .le("date", endDate)
                 .eq("status", com.econovafx.modules.accounting.model.TransactionStatus.POSTED)
-                .orderBy().desc("date")
+                .orderBy("date asc, number asc")
                 .findList();
     }
 
@@ -145,6 +147,26 @@ public class TransactionRepository {
     public boolean existsByNumber(String number) {
         return database.find(Transaction.class)
                 .where().eq("number", number).exists();
+    }
+
+    /**
+     * Returns the highest transaction number that starts with the given prefix,
+     * or {@code null} when none exists.
+     * Resolution 340/2004 requires strictly sequential numbering, so the next
+     * number is derived from the maximum already issued (never from a row count,
+     * which would reuse numbers freed by deletion).
+     *
+     * @param prefix Number prefix including the trailing separator, e.g. {@code "TXN-2026-"}
+     * @return the maximum existing number for the prefix, or {@code null}
+     */
+    public String findMaxNumberByPrefix(String prefix) {
+        List<String> numbers = database.find(Transaction.class)
+                .select("number")
+                .where().like("number", prefix + "%")
+                .orderBy().desc("number")
+                .setMaxRows(1)
+                .findSingleAttributeList();
+        return numbers.isEmpty() ? null : numbers.get(0);
     }
 
     public long count() {

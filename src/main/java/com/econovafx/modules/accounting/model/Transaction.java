@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "transactions")
 public class Transaction extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String number;
 
     @Column(nullable = false, columnDefinition = "DATE")
