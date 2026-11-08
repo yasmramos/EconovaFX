@@ -39,6 +39,8 @@ class FinancialReportingServiceTest {
 
     private FinancialReportingService service;
 
+    private static final LocalDate EPOCH = LocalDate.of(1900, 1, 1);
+
     @BeforeEach
     void setUp() {
         service = new FinancialReportingService(reportRepository, accountRepository, transactionRepository);
@@ -60,7 +62,7 @@ class FinancialReportingServiceTest {
         
         List<Transaction> transactions = Arrays.asList(tx1, tx2);
         
-        when(transactionRepository.findPostedByDateRange(LocalDate.MIN, endDate))
+        when(transactionRepository.findPostedByDateRange(EPOCH, endDate))
                 .thenReturn(transactions);
 
         // Act: Use reflection to test private method
@@ -109,7 +111,7 @@ class FinancialReportingServiceTest {
         Transaction tx = createPostedTransaction(LocalDate.of(2024, 1, 15), assetAccount, 
                                                   BigDecimal.valueOf(1000), BigDecimal.ZERO);
         
-        when(transactionRepository.findPostedByDateRange(LocalDate.MIN, endDate))
+        when(transactionRepository.findPostedByDateRange(EPOCH, endDate))
                 .thenReturn(Arrays.asList(tx));
 
         // Act
@@ -130,7 +132,7 @@ class FinancialReportingServiceTest {
         Transaction tx = createPostedTransaction(LocalDate.of(2024, 1, 15), liabilityAccount, 
                                                   BigDecimal.ZERO, BigDecimal.valueOf(3000));
         
-        when(transactionRepository.findPostedByDateRange(LocalDate.MIN, endDate))
+        when(transactionRepository.findPostedByDateRange(EPOCH, endDate))
                 .thenReturn(Arrays.asList(tx));
 
         // Act
@@ -154,7 +156,7 @@ class FinancialReportingServiceTest {
                                                       BigDecimal.valueOf(9999), BigDecimal.ZERO);
         
         // Only posted transactions should be returned by repository method
-        when(transactionRepository.findPostedByDateRange(LocalDate.MIN, endDate))
+        when(transactionRepository.findPostedByDateRange(EPOCH, endDate))
                 .thenReturn(Arrays.asList(postedTx));
 
         // Act
@@ -173,7 +175,7 @@ class FinancialReportingServiceTest {
         
         LocalDate endDate = LocalDate.of(2024, 1, 31);
         
-        when(transactionRepository.findPostedByDateRange(LocalDate.MIN, endDate))
+        when(transactionRepository.findPostedByDateRange(EPOCH, endDate))
                 .thenReturn(Arrays.asList());
 
         // Act
@@ -201,7 +203,7 @@ class FinancialReportingServiceTest {
 
         Transaction opening = createPostedTransaction(LocalDate.of(2025, 12, 15), equity,
                 BigDecimal.ZERO, BigDecimal.valueOf(5000));
-        when(transactionRepository.findPostedByDateRange(LocalDate.MIN, start.minusDays(1)))
+        when(transactionRepository.findPostedByDateRange(EPOCH, start.minusDays(1)))
                 .thenReturn(List.of(opening));
 
         Transaction revenueTx = createPostedTransaction(LocalDate.of(2026, 6, 1), rev,

@@ -29,6 +29,10 @@ public class FinancialReportingService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
+    // Lower bound for cumulative balance queries. LocalDate.MIN overflows the
+    // JDBC DATE mapping, so use an early but representable date.
+    private static final LocalDate EPOCH = LocalDate.of(1900, 1, 1);
+
     @Inject
     public FinancialReportingService(FinancialReportRepository reportRepository,
             AccountRepository accountRepository,
@@ -359,7 +363,7 @@ public class FinancialReportingService {
      * @return accumulated balance before {@code beforeDate}
      */
     private BigDecimal calculateAccountBalanceBefore(Account account, LocalDate beforeDate) {
-        List<Transaction> transactions = transactionRepository.findPostedByDateRange(LocalDate.MIN, beforeDate.minusDays(1));
+        List<Transaction> transactions = transactionRepository.findPostedByDateRange(EPOCH, beforeDate.minusDays(1));
         BigDecimal balance = BigDecimal.ZERO;
         for (Transaction transaction : transactions) {
             for (TransactionEntry entry : transaction.getEntries()) {
@@ -401,7 +405,7 @@ public class FinancialReportingService {
     private BigDecimal calculateAccountBalance(Account account, LocalDate endDate) {
         // Get all posted transactions up to endDate
         List<Transaction> transactions = transactionRepository.findPostedByDateRange(
-                LocalDate.MIN, endDate);
+                EPOCH, endDate);
 
         BigDecimal balance = BigDecimal.ZERO;
         AccountType type = account.getType();

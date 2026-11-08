@@ -3,6 +3,7 @@ package com.econovafx.modules.reporting.controller;
 import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.service.AccountingReportService;
 import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.reporting.model.FinancialReport;
 import com.econovafx.modules.reporting.model.ReportLine;
 import javafx.beans.property.SimpleStringProperty;
@@ -34,6 +35,7 @@ public class FinancialReportingViewController implements Initializable {
     private final FinancialReportingController reportingController;
     private final AccountingReportService accountingReportService;
     private final AccountService accountService;
+    private final ExportService exportService;
 
     @FXML private ComboBox<ReportKind> reportTypeCombo;
     @FXML private DatePicker statementStartDate;
@@ -41,6 +43,7 @@ public class FinancialReportingViewController implements Initializable {
     @FXML private Spinner<Integer> fiscalYearSpinner;
     @FXML private Button btnGenerateStatement;
     @FXML private Button btnFinalizeStatement;
+    @FXML private Button btnExportStatement;
     @FXML private Label statementStatusLabel;
     @FXML private TableView<ReportLine> statementTable;
     @FXML private TableColumn<ReportLine, String> colStmtCode;
@@ -93,10 +96,12 @@ public class FinancialReportingViewController implements Initializable {
 
     public FinancialReportingViewController(FinancialReportingController reportingController,
                                             AccountingReportService accountingReportService,
-                                            AccountService accountService) {
+                                            AccountService accountService,
+                                            ExportService exportService) {
         this.reportingController = reportingController;
         this.accountingReportService = accountingReportService;
         this.accountService = accountService;
+        this.exportService = exportService;
     }
 
     @Override
@@ -224,6 +229,39 @@ public class FinancialReportingViewController implements Initializable {
     }
 
     @FXML
+    private void onExportStatement() {
+        ReportKind kind = reportTypeCombo.getValue();
+        if (kind != ReportKind.BALANCE_SHEET && kind != ReportKind.INCOME_STATEMENT) {
+            setStatus(statementStatusLabel, "Solo el Balance de Situación y el Estado de Resultados se exportan a PDF.", true);
+            return;
+        }
+        LocalDate start = statementStartDate.getValue();
+        LocalDate end = statementEndDate.getValue();
+        if (start == null || end == null) {
+            setStatus(statementStatusLabel, "Complete el rango de fechas.", true);
+            return;
+        }
+        try {
+            List<Account> accounts = accountService.getAllAccounts();
+            byte[] pdf = kind == ReportKind.BALANCE_SHEET
+                    ? exportService.exportBalanceSheetToPdf(accounts, start, end)
+                    : exportService.exportIncomeStatementToPdf(accounts, start, end);
+
+            java.io.File dir = new java.io.File(System.getProperty("user.home"), "Downloads");
+            dir.mkdirs();
+            java.io.File file = new java.io.File(dir, kind.fileName(start, end));
+            try (java.io.FileOutputStream fos = new java.io.FileOutputStream(file)) {
+                fos.write(pdf);
+            }
+            logger.info("Exported {} to {}", kind.label, file.getAbsolutePath());
+            setStatus(statementStatusLabel, "Exportado a " + file.getAbsolutePath(), false);
+        } catch (java.io.IOException e) {
+            logger.error("Error exporting statement to PDF", e);
+            setStatus(statementStatusLabel, "Error al exportar: " + e.getMessage(), true);
+        }
+    }
+
+    @FXML
     private void onGenerateTrialBalance() {
         try {
             LocalDate start = trialStartDate.getValue();
@@ -339,6 +377,10 @@ public class FinancialReportingViewController implements Initializable {
                    BiFunction<FinancialReportingController, StatementRequest, FinancialReport> generate) {
             this.label = label;
             this.generate = generate;
+        }
+
+        String fileName(LocalDate start, LocalDate end) {
+            return name().toLowerCase() + "_" + start + "_" + end + ".pdf";
         }
 
         @Override

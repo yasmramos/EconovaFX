@@ -5,6 +5,7 @@ import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.model.AccountType;
 import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.model.TransactionEntry;
+import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.bank.model.BankReconciliation;
 import com.econovafx.modules.bank.model.ReconciliationItem;
 import com.econovafx.modules.billing.model.ThirdParty;
@@ -19,6 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,10 +41,25 @@ public class ExportService {
     private static final Logger logger = LoggerFactory.getLogger(ExportService.class);
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    
+
+    // Lower bound for cumulative balance queries. LocalDate.MIN overflows the
+    // JDBC DATE mapping, so use an early but representable date.
+    private static final LocalDate EPOCH = LocalDate.of(1900, 1, 1);
+
+    private final TransactionRepository transactionRepository;
+
     // Resource bundle for internationalization
     private static ResourceBundle bundle;
-    
+
+    @Inject
+    public ExportService(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
+    }
+
+    public ExportService() {
+        this(null);
+    }
+
     /**
      * Gets the resource bundle, initializing it if necessary.
      */
@@ -927,13 +944,46 @@ public class ExportService {
     }
 
     /**
-     * Calculate the balance of an account for a given period.
-     * This is a helper method that should be replaced with actual service calls.
-     * For now, it returns a placeholder value.
+     * Balance of an account for the financial statements.
+     *
+     * <p>Balance-sheet accounts (asset, liability, equity) report their
+     * cumulative balance as of {@code endDate}. Income-statement accounts
+     * (revenue, expense) report the movement within {@code startDate..endDate}.
+     * Only posted transactions are considered, so the figures match the
+     * statements produced by {@code FinancialReportingService}.
+     *
+     * @param account   account to compute
+     * @param startDate period start (used for revenue and expense accounts)
+     * @param endDate   period end
+     * @return the account balance, or zero when no repository is available
      */
     private BigDecimal calculateAccountBalance(Account account, LocalDate startDate, LocalDate endDate) {
-        // TODO: Implement actual balance calculation using TransactionService
-        // This is a placeholder that returns zero
-        return BigDecimal.ZERO;
+        if (transactionRepository == null) {
+            return BigDecimal.ZERO;
+        }
+        AccountType type = account.getType();
+        boolean periodBased = type == AccountType.REVENUE || type == AccountType.EXPENSE;
+        LocalDate from = periodBased ? startDate : EPOCH;
+
+        BigDecimal balance = BigDecimal.ZERO;
+        for (Transaction transaction : transactionRepository.findPostedByDateRange(from, endDate)) {
+            for (TransactionEntry entry : transaction.getEntries()) {
+                if (entry.getAccount() == null || entry.getAccount().getId() == null
+                        || !entry.getAccount().getId().equals(account.getId())) {
+                    continue;
+                }
+                BigDecimal debit = entry.getDebitAmount() == null ? BigDecimal.ZERO : entry.getDebitAmount();
+                BigDecimal credit = entry.getCreditAmount() == null ? BigDecimal.ZERO : entry.getCreditAmount();
+                balance = balance.add(signedAmount(type, debit, credit));
+            }
+        }
+        return balance;
+    }
+
+    private BigDecimal signedAmount(AccountType type, BigDecimal debit, BigDecimal credit) {
+        return switch (type) {
+            case ASSET, EXPENSE -> debit.subtract(credit);
+            case LIABILITY, EQUITY, REVENUE -> credit.subtract(debit);
+        };
     }
 }
