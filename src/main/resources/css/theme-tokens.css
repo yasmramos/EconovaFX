@@ -87,21 +87,22 @@
     -secondary-hover:      #e4e4e7;
 
     -muted:                #f4f4f5;
-    -muted-foreground:     #71717a;   /* zinc-500 */
+    -muted-foreground:     #6e6e76;   /* zinc-500 stepped down to clear 4.5:1 on -muted */
     -muted-hover:          #e4e4e7;
 
     -accent:               #f4f4f5;
     -accent-foreground:    #18181b;
 
-    -destructive:          #dc2626;
-    -destructive-hover:    #b91c1c;
+    -destructive:          #b91c1c;   /* red-700 - reads as text on a card and
+                                         as a fill under -destructive-fore */
+    -destructive-hover:    #991b1b;   /* red-800 */
     -destructive-fore:     #fafafa;
     -destructive-soft:     #fef2f2;
 
     -border:               #e4e4e7;   /* zinc-200 - the shadcn hairline */
     -input:                #e4e4e7;
     -input-hover:          #d4d4d8;
-    -ring:                 #a1a1aa;   /* focus ring */
+    -ring:                 #71717a;   /* zinc-500 - focus ring; 3:1 on every surface */
 
     /* Structural chrome that is neither a surface nor a hairline: the page
        canvas behind cards, and the scroll-bar thumb. They get their own tokens
@@ -116,30 +117,39 @@
     -fg-strong:            #27272a;   /* zinc-800 */
     -fg-body:              #3f3f46;   /* zinc-700 */
     -fg-subtle:            #52525b;   /* zinc-600 */
-    -fg-faint:             #a1a1aa;   /* zinc-400 */
+    -fg-faint:             #71717a;   /* zinc-500 - the lightest text that still
+                                         clears 4.5:1 on the white/page canvas */
 
     /* =========================================================================
      * SEMANTIC STATUS COLOURS - muted surfaces + saturated foreground.
      * Shadcn badges use a soft background with the strong hue as text.
+     *
+     * Each hue sits at the step that clears 4.5:1 both as text on a card and
+     * as text on its own *-soft surface (see ContrastDisciplineTest). That is
+     * one step darker than the Tailwind base, so the same value also works as
+     * a solid fill under the light *-foreground.
      * ========================================================================= */
-    -success:          #16a34a;
-    -success-hover:    #15803d;
+    -success:          #15803d;   /* green-700 */
+    -success-hover:    #166534;   /* green-800 */
     -success-soft:     #f0fdf4;
     -success-border:   #bbf7d0;
+    -success-foreground: #fafafa;
 
-    -warning:          #d97706;
-    -warning-hover:    #b45309;
+    -warning:          #b45309;   /* amber-700 */
+    -warning-hover:    #92400e;   /* amber-800 */
     -warning-soft:     #fffbeb;
     -warning-border:   #fde68a;
+    -warning-foreground: #fafafa;
 
-    -info:             #2563eb;
-    -info-hover:       #1d4ed8;
+    -info:             #2563eb;   /* blue-600 */
+    -info-hover:       #1d4ed8;   /* blue-700 */
     -info-soft:        #eff6ff;
     -info-border:      #bfdbfe;
+    -info-foreground:  #fafafa;
 
-    -danger:           #dc2626;
-    -danger-hover:     #b91c1c;
-    -danger-pressed:   #991b1b;
+    -danger:           #b91c1c;   /* red-700 */
+    -danger-hover:     #991b1b;
+    -danger-pressed:   #7f1d1d;
     -danger-soft:      #fef2f2;
     -danger-border:    #fecaca;
 
@@ -277,7 +287,7 @@
      * ========================================================================= */
     -fx-base: -zinc-50;
     -fx-background: -zinc-50;
-    -fx-focus-color: -zinc-300;
+    -fx-focus-color: -ring;   /* keep Modena-derived focus on the AA ring */
     -fx-text-fill: -foreground;
 }
 
@@ -318,15 +328,15 @@
     -accent:               #27272a;
     -accent-foreground:    #fafafa;
 
-    -destructive:          #ef4444;
-    -destructive-hover:    #dc2626;
-    -destructive-fore:     #fafafa;
+    -destructive:          #f87171;   /* red-400 - AA as text on the dark card */
+    -destructive-hover:    #ef4444;
+    -destructive-fore:     #18181b;   /* dark ink sits on the lighter red fill */
     -destructive-soft:     #450a0a;
 
     -border:               #27272a;
     -input:                #27272a;
     -input-hover:          #3f3f46;
-    -ring:                 #52525b;
+    -ring:                 #a1a1aa;   /* zinc-400 - 3:1 on every dark surface */
 
     -page:                 #09090b;   /* zinc-950 */
     -thumb:                #3f3f46;   /* zinc-700 */
@@ -335,31 +345,36 @@
     -fg-strong:            #e4e4e7;   /* zinc-200 */
     -fg-body:              #d4d4d8;   /* zinc-300 */
     -fg-subtle:            #a1a1aa;   /* zinc-400 */
-    -fg-faint:             #71717a;   /* zinc-500 */
+    -fg-faint:             #a1a1aa;   /* zinc-400 - 4.5:1 on the dark card/page */
 
-    /* Status colours keep their hue but drop to the darker, low-glare step. */
+    /* Status colours keep their hue but step up to a low-glare value that
+       clears 4.5:1 as text on the dark card and on the dark *-soft surface. */
     -success:          #22c55e;
     -success-hover:    #16a34a;
     -success-soft:     #052e16;
     -success-border:   #14532d;
+    -success-foreground: #18181b;
 
     -warning:          #f59e0b;
     -warning-hover:    #d97706;
     -warning-soft:     #451a03;
     -warning-border:   #78350f;
+    -warning-foreground: #18181b;
 
-    -info:             #3b82f6;
-    -info-hover:       #2563eb;
+    -info:             #60a5fa;   /* blue-400 - 4.5:1 on the dark card */
+    -info-hover:       #3b82f6;
     -info-soft:        #172554;
     -info-border:      #1e3a8a;
+    -info-foreground:  #18181b;
 
-    -danger:           #ef4444;
-    -danger-hover:     #dc2626;
-    -danger-pressed:   #b91c1c;
+    -danger:           #f87171;   /* red-400 - 4.5:1 on the dark card */
+    -danger-hover:     #ef4444;
+    -danger-pressed:   #ef4444;   /* the dark ink needs the fill to stay this
+                                     light; red-600 would drop it to 3.7:1 */
     -danger-soft:      #450a0a;
     -danger-border:    #7f1d1d;
 
-    -purple:           #a855f7;
+    -purple:           #c084fc;   /* purple-400 - 4.5:1 on the dark card */
     -purple-soft:      #3b0764;
     -purple-border:    #6b21a8;
 
@@ -383,6 +398,6 @@
     /* Modena base, flipped. */
     -fx-base: -zinc-900;
     -fx-background: -zinc-950;
-    -fx-focus-color: -zinc-600;
+    -fx-focus-color: -ring;
     -fx-text-fill: -foreground;
 }

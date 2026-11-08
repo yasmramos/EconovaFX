@@ -84,7 +84,24 @@ styling the JavaFX app.
   (a table header's bottom rule) is exempt because its border is not uniform.
 - Table radii are 8, so the header's top corners are `8 8 0 0` (and the corner
   cell `8 0 0 0`); they used to say 7 and left a 1px ledge.
+- Accessibility, enforced by `ContrastDisciplineTest` (default suite): it reads
+  the tokens from `theme-tokens.css` and checks WCAG ratios in both themes.
+  - Text pairs must clear 4.5:1, including a status hue used as text on a card
+    *and* on its own `-*-soft` chip. That is why `-success` is green-700, not
+    green-600: the lighter base was only 3.15:1 as 11px badge text.
+  - The focus ring `-ring` must clear 3:1 (WCAG 1.4.11) on `-card`, `-page` and
+    `-muted`. It is the one indicator a keyboard user has.
+  - A status hue that is also a solid fill (`.btn-success`, ...) gets a matching
+    `-*-foreground` token rather than literal `white`, so the ink flips in dark
+    mode (dark ink on the lighter dark-mode fill).
+  - Solid fills declare `-fx-border-color` after `.button:focused`, which wins,
+    so they would show no focus. They get an outer `-fx-effect` glow instead,
+    which sits on the surrounding surface where `-ring` clears 3:1.
+- `.check-box`, `.radio-button` and `.toggle-button` focus with the same outer
+  glow; their selected fill is `-primary` (near-white in dark), so a border ring
+  would disappear against it.
 - Regression tests for tokens/controls live in `ChartsAndThemeTest` and
   `StyleTokenDisciplineTest` (the latter runs in the default suite; the former
-  with `-Pvisual-tests`). `StyleShapeDisciplineTest` runs in the default suite.
+  with `-Pvisual-tests`). `StyleShapeDisciplineTest` and
+  `ContrastDisciplineTest` run in the default suite.
 

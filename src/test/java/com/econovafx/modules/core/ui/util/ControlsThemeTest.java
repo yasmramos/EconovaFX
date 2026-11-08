@@ -140,7 +140,7 @@ public class ControlsThemeTest extends ApplicationTest {
             root.applyCss();
             root.layout();
 
-            assertEquals(Color.web("#71717a"), status.getTextFill(),
+            assertEquals(Color.web("#6e6e76"), status.getTextFill(),
                     "status-label should use the muted-foreground token");
             assertEquals(Color.web("#ffffff"), fillOf(action),
                     "action-btn background should be the background token");

@@ -76,7 +76,7 @@
 }
 .trend-badge-neutral {
     -fx-background-color: -muted;
-    -fx-text-fill: -muted-foreground;
+    -fx-text-fill: -fg-body;
 }
 
 /* ------------------------------------------------------------- icon tiles */
