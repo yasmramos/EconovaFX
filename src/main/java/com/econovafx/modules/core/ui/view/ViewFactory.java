@@ -64,6 +64,7 @@ public class ViewFactory {
     private final SystemSettingsController systemSettingsController;
     private final InventoryController inventoryController;
     private final com.econovafx.modules.core.ui.controller.WebViewController webViewController;
+    private final com.econovafx.modules.reporting.controller.FinancialReportingViewController financialReportingViewController;
     private final AccountService accountService;
     private final ThirdPartyService thirdPartyService;
     private final TransactionService transactionService;
@@ -86,6 +87,7 @@ public class ViewFactory {
                       SystemSettingsController systemSettingsController,
                       InventoryController inventoryController,
                       com.econovafx.modules.core.ui.controller.WebViewController webViewController,
+                      com.econovafx.modules.reporting.controller.FinancialReportingViewController financialReportingViewController,
                       AccountService accountService,
                       ThirdPartyService thirdPartyService,
                       TransactionService transactionService,
@@ -108,6 +110,7 @@ public class ViewFactory {
         this.systemSettingsController = systemSettingsController;
         this.inventoryController = inventoryController;
         this.webViewController = webViewController;
+        this.financialReportingViewController = financialReportingViewController;
         this.accountService = accountService;
         this.thirdPartyService = thirdPartyService;
         this.transactionService = transactionService;
@@ -259,6 +262,18 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading web view", e);
             throw new RuntimeException("Failed to load web view", e);
+        }
+    }
+
+    public Node createFinancialReportingView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/financial-reporting.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> financialReportingViewController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading financial reporting view", e);
+            throw new RuntimeException("Failed to load financial reporting view", e);
         }
     }
     

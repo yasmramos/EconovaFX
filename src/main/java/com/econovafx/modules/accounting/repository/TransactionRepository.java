@@ -62,11 +62,13 @@ public class TransactionRepository {
      */
     public List<Transaction> findPostedByDateRange(LocalDate startDate, LocalDate endDate) {
         return database.find(Transaction.class)
+                .fetch("entries")
+                .fetch("entries.account")
                 .where()
                 .ge("date", startDate)
                 .le("date", endDate)
                 .eq("status", com.econovafx.modules.accounting.model.TransactionStatus.POSTED)
-                .orderBy().desc("date")
+                .orderBy("date asc, number asc")
                 .findList();
     }
 

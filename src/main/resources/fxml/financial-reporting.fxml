@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.econovafx.modules.reporting.controller.FinancialReportingViewController"
+      fx:id="contentArea"
+      spacing="16"
+      styleClass="bg-gray-50, p-6">
+
+    <Label text="Estados Financieros e Informes" styleClass="text-2xl, font-bold, text-slate-800">
+        <graphic><FontIcon iconLiteral="mdi2f-file-chart" iconSize="24"/></graphic>
+    </Label>
+
+    <Separator/>
+
+    <TabPane fx:id="reportTabs" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+
+        <!-- ================= Estados Financieros ================= -->
+        <Tab text="Estados Financieros">
+            <VBox spacing="12" styleClass="p-4">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="Tipo:" styleClass="text-slate-700"/>
+                    <ComboBox fx:id="reportTypeCombo" prefWidth="220"/>
+                    <Label text="Desde:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="statementStartDate"/>
+                    <Label text="Hasta:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="statementEndDate"/>
+                    <Label text="Año fiscal:" styleClass="text-slate-700"/>
+                    <Spinner fx:id="fiscalYearSpinner" prefWidth="110"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnGenerateStatement" onAction="#onGenerateStatement" styleClass="btn, btn-primary" graphicTextGap="8" contentDisplay="LEFT">
+                        <text>Generar</text>
+                        <graphic><FontIcon iconLiteral="mdi2p-play" iconSize="18"/></graphic>
+                    </Button>
+                    <Button fx:id="btnFinalizeStatement" onAction="#onFinalizeStatement" styleClass="btn, btn-secondary" graphicTextGap="8" contentDisplay="LEFT">
+                        <text>Finalizar</text>
+                        <graphic><FontIcon iconLiteral="mdi2c-check-decagram" iconSize="18"/></graphic>
+                    </Button>
+                </HBox>
+
+                <Label fx:id="statementStatusLabel" styleClass="text-slate-500" wrapText="true"/>
+
+                <TableView fx:id="statementTable" prefHeight="360" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colStmtCode" text="Código" prefWidth="120"/>
+                        <TableColumn fx:id="colStmtDescription" text="Concepto" prefWidth="340"/>
+                        <TableColumn fx:id="colStmtDebit" text="Débito" prefWidth="130"/>
+                        <TableColumn fx:id="colStmtCredit" text="Crédito" prefWidth="130"/>
+                        <TableColumn fx:id="colStmtBalance" text="Saldo" prefWidth="130"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- ================= Balance de Comprobación ================= -->
+        <Tab text="Balance de Comprobación">
+            <VBox spacing="12" styleClass="p-4">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="Desde:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="trialStartDate"/>
+                    <Label text="Hasta:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="trialEndDate"/>
+                    <CheckBox fx:id="includeSubAccountsCheck" text="Incluir subcuentas"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnGenerateTrialBalance" onAction="#onGenerateTrialBalance" styleClass="btn, btn-primary" graphicTextGap="8" contentDisplay="LEFT">
+                        <text>Generar</text>
+                        <graphic><FontIcon iconLiteral="mdi2p-play" iconSize="18"/></graphic>
+                    </Button>
+                </HBox>
+
+                <Label fx:id="trialStatusLabel" styleClass="text-slate-500" wrapText="true"/>
+
+                <TableView fx:id="trialBalanceTable" prefHeight="360" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colTbCode" text="Código" prefWidth="120"/>
+                        <TableColumn fx:id="colTbName" text="Cuenta" prefWidth="300"/>
+                        <TableColumn fx:id="colTbType" text="Tipo" prefWidth="120"/>
+                        <TableColumn fx:id="colTbDebit" text="Débito" prefWidth="130"/>
+                        <TableColumn fx:id="colTbCredit" text="Crédito" prefWidth="130"/>
+                        <TableColumn fx:id="colTbBalance" text="Saldo" prefWidth="130"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- ================= Libro Mayor ================= -->
+        <Tab text="Libro Mayor">
+            <VBox spacing="12" styleClass="p-4">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="Cuenta:" styleClass="text-slate-700"/>
+                    <ComboBox fx:id="ledgerAccountCombo" prefWidth="300"/>
+                    <Label text="Desde:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="ledgerStartDate"/>
+                    <Label text="Hasta:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="ledgerEndDate"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnGenerateLedger" onAction="#onGenerateLedger" styleClass="btn, btn-primary" graphicTextGap="8" contentDisplay="LEFT">
+                        <text>Generar</text>
+                        <graphic><FontIcon iconLiteral="mdi2p-play" iconSize="18"/></graphic>
+                    </Button>
+                </HBox>
+
+                <Label fx:id="ledgerOpeningLabel" styleClass="text-slate-700"/>
+                <Label fx:id="ledgerClosingLabel" styleClass="text-slate-700"/>
+
+                <TableView fx:id="ledgerTable" prefHeight="320" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colLedgerDate" text="Fecha" prefWidth="110"/>
+                        <TableColumn fx:id="colLedgerVoucher" text="Comprobante" prefWidth="150"/>
+                        <TableColumn fx:id="colLedgerDescription" text="Descripción" prefWidth="300"/>
+                        <TableColumn fx:id="colLedgerDebit" text="Débito" prefWidth="120"/>
+                        <TableColumn fx:id="colLedgerCredit" text="Crédito" prefWidth="120"/>
+                        <TableColumn fx:id="colLedgerRunning" text="Saldo corrido" prefWidth="140"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- ================= Fichero Histórico ================= -->
+        <Tab text="Fichero Histórico">
+            <VBox spacing="12" styleClass="p-4">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="Desde:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="historyStartDate"/>
+                    <Label text="Hasta:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="historyEndDate"/>
+                    <Label text="Cuenta (filtro):" styleClass="text-slate-700"/>
+                    <TextField fx:id="historyAccountFilter" prefWidth="160"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnGenerateHistory" onAction="#onGenerateVoucherHistory" styleClass="btn, btn-primary" graphicTextGap="8" contentDisplay="LEFT">
+                        <text>Generar</text>
+                        <graphic><FontIcon iconLiteral="mdi2p-play" iconSize="18"/></graphic>
+                    </Button>
+                </HBox>
+
+                <Label fx:id="historyStatusLabel" styleClass="text-slate-500" wrapText="true"/>
+
+                <TableView fx:id="voucherHistoryTable" prefHeight="360" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colHistVoucher" text="Comprobante" prefWidth="150"/>
+                        <TableColumn fx:id="colHistDate" text="Fecha" prefWidth="110"/>
+                        <TableColumn fx:id="colHistAccount" text="Cuenta" prefWidth="240"/>
+                        <TableColumn fx:id="colHistDescription" text="Descripción" prefWidth="260"/>
+                        <TableColumn fx:id="colHistDebit" text="Débito" prefWidth="120"/>
+                        <TableColumn fx:id="colHistCredit" text="Crédito" prefWidth="120"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+    </TabPane>
+
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20"/>
+    </padding>
+</VBox>

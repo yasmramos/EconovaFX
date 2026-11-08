@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class FinancialReport extends BaseEntity {
 
     public enum ReportType {
-        BALANCE_SHEET, INCOME_STATEMENT, CASH_FLOW, TRIAL_BALANCE
+        BALANCE_SHEET, INCOME_STATEMENT, CASH_FLOW, TRIAL_BALANCE, CHANGES_IN_EQUITY
     }
 
     @Column(nullable = false)

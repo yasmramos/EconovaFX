@@ -371,7 +371,9 @@ public class MainViewController implements Initializable {
     @FXML
     private void showReports() {
         logger.debug("Showing reports");
-        updateStatus("Reportes - Próximamente");
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createFinancialReportingView());
+        updateStatus("Reportes Financieros");
     }
 
     @FXML
@@ -621,7 +623,9 @@ public class MainViewController implements Initializable {
     private void showFinanzas() {
         logger.debug("Showing finanzas");
         setActiveButton(btnFinanzas);
-        updateStatus("Finanzas - Próximamente");
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createFinancialReportingView());
+        updateStatus("Finanzas - Estados Financieros");
     }
 
     @FXML

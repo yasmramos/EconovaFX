@@ -304,6 +304,74 @@ public class FinancialReportingService {
     }
 
     /**
+     * Generate a Statement of Changes in Equity report.
+     * Resolution 340/2004 requires this statement alongside the balance sheet
+     * and income statement. It shows the opening equity, the result of the
+     * period (net income) and the resulting closing equity.
+     *
+     * @param startDate start date of the period
+     * @param endDate end date of the period
+     * @param fiscalYear fiscal year
+     * @return generated FinancialReport entity
+     */
+    @Transactional(readOnly = true)
+    public FinancialReport generateChangesInEquityStatement(LocalDate startDate, LocalDate endDate, Integer fiscalYear) {
+        FinancialReport report = new FinancialReport();
+        report.setReportType(FinancialReport.ReportType.CHANGES_IN_EQUITY);
+        report.setStartDate(startDate);
+        report.setEndDate(endDate);
+        report.setFiscalYear(fiscalYear);
+        report.setFinal(false);
+
+        List<ReportLine> lines = new ArrayList<>();
+
+        // Opening equity: equity accounts balance accumulated before the period.
+        BigDecimal openingEquity = BigDecimal.ZERO;
+        for (Account account : accountRepository.findByType(AccountType.EQUITY)) {
+            openingEquity = openingEquity.add(calculateAccountBalanceBefore(account, startDate));
+        }
+        lines.add(new ReportLine("", "Opening Equity", BigDecimal.ZERO, openingEquity, openingEquity.negate()));
+
+        // Result of the period: revenue minus expenses within the period.
+        BigDecimal periodResult = BigDecimal.ZERO;
+        for (Account account : accountRepository.findByType(AccountType.REVENUE)) {
+            periodResult = periodResult.add(calculateAccountBalancePeriod(account, startDate, endDate));
+        }
+        for (Account account : accountRepository.findByType(AccountType.EXPENSE)) {
+            periodResult = periodResult.subtract(calculateAccountBalancePeriod(account, startDate, endDate));
+        }
+        lines.add(new ReportLine("", "Result of the Period", BigDecimal.ZERO, periodResult, periodResult.negate()));
+
+        BigDecimal closingEquity = openingEquity.add(periodResult);
+        lines.add(new ReportLine("", "Closing Equity", BigDecimal.ZERO, closingEquity, closingEquity.negate()));
+
+        report.setLines(lines);
+        report.setGeneratedData("Statement of Changes in Equity generated successfully");
+
+        return reportRepository.save(report);
+    }
+
+    /**
+     * Calculate the equity balance accumulated strictly before a date.
+     *
+     * @param account the equity account
+     * @param beforeDate exclusive upper bound
+     * @return accumulated balance before {@code beforeDate}
+     */
+    private BigDecimal calculateAccountBalanceBefore(Account account, LocalDate beforeDate) {
+        List<Transaction> transactions = transactionRepository.findPostedByDateRange(LocalDate.MIN, beforeDate.minusDays(1));
+        BigDecimal balance = BigDecimal.ZERO;
+        for (Transaction transaction : transactions) {
+            for (TransactionEntry entry : transaction.getEntries()) {
+                if (entry.getAccount().getId().equals(account.getId())) {
+                    balance = balance.add(entry.getCreditAmount().subtract(entry.getDebitAmount()));
+                }
+            }
+        }
+        return balance;
+    }
+
+    /**
      * Finalize a report, making it immutable.
      *
      * @param reportId ID of the report to finalize

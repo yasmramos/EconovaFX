@@ -120,6 +120,13 @@ public final class AppContext {
         UserContext userContext = beanScope.get(UserContext.class);
         inventoryController = new InventoryController(inventoryService, userContext);
 
+        // Financial reporting view (statements + Trial Balance + General Ledger)
+        com.econovafx.modules.reporting.controller.FinancialReportingViewController financialReportingViewController =
+                new com.econovafx.modules.reporting.controller.FinancialReportingViewController(
+                        beanScope.get(com.econovafx.modules.reporting.controller.FinancialReportingController.class),
+                        beanScope.get(com.econovafx.modules.accounting.service.AccountingReportService.class),
+                        accountService);
+
         // Create ViewFactory with controllers that don't need it back
         viewFactory = new ViewFactory(
                 null, // dashboardController - will be set later
@@ -136,6 +143,7 @@ public final class AppContext {
                 null, // systemSettingsController - will be set later
                 inventoryController,
                 null, // webViewController - will be set later
+                financialReportingViewController,
                 accountService,
                 thirdPartyService,
                 transactionService,
@@ -185,6 +193,7 @@ public final class AppContext {
                 systemSettingsController,
                 inventoryController,
                 webViewController,
+                financialReportingViewController,
                 accountService,
                 thirdPartyService,
                 transactionService,
