@@ -511,32 +511,30 @@ public class ComprobanteFormController implements Initializable {
             validationLabel.setManaged(false);
 
             // Create or update transaction
+            ThirdParty selectedThirdParty = thirdPartyComboBox.getValue();
+            ThirdParty effectiveThirdParty =
+                    (selectedThirdParty != null && selectedThirdParty.getId() != null) ? selectedThirdParty : null;
+
             if (editingTransaction == null) {
                 editingTransaction = new Transaction();
                 editingTransaction.setDate(date);
                 editingTransaction.setType("JOURNAL");
                 editingTransaction.setDescription(description);
                 editingTransaction.setIsPosted(false);
-                
-                // Set third party if selected
-                ThirdParty selectedThirdParty = thirdPartyComboBox.getValue();
-                if (selectedThirdParty != null && selectedThirdParty.getId() != null) {
-                    editingTransaction.setThirdParty(selectedThirdParty);
+
+                if (effectiveThirdParty != null) {
+                    editingTransaction.setThirdParty(effectiveThirdParty);
                 }
 
                 transactionService.createTransaction(editingTransaction, entryDataList);
             } else {
-                // Update existing (simplified - in production would need more complex logic)
-                editingTransaction.setDate(date);
-                editingTransaction.setDescription(description);
-                
-                // Update third party
-                ThirdParty selectedThirdParty = thirdPartyComboBox.getValue();
-                if (selectedThirdParty != null && selectedThirdParty.getId() != null) {
-                    editingTransaction.setThirdParty(selectedThirdParty);
-                } else {
-                    editingTransaction.setThirdParty(null);
-                }
+                transactionService.updateTransaction(
+                        editingTransaction.getId(),
+                        date,
+                        description,
+                        effectiveThirdParty,
+                        entryDataList,
+                        "system");
             }
 
             saved = true;

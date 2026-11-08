@@ -47,7 +47,7 @@ class TransactionServiceTest {
         auditService = new AuditService(new StubAuditLogRepositoryForTransaction());
         accountingPeriodService = new StubAccountingPeriodService();
         closingEntryRepository = new StubClosingEntryRepository();
-        transactionService = new TransactionService(transactionRepository, accountRepository, auditService, accountingPeriodService, closingEntryRepository);
+        transactionService = new TransactionService(transactionRepository, accountRepository, auditService, accountingPeriodService, closingEntryRepository, new StubDocumentSequenceRepository());
     }
 
     @Test
@@ -89,6 +89,125 @@ class TransactionServiceTest {
 
         assertNotNull(result.getNumber());
         assertTrue(result.getNumber().startsWith("TXN-2026-"));
+    }
+
+    @Test
+    void testCreateTransactionNumberNeverReusesDeletedNumber() {
+        Account debitAccount = accountRepository.save(new Account("1001", "Cash", AccountType.ASSET));
+        Account creditAccount = accountRepository.save(new Account("4001", "Sales", AccountType.REVENUE));
+
+        List<TransactionService.TransactionEntryData> entries = List.of(
+            new TransactionService.TransactionEntryData(debitAccount.getId(), new BigDecimal("100.00"), BigDecimal.ZERO, "Debit"),
+            new TransactionService.TransactionEntryData(creditAccount.getId(), BigDecimal.ZERO, new BigDecimal("100.00"), "Credit")
+        );
+
+        Transaction first = transactionService.createTransaction(newTransaction(), entries);
+        String firstNumber = first.getNumber();
+
+        // Remove the issued transaction: a row count would now hand out the same number again.
+        transactionService.deleteTransaction(first.getId());
+
+        Transaction second = transactionService.createTransaction(newTransaction(), entries);
+
+        assertNotEquals(firstNumber, second.getNumber(),
+            "A deleted voucher number must never be reused (Resolution 340/2004)");
+        assertTrue(second.getNumber().compareTo(firstNumber) > 0,
+            "Next number must follow the highest already issued");
+    }
+
+    @Test
+    void testCreateTransactionNumberFollowsHighestIssued() {
+        Account debitAccount = accountRepository.save(new Account("1001", "Cash", AccountType.ASSET));
+        Account creditAccount = accountRepository.save(new Account("4001", "Sales", AccountType.REVENUE));
+
+        List<TransactionService.TransactionEntryData> entries = List.of(
+            new TransactionService.TransactionEntryData(debitAccount.getId(), new BigDecimal("100.00"), BigDecimal.ZERO, "Debit"),
+            new TransactionService.TransactionEntryData(creditAccount.getId(), BigDecimal.ZERO, new BigDecimal("100.00"), "Credit")
+        );
+
+        Transaction first = transactionService.createTransaction(newTransaction(), entries);
+        Transaction second = transactionService.createTransaction(newTransaction(), entries);
+
+        assertEquals("TXN-2026-000001", first.getNumber());
+        assertEquals("TXN-2026-000002", second.getNumber());
+    }
+
+    @Test
+    void testUpdateTransactionReplacesEntriesAndHeader() {
+        Account cash = accountRepository.save(new Account("1001", "Cash", AccountType.ASSET));
+        Account sales = accountRepository.save(new Account("4001", "Sales", AccountType.REVENUE));
+        Account expense = accountRepository.save(new Account("5001", "Expense", AccountType.EXPENSE));
+
+        Transaction original = newTransaction();
+        List<TransactionService.TransactionEntryData> originalEntries = List.of(
+            new TransactionService.TransactionEntryData(cash.getId(), new BigDecimal("100.00"), BigDecimal.ZERO, "Debit"),
+            new TransactionService.TransactionEntryData(sales.getId(), BigDecimal.ZERO, new BigDecimal("100.00"), "Credit")
+        );
+        Transaction created = transactionService.createTransaction(original, originalEntries);
+
+        List<TransactionService.TransactionEntryData> newEntries = List.of(
+            new TransactionService.TransactionEntryData(expense.getId(), new BigDecimal("250.00"), BigDecimal.ZERO, "New debit"),
+            new TransactionService.TransactionEntryData(cash.getId(), BigDecimal.ZERO, new BigDecimal("250.00"), "New credit")
+        );
+
+        Transaction updated = transactionService.updateTransaction(
+            created.getId(), LocalDate.now(), "Updated description", null, newEntries, "tester");
+
+        assertEquals("Updated description", updated.getDescription());
+        assertEquals(2, updated.getEntries().size());
+        assertEquals(0, new BigDecimal("250.00").compareTo(updated.getTotalDebit()));
+        assertEquals(0, new BigDecimal("250.00").compareTo(updated.getTotalCredit()));
+        assertEquals(expense.getId(), updated.getEntries().get(0).getAccount().getId());
+        assertTrue(transactionRepository.updateCalled);
+    }
+
+    @Test
+    void testUpdateTransactionRejectsPostedTransaction() {
+        Account cash = accountRepository.save(new Account("1001", "Cash", AccountType.ASSET));
+        Account sales = accountRepository.save(new Account("4001", "Sales", AccountType.REVENUE));
+
+        Transaction posted = new Transaction();
+        posted.setId(1L);
+        posted.setNumber("TXN-2026-000001");
+        posted.setStatus(com.econovafx.modules.accounting.model.TransactionStatus.POSTED);
+        transactionRepository.save(posted);
+
+        List<TransactionService.TransactionEntryData> entries = List.of(
+            new TransactionService.TransactionEntryData(cash.getId(), new BigDecimal("10.00"), BigDecimal.ZERO, "Debit"),
+            new TransactionService.TransactionEntryData(sales.getId(), BigDecimal.ZERO, new BigDecimal("10.00"), "Credit")
+        );
+
+        ValidationException exception = assertThrows(ValidationException.class,
+            () -> transactionService.updateTransaction(1L, LocalDate.now(), "desc", null, entries, "tester"));
+
+        assertTrue(exception.getMessage().contains("Cannot delete posted transaction"));
+    }
+
+    @Test
+    void testUpdateTransactionRejectsUnbalancedEntries() {
+        Account cash = accountRepository.save(new Account("1001", "Cash", AccountType.ASSET));
+        Account sales = accountRepository.save(new Account("4001", "Sales", AccountType.REVENUE));
+
+        Transaction draft = transactionService.createTransaction(newTransaction(), List.of(
+            new TransactionService.TransactionEntryData(cash.getId(), new BigDecimal("100.00"), BigDecimal.ZERO, "Debit"),
+            new TransactionService.TransactionEntryData(sales.getId(), BigDecimal.ZERO, new BigDecimal("100.00"), "Credit")
+        ));
+
+        List<TransactionService.TransactionEntryData> unbalanced = List.of(
+            new TransactionService.TransactionEntryData(cash.getId(), new BigDecimal("100.00"), BigDecimal.ZERO, "Debit"),
+            new TransactionService.TransactionEntryData(sales.getId(), BigDecimal.ZERO, new BigDecimal("90.00"), "Credit")
+        );
+
+        assertThrows(BusinessException.class,
+            () -> transactionService.updateTransaction(draft.getId(), LocalDate.now(), "desc", null, unbalanced, "tester"));
+    }
+
+    private Transaction newTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setDate(LocalDate.now());
+        transaction.setType("JOURNAL");
+        transaction.setDescription("Test transaction");
+        return transaction;
     }
 
     @Test
@@ -648,6 +767,21 @@ class TransactionServiceTest {
         public long count() {
             return transactions.size();
         }
+
+        @Override
+        public String findMaxNumberByPrefix(String prefix) {
+            return transactions.stream()
+                .map(Transaction::getNumber)
+                .filter(n -> n != null && n.startsWith(prefix))
+                .max(String::compareTo)
+                .orElse(null);
+        }
+
+        @Override
+        public boolean existsByNumber(String number) {
+            return transactions.stream()
+                .anyMatch(t -> number.equals(t.getNumber()));
+        }
     }
 
     private static class StubAccountRepositoryForTransaction extends AccountRepository {
@@ -797,6 +931,30 @@ class TransactionServiceTest {
         @Override
         public void save(com.econovafx.modules.accounting.model.ClosingEntry closingEntry) {
             // No-op for testing
+        }
+    }
+
+    private static class StubDocumentSequenceRepository extends com.econovafx.modules.accounting.repository.DocumentSequenceRepository {
+        private final java.util.Map<String, com.econovafx.modules.accounting.model.DocumentSequence> store = new java.util.HashMap<>();
+
+        public StubDocumentSequenceRepository() {
+            super(null);
+        }
+
+        @Override
+        public com.econovafx.modules.accounting.model.DocumentSequence findByKey(String sequenceKey) {
+            return store.get(sequenceKey);
+        }
+
+        @Override
+        public com.econovafx.modules.accounting.model.DocumentSequence save(com.econovafx.modules.accounting.model.DocumentSequence sequence) {
+            store.put(sequence.getSequenceKey(), sequence);
+            return sequence;
+        }
+
+        @Override
+        public void update(com.econovafx.modules.accounting.model.DocumentSequence sequence) {
+            store.put(sequence.getSequenceKey(), sequence);
         }
     }
 }
