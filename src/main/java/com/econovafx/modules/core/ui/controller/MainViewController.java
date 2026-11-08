@@ -5,6 +5,7 @@ import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.service.UserService;
 import com.econovafx.modules.core.ui.util.NotificationService;
 import com.econovafx.modules.core.ui.util.ThemeManager;
+import com.econovafx.modules.core.ui.util.UiMotion;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import io.avaje.inject.Component;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -190,6 +192,14 @@ public class MainViewController implements Initializable {
         } catch (Exception e) {
             logger.error("Error during dashboard initialization", e);
         }
+
+        // Every view swap goes through contentArea. Animating it once here gives
+        // each screen a short fade-and-rise entrance without touching 20 handlers.
+        contentArea.getChildren().addListener((javafx.collections.ListChangeListener<Node>) change -> {
+            if (!contentArea.getChildren().isEmpty()) {
+                UiMotion.enter(contentArea.getChildren().get(contentArea.getChildren().size() - 1));
+            }
+        });
         
         // Defer welcome notification to ensure scene is fully ready
         javafx.application.Platform.runLater(() -> {

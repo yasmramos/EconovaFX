@@ -77,6 +77,16 @@ styling the JavaFX app.
 - Modena leaks on some controls; reset them explicitly. The chart frame/plot
   area and the progress indicator both needed this (see `dashboard.css`,
   `controls.css`).
+- JavaFX CSS has **no** `-fx-transition`, `@keyframes` or `-fx-animation`. The
+  sheets used to declare all three, so the KPI "fade-in" and every hover
+  transition looked defined but never ran. Real motion lives in
+  `UiMotion` (code, on the nodes): `enter` fades a view in and rises it,
+  `enterStaggered` sequences a grid of cards, `installHoverLift` lifts on hover.
+  It defers until a node is attached to a scene, and no-ops under reduced
+  motion (`-Deconovafx.reducedMotion=true`, or `UiMotion.setReducedMotion`).
+  A sheet must not also set `-fx-translate-y` on a node the motion moves, or the
+  sheet value fights the animation every frame. `StyleMotionDisciplineTest`
+  fails the build if any of the dead properties come back.
 - Modena paints its chart series with a **compound** selector on the series node
   itself (`.default-color0.chart-bar`, `.default-color0.chart-series-line`,
   `.default-color0.chart-series-area-fill`). A descendant selector

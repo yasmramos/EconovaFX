@@ -24,7 +24,6 @@
     -fx-background-insets: 0;
     -fx-padding: 20;
     -fx-effect: dropshadow(gaussian, -shadow-xs, 2, 0, 0, 1);
-    -fx-transition: -fx-effect 0.2s ease, -fx-border-color 0.2s ease;
 }
 
 .card-assets:hover,
@@ -34,7 +33,8 @@
 .card-profit:hover {
     -fx-border-color: -input-hover;
     -fx-effect: dropshadow(gaussian, -shadow-md, 8, 0, 0, 4);
-    -fx-translate-y: -2;
+    /* No -fx-translate-y here: the hover lift is a TranslateTransition in
+       UiMotion, and a sheet value would fight it every frame. */
 }
 
 .card-label {
@@ -161,25 +161,17 @@
     -fx-background-radius: 8;
     -fx-padding: 10;
     -fx-cursor: hand;
-    -fx-transition: -fx-background-color 0.15s ease;
 }
 .stat-item:hover { -fx-background-color: -muted; }
 
 /* -----------------------------------------------------------------------------
  * ANIMATIONS
+ * None here. JavaFX CSS has no -fx-transition, @keyframes or -fx-animation, so
+ * the fade-in and hover transitions that used to live in this sheet never ran.
+ * Real motion is applied in code (see UiMotion), which also keeps the card's
+ * translateY free for the hover lift. A guard test fails the build if any of
+ * those dead properties come back.
  * --------------------------------------------------------------------------- */
-@keyframes fade-in {
-    from { -fx-opacity: 0; -fx-translate-y: 10; }
-    to { -fx-opacity: 1; -fx-translate-y: 0; }
-}
-
-.card-assets,
-.card-liabilities,
-.card-equity,
-.card-balance,
-.card-profit {
-    -fx-animation: fade-in 0.3s ease-out;
-}
 
 /* -----------------------------------------------------------------------------
  * FILTER BAR
