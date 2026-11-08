@@ -213,17 +213,47 @@ public class ChartsAndThemeTest extends ApplicationTest {
             // The series node carries "default-color0" and "chart-bar" on itself,
             // so only a compound selector matches. The old descendant selector
             // (".chart-bar .default-color0.chart-bar") never did, and every bar
-            // fell back to Modena's orange. Modena then paints a gradient derived
-            // from -fx-bar-fill, whose middle stop is the base colour, so that
-            // stop must sit on the matching -series token.
+            // fell back to Modena's orange. The bar now paints our own wash ->
+            // token sheen, so its lower stop must sit on the matching -series.
             Color[] expected = {Color.web("#3b82f6"), Color.web("#10b981"), Color.web("#f59e0b")};
             for (int i = 0; i < 3; i++) {
                 Node series = seriesNode(bar, ".default-color" + i + ".chart-bar");
                 Paint fill = fillOfNode(series);
                 assertTrue(fill instanceof LinearGradient,
-                        "bar series " + i + " should keep Modena's derived gradient, got " + fill);
-                Color mid = ((LinearGradient) fill).getStops().get(2).getColor();
-                assertColorNear(expected[i], mid, 0.02);
+                        "bar series " + i + " should keep our sheen, got " + fill);
+                LinearGradient g = (LinearGradient) fill;
+                assertColorNear(expected[i], g.getStops().get(1).getColor(), 0.02);
+            }
+        });
+    }
+
+    @Test
+    public void legendSwatchKeepsItsSizeForBarAndPie() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            BarChart<String, Number> bar = new BarChart<>(new CategoryAxis(), new NumberAxis());
+            XYChart.Series<String, Number> s = new XYChart.Series<>();
+            s.setName("S");
+            s.getData().add(new XYChart.Data<>("Ene", 10));
+            bar.getData().add(s);
+            bar.setLegendVisible(true);
+
+            PieChart pie = new PieChart();
+            pie.getData().add(new PieChart.Data("A", 1));
+
+            VBox root = show(new VBox(bar, pie));
+            root.applyCss();
+            root.layout();
+
+            // The legend swatch for a bar/pie chart carries .chart-bar / .chart-pie
+            // on itself. A blanket ".chart-bar { -fx-padding: 0 }" on the chart
+            // class also hit the swatch and overrode Modena's .bar-legend-symbol
+            // sizing, collapsing it to 0x0 - a legend of bare text, no colour key.
+            for (javafx.scene.Parent chart : new javafx.scene.Parent[]{bar, pie}) {
+                Node swatch = chart.lookup(".chart-legend-item-symbol");
+                assertNotNull(swatch, "the legend swatch must resolve");
+                Region r = (Region) swatch;
+                assertTrue(r.getLayoutBounds().getWidth() > 4 && r.getLayoutBounds().getHeight() > 4,
+                        "the legend swatch must keep a visible size, was " + r.getLayoutBounds());
             }
         });
     }

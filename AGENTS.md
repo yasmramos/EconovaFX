@@ -86,6 +86,17 @@ styling the JavaFX app.
   uses the compound form and covers all five `-series-*`. Bar and line symbols
   are ringed with `-card` rather than Modena's literal white, which glares in
   dark.
+- The legend swatch of a bar/pie chart carries the `.chart-bar` / `.chart-pie`
+  class on itself, and Modena sizes it via `.bar-legend-symbol` /
+  `.pie-legend-symbol.chart-pie { -fx-padding: 8px }`. A blanket
+  `-fx-padding: 0` on those chart classes therefore also hit the swatch and
+  collapsed it to 0x0 - a legend of bare text, no colour key. Do not pad the
+  chart classes; the swatch is a `.chart-bar` too, so it also picks up the bar
+  gradient, which keeps it consistent with the bars.
+- Bars carry their own `-fx-background-color` sheen (`-series-N-wash` to
+  `-series-N`) instead of relying on Modena's five-stop `derive()` of
+  `-fx-bar-fill`. Keep `-fx-bar-fill` set as well: the legend swatch and any
+  code reading the bar colour fall back to it.
 - A rounded surface with a visible border must declare `-fx-border-radius` equal
   to its `-fx-background-radius`, or JavaFX paints a square hairline that pokes
   out of the rounded corners (the "corner tip"). `StyleShapeDisciplineTest`
