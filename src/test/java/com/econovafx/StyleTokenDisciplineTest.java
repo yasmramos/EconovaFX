@@ -48,6 +48,16 @@ class StyleTokenDisciplineTest {
     private static final Pattern RAW_COLOUR = Pattern.compile(
             "#[0-9a-fA-F]{3,8}\\b|rgba?\\s*\\(");
 
+    /**
+     * The status palette has semantic twins that flip with the theme
+     * ({@code -blue-500} -> {@code -info}, {@code -red-50} -> {@code -danger-soft}).
+     * A sheet that reaches for the raw ramp entry instead freezes that colour on
+     * the light palette. Neutrals ({@code -zinc-*}) are deliberately exempt: the
+     * sidebar rail is zinc by design and stays dark in both themes.
+     */
+    private static final Pattern RAW_STATUS_PALETTE = Pattern.compile(
+            "-(?:blue|green|red|orange|amber|emerald|yellow|purple)-\\d+\\b");
+
     @Test
     void javafxStylesheetsUseTokensNotRawColours() throws IOException {
         List<String> offenders = new ArrayList<>();
@@ -105,6 +115,45 @@ class StyleTokenDisciplineTest {
                 "these FXML files set a raw colour (iconColor=\"#...\") that beats the"
                         + " stylesheets and will not flip in dark mode; use a token class"
                         + " such as .icon-success or .icon-brand instead:\n  "
+                        + String.join("\n  ", offenders));
+    }
+
+    @Test
+    void stylesheetsUseSemanticStatusTokensNotTheRawRamp() throws IOException {
+        List<String> offenders = new ArrayList<>();
+        int checked = 0;
+
+        try (Stream<Path> files = Files.walk(CSS_ROOT)) {
+            for (Path css : files.filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".css"))
+                    .toList()) {
+                String rel = relative(css);
+                if (ALLOWED.stream().anyMatch(rel::contains)) {
+                    continue;
+                }
+                checked++;
+
+                List<String> lines = Files.readAllLines(css);
+                for (int i = 0; i < lines.size(); i++) {
+                    String line = lines.get(i);
+                    // Only the declaration is inspected: a class name such as
+                    // ".bg-blue-500" legitimately contains the ramp spelling.
+                    int colon = line.indexOf(':');
+                    String declaration = colon >= 0 ? line.substring(colon + 1) : "";
+                    Matcher matcher = RAW_STATUS_PALETTE.matcher(declaration);
+                    if (matcher.find()) {
+                        offenders.add(rel + ":" + (i + 1) + " -> " + line.strip());
+                    }
+                }
+            }
+        }
+
+        assertTrue(checked > 0, "no stylesheets found; the scan itself is broken");
+        assertTrue(offenders.isEmpty(),
+                "these stylesheets reach for a raw status-ramp entry instead of its"
+                        + " semantic token, so the colour will not flip in dark mode; use"
+                        + " -info/-info-soft, -success/-success-soft, -warning/-warning-soft,"
+                        + " -danger/-danger-soft or -purple/-purple-soft:\n  "
                         + String.join("\n  ", offenders));
     }
 

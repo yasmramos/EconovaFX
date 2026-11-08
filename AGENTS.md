@@ -99,6 +99,17 @@ styling the JavaFX app.
   - loading veils: `-page-veil` / `-card-veil`.
 - The raw `-zinc-*` scale does **not** flip with the theme. Structural chrome
   must use semantic tokens that do (`-page`, `-thumb`, `-fg-*`, `-card`).
+- The status ramps (`-blue-*`, `-green-*`, `-red-*`, `-orange-*`, `-amber-*`,
+  `-emerald-*`, `-yellow-*`, `-purple-*`) do not flip either. Reach for their
+  semantic twin: `-info` / `-info-soft` / `-info-hover`, `-success*`,
+  `-warning*`, `-danger*` (or `-destructive*`), `-purple*`. The Tailwind-style
+  utilities (`bg-blue-50`, `text-red-600`, ...) already map to the semantic
+  tokens; a raw ramp value in a declaration does not. `StyleTokenDisciplineTest`
+  fails the build on a raw ramp entry used as a CSS value.
+- A glyph on a solid fill follows that fill's `-*-foreground` token, never a
+  literal `white`. `controls.css` wires `.btn-info` / `-success` / `-warning` /
+  `-danger` / `-primary` to set `-fx-fill` on the `FontIcon` / `SVGPath` child,
+  so the ink stays readable on the lighter fills dark mode uses.
 - Dark mode redefines the same tokens under `.root.dark`. `ThemeManager`
   toggles that class on the scene root and persists the choice with
   `java.util.prefs.Preferences` (never `ConfigFileUtil.saveProperties`, which

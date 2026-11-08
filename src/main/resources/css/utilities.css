@@ -18,24 +18,26 @@
 .background    { -fx-background-color: -page; }
 .bg-transparent { -fx-background-color: transparent; }
 
-.bg-blue-50     { -fx-background-color: -blue-50; }
-.bg-blue-500    { -fx-background-color: -blue-500; }
-.bg-green-50    { -fx-background-color: -green-50; }
-.bg-green-500   { -fx-background-color: -green-500; }
-.bg-emerald-500 { -fx-background-color: -emerald-500; }
-.bg-orange-50   { -fx-background-color: -orange-50; }
-.bg-orange-500  { -fx-background-color: -orange-500; }
-.bg-red-50      { -fx-background-color: -red-50; }
-.bg-red-500     { -fx-background-color: -red-500; }
-.bg-amber-500   { -fx-background-color: -amber-500; }
-.bg-yellow-50   { -fx-background-color: -yellow-50; }
-.bg-purple-50   { -fx-background-color: -purple-50; }
+/* Status hues resolve to the semantic tokens, so every one of these utilities
+ * flips with the theme. The raw -blue-500 / -red-50 palette entries do not. */
+.bg-blue-50     { -fx-background-color: -info-soft; }
+.bg-blue-500    { -fx-background-color: -info; }
+.bg-green-50    { -fx-background-color: -success-soft; }
+.bg-green-500   { -fx-background-color: -success; }
+.bg-emerald-500 { -fx-background-color: -success; }
+.bg-orange-50   { -fx-background-color: -warning-soft; }
+.bg-orange-500  { -fx-background-color: -warning; }
+.bg-red-50      { -fx-background-color: -danger-soft; }
+.bg-red-500     { -fx-background-color: -danger; }
+.bg-amber-500   { -fx-background-color: -warning; }
+.bg-yellow-50   { -fx-background-color: -warning-soft; }
+.bg-purple-50   { -fx-background-color: -purple-soft; }
 
 /* Fill (icons, shapes) */
 .fill-white      { -fx-fill: white; -fx-text-fill: white; }
-.fill-yellow-600 { -fx-fill: -yellow-600; -fx-text-fill: -yellow-600; }
-.fill-red-600    { -fx-fill: -red-600; -fx-text-fill: -red-600; }
-.fill-green-600  { -fx-fill: -green-600; -fx-text-fill: -green-600; }
+.fill-yellow-600 { -fx-fill: -warning; -fx-text-fill: -warning; }
+.fill-red-600    { -fx-fill: -danger; -fx-text-fill: -danger; }
+.fill-green-600  { -fx-fill: -success; -fx-text-fill: -success; }
 .fill-current    { -fx-fill: -foreground; -fx-text-fill: -foreground; }
 
 /* =============================================================================
@@ -59,7 +61,7 @@
 .text-orange-600 { -fx-text-fill: -warning; }
 .text-purple-600 { -fx-text-fill: -purple; }
 .text-red-600    { -fx-text-fill: -destructive; }
-.text-yellow-800 { -fx-text-fill: -yellow-800; }
+.text-yellow-800 { -fx-text-fill: -warning; }
 .text-warning    { -fx-text-fill: -warning; }
 .text-danger     { -fx-text-fill: -destructive; }
 .text-muted      { -fx-text-fill: -muted-foreground; }
@@ -132,16 +134,16 @@
 .rounded-full{ -fx-background-radius: 9999; }
 
 .border         { -fx-border-color: -border; -fx-border-width: 1; }
-.border-gray-200{ -fx-border-color: -zinc-200; -fx-border-width: 1; }
-.border-gray-300{ -fx-border-color: -zinc-300; -fx-border-width: 1; }
-.border-gray-400{ -fx-border-color: -zinc-400; -fx-border-width: 1; }
+.border-gray-200{ -fx-border-color: -border; -fx-border-width: 1; }
+.border-gray-300{ -fx-border-color: -input-hover; -fx-border-width: 1; }
+.border-gray-400{ -fx-border-color: -ring; -fx-border-width: 1; }
 /* Per-side helpers spell the colour out per edge: JavaFX accepts the
    "top"/"left" keywords, but combining them with a looked-up colour is
    needlessly fragile, so the transparent sides are stated explicitly. */
 .border-t          { -fx-border-width: 1 0 0 0; -fx-border-color: -border transparent transparent transparent; }
 .border-b          { -fx-border-width: 0 0 1 0; -fx-border-color: transparent transparent -border transparent; }
 .border-l-4        { -fx-border-width: 0 0 0 4; -fx-border-color: transparent transparent transparent -border; }
-.border-yellow-400 { -fx-border-width: 0 0 0 4; -fx-border-color: transparent transparent transparent -yellow-400; }
+.border-yellow-400 { -fx-border-width: 0 0 0 4; -fx-border-color: transparent transparent transparent -warning; }
 .border-l-primary  { -fx-border-width: 0 0 0 3; -fx-border-color: transparent transparent transparent -primary; }
 
 .shadow-xs { -fx-effect: dropshadow(gaussian, -shadow-xs, 2, 0, 0, 1); }
