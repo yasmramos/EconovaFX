@@ -178,22 +178,19 @@
 .button-info { -fx-background-color: -info; -fx-border-color: -info; -fx-text-fill: -info-foreground; }
 .button-info:hover { -fx-background-color: -info-hover; }
 
-/* A solid fill declares its own -fx-border-color after .button:focused, so it
-   wins and the button would show no focus at all. Give these an outer glow: it
-   sits on the surrounding surface, where -ring clears 3:1, unlike a border
-   drawn against the near-white primary fill in dark mode. */
+/* .button:focused carries a pseudo-class, so it outranks a plain variant class
+   and replaces the fill with the translucent ring wash - which turns a focused
+   solid button into a ghost. Keep the fill; the ring border still shows. */
 .btn-primary:focused,
-.button-primary:focused,
+.button-primary:focused { -fx-background-color: -primary; }
 .btn-danger:focused,
+.button-danger:focused { -fx-background-color: -destructive; }
 .btn-success:focused,
+.button-success:focused { -fx-background-color: -success; }
 .btn-warning:focused,
+.button-warning:focused { -fx-background-color: -warning; }
 .btn-info:focused,
-.button-danger:focused,
-.button-success:focused,
-.button-warning:focused,
-.button-info:focused {
-    -fx-effect: dropshadow(gaussian, -ring, 3, 0.6, 0, 0);
-}
+.button-info:focused { -fx-background-color: -info; }
 
 /* ------------------------------------------------------------------- sizes */
 .btn-sm {
