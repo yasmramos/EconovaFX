@@ -14,11 +14,11 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
- * Genera los reportes contables obligatorios de la Resolución 340/2004:
- * Balance de Comprobación, Libro Mayor y Fichero Histórico de Comprobantes.
+ * Generates the mandatory accounting reports of Resolution 340/2004:
+ * Trial Balance, General Ledger and the Voucher History file.
  *
- * <p>Todos los importes se calculan sobre comprobantes en estado POSTED, que es
- * lo que la norma considera movimiento definitivo.
+ * <p>All amounts are computed from vouchers in POSTED status, which is what the
+ * regulation treats as a definitive movement.
  */
 @Component
 public class AccountingReportService {
@@ -37,14 +37,14 @@ public class AccountingReportService {
     }
 
     /**
-     * Balance de Comprobación a nivel de cuenta mayor.
+     * Trial Balance at major-account level.
      *
-     * @param startDate fecha inicial del período
-     * @param endDate   fecha final del período
-     * @param includeSubAccounts cuando es {@code false} las subcuentas se
-     *                           agregan en su cuenta mayor; cuando es {@code true}
-     *                           se presentan como líneas independientes
-     * @return una fila por cuenta con movimientos (débito, crédito y saldo)
+     * @param startDate          period start date
+     * @param endDate            period end date
+     * @param includeSubAccounts when {@code false} sub-accounts are rolled up
+     *                           into their major account; when {@code true} they
+     *                           are shown as separate rows
+     * @return one row per account with movements (debit, credit and balance)
      */
     public List<TrialBalanceRow> generateTrialBalance(LocalDate startDate, LocalDate endDate,
                                                       boolean includeSubAccounts) {
@@ -80,13 +80,13 @@ public class AccountingReportService {
     }
 
     /**
-     * Libro Mayor de una cuenta: saldo inicial (movimientos anteriores al
-     * período), movimientos del período con saldo corrido y saldo final.
+     * General Ledger of one account: opening balance (movements before the
+     * period), period movements with a running balance, and closing balance.
      *
-     * @param accountId cuenta a consultar
-     * @param startDate fecha inicial del período
-     * @param endDate   fecha final del período
-     * @return el libro mayor de la cuenta
+     * @param accountId account to inspect
+     * @param startDate period start date
+     * @param endDate   period end date
+     * @return the account's general ledger
      */
     public GeneralLedger generateGeneralLedger(Long accountId, LocalDate startDate, LocalDate endDate) {
         Account account = accountRepository.findById(accountId)
@@ -126,12 +126,12 @@ public class AccountingReportService {
     }
 
     /**
-     * Fichero Histórico de Comprobantes del período.
+     * Voucher History file for the period.
      *
-     * @param startDate         fecha inicial
-     * @param endDate           fecha final
-     * @param accountCodeFilter filtro opcional por código de cuenta (contiene)
-     * @return comprobantes con sus partidas
+     * @param startDate         start date
+     * @param endDate           end date
+     * @param accountCodeFilter optional filter by account code (contains)
+     * @return vouchers with their entries
      */
     public List<VoucherRecord> generateVoucherHistory(LocalDate startDate, LocalDate endDate,
                                                       String accountCodeFilter) {
@@ -166,10 +166,10 @@ public class AccountingReportService {
     }
 
     /**
-     * Verifica que un comprobante cuadre (débito = crédito).
+     * Checks that a voucher balances (debit = credit).
      *
-     * @param transactionId comprobante a validar
-     * @return {@code true} si el total de débitos iguala el total de créditos
+     * @param transactionId voucher to validate
+     * @return {@code true} when total debits equal total credits
      */
     public boolean validateVoucherBalance(Long transactionId) {
         BigDecimal debit = ZERO;
@@ -233,27 +233,27 @@ public class AccountingReportService {
         return move[0].compareTo(ZERO) == 0 && move[1].compareTo(ZERO) == 0;
     }
 
-    /** Fila del Balance de Comprobación. */
+    /** Trial Balance row. */
     public record TrialBalanceRow(String accountCode, String accountName, AccountType accountType,
                                   BigDecimal totalDebit, BigDecimal totalCredit, BigDecimal netBalance) {
     }
 
-    /** Línea del Libro Mayor. */
+    /** General Ledger line. */
     public record LedgerLine(Long transactionId, String voucherNumber, LocalDate date, String description,
                              BigDecimal debit, BigDecimal credit, BigDecimal runningBalance) {
     }
 
-    /** Libro Mayor de una cuenta. */
+    /** General Ledger of one account. */
     public record GeneralLedger(Long accountId, String accountCode, String accountName,
                                 BigDecimal openingBalance, List<LedgerLine> lines, BigDecimal closingBalance) {
     }
 
-    /** Partida dentro de un comprobante. */
+    /** Entry within a voucher. */
     public record VoucherEntryLine(String accountCode, String accountName,
                                    BigDecimal debit, BigDecimal credit) {
     }
 
-    /** Comprobante del fichero histórico. */
+    /** Voucher in the history file. */
     public record VoucherRecord(Long transactionId, String voucherNumber, LocalDate date, String description,
                                 List<VoucherEntryLine> entries, BigDecimal totalDebit, BigDecimal totalCredit) {
     }

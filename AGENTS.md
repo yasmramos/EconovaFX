@@ -2,6 +2,26 @@
 
 Repository-specific guidance for AI agents working on EconovaFX.
 
+## Language: English only
+
+**The whole repository is English.** Everything a contributor writes is in
+English, with one exception: end-user content. See `CONTRIBUTING.md` for the
+full policy.
+
+- **Code**: identifiers (classes, methods, variables, packages, enum constants,
+  FXML `fx:id`s) in English.
+- **Comments and Javadoc**: inline comments, block comments, `TODO`/`FIXME`
+  notes and every Javadoc tag/description in English.
+- **Documentation**: `README.md`, `AGENTS.md`, `CONTRIBUTING.md` and any other
+  Markdown in English.
+- **Commit messages and PR titles/descriptions**: English.
+- **Exception - user-facing strings**: application UI text and the localized
+  message bundles may stay in Spanish, because that is end-user content, not
+  developer documentation. Do not translate a label the user reads; do not leave
+  a comment in Spanish.
+- When you touch an existing file that carries non-English comments, translate
+  those comments to English as part of the change.
+
 ## Git identity
 
 All commits must be authored and committed as:
