@@ -124,7 +124,10 @@ styling the JavaFX app.
     `-brand-track` foregrounds. Used only by the splash/login screens, the
     brand badges and the auth primary action.
   - data series: `-series-1..5` and `-series-1..5-wash` (chart palette; fixed in
-    both themes because the hue carries meaning).
+    both themes because the hue carries meaning). Every hue must clear 3:1
+    (WCAG 1.4.11) against both card surfaces, so pick a stop that works on
+    white *and* zinc-900 - the emerald and amber entries are the 600 steps for
+    that reason. `ContrastDisciplineTest` locks the pairs.
   - loading veils: `-page-veil` / `-card-veil`.
 - The raw `-zinc-*` scale does **not** flip with the theme. Structural chrome
   must use semantic tokens that do (`-page`, `-thumb`, `-fg-*`, `-card`).

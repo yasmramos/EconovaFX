@@ -54,6 +54,10 @@ class ContrastDisciplineTest {
         static Pair ring(String fg, String bg) {
             return new Pair(fg + " on " + bg, fg, bg, RING_MIN);
         }
+
+        static Pair graphic(String fg, String bg) {
+            return new Pair(fg + " on " + bg, fg, bg, RING_MIN);
+        }
     }
 
     private static final List<Pair> PAIRS = List.of(
@@ -114,7 +118,17 @@ class ContrastDisciplineTest {
             // would resolve to a value tuned for a white page in light mode).
             Pair.text("-zinc-400", "-zinc-950"),   // nav label, section title
             Pair.text("-zinc-100", "-zinc-900"),   // nav label on hover
-            Pair.text("-zinc-50", "-zinc-800")     // nav label on the active row
+            Pair.text("-zinc-50", "-zinc-800"),    // nav label on the active row
+
+            // The chart palette does not flip with the theme, so every series
+            // hue must clear the 3:1 non-text target against BOTH card surfaces:
+            // white in light, zinc-900 in dark. A series mark is a graphical
+            // object (WCAG 1.4.11), not text.
+            Pair.graphic("-series-1", "-card"),
+            Pair.graphic("-series-2", "-card"),
+            Pair.graphic("-series-3", "-card"),
+            Pair.graphic("-series-4", "-card"),
+            Pair.graphic("-series-5", "-card")
     );
 
     @Test
