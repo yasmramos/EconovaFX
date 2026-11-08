@@ -19,7 +19,7 @@
 
 .db-dialog-title {
     -fx-text-fill: -foreground;
-    -fx-font-size: 17px;
+    -fx-font-size: 16px;
     -fx-font-weight: 600;
 }
 

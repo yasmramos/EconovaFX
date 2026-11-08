@@ -211,7 +211,7 @@
 .btn-lg {
     -fx-padding: 11 20;
     -fx-min-height: 44;
-    -fx-font-size: 15px;
+    -fx-font-size: 16px;
 }
 .btn-icon {
     -fx-padding: 0;
@@ -357,7 +357,7 @@
     -fx-background-color: transparent;
     -fx-text-fill: -foreground;
     -fx-font-size: 14px;
-    -fx-background-radius: 5;
+    -fx-background-radius: 4;
     -fx-padding: 7 10;
 }
 .combo-box-popup .list-cell:hover { -fx-background-color: -muted; }
@@ -368,7 +368,7 @@
 
 .date-picker .arrow-button {
     -fx-background-color: transparent;
-    -fx-background-radius: 0 5 5 0;
+    -fx-background-radius: 0 6 6 0;
     -fx-padding: 0 8 0 4;
 }
 .date-picker .arrow-button .arrow {
@@ -514,7 +514,7 @@
     -fx-background-color: -background;
     -fx-border-color: -input-hover;
     -fx-border-width: 1.5;
-    -fx-border-radius: 100;
+    -fx-border-radius: 9999;
     -fx-padding: 4;
 }
 .radio-button:hover > .dot { -fx-border-color: -ring; }
@@ -553,20 +553,20 @@
 }
 .slider > .track > .track {
     -fx-background-color: -border;
-    -fx-background-radius: 3;
+    -fx-background-radius: 4;
     -fx-height: 4;
 }
 .slider > .track > .filled-track {
     -fx-background-color: -primary;
-    -fx-background-radius: 3;
+    -fx-background-radius: 4;
     -fx-height: 4;
 }
 .slider > .thumb {
     -fx-background-color: -background;
     -fx-border-color: -primary;
     -fx-border-width: 2;
-    -fx-background-radius: 100;
-    -fx-border-radius: 100;
+    -fx-background-radius: 9999;
+    -fx-border-radius: 9999;
     -fx-pref-width: 16;
     -fx-pref-height: 16;
     -fx-effect: dropshadow(gaussian, -shadow-sm, 3, 0, 0, 1);
@@ -796,7 +796,7 @@
 .menu .menu-item,
 .context-menu .menu-item {
     -fx-background-color: transparent;
-    -fx-background-radius: 5;
+    -fx-background-radius: 4;
     -fx-padding: 7 10;
     -fx-font-size: 14px;
 }

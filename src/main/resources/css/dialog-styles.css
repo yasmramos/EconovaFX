@@ -67,7 +67,7 @@
     -fx-min-height: 28;
     -fx-pref-height: 28;
     -fx-text-fill: -muted-foreground;
-    -fx-font-size: 15px;
+    -fx-font-size: 14px;
     -fx-cursor: hand;
 }
 .dialog-close-btn:hover { -fx-background-color: -muted; -fx-text-fill: -foreground; }
@@ -207,7 +207,7 @@
 
 .modern-dialog-title {
     -fx-text-fill: -foreground;
-    -fx-font-size: 15px;
+    -fx-font-size: 16px;
     -fx-font-weight: 600;
 }
 .modern-dialog-message {

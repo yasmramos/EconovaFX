@@ -131,6 +131,11 @@ styling the JavaFX app.
     white *and* zinc-900 - the emerald and amber entries are the 600 steps for
     that reason. `ContrastDisciplineTest` locks the pairs.
   - loading veils: `-page-veil` / `-card-veil`.
+- The type scale is 10 / 11 / 12 / 13 / 14 / 16 / 18 / 22 / 30, published as the
+  `.text-*` utilities in `utilities.css` (13 is the dense step tables, form
+  labels and dialogs share, so it has no Tailwind-named class). Every
+  `-fx-font-size` in a JavaFX sheet must be one of those steps;
+  `TypeScaleDisciplineTest` fails the build otherwise.
 - The raw `-zinc-*` scale does **not** flip with the theme. Structural chrome
   must use semantic tokens that do (`-page`, `-thumb`, `-fg-*`, `-card`).
 - The status ramps (`-blue-*`, `-green-*`, `-red-*`, `-orange-*`, `-amber-*`,
@@ -188,6 +193,12 @@ styling the JavaFX app.
   (a table header's bottom rule) is exempt because its border is not uniform.
 - Table radii are 8, so the header's top corners are `8 8 0 0` (and the corner
   cell `8 0 0 0`); they used to say 7 and left a 1px ledge.
+- The radius scale is 0 / 4 / 6 / 8 / 10 / 12 / 9999, the steps listed in the
+  `theme-tokens.css` GEOMETRY REFERENCE. 4 is the nested radius a control takes
+  inside an 8px popover with 4px padding, 12 is the large surface (dashboard
+  hero, login card), 9999 is a pill/circle. Every `-fx-background-radius` and
+  `-fx-border-radius` must be a step - each value of a per-corner radius such as
+  `8 8 0 0` counts; `RadiusDisciplineTest` fails the build otherwise.
 - Accessibility, enforced by `ContrastDisciplineTest` (default suite): it reads
   the tokens from `theme-tokens.css` and checks WCAG ratios in both themes.
   - Text pairs must clear 4.5:1, including a status hue used as text on a card

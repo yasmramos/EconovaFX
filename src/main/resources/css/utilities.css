@@ -68,7 +68,12 @@
 
 /* =============================================================================
  * 13. UTILITIES - type scale
- * ============================================================================= */
+ *
+ * The scale is 10 / 11 / 12 / 13 / 14 / 16 / 18 / 22 / 30. Every -fx-font-size
+ * in a JavaFX sheet has to be one of these steps; TypeScaleDisciplineTest fails
+ * the build otherwise. 13 is the dense step that tables, form labels and dialogs
+ * share and has no Tailwind-named class, so it stays a literal.
+ * ========================================================================== */
 .text-2xs { -fx-font-size: 10px; }
 .text-xs  { -fx-font-size: 11px; }
 .text-sm  { -fx-font-size: 12px; }

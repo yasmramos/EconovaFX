@@ -45,7 +45,7 @@
 
 .card-value {
     -fx-text-fill: -foreground;
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-font-weight: 600;
 }
 
@@ -372,7 +372,7 @@
     -fx-padding: 0 0 8 0;
 }
 .axis .axis-line { -fx-stroke: -border; }
-.chart-legend-item-symbol { -fx-background-radius: 3; }
+.chart-legend-item-symbol { -fx-background-radius: 4; }
 
 .axis {
     -fx-tick-label-fill: -muted-foreground;
