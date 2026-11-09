@@ -609,10 +609,27 @@
                                 <arg>psapi.lib</arg>
                             </linkerArgs>
                             <bundlesList>
-                                <bundle>messages</bundle>
-                                <bundle>messages_es</bundle>
+                                <!-- Base name only: I18nManager loads "i18n.messages"
+                                     via ResourceBundle, and the plugin turns this
+                                     into -H:IncludeResourceBundles. The old
+                                     "messages"/"messages_es" entries matched no
+                                     file on the classpath (the files are
+                                     i18n/messages_*.properties), so the bundle
+                                     was absent from the image and
+                                     ResourceBundle.getBundle threw at startup. -->
+                                <list>i18n.messages</list>
                             </bundlesList>
                             <reflectionList>
+                                <!-- Application subclass. The plugin auto-registers
+                                     only mainClass (com.econovafx.Launcher), but
+                                     Application.launch(App.class, ...) makes
+                                     LauncherImpl instantiate App reflectively
+                                     (appClass.getConstructor().newInstance()).
+                                     Without this entry the native image dies in
+                                     "Exception in Application constructor" before
+                                     the first window, and a GUI .exe has no
+                                     console, so nothing is shown. -->
+                                <list>com.econovafx.App</list>
                                 <!-- Ebean Entities - Core -->
                                 <list>com.econovafx.modules.core.model.Company</list>
                                 <list>com.econovafx.modules.core.model.User</list>
@@ -630,6 +647,7 @@
                                 <list>com.econovafx.modules.accounting.model.TransactionEntry</list>
                                 <list>com.econovafx.modules.accounting.model.AccountingPeriod</list>
                                 <list>com.econovafx.modules.accounting.model.ClosingEntry</list>
+                                <list>com.econovafx.modules.accounting.model.DocumentSequence</list>
                                 <list>com.econovafx.modules.accounting.model.ExchangeDifference</list>
                                 <list>com.econovafx.modules.accounting.model.FinancialStatementModel</list>
                                 <list>com.econovafx.modules.accounting.model.FinancialStatementRow</list>
@@ -680,7 +698,17 @@
                                 <list>com.econovafx.modules.core.ui.controller.ExchangeRatesController</list>
                                 <list>com.econovafx.modules.core.ui.controller.SystemSettingsController</list>
                                 <list>com.econovafx.modules.core.ui.controller.AuditLogsController</list>
+                                <list>com.econovafx.modules.core.ui.controller.BackupController</list>
+                                <list>com.econovafx.modules.core.ui.controller.HelpController</list>
+                                <list>com.econovafx.modules.core.ui.controller.ProfileController</list>
+                                <list>com.econovafx.modules.core.ui.controller.WebViewController</list>
                                 <list>com.econovafx.modules.core.ui.view.SplashController</list>
+                                <!-- Loaded by App.start() through the setup assistant.
+                                     This is the first FXML of the run, and it is loaded
+                                     without a controller factory, so the controller is
+                                     built reflectively: leaving it out killed the app
+                                     before the first window. -->
+                                <list>com.econovafx.modules.core.ui.controller.DatabaseSetupController</list>
                                 <!-- FXML Controllers - Security -->
                                 <list>com.econovafx.modules.security.ui.controller.LoginController</list>
                                 <!-- FXML Controllers - Accounting -->
@@ -692,6 +720,7 @@
                                 <list>com.econovafx.modules.accounting.controller.AccountingClosuresController</list>
                                 <list>com.econovafx.modules.accounting.controller.ComprobantesController</list>
                                 <list>com.econovafx.modules.accounting.controller.ComprobanteFormController</list>
+                                <list>com.econovafx.modules.accounting.controller.AccountClassController</list>
                                 <!-- FXML Controllers - Billing -->
                                 <list>com.econovafx.modules.billing.controller.ThirdPartiesController</list>
                                 <list>com.econovafx.modules.billing.controller.ThirdPartyFormController</list>
@@ -708,6 +737,16 @@
                                 <list>com.econovafx.modules.cash.controller.CashModuleController</list>
                                 <!-- FXML Controllers - Reporting -->
                                 <list>com.econovafx.modules.reporting.controller.FinancialReportingController</list>
+                                <list>com.econovafx.modules.reporting.controller.FinancialReportingViewController</list>
+                                <!-- FXML Controllers - AFT / Costing / Finance / Payroll.
+                                     Loaded through ViewFactory.loadFXML (or a future
+                                     navigation hook) with the controller class passed
+                                     in, so FXMLLoader still instantiates it
+                                     reflectively. -->
+                                <list>com.econovafx.modules.aft.controller.AFTController</list>
+                                <list>com.econovafx.modules.costing.controller.CostsController</list>
+                                <list>com.econovafx.modules.finance.controller.FinanceController</list>
+                                <list>com.econovafx.modules.payroll.controller.PayrollController</list>
                             </reflectionList>
                             <appIdentifier>econovafx</appIdentifier>
                         </configuration>

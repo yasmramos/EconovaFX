@@ -163,8 +163,12 @@ public class App extends Application {
             return true;
 
         } catch (IOException e) {
+            // A load failure is not a cancellation. Returning false here used to
+            // make start() call System.exit(0), so a broken FXML or a missing
+            // reflection entry closed the app with no error on screen. Rethrow so
+            // start()'s handler logs it and Launcher writes the crash log.
             logger.error("Failed to show database setup assistant", e);
-            return false;
+            throw new IllegalStateException("Database setup assistant could not be shown", e);
         }
     }    
     private void showSplashScreen() {
