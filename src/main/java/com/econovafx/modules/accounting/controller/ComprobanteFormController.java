@@ -7,6 +7,7 @@ import com.econovafx.modules.accounting.model.TransactionEntry;
 import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.ui.util.ErrorState;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.core.ui.util.NotificationService;
 import io.avaje.inject.Component;
@@ -441,6 +442,9 @@ public class ComprobanteFormController implements Initializable {
             // Validate required fields
             LocalDate date = datePicker.getValue();
             String description = descriptionField.getText().trim();
+
+            ErrorState.setError(datePicker, date == null);
+            ErrorState.setError(descriptionField, description.isEmpty());
 
             if (date == null) {
                 showAlert(Alert.AlertType.ERROR, "Validation", "Date is required");

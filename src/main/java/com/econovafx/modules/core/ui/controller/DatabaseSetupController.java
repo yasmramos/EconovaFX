@@ -1,6 +1,7 @@
 package com.econovafx.modules.core.ui.controller;
 
 import com.econovafx.modules.core.config.ConfigFileUtil;
+import com.econovafx.modules.core.ui.util.ErrorState;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -114,6 +115,8 @@ public class DatabaseSetupController {
 
     private void testConnection() {
         statusLabel.setText("Probando conexión...");
+        ErrorState.setError(statusLabel, false);
+        ErrorState.setWarning(statusLabel, false);
         try {
             String type = dbTypeCombo.getValue();
             if ("postgresql".equalsIgnoreCase(type)) {
@@ -138,11 +141,14 @@ public class DatabaseSetupController {
         } catch (Exception ex) {
             logger.warn("Connection test failed", ex);
             statusLabel.setText("Error: " + ex.getMessage());
+            ErrorState.setError(statusLabel, true);
         }
     }
 
     private void saveAndClose() {
         statusLabel.setText("Validando y guardando configuración...");
+        ErrorState.setError(statusLabel, false);
+        ErrorState.setWarning(statusLabel, false);
         try {
             String type = dbTypeCombo.getValue();
             if (type == null) {
@@ -210,9 +216,14 @@ public class DatabaseSetupController {
             statusLabel.setText("Configuración guardada exitosamente");
             // Close after brief delay to show success
             dialogStage.close();
+        } catch (IllegalArgumentException ex) {
+            logger.warn("Invalid database configuration: {}", ex.getMessage());
+            statusLabel.setText(ex.getMessage());
+            ErrorState.setWarning(statusLabel, true);
         } catch (Exception ex) {
             logger.error("Failed to save configuration", ex);
             statusLabel.setText("Error al guardar: " + ex.getMessage());
+            ErrorState.setError(statusLabel, true);
         }
     }
 

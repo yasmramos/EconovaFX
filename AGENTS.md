@@ -166,6 +166,15 @@ styling the JavaFX app.
   A sheet must not also set `-fx-translate-y` on a node the motion moves, or the
   sheet value fights the animation every frame. `StyleMotionDisciplineTest`
   fails the build if any of the dead properties come back.
+- JavaFX ships a fixed set of pseudo-classes (`:hover`, `:focused`, `:disabled`,
+  `:selected`, `:filled`, `:odd`, `:even`, `:armed`, `:expanded`,
+  `:indeterminate`...). It has no `:error` or `:warning`: a selector such as
+  `.text-field:error` matches nothing until something turns the state on through
+  `PseudoClass.getPseudoClass(...)`. The sheets used both and a comment claimed
+  the controllers set them, but no code did, so the inline validation state was
+  inert. `ErrorState` now registers and toggles them; `PseudoClassDisciplineTest`
+  fails the build if a sheet uses a pseudo-class that is neither built in nor
+  registered in code.
 - Modena paints its chart series with a **compound** selector on the series node
   itself (`.default-color0.chart-bar`, `.default-color0.chart-series-line`,
   `.default-color0.chart-series-area-fill`). A descendant selector
