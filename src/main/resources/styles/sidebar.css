@@ -57,7 +57,8 @@
     -fx-max-height: 1;
     -fx-pref-height: 1;
     -fx-min-height: 1;
-    -fx-margin: 8 8 4 8;
+    /* No -fx-margin: a margin is a layout constraint, not a CSS property. The
+       surrounding gap is set with VBox.margin in the markup. */
 }
 
 .sidebar-submenu {
@@ -184,8 +185,9 @@
     -fx-border-color: transparent transparent transparent -series-1;
     -fx-border-width: 0 0 0 3;
 }
-.sidebar-collapsed .button.sidebar-submenu-btn { -fx-display: none; }
-.sidebar-collapsed .sidebar-chevron-float { -fx-visibility: hidden; }
+/* The submenu buttons are hidden when collapsed by closing the submenu in
+   collapseSidebar (setVisible/setManaged), and the chevrons are hidden by
+   setVisible in code: JavaFX has no -fx-display or -fx-visibility property. */
 .sidebar-collapsed .sidebar-submenu { -fx-padding: 0; }
 .sidebar-collapsed .sidebar-section-title,
 .sidebar-collapsed .sidebar-separator { -fx-max-width: 0; -fx-padding: 0; }

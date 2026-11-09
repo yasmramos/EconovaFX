@@ -175,6 +175,19 @@ styling the JavaFX app.
   inert. `ErrorState` now registers and toggles them; `PseudoClassDisciplineTest`
   fails the build if a sheet uses a pseudo-class that is neither built in nor
   registered in code.
+- JavaFX drops any CSS property it does not know, without a warning, so a rule
+  can look like it styles a node while the engine ignores it. The sheets had
+  accumulated nine: a bare `-fx-height` (the real names are `-fx-pref-height` /
+  `-fx-max-height` / `-fx-min-height`, and the slider rail was 0px tall because
+  of it), `-fx-grow` / `-fx-hgrow` / `-fx-vgrow` (grow is a layout constraint,
+  set with `VBox.setVgrow` or the `VBox.vgrow` FXML attribute, not a CSS
+  property), `-fx-margin` (a margin is a layout constraint, set with
+  `VBox.margin` / `Insets`), `-fx-overflow` / `-fx-text-overflow` (JavaFX spells
+  the ellipsis `-fx-text-overrun`), and `-fx-display` / `-fx-visibility` (hide a
+  node with `setVisible`). `StylePropertyDisciplineTest` derives the set of names
+  JavaFX accepts from the JavaFX and Ikonli jars on the classpath and fails the
+  build on any other `-fx-*` declaration, so the guard tracks the engine instead
+  of a hand-copied list.
 - Modena paints its chart series with a **compound** selector on the series node
   itself (`.default-color0.chart-bar`, `.default-color0.chart-series-line`,
   `.default-color0.chart-series-area-fill`). A descendant selector
@@ -228,6 +241,7 @@ styling the JavaFX app.
   (near-white in dark), where a border ring would disappear against it.
 - Regression tests for tokens/controls live in `ChartsAndThemeTest` and
   `StyleTokenDisciplineTest` (the latter runs in the default suite; the former
-  with `-Pvisual-tests`). `StyleShapeDisciplineTest` and
-  `ContrastDisciplineTest` run in the default suite.
+  with `-Pvisual-tests`). `StyleShapeDisciplineTest`,
+  `StylePropertyDisciplineTest` and `ContrastDisciplineTest` run in the default
+  suite.
 

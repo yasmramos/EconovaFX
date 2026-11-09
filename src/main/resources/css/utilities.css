@@ -119,9 +119,6 @@
 .mt-1 { -fx-padding: 4 0 0 0; }
 .mt-2 { -fx-padding: 8 0 0 0; }
 
-.grow { -fx-grow: ALWAYS; }
-.hgrow { -fx-hgrow: ALWAYS; }
-.vgrow { -fx-vgrow: ALWAYS; }
 .fill-width { -fx-fill-width: true; }
 
 .w-48 { -fx-pref-width: 192; }
@@ -162,7 +159,9 @@
 .cursor-default{ -fx-cursor: default; }
 .cursor-resize { -fx-cursor: size-ew; }
 
-.truncate { -fx-overflow: ellipsis; -fx-text-overflow: ellipsis; }
+/* JavaFX spells the CSS ellipsis property -fx-text-overrun (the browser
+   -fx-text-overflow and -fx-overflow are dropped by the engine). */
+.truncate { -fx-text-overrun: ellipsis; }
 
 /* =============================================================================
  * 16. UTILITIES - status text (shared by pages, forms and dialogs)

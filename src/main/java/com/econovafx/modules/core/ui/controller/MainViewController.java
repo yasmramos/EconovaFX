@@ -247,6 +247,11 @@ public class MainViewController implements Initializable {
         // Add collapsed style class
         sidebarVBox.getStyleClass().add("sidebar-collapsed");
 
+        // The chevron floats sit on top of the trigger buttons; hide them in the
+        // icon-only rail. JavaFX has no -fx-visibility property, so this cannot
+        // be a stylesheet rule.
+        setChevronsVisible(false);
+
         // Animate width change
         double targetWidth = SIDEBAR_COLLAPSED_WIDTH;
         Timeline timeline = new Timeline();
@@ -283,6 +288,9 @@ public class MainViewController implements Initializable {
         // Remove collapsed style class
         sidebarVBox.getStyleClass().remove("sidebar-collapsed");
 
+        // Bring the chevron floats back for the expanded rail.
+        setChevronsVisible(true);
+
         // Animate width change
         double targetWidth = SIDEBAR_EXPANDED_WIDTH;
         Timeline timeline = new Timeline();
@@ -309,6 +317,18 @@ public class MainViewController implements Initializable {
         if (btnToggleSidebar != null && btnToggleSidebar.getGraphic() instanceof FontIcon) {
             FontIcon icon = (FontIcon) btnToggleSidebar.getGraphic();
             icon.setIconLiteral("mdi2c-chevron-left");
+        }
+    }
+
+    /**
+     * Shows or hides the chevron floats that sit on the submenu trigger buttons.
+     * They are hidden in the collapsed rail, where the buttons show icons only.
+     */
+    private void setChevronsVisible(boolean visible) {
+        for (FontIcon chevron : new FontIcon[]{contabilidadChevron, settingsChevron}) {
+            if (chevron != null) {
+                chevron.setVisible(visible);
+            }
         }
     }
 
