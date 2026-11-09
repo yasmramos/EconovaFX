@@ -550,18 +550,15 @@
     -fx-pref-height: 20;
 }
 .slider > .track {
-    -fx-background-color: transparent;
-    -fx-padding: 0;
-}
-.slider > .track > .track {
+    /* SliderSkin puts one .track and one .thumb directly under the slider; there
+       is no nested track and no .filled-track region, so the rail is styled on
+       the track itself. A bare -fx-height is not a JavaFX property (it is
+       -fx-pref/max-height), which used to leave the rail 0px tall. */
     -fx-background-color: -border;
     -fx-background-radius: 4;
-    -fx-height: 4;
-}
-.slider > .track > .filled-track {
-    -fx-background-color: -primary;
-    -fx-background-radius: 4;
-    -fx-height: 4;
+    -fx-padding: 0;
+    -fx-pref-height: 4;
+    -fx-max-height: 4;
 }
 .slider > .thumb {
     -fx-background-color: -background;

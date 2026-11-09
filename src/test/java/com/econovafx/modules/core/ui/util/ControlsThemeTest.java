@@ -6,6 +6,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -202,6 +203,27 @@ public class ControlsThemeTest extends ApplicationTest {
             // ThemeManager persists the choice; restore light so the next test
             // in the suite does not inherit the dark palette.
             ThemeManager.toggle(stage.getScene());
+        });
+    }
+
+    @Test
+    public void sliderTrackIsAThinVisibleRail() throws Exception {
+        FxToolkit.setupFixture(() -> {
+            Slider slider = new Slider(0, 100, 40);
+            slider.setPrefWidth(300);
+
+            VBox root = showWithDesignSystem(slider);
+            root.applyCss();
+            root.layout();
+
+            Region track = (Region) slider.lookup(".track");
+            assertNotNull(track, "the slider track region must resolve");
+            // A bare -fx-height is not a JavaFX property (it is -fx-pref/max-height),
+            // so the rail used to render 0px tall and disappear entirely.
+            assertEquals(4.0, track.getHeight(), 0.5,
+                    "the track must keep its 4px rail height");
+            assertEquals(Color.web("#e4e4e7"), fillOf(track),
+                    "the track should use the border token");
         });
     }
 

@@ -140,7 +140,9 @@
                 <Region VBox.vgrow="ALWAYS"/>
 
                 <!-- SISTEMA Section -->
-                <Separator styleClass="sidebar-separator"/>
+                <Separator styleClass="sidebar-separator">
+                    <VBox.margin><Insets top="8" right="8" bottom="4" left="8"/></VBox.margin>
+                </Separator>
                 <Label text="SISTEMA" styleClass="sidebar-section-title"/>
                 <VBox styleClass="sidebar-menu-group">
                     <StackPane styleClass="sidebar-btn-wrapper">

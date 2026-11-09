@@ -165,7 +165,9 @@
                 <graphic><FontIcon iconLiteral="mdi2c-close" iconSize="16"/></graphic>
             </Button>
         </HBox>
-        <Separator styleClass="sidebar-separator" />
+        <Separator styleClass="sidebar-separator">
+            <VBox.margin><Insets top="8" right="8" bottom="4" left="8"/></VBox.margin>
+        </Separator>
         <GridPane hgap="16" vgap="12">
             <columnConstraints>
                 <ColumnConstraints percentWidth="15" />
