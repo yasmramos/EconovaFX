@@ -288,9 +288,11 @@
     -fx-padding: 0;
 }
 
-/* Inline error state, set from controllers via PseudoClass "error" */
+/* Inline error state. JavaFX has no :error pseudo-class, so it is registered
+ * and toggled through ErrorState (PseudoClassDisciplineTest guards it). */
 .text-field:error,
-.form-input:error {
+.form-input:error,
+.form-date-picker:error {
     -fx-border-color: -destructive;
 }
 
