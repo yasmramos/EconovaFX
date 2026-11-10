@@ -218,7 +218,7 @@ public class SystemSettingsController {
     private void openDatabaseSetup() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/database-setup.fxml"));
-            loader.setResources(java.util.ResourceBundle.getBundle("i18n/messages"));
+            loader.setResources(com.econovafx.core.i18n.I18nManager.getBundle());
             VBox root = loader.load();
             Scene scene = new Scene(root);
             StyleSheets.apply(scene, "/css/dialog-styles.css", "/css/database-setup.css");
