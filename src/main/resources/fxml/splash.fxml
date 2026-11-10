@@ -4,7 +4,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
-<?import javafx.geometry.Insets?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <!-- Full-bleed coloured splash: brand gradient fills the whole window, the
@@ -26,9 +25,6 @@
         <Label fx:id="versionLabel" styleClass="splash-version"/>
 
         <VBox spacing="12.0" alignment="CENTER" styleClass="splash-progress-box">
-            <padding>
-                <Insets top="18"/>
-            </padding>
             <ProgressBar fx:id="progressBar" prefWidth="380" progress="0"/>
             <Label fx:id="statusLabel" text="Iniciando..." styleClass="splash-status"/>
         </VBox>

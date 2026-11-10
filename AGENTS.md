@@ -135,6 +135,16 @@ styling the JavaFX app.
   screen's own sheets (`main-styles`, `sidebar`, `dashboard`, `dialog`,
   `login`...) -> `utilities` (utilities last so a Tailwind-style class always
   wins). Apply them through `StyleSheets`, never by hand.
+- Page chrome belongs to the shell. `.workspace-content` (the `contentArea`
+  every module page is dropped into) already paints the `-page` canvas and a
+  24px gutter, so a page **root** must carry no `p-*` / `bg-*` class and no
+  inline `<padding>`: either one double-pads the content, and a `bg-gray-50`
+  fill (which resolves to `-muted`, not the page) drops an opaque slab on the
+  dark canvas. Open every page with one `.page-header` HBox holding a single
+  `icon-brand-ink` glyph, a `.page-title` (and optional `.page-subtitle`) and
+  the page actions pushed right with a growing `Region`.
+  `PageChromeDisciplineTest` fails the build if a reachable page root sets its
+  own padding/background or misses the shared header block.
 - Token families:
   - structure: `-page` (page canvas), `-card`, `-popover`, `-border`, `-muted`.
   - text ramp: `-foreground`, `-muted-foreground`, `-fg-strong` / `-fg-body` /
