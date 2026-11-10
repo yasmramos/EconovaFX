@@ -55,6 +55,8 @@ class NativeImageConfigTest {
             Pattern.compile("(?:public\\s+)?(?:abstract\\s+)?class\\s+(\\w+)");
     private static final Pattern BUNDLE_NAME_CONSTANT =
             Pattern.compile("BUNDLE_NAME\\s*=\\s*\"([^\"]+)\"");
+    private static final Pattern GET_BUNDLE_CALL =
+            Pattern.compile("ResourceBundle\\.getBundle\\(\\s*\"([^\"]+)\"");
 
     @Test
     void applicationSubclassIsRegisteredForReflection() throws IOException {
@@ -143,6 +145,34 @@ class NativeImageConfigTest {
                         + " name I18nManager passes to ResourceBundle.getBundle). A name"
                         + " that matches no file on the classpath leaves the bundle out of"
                         + " the image and getBundle throws at startup. Found: " + bundles);
+    }
+
+    @Test
+    void noCodeLoadsTheBundleUnderADifferentName() throws IOException {
+        String bundleName = i18nBundleName();
+        List<String> offenders = new ArrayList<>();
+
+        try (Stream<Path> files = Files.walk(JAVA_ROOT)) {
+            for (Path java : files.filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".java"))
+                    .toList()) {
+                Matcher matcher = GET_BUNDLE_CALL.matcher(
+                        Files.readString(java, StandardCharsets.UTF_8));
+                while (matcher.find()) {
+                    String name = matcher.group(1);
+                    if (!name.equals(bundleName)) {
+                        offenders.add(relative(java) + " -> \"" + name + "\"");
+                    }
+                }
+            }
+        }
+
+        assertTrue(offenders.isEmpty(),
+                "these call sites load the resource bundle under a name other than \""
+                        + bundleName + "\". ResourceBundle treats \"/\" and \".\" as"
+                        + " equivalent on the JVM, but the native image registers the bundle"
+                        + " under one name only, so the other throws at runtime:\n  "
+                        + String.join("\n  ", offenders));
     }
 
     private static Set<String> reflectionEntries() throws IOException {
