@@ -52,12 +52,6 @@ public class AccountClassController implements Initializable {
         this.viewFactory = viewFactory;
     }
 
-    /**
-     * Complete initialization after ViewFactory is fully constructed
-     */
-    public void completeInitialization(ViewFactory viewFactory) {
-        // Additional initialization if needed
-    }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {

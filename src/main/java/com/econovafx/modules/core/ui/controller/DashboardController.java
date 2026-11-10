@@ -193,12 +193,6 @@ public class DashboardController implements Initializable {
         this.viewFactory = viewFactory;
     }
 
-    /**
-     * Complete initialization after ViewFactory is fully constructed
-     */
-    public void completeInitialization(ViewFactory viewFactory) {
-        // Additional initialization if needed
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -826,27 +820,7 @@ public class DashboardController implements Initializable {
     private void viewAllTransactions() {
         logger.info("View all transactions clicked - navigating to transactions view");
         if (viewFactory != null) {
-            // Navigate to the transactions view using the ViewFactory
-            // This will replace the current content area with the transactions view
-            try {
-                // Get the main view controller's content area through the view factory
-                // The viewFactory has access to switch views in the main application
-                viewFactory.showTransactions();
-                logger.debug("Successfully navigated to transactions view");
-            } catch (Exception e) {
-                logger.error("Error navigating to transactions view", e);
-                // Fallback: try to get the stage and show transactions in a new window
-                try {
-                    javafx.stage.Stage stage = new javafx.stage.Stage();
-                    stage.setTitle("All Transactions");
-                    javafx.scene.Parent root = (javafx.scene.Parent) viewFactory.createTransactionsView();
-                    stage.setScene(new javafx.scene.Scene(root, 1024, 600));
-                    stage.show();
-                    logger.debug("Opened transactions view in new window");
-                } catch (Exception ex) {
-                    logger.error("Failed to open transactions view", ex);
-                }
-            }
+            viewFactory.showTransactions();
         } else {
             logger.warn("ViewFactory is not initialized, cannot navigate to transactions view");
         }
