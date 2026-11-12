@@ -36,7 +36,6 @@
     -fx-padding: 24;
 }
 
-.content-view,
 .content-wrapper,
 .main-view {
     -fx-background-color: -page;
@@ -55,23 +54,25 @@
 /* -----------------------------------------------------------------------------
  * PAGE HEADER
  * shadcn "page title" + "description" pair, 24px / 32px below it.
+ * Every top-level module page opens with this block: an icon, the title (and
+ * optional description) on the left, the page actions pushed right. The shell
+ * already paints the page canvas and its 24px gutter, so a page root carries no
+ * background and no padding of its own - adding either double-pads the content
+ * and, on a -muted fill, drops an opaque slab on the dark canvas.
  * --------------------------------------------------------------------------- */
-.dashboard-header,
-.module-header,
+.page-header,
 .section-header,
 .toolbar {
     -fx-background-color: transparent;
     -fx-padding: 0 0 4 0;
 }
 
-.dashboard-title,
 .page-title {
     -fx-text-fill: -foreground;
     -fx-font-size: 22px;
     -fx-font-weight: 600;
 }
 
-.dashboard-subtitle,
 .page-subtitle,
 .subtitle {
     -fx-text-fill: -muted-foreground;
@@ -155,6 +156,7 @@
  * WEB VIEW HOST
  * --------------------------------------------------------------------------- */
 .web-view,
+.web-shell,
 .web-shell-body {
     -fx-background-color: -page;
 }

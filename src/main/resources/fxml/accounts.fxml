@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.modules.accounting.controller.AccountsController"
-      spacing="20"
-      styleClass="p-5">
+      spacing="20">
 
     <!-- Header -->
-    <HBox alignment="CENTER_LEFT" spacing="10">
-        <Label text="Plan de Cuentas" styleClass="text-2xl, font-bold, text-gray-800"/>
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="page-header">
+        <FontIcon iconLiteral="mdi2b-book-open" iconSize="22" styleClass="icon-brand-ink"/>
+        <Label text="Plan de Cuentas" styleClass="page-title"/>
         <Region HBox.hgrow="ALWAYS"/>
         <TextField fx:id="searchField" promptText="Buscar cuenta..." styleClass="w-64, rounded-md"/>
         <Button text="Buscar" onAction="#searchAccounts" styleClass="btn, btn-info"/>
         <Button text="Nueva Cuenta" onAction="#newAccount" styleClass="btn, btn-success"/>
     </HBox>
-    
+
     <!-- Account Tree and List -->
     <HBox VBox.vgrow="ALWAYS" spacing="20">
 
@@ -50,5 +50,5 @@
         </VBox>
 
     </HBox>
-    
+
 </VBox>

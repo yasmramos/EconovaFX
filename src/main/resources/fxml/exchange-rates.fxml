@@ -4,20 +4,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.control.*?>
-<?import javafx.geometry.Insets?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox fx:id="rootView" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.modules.core.ui.controller.ExchangeRatesController"
-      spacing="10" styleClass="content-view">
-
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+      spacing="10">
 
     <!-- Header -->
-    <HBox alignment="CENTER_LEFT" spacing="10">
-        <Label text="Exchange Rates Management" styleClass="page-title"><graphic><FontIcon iconLiteral="mdi2c-currency-usd" iconSize="20"/></graphic></Label>
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="page-header">
+        <FontIcon iconLiteral="mdi2c-currency-usd" iconSize="22" styleClass="icon-brand-ink"/>
+        <Label text="Exchange Rates Management" styleClass="page-title"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Label fx:id="statusLabel" styleClass="status-label"/>
         <Button graphicTextGap="8" onAction="#handleRefreshRates" styleClass="btn-primary" contentDisplay="LEFT">
@@ -68,7 +64,7 @@
                     <graphic><FontIcon iconLiteral="mdi2f-file-document-outline" iconSize="16"/></graphic>
                 </Button>
             </HBox>
-            
+
             <!-- Historical Table -->
             <TableView fx:id="historicalRatesTable" VBox.vgrow="ALWAYS">
                 <columns>
