@@ -11,6 +11,10 @@ import javafx.util.Duration;
  * Service for displaying temporary notifications to the user.
  * Supports INFO, SUCCESS, WARNING, and ERROR types.
  * The notification container must be provided when showing notifications.
+ *
+ * <p>These are in-layout banners stacked inside a caller-supplied container.
+ * For floating toasts anchored to a window, use
+ * {@link com.econovafx.modules.core.ui.util.ToastNotifier} instead.
  */
 @Singleton
 public class NotificationService {

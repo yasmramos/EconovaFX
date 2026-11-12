@@ -227,7 +227,7 @@
 /* =============================================================================
  * TOASTS + INLINE NOTIFICATIONS
  * ========================================================================== */
-/* Floating toasts (core/ui/util/NotificationService). A white shadcn card with a
+/* Floating toasts (core/ui/util/ToastNotifier). A white shadcn card with a
  * hairline border; the variant tints the border and the leading icon only. */
 .toast {
     -fx-background-color: -card;

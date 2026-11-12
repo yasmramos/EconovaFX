@@ -12,11 +12,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * Service for displaying toast notifications to the user.
+ * Utility for displaying toast notifications to the user.
  * Notifications are displayed in a container anchored to the top-right corner,
  * stacked vertically without overlapping, and do not push or resize content.
  */
-public class NotificationService {
+public class ToastNotifier {
 
     private static final int WIDTH = 320;
     private static final int HEIGHT = 70;

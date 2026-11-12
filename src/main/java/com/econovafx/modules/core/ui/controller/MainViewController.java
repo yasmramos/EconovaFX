@@ -3,7 +3,7 @@ package com.econovafx.modules.core.ui.controller;
 import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.service.UserService;
-import com.econovafx.modules.core.ui.util.NotificationService;
+import com.econovafx.modules.core.ui.util.ToastNotifier;
 import com.econovafx.modules.core.ui.util.ThemeManager;
 import com.econovafx.modules.core.ui.util.UiMotion;
 import com.econovafx.modules.core.ui.view.ViewFactory;
@@ -200,7 +200,7 @@ public class MainViewController implements Initializable {
             try {
                 syncThemeIcon(ThemeManager.isDark());
                 // Show welcome notification after dashboard is visible
-                NotificationService.showInfo(getStage(), "Welcome to EconovaFX v1.0.0");
+                ToastNotifier.showInfo(getStage(), "Welcome to EconovaFX v1.0.0");
             } catch (Exception e) {
                 logger.error("Error showing welcome notification", e);
             }
@@ -536,7 +536,7 @@ public class MainViewController implements Initializable {
             updateStatus("Configuración del Sistema");
         } catch (Exception e) {
             logger.error("Error loading system settings", e);
-            NotificationService.showError(getStage(), "Error al cargar la configuración: " + e.getMessage());
+            ToastNotifier.showError(getStage(), "Error al cargar la configuración: " + e.getMessage());
         }
     }
 
@@ -685,7 +685,7 @@ public class MainViewController implements Initializable {
     @FXML
     private void handleLogout() {
         logger.info("User logged out");
-        NotificationService.showInfo(getStage(), "Logging out...");
+        ToastNotifier.showInfo(getStage(), "Logging out...");
     }
 
     @FXML
