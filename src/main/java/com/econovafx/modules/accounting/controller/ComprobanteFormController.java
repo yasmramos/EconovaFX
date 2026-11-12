@@ -9,7 +9,7 @@ import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.ui.util.ErrorState;
 import com.econovafx.modules.core.ui.util.ModernDialog;
-import com.econovafx.modules.core.ui.util.NotificationService;
+import com.econovafx.modules.core.ui.util.ToastNotifier;
 import io.avaje.inject.Component;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

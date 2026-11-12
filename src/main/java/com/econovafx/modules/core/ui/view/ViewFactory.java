@@ -7,7 +7,6 @@ import com.econovafx.modules.accounting.model.Transaction;
 import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.service.ExportService;
-import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.accounting.controller.AccountFormController;
@@ -41,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * Factory for creating UI views and dialogs
@@ -71,7 +69,13 @@ public class ViewFactory {
     private final ExportService exportService;
     private final AccountingPeriodService accountingPeriodService;
     private final InventoryService inventoryService;
-    private final Consumer<Runnable> viewSwitcher;
+
+    /**
+     * Navigates the shell to the transactions page. Wired by {@code App} once the
+     * main window exists, because the shell controller is created after this
+     * factory. Null until then.
+     */
+    private Runnable transactionsNavigator;
 
     public ViewFactory(DashboardController dashboardController,
                       AccountsController accountsController,
@@ -93,9 +97,7 @@ public class ViewFactory {
                       TransactionService transactionService,
                       ExportService exportService,
                       AccountingPeriodService accountingPeriodService,
-                      NotificationService notificationService,
-                      InventoryService inventoryService,
-                      Consumer<Runnable> viewSwitcher) {
+                      InventoryService inventoryService) {
         this.dashboardController = dashboardController;
         this.accountsController = accountsController;
         this.transactionsController = transactionsController;
@@ -117,7 +119,6 @@ public class ViewFactory {
         this.exportService = exportService;
         this.accountingPeriodService = accountingPeriodService;
         this.inventoryService = inventoryService;
-        this.viewSwitcher = viewSwitcher;
     }
 
     public TransactionService getTransactionService() {
@@ -478,16 +479,21 @@ public class ViewFactory {
     }
 
     /**
-     * Switch to transactions view via the main view controller
+     * Registers the shell action that opens the transactions page. Called by
+     * {@code App} after the main window is built.
+     */
+    public void setTransactionsNavigator(Runnable transactionsNavigator) {
+        this.transactionsNavigator = transactionsNavigator;
+    }
+
+    /**
+     * Navigate to the transactions page via the main shell.
      */
     public void showTransactions() {
-        if (viewSwitcher != null) {
-            viewSwitcher.accept(() -> {
-                // This will be executed by MainViewController to switch to transactions view
-                logger.debug("Switching to transactions view");
-            });
+        if (transactionsNavigator != null) {
+            transactionsNavigator.run();
         } else {
-            logger.warn("ViewSwitcher is not configured, cannot switch to transactions view");
+            logger.warn("Transactions navigator is not configured, cannot switch to transactions view");
         }
     }
 }

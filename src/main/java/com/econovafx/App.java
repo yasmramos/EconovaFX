@@ -163,8 +163,12 @@ public class App extends Application {
             return true;
 
         } catch (IOException e) {
+            // A load failure is not a cancellation. Returning false here used to
+            // make start() call System.exit(0), so a broken FXML or a missing
+            // reflection entry closed the app with no error on screen. Rethrow so
+            // start()'s handler logs it and Launcher writes the crash log.
             logger.error("Failed to show database setup assistant", e);
-            return false;
+            throw new IllegalStateException("Database setup assistant could not be shown", e);
         }
     }    
     private void showSplashScreen() {
@@ -432,7 +436,11 @@ public class App extends Application {
             scene.getRoot().setOpacity(1.0);
             
             primaryStage.show(); // Explicitly show the primary stage
-            
+
+            // The dashboard's "view all" action navigates through the shell. The
+            // shell controller only exists now, so wire the navigator here.
+            viewFactory.setTransactionsNavigator(mainController::navigateToTransactions);
+
             // Ahora sí: cierra el login ya con la app principal en pantalla
             if (loginStage != null) {
                 loginStage.close();

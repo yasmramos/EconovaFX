@@ -3,7 +3,7 @@ package com.econovafx.modules.core.ui.controller;
 import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.accounting.service.TransactionService;
 import com.econovafx.modules.core.service.UserService;
-import com.econovafx.modules.core.ui.util.NotificationService;
+import com.econovafx.modules.core.ui.util.ToastNotifier;
 import com.econovafx.modules.core.ui.util.ThemeManager;
 import com.econovafx.modules.core.ui.util.UiMotion;
 import com.econovafx.modules.core.ui.view.ViewFactory;
@@ -169,12 +169,6 @@ public class MainViewController implements Initializable {
         this.viewFactory = viewFactory;
     }
 
-    /**
-     * Complete initialization after ViewFactory is fully constructed
-     */
-    public void completeInitialization(ViewFactory viewFactory) {
-        // Additional initialization if needed
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -206,7 +200,7 @@ public class MainViewController implements Initializable {
             try {
                 syncThemeIcon(ThemeManager.isDark());
                 // Show welcome notification after dashboard is visible
-                NotificationService.showInfo(getStage(), "Welcome to EconovaFX v1.0.0");
+                ToastNotifier.showInfo(getStage(), "Welcome to EconovaFX v1.0.0");
             } catch (Exception e) {
                 logger.error("Error showing welcome notification", e);
             }
@@ -380,6 +374,14 @@ public class MainViewController implements Initializable {
         updateStatus("Transacciones");
     }
 
+    /**
+     * Public entry point for other components (e.g. the dashboard's "view all"
+     * action) to open the transactions page. Must run on the FX thread.
+     */
+    public void navigateToTransactions() {
+        showTransactions();
+    }
+
     @FXML
     private void showAccounts() {
         logger.debug("Showing accounts");
@@ -534,7 +536,7 @@ public class MainViewController implements Initializable {
             updateStatus("Configuración del Sistema");
         } catch (Exception e) {
             logger.error("Error loading system settings", e);
-            NotificationService.showError(getStage(), "Error al cargar la configuración: " + e.getMessage());
+            ToastNotifier.showError(getStage(), "Error al cargar la configuración: " + e.getMessage());
         }
     }
 
@@ -683,7 +685,7 @@ public class MainViewController implements Initializable {
     @FXML
     private void handleLogout() {
         logger.info("User logged out");
-        NotificationService.showInfo(getStage(), "Logging out...");
+        ToastNotifier.showInfo(getStage(), "Logging out...");
     }
 
     @FXML

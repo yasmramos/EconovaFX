@@ -8,10 +8,13 @@
 
 /* =============================================================================
  * 11. UTILITIES - background surfaces
+ *
+ * gray-* and slate-* are the same neutral ramp under two names, kept because
+ * both spellings are already in the markup; they resolve to the same tokens, so
+ * either one is theme-safe.
  * ========================================================================== */
 .bg-white      { -fx-background-color: -card; }
 .bg-gray-50    { -fx-background-color: -muted; }
-.bg-gray-100   { -fx-background-color: -muted; }
 .bg-gray-500   { -fx-background-color: -zinc-500; }
 .bg-gray-600   { -fx-background-color: -zinc-600; }
 .bg-slate-800  { -fx-background-color: -zinc-950; }
@@ -224,7 +227,7 @@
 /* =============================================================================
  * TOASTS + INLINE NOTIFICATIONS
  * ========================================================================== */
-/* Floating toasts (core/ui/util/NotificationService). A white shadcn card with a
+/* Floating toasts (core/ui/util/ToastNotifier). A white shadcn card with a
  * hairline border; the variant tints the border and the leading icon only. */
 .toast {
     -fx-background-color: -card;

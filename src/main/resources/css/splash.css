@@ -46,6 +46,11 @@
     -fx-font-size: 12px;
 }
 
+/* The progress block sits 18px below the version line. */
+.splash-progress-box {
+    -fx-padding: 18 0 0 0;
+}
+
 /* --------------------------------------------------------------- progress */
 .splash-container .progress-bar {
     -fx-pref-height: 6;

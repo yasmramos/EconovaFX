@@ -1,6 +1,6 @@
 package com.econovafx.modules.core.ui.util;
 
-import com.econovafx.modules.core.ui.util.NotificationService;
+import com.econovafx.modules.core.ui.util.ToastNotifier;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -38,16 +38,16 @@ public class NotificationToastVisualTest extends ApplicationTest {
         buttonContainer.setAlignment(javafx.geometry.Pos.CENTER);
         
         Button successBtn = createButton("Show Success", "#28a745");
-        successBtn.setOnAction(e -> NotificationService.showSuccess(primaryStage, "Operation completed successfully!"));
+        successBtn.setOnAction(e -> ToastNotifier.showSuccess(primaryStage, "Operation completed successfully!"));
         
         Button errorBtn = createButton("Show Error", "#dc3545");
-        errorBtn.setOnAction(e -> NotificationService.showError(primaryStage, "An error occurred during processing."));
+        errorBtn.setOnAction(e -> ToastNotifier.showError(primaryStage, "An error occurred during processing."));
         
         Button warningBtn = createButton("Show Warning", "#ffc107");
-        warningBtn.setOnAction(e -> NotificationService.showWarning(primaryStage, "Please review the input data."));
+        warningBtn.setOnAction(e -> ToastNotifier.showWarning(primaryStage, "Please review the input data."));
         
         Button infoBtn = createButton("Show Info", "#17a2b8");
-        infoBtn.setOnAction(e -> NotificationService.showInfo(primaryStage, "New update available."));
+        infoBtn.setOnAction(e -> ToastNotifier.showInfo(primaryStage, "New update available."));
         
         buttonContainer.getChildren().addAll(successBtn, errorBtn, warningBtn, infoBtn);
         mainLayout.getChildren().addAll(title, buttonContainer);
