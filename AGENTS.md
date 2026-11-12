@@ -265,3 +265,17 @@ styling the JavaFX app.
   `StylePropertyDisciplineTest` and `ContrastDisciplineTest` run in the default
   suite.
 
+## UI notifications
+
+Two unrelated helpers show feedback; keep them apart:
+
+- `core.service.NotificationService` (injected `@Singleton`) renders in-layout
+  banners inside a caller-supplied container (`.notification` styles). This is
+  the one to `@Inject` into a controller.
+- `core.ui.util.ToastNotifier` (static) renders floating toasts anchored to a
+  `Stage` (`.toast` styles). Use it from code that owns a window, not from a
+  controller that only has a root node.
+
+They used to share the name `NotificationService`, which made imports ambiguous;
+the toast helper was renamed to `ToastNotifier` for that reason.
+

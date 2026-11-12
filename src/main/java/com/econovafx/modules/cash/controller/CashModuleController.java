@@ -12,6 +12,7 @@ import com.econovafx.modules.cash.repository.CashMovementRepository;
 import com.econovafx.modules.cash.service.CashMovementService;
 import com.econovafx.modules.bank.service.BankReconciliationService;
 import com.econovafx.modules.core.service.ExportService;
+import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.core.security.SecurityUtil;
 import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
@@ -462,14 +463,21 @@ public class CashModuleController {
         
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
-                // TODO: Implement delete via service when available
-                showAlert("Success", "Bank account deleted successfully.");
-                loadBankAccounts();
+                if (deleteBankAccount(selected)) {
+                    showAlert("Success", "Bank account deleted successfully.");
+                    loadBankAccounts();
+                } else {
+                    showAlert("Error", "Bank account no longer exists; nothing was deleted.");
+                }
             } catch (Exception e) {
                 logger.error("Error deleting bank account", e);
                 showAlert("Error", "Failed to delete bank account: " + e.getMessage());
             }
         }
+    }
+
+    boolean deleteBankAccount(BankAccount account) {
+        return bankAccountRepository.deleteById(account.getId());
     }
 
     @FXML
@@ -504,14 +512,21 @@ public class CashModuleController {
         
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
-                // TODO: Implement delete via service when available
-                showAlert("Success", "Cash box deleted successfully.");
-                loadCashBoxes();
+                if (deleteCashBox(selected)) {
+                    showAlert("Success", "Cash box deleted successfully.");
+                    loadCashBoxes();
+                } else {
+                    showAlert("Error", "Cash box no longer exists; nothing was deleted.");
+                }
             } catch (Exception e) {
                 logger.error("Error deleting cash box", e);
                 showAlert("Error", "Failed to delete cash box: " + e.getMessage());
             }
         }
+    }
+
+    boolean deleteCashBox(CashBox box) {
+        return cashBoxRepository.deleteById(box.getId());
     }
 
     @FXML
@@ -529,7 +544,7 @@ public class CashModuleController {
         }
         
         try {
-            String currentUser = "system"; // TODO: Get from session
+            String currentUser = currentUsername();
             CashMovement posted = cashMovementService.postMovement(selected.getId(), currentUser);
             showAlert("Success", "Movement posted successfully.");
             loadMovements();
@@ -556,7 +571,7 @@ public class CashModuleController {
         
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
-                String currentUser = "system"; // TODO: Get from session
+                String currentUser = currentUsername();
                 cashMovementService.cancelMovement(selected.getId(), currentUser);
                 showAlert("Success", "Movement cancelled successfully.");
                 loadMovements();
@@ -629,11 +644,7 @@ public class CashModuleController {
             bankReconciliationService.createReconciliation(currentReconciliation);
 
             // Get current user from security context
-            com.econovafx.modules.core.model.User currentUserObj = SecurityUtil.getCurrentUser();
-            String currentUser = (currentUserObj != null) ? currentUserObj.getUsername() : "system";
-            if (currentUser == null || currentUser.isEmpty()) {
-                currentUser = "system";
-            }
+            String currentUser = currentUsername();
             
             // Validate and complete the reconciliation
             BankReconciliation completed = bankReconciliationService.completeReconciliation(
@@ -779,5 +790,16 @@ public class CashModuleController {
             alert.initOwner(btnRefresh.getScene().getWindow());
         }
         alert.showAndWait();
+    }
+
+    /**
+     * Returns the username of the authenticated user for audit trails, or
+     * {@code "system"} when no user is present (e.g. background/startup calls).
+     */
+    String currentUsername() {
+        User user = SecurityUtil.getCurrentUser();
+        return (user != null && user.getUsername() != null && !user.getUsername().isEmpty())
+            ? user.getUsername()
+            : "system";
     }
 }
