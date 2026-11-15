@@ -326,6 +326,7 @@
                              mvn test -Pvisual-tests -->
                         <exclude>**/SidebarNavLayoutTest.java</exclude>
                         <exclude>**/SystemSettingsFxmlSmokeTest.java</exclude>
+                        <exclude>**/AccountClassFxmlSmokeTest.java</exclude>
                         <exclude>**/NotificationToastVisualTest.java</exclude>
                         <exclude>**/ModernDialogVisualTest.java</exclude>
                         <exclude>**/DashboardCardsVisualTest.java</exclude>

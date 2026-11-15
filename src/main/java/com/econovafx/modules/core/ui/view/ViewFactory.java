@@ -10,6 +10,7 @@ import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.accounting.controller.AccountClassController;
 import com.econovafx.modules.accounting.controller.AccountFormController;
 import com.econovafx.modules.accounting.controller.AccountingClosuresController;
 import com.econovafx.modules.accounting.controller.AccountingPeriodsController;
@@ -56,6 +57,7 @@ public class ViewFactory {
     private final ThirdPartiesController thirdPartiesController;
     private final AccountingPeriodsController accountingPeriodsController;
     private final AccountingClosuresController accountingClosuresController;
+    private final AccountClassController accountClassController;
     private final ExchangeRatesController exchangeRatesController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
@@ -79,6 +81,7 @@ public class ViewFactory {
                       ThirdPartiesController thirdPartiesController,
                       AccountingPeriodsController accountingPeriodsController,
                       AccountingClosuresController accountingClosuresController,
+                      AccountClassController accountClassController,
                       ExchangeRatesController exchangeRatesController,
                       AccountFormController accountFormController,
                       ThirdPartyFormController thirdPartyFormController,
@@ -102,6 +105,7 @@ public class ViewFactory {
         this.thirdPartiesController = thirdPartiesController;
         this.accountingPeriodsController = accountingPeriodsController;
         this.accountingClosuresController = accountingClosuresController;
+        this.accountClassController = accountClassController;
         this.exchangeRatesController = exchangeRatesController;
         this.accountFormController = accountFormController;
         this.thirdPartyFormController = thirdPartyFormController;
@@ -157,6 +161,18 @@ public class ViewFactory {
         } catch (IOException e) {
             logger.error("Error loading accounts view", e);
             throw new RuntimeException("Failed to load accounts view", e);
+        }
+    }
+
+    public Node createAccountClassView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/account-class.fxml"));
+            loader.setResources(I18nManager.getBundle());
+            loader.setControllerFactory(cls -> accountClassController);
+            return loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading account classification view", e);
+            throw new RuntimeException("Failed to load account classification view", e);
         }
     }
 

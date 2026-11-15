@@ -17,6 +17,7 @@ import com.econovafx.modules.core.ui.controller.*;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.accounting.controller.AccountsController;
 import com.econovafx.modules.accounting.controller.TransactionsController;
+import com.econovafx.modules.accounting.controller.AccountClassController;
 import com.econovafx.modules.accounting.controller.AccountFormController;
 import com.econovafx.modules.accounting.controller.TransactionEntryController;
 import com.econovafx.modules.accounting.controller.ComprobantesController;
@@ -68,6 +69,7 @@ public final class AppContext {
     private ThirdPartiesController thirdPartiesController;
     private AccountingPeriodsController accountingPeriodsController;
     private AccountingClosuresController accountingClosuresController;
+    private AccountClassController accountClassController;
     private ExchangeRatesController exchangeRatesController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
@@ -108,6 +110,7 @@ public final class AppContext {
 
         // Create controllers without ViewFactory initially
         // Controllers that don't need ViewFactory
+        accountClassController = new AccountClassController(accountService);
         accountFormController = new AccountFormController(accountService);
         thirdPartyFormController = new ThirdPartyFormController(thirdPartyService);
         transactionEntryController = new TransactionEntryController(accountService, transactionService);
@@ -121,10 +124,13 @@ public final class AppContext {
         inventoryController = new InventoryController(inventoryService, userContext);
 
         // Financial reporting view (statements + Trial Balance + General Ledger)
+        com.econovafx.modules.accounting.service.AccountingReportService accountingReportService =
+                beanScope.get(com.econovafx.modules.accounting.service.AccountingReportService.class);
+
         com.econovafx.modules.reporting.controller.FinancialReportingViewController financialReportingViewController =
                 new com.econovafx.modules.reporting.controller.FinancialReportingViewController(
                         beanScope.get(com.econovafx.modules.reporting.controller.FinancialReportingController.class),
-                        beanScope.get(com.econovafx.modules.accounting.service.AccountingReportService.class),
+                        accountingReportService,
                         accountService,
                         exportService);
 
@@ -136,6 +142,7 @@ public final class AppContext {
                 null, // thirdPartiesController - will be set later
                 accountingPeriodsController,
                 accountingClosuresController,
+                accountClassController,
                 exchangeRatesController,
                 accountFormController,
                 thirdPartyFormController,
@@ -159,8 +166,10 @@ public final class AppContext {
         dashboardController = new DashboardController(accountService, transactionService, systemConfigService);
         dashboardController.initializeViewFactory(viewFactory);
 
-        accountsController = new AccountsController(accountService);
+        accountsController = new AccountsController(accountService, accountingReportService);
         accountsController.initializeViewFactory(viewFactory);
+
+        accountClassController.initializeViewFactory(viewFactory);
 
         transactionsController = new TransactionsController(transactionService, accountService);
         transactionsController.initializeViewFactory(viewFactory);
@@ -186,6 +195,7 @@ public final class AppContext {
                 thirdPartiesController,
                 accountingPeriodsController,
                 accountingClosuresController,
+                accountClassController,
                 exchangeRatesController,
                 accountFormController,
                 thirdPartyFormController,
@@ -208,6 +218,7 @@ public final class AppContext {
         // Final initialization pass for controllers that need the complete ViewFactory
         dashboardController.completeInitialization(viewFactory);
         accountsController.completeInitialization(viewFactory);
+        accountClassController.completeInitialization(viewFactory);
         transactionsController.completeInitialization(viewFactory);
         thirdPartiesController.completeInitialization(viewFactory);
         comprobantesController.completeInitialization(viewFactory);
