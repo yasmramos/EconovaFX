@@ -701,36 +701,54 @@ public class IntercompanyEliminationService {
     }
 
     /**
-     * Validates that eliminations are balanced (debits = credits).
-     * 
+     * Validates that every elimination can be posted and that the batch is
+     * balanced (debits = credits).
+     *
+     * An elimination is unpostable when its amount is missing or not positive,
+     * or when either account code is blank; such an entry is skipped when the
+     * journal entries are generated and would leave the journal unbalanced.
+     *
      * @param eliminations List of eliminations to validate
-     * @return true if eliminations are balanced, false otherwise
+     * @return true if every elimination is postable and the batch is balanced
      */
     public boolean validateEliminationsBalanced(List<IntercompanyElimination> eliminations) {
         if (eliminations == null || eliminations.isEmpty()) {
             return true;
         }
-        
+
         BigDecimal totalDebits = BigDecimal.ZERO;
         BigDecimal totalCredits = BigDecimal.ZERO;
-        
+        int unpostable = 0;
+
         for (IntercompanyElimination elimination : eliminations) {
-            // Each elimination should have equal debit and credit impact
-            totalDebits = totalDebits.add(elimination.getAmount());
-            totalCredits = totalCredits.add(elimination.getAmount());
+            BigDecimal amount = elimination.getAmount();
+            if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0
+                    || !hasText(elimination.getAccountCode())
+                    || !hasText(elimination.getCounterAccountCode())) {
+                unpostable++;
+                logger.error("Unpostable elimination: amount={}, accountCode={}, counterAccountCode={}",
+                             amount, elimination.getAccountCode(), elimination.getCounterAccountCode());
+                continue;
+            }
+            totalDebits = totalDebits.add(amount);
+            totalCredits = totalCredits.add(amount);
         }
-        
-        boolean balanced = totalDebits.compareTo(totalCredits) == 0;
-        
+
+        boolean balanced = unpostable == 0 && totalDebits.compareTo(totalCredits) == 0;
+
         if (!balanced) {
-            logger.error("Eliminations are NOT balanced! Debits: {}, Credits: {}", 
-                         totalDebits, totalCredits);
+            logger.error("Eliminations are NOT balanced! Debits: {}, Credits: {}, unpostable: {}",
+                         totalDebits, totalCredits, unpostable);
         } else {
-            logger.debug("Eliminations validated: {} debits, {} credits - BALANCED", 
+            logger.debug("Eliminations validated: {} debits, {} credits - BALANCED",
                          totalDebits, totalCredits);
         }
-        
+
         return balanced;
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
     /**
