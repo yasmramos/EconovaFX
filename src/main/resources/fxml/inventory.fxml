@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -9,10 +8,13 @@
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.modules.inventory.controller.InventoryController"
       fx:id="contentArea"
-      spacing="20"
-      styleClass="bg-gray-50, p-6">
+      spacing="20">
 
-    <Label text="Inventory Management" styleClass="text-2xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2c-cube-outline" iconSize="24"/></graphic></Label>
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="page-header">
+        <FontIcon iconLiteral="mdi2c-cube-outline" iconSize="22" styleClass="icon-brand-ink"/>
+        <Label text="Inventory Management" styleClass="page-title"/>
+    </HBox>
 
     <Separator/>
 
@@ -46,7 +48,7 @@
     <!-- Products Table -->
     <VBox styleClass="card, bg-white, p-6" spacing="15" VBox.vgrow="ALWAYS">
         <Label text="Products List" styleClass="text-lg, font-semibold, text-slate-700"/>
-        
+
         <TableView fx:id="productsTable" prefHeight="400">
             <columns>
                 <TableColumn fx:id="colCodigo" text="Code" prefWidth="100"/>
@@ -61,7 +63,7 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
         </TableView>
-        
+
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label fx:id="lblTotalProductos" text="Total Products: 0" styleClass="text-slate-600"/>
             <Region HBox.hgrow="ALWAYS"/>

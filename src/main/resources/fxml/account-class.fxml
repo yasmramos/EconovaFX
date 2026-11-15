@@ -10,7 +10,7 @@
       spacing="20">
 
     <!-- Header -->
-    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="module-header">
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="page-header">
         <FontIcon iconLiteral="mdi2t-tree-outline" iconSize="22" styleClass="icon-brand-ink"/>
         <Label text="Clasificador de Cuentas" styleClass="page-title"/>
         <Region HBox.hgrow="ALWAYS"/>

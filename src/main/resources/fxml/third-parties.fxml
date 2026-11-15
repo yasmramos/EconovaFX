@@ -1,62 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.SVGPath?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.modules.billing.controller.ThirdPartiesController"
-      spacing="15"
-      styleClass="p-4, bg-gray-50">
+      spacing="16">
 
-    <!-- Header with Statistics -->
-    <VBox spacing="10" styleClass="bg-white, rounded-lg, p-4, shadow-sm">
-        <HBox alignment="CENTER_LEFT" spacing="15">
-            <Label text="Third Parties Management" styleClass="text-2xl, font-bold, text-gray-800"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="searchField" promptText="Search by name or ID..." 
-                       styleClass="w-80, rounded-md, border-gray-300" 
-                       prefWidth="250"/>
-            <Button fx:id="searchButton" text="" onAction="#searchThirdParties" 
-                    styleClass="btn, btn-info">
-                <graphic>
-                    <SVGPath content="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" 
-                           styleClass="fill-white"/>
-                </graphic>
-            </Button>
-            <Button text="New Third Party" onAction="#newThirdParty" 
-                    styleClass="btn, btn-success, font-semibold">
-                <graphic>
-                    <SVGPath content="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" styleClass="fill-white"/>
-                </graphic>
-            </Button>
-        </HBox>
-        
-        <!-- Quick Stats -->
-        <HBox spacing="20" alignment="CENTER_LEFT">
-            <VBox styleClass="bg-blue-50, rounded-md, p-3" alignment="CENTER" prefWidth="150">
-                <Label fx:id="totalThirdPartiesLabel" text="0" styleClass="text-2xl, font-bold, text-blue-600"/>
-                <Label text="Total Third Parties" styleClass="text-xs, text-gray-600"/>
-            </VBox>
-            <VBox styleClass="bg-green-50, rounded-md, p-3" alignment="CENTER" prefWidth="150">
-                <Label fx:id="totalCustomersLabel" text="0" styleClass="text-2xl, font-bold, text-green-600"/>
-                <Label text="Customers" styleClass="text-xs, text-gray-600"/>
-            </VBox>
-            <VBox styleClass="bg-orange-50, rounded-md, p-3" alignment="CENTER" prefWidth="150">
-                <Label fx:id="totalSuppliersLabel" text="0" styleClass="text-2xl, font-bold, text-orange-600"/>
-                <Label text="Suppliers" styleClass="text-xs, text-gray-600"/>
-            </VBox>
-            <VBox styleClass="bg-purple-50, rounded-md, p-3" alignment="CENTER" prefWidth="150">
-                <Label fx:id="activeThirdPartiesLabel" text="0" styleClass="text-2xl, font-bold, text-purple-600"/>
-                <Label text="Active" styleClass="text-xs, text-gray-600"/>
-            </VBox>
-        </HBox>
-    </VBox>
-    
+    <!-- Header with Actions -->
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="page-header">
+        <FontIcon iconLiteral="mdi2a-account-group" iconSize="22" styleClass="icon-brand-ink"/>
+        <Label text="Third Parties Management" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search by name or ID..."
+                   styleClass="w-80, rounded-md, border-gray-300"
+                   prefWidth="250"/>
+        <Button fx:id="searchButton" text="" onAction="#searchThirdParties"
+                styleClass="btn, btn-info">
+            <graphic>
+                <SVGPath content="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                       styleClass="fill-white"/>
+            </graphic>
+        </Button>
+        <Button text="New Third Party" onAction="#newThirdParty"
+                styleClass="btn, btn-success, font-semibold">
+            <graphic>
+                <SVGPath content="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" styleClass="fill-white"/>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <!-- Quick Stats -->
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <VBox styleClass="bg-blue-50, rounded-md, p-3" alignment="CENTER" prefWidth="150">
+            <Label fx:id="totalThirdPartiesLabel" text="0" styleClass="text-2xl, font-bold, text-blue-600"/>
+            <Label text="Total Third Parties" styleClass="text-xs, text-gray-600"/>
+        </VBox>
+        <VBox styleClass="bg-green-50, rounded-md, p-3" alignment="CENTER" prefWidth="150">
+            <Label fx:id="totalCustomersLabel" text="0" styleClass="text-2xl, font-bold, text-green-600"/>
+            <Label text="Customers" styleClass="text-xs, text-gray-600"/>
+        </VBox>
+        <VBox styleClass="bg-orange-50, rounded-md, p-3" alignment="CENTER" prefWidth="150">
+            <Label fx:id="totalSuppliersLabel" text="0" styleClass="text-2xl, font-bold, text-orange-600"/>
+            <Label text="Suppliers" styleClass="text-xs, text-gray-600"/>
+        </VBox>
+        <VBox styleClass="bg-purple-50, rounded-md, p-3" alignment="CENTER" prefWidth="150">
+            <Label fx:id="activeThirdPartiesLabel" text="0" styleClass="text-2xl, font-bold, text-purple-600"/>
+            <Label text="Active" styleClass="text-xs, text-gray-600"/>
+        </VBox>
+    </HBox>
+
     <!-- Filter and Table -->
     <VBox VBox.vgrow="ALWAYS" spacing="10" styleClass="bg-white, rounded-lg, p-4, shadow-sm">
-        
+
         <!-- Filter Row -->
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Label text="Filter by Type:" styleClass="text-sm, font-semibold, text-gray-700"/>
@@ -66,7 +64,7 @@
         </HBox>
 
         <!-- Third Parties Table -->
-        <TableView fx:id="thirdPartiesTable" VBox.vgrow="ALWAYS" 
+        <TableView fx:id="thirdPartiesTable" VBox.vgrow="ALWAYS"
                    styleClass="rounded-lg, border, border-gray-200, table-view-modern">
             <columns>
                 <TableColumn fx:id="colName" text="Name" prefWidth="220"/>
@@ -83,35 +81,35 @@
 
         <!-- Action Buttons -->
         <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="Edit" onAction="#editThirdParty" 
+            <Button text="Edit" onAction="#editThirdParty"
                     styleClass="btn, btn-info">
                 <graphic>
-                    <SVGPath content="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" 
+                    <SVGPath content="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
                            styleClass="fill-white"/>
                 </graphic>
             </Button>
-            <Button text="Delete" onAction="#deleteThirdParty" 
+            <Button text="Delete" onAction="#deleteThirdParty"
                     styleClass="btn, btn-danger">
                 <graphic>
-                    <SVGPath content="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" 
+                    <SVGPath content="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
                            styleClass="fill-white"/>
                 </graphic>
             </Button>
-            <Button text="View Transactions" onAction="#viewTransactions" 
+            <Button text="View Transactions" onAction="#viewTransactions"
                     styleClass="btn, btn-secondary">
                 <graphic>
-                    <SVGPath content="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" 
+                    <SVGPath content="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
                            styleClass="fill-white"/>
                 </graphic>
             </Button>
-            <Button text="Export Excel" onAction="#exportToExcel" 
+            <Button text="Export Excel" onAction="#exportToExcel"
                     styleClass="btn, btn-success">
                 <graphic>
-                    <SVGPath content="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" 
+                    <SVGPath content="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
                            styleClass="fill-white"/>
                 </graphic>
             </Button>
         </HBox>
     </VBox>
-    
+
 </VBox>

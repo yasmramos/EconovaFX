@@ -5,13 +5,14 @@
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox spacing="16" styleClass="bg-gray-100, p-6" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.accounting.controller.ComprobantesController">
+<VBox spacing="16" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.econovafx.modules.accounting.controller.ComprobantesController">
 
     <!-- Header with Actions -->
-    <HBox alignment="CENTER_LEFT" spacing="16" styleClass="dashboard-header">
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="page-header">
+        <FontIcon iconLiteral="mdi2f-file-document" iconSize="22" styleClass="icon-brand-ink"/>
         <VBox>
-            <Label styleClass="dashboard-title" text="Vouchers"><graphic><FontIcon iconLiteral="mdi2f-file-document" iconSize="18"/></graphic></Label>
-            <Label styleClass="dashboard-subtitle" text="Accounting vouchers management" />
+            <Label styleClass="page-title" text="Vouchers"/>
+            <Label styleClass="page-subtitle" text="Accounting vouchers management" />
         </VBox>
         <Region HBox.hgrow="ALWAYS" />
         <Button fx:id="btnNewComprobante" onAction="#newComprobante" styleClass="submit-btn" graphicTextGap="8" contentDisplay="LEFT">
@@ -39,15 +40,15 @@
             <DatePicker fx:id="filterStartDate" promptText="Start date" styleClass="filter-date-picker" />
             <Label styleClass="filter-label" text="—" />
             <DatePicker fx:id="filterEndDate" promptText="End date" styleClass="filter-date-picker" />
-            
+
             <Region HBox.hgrow="ALWAYS" />
-            
+
             <Label styleClass="filter-label" text="Status:"><graphic><FontIcon iconLiteral="mdi2s-state-machine" iconSize="16"/></graphic></Label>
             <ComboBox fx:id="filterStatusCombo" promptText="All" styleClass="form-combo" prefWidth="150" />
-            
+
             <Label styleClass="filter-label" text="Search:"><graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic></Label>
             <TextField fx:id="searchField" promptText="Number or description..." styleClass="form-input" prefWidth="250" />
-            
+
             <Button onAction="#applyFilters" styleClass="filter-btn" graphicTextGap="8" contentDisplay="LEFT">
                 <text>Filter</text>
                 <graphic><FontIcon iconLiteral="mdi2m-magnify" iconSize="16"/></graphic>

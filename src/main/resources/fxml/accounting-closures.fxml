@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -9,19 +8,22 @@
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.econovafx.modules.accounting.controller.AccountingClosuresController"
       fx:id="contentArea"
-      spacing="20"
-      styleClass="bg-gray-50, p-6">
+      spacing="20">
 
-    <Label text="Accounting Closures" styleClass="text-2xl, font-bold, text-slate-800"><graphic><FontIcon iconLiteral="mdi2l-lock" iconSize="24"/></graphic></Label>
-    
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="page-header">
+        <FontIcon iconLiteral="mdi2l-lock" iconSize="22" styleClass="icon-brand-ink"/>
+        <Label text="Accounting Closures" styleClass="page-title"/>
+    </HBox>
+
     <Separator/>
 
     <!-- Info Panel -->
     <VBox styleClass="card, bg-white, p-6" spacing="15">
         <Label text="Accounting Closures Management" styleClass="text-lg, font-semibold, text-slate-700"/>
-        <Label text="Manage monthly and annual closings of the accounting system. This functionality allows closing accounting periods securely, generating corresponding closing entries and blocking movements in already closed periods." 
+        <Label text="Manage monthly and annual closings of the accounting system. This functionality allows closing accounting periods securely, generating corresponding closing entries and blocking movements in already closed periods."
                styleClass="text-slate-600" wrapText="true"/>
-        
+
         <HBox spacing="15" alignment="CENTER_LEFT">
             <Button fx:id="btnVerPeriodos" graphicTextGap="8" onAction="#handleVerPeriodos" styleClass="btn, btn-primary" contentDisplay="LEFT">
                 <text>View Open Periods</text>
@@ -41,7 +43,7 @@
     <!-- Closures List Placeholder -->
     <VBox styleClass="card, bg-white, p-6" spacing="15" VBox.vgrow="ALWAYS">
         <Label text="Closures History" styleClass="text-lg, font-semibold, text-slate-700"/>
-        
+
         <TableView fx:id="closuresTable" prefHeight="300">
             <columns>
                 <TableColumn fx:id="colTipo" text="Type" prefWidth="150"/>
