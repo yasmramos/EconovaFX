@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -238,9 +241,60 @@ public class ExchangeRatesController {
 
     @FXML
     private void handleExportToCSV() {
-        // TODO: Implement CSV export
-        ModernDialog.showInfoDialog((Stage) rootView.getScene().getWindow(), 
-            "Exportar", "Funcionalidad de exportación a CSV en desarrollo");
+        List<ExchangeRate> rates = historicalRatesData.isEmpty()
+            ? List.copyOf(activeRatesData)
+            : List.copyOf(historicalRatesData);
+
+        if (rates.isEmpty()) {
+            ModernDialog.showInfoDialog((Stage) rootView.getScene().getWindow(),
+                "Exportar", "No hay tasas para exportar");
+            return;
+        }
+
+        try {
+            File file = new File(System.getProperty("user.home"),
+                "Downloads/tasas_cambio_" + LocalDate.now() + ".csv");
+            Files.writeString(file.toPath(), buildRatesCsv(rates), StandardCharsets.UTF_8);
+            logger.info("Exchange rates exported to CSV: {}", file.getAbsolutePath());
+            ModernDialog.showInfoDialog((Stage) rootView.getScene().getWindow(),
+                "Exportar", "Tasas exportadas a:\n" + file.getAbsolutePath());
+        } catch (Exception e) {
+            logger.error("Error al exportar tasas a CSV", e);
+            ModernDialog.showInfoDialog((Stage) rootView.getScene().getWindow(),
+                "Error", "No se pudo exportar a CSV: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Builds the CSV body for the given rates. Extracted from the handler so the
+     * escaping and column order can be tested without a live JavaFX window.
+     */
+    static String buildRatesCsv(List<ExchangeRate> rates) {
+        StringBuilder csv = new StringBuilder("Moneda,Nombre,Tasa,Fecha,Tipo\n");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        for (ExchangeRate rate : rates) {
+            csv.append(csvField(rate.getToCurrency() != null ? rate.getToCurrency().getCode() : ""))
+               .append(',')
+               .append(csvField(rate.getToCurrency() != null ? rate.getToCurrency().getName() : ""))
+               .append(',')
+               .append(rate.getRate() != null ? rate.getRate().toPlainString() : "")
+               .append(',')
+               .append(rate.getEffectiveDate() != null ? rate.getEffectiveDate().format(formatter) : "")
+               .append(',')
+               .append(rate.getRateType() != null ? rate.getRateType().name() : "")
+               .append('\n');
+        }
+        return csv.toString();
+    }
+
+    private static String csvField(String value) {
+        if (value == null) {
+            return "";
+        }
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
     }
 
     private void loadActiveRates() {
