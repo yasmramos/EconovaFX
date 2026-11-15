@@ -252,6 +252,61 @@ class ConsolidationServiceTest {
         // This is acceptable behavior - caller should set their own context if needed
     }
 
+    @Test
+    void testConsolidateStatementExposesAppliedEliminations() {
+        // Setup: two active companies
+        Company company1 = createCompany("Company A", "COMP_A", "ACTIVE");
+        company1.setId(1L);
+        Company company2 = createCompany("Company B", "COMP_B", "ACTIVE");
+        company2.setId(2L);
+        companyService.companies.put(1L, company1);
+        companyService.companies.put(2L, company2);
+
+        FinancialStatementModel model = createModel(1L, "Consolidation Model");
+        financialStatementService.models.put(1L, model);
+
+        // The stub identifies one elimination for this consolidation
+        com.econovafx.modules.accounting.model.IntercompanyElimination elimination =
+                new com.econovafx.modules.accounting.model.IntercompanyElimination(
+                        com.econovafx.modules.accounting.model.IntercompanyElimination.EliminationType.RECEIVABLE_PAYABLE,
+                        "test", 1L, 2L, "1.1.3.01", "2.1.3.01",
+                        BigDecimal.valueOf(500), LocalDate.of(2024, 12, 31));
+        intercompanyEliminationService.eliminations = new ArrayList<>(List.of(elimination));
+
+        ConsolidatedStatementResult result = consolidationService.consolidateStatement(
+                Arrays.asList(1L, 2L), 1L,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31),
+                true);
+
+        assertTrue(result.isEliminationsApplied(),
+                "eliminationsApplied should be true when eliminations were applied");
+        assertNotNull(result.getAppliedEliminations(),
+                "the audit trail should be populated");
+        assertEquals(1, result.getAppliedEliminations().size());
+        assertSame(elimination, result.getAppliedEliminations().get(0));
+    }
+
+    @Test
+    void testConsolidateStatementReportsNoEliminationsWhenNoneIdentified() {
+        Company company = createCompany("Company A", "COMP_A", "ACTIVE");
+        company.setId(1L);
+        companyService.companies.put(1L, company);
+
+        FinancialStatementModel model = createModel(1L, "Consolidation Model");
+        financialStatementService.models.put(1L, model);
+
+        ConsolidatedStatementResult result = consolidationService.consolidateStatement(
+                Arrays.asList(1L), 1L,
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31),
+                true);
+
+        assertFalse(result.isEliminationsApplied(),
+                "eliminationsApplied should be false when nothing was eliminated");
+        assertTrue(result.getAppliedEliminations().isEmpty());
+    }
+
     private Company createCompany(String name, String code, String status) {
         Company company = new Company(name, code, "123456789");
         company.setStatus(status);
@@ -355,6 +410,9 @@ class ConsolidationServiceTest {
 
     // Stub implementation of IntercompanyEliminationService
     private static class StubIntercompanyEliminationService extends IntercompanyEliminationService {
+        private java.util.List<com.econovafx.modules.accounting.model.IntercompanyElimination> eliminations =
+                new ArrayList<>();
+
         public StubIntercompanyEliminationService() {
             super(null, null, null, null);
         }
@@ -364,8 +422,7 @@ class ConsolidationServiceTest {
                 java.util.List<com.econovafx.modules.core.model.Company> companies,
                 java.time.LocalDate startDate,
                 java.time.LocalDate endDate) {
-            // Return empty list for basic tests
-            return new ArrayList<>();
+            return eliminations;
         }
 
         @Override

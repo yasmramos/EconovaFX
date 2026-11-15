@@ -157,6 +157,7 @@ public class ConsolidationService {
                     .collect(Collectors.toList());
 
             // Apply intercompany eliminations if requested
+            List<IntercompanyElimination> appliedEliminations = List.of();
             if (applyEliminations) {
                 logger.info("Applying intercompany eliminations...");
                 
@@ -174,6 +175,7 @@ public class ConsolidationService {
                     logger.warn("Intercompany eliminations are not balanced! Review required.");
                 }
                 
+                appliedEliminations = eliminations;
                 logger.info("Applied {} intercompany eliminations", eliminations.size());
             }
 
@@ -199,7 +201,8 @@ public class ConsolidationService {
             result.setConsolidatedRows(consolidatedRows);
             result.setCompanyBreakdown(companyBreakdown);
             result.setGeneratedAt(LocalDate.now());
-            result.setEliminationsApplied(applyEliminations);
+            result.setEliminationsApplied(!appliedEliminations.isEmpty());
+            result.setAppliedEliminations(appliedEliminations);
 
             logger.info("Consolidation completed successfully: {} companies, {} consolidated rows, eliminations={}", 
                         companies.size(), consolidatedRows.size(), applyEliminations);
