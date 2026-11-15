@@ -292,3 +292,17 @@ Two unrelated helpers show feedback; keep them apart:
 They used to share the name `NotificationService`, which made imports ambiguous;
 the toast helper was renamed to `ToastNotifier` for that reason.
 
+
+## Intercompany transactions
+
+A `ThirdParty` may point at another company of the group through the plain
+`related_company_id` column (no JPA relation). Every company lives in its own
+tenant database, so the referenced `companies` row is not reachable from a
+third party's schema; the id is enough to match.
+
+- `TransactionRepository.findIntercompanyTransactions(...)` returns the
+  transactions a company booked against a counterparty, matching on
+  `thirdParty.relatedCompanyId`. A null counterparty yields no rows.
+- `IntercompanyEliminationService` selects each company's tenant before
+  querying, because a company's transactions are only visible while its tenant
+  is current, and checks both directions of every pair.
