@@ -8,6 +8,7 @@ import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.accounting.repository.AccountRepository;
 import com.econovafx.modules.core.model.Company;
+import com.econovafx.modules.core.security.SecurityUtil;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -660,7 +661,7 @@ public class IntercompanyEliminationService {
             // Only create transaction if we have valid entries
             if (!adjustmentEntries.isEmpty()) {
                 try {
-                    Transaction savedTxn = transactionService.createTransaction(adjustmentTxn, adjustmentEntries, "system");
+                    Transaction savedTxn = transactionService.createTransaction(adjustmentTxn, adjustmentEntries, SecurityUtil.currentUsername());
                     transactionIds.add(savedTxn.getId());
                     logger.debug("Created consolidation adjustment transaction: {}", savedTxn.getNumber());
                 } catch (Exception e) {

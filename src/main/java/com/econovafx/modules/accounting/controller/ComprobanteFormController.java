@@ -7,6 +7,7 @@ import com.econovafx.modules.accounting.model.TransactionEntry;
 import com.econovafx.modules.accounting.service.AccountService;
 import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.accounting.service.TransactionService;
+import com.econovafx.modules.core.security.SecurityUtil;
 import com.econovafx.modules.core.ui.util.ErrorState;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import com.econovafx.modules.core.ui.util.ToastNotifier;
@@ -538,7 +539,7 @@ public class ComprobanteFormController implements Initializable {
                         description,
                         effectiveThirdParty,
                         entryDataList,
-                        "system");
+                        SecurityUtil.currentUsername());
             }
 
             saved = true;

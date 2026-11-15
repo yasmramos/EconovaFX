@@ -78,6 +78,20 @@ public class SecurityUtil {
     public static User getCurrentUser() {
         return currentUserHolder.get();
     }
+
+    /**
+     * Gets the username of the current authenticated user for audit trails.
+     * Falls back to {@code "system"} when no user is present, which happens for
+     * background/startup work that runs outside a logged-in session.
+     *
+     * @return the authenticated username, or {@code "system"} when unavailable
+     */
+    public static String currentUsername() {
+        User user = currentUserHolder.get();
+        return (user != null && user.getUsername() != null && !user.getUsername().isBlank())
+            ? user.getUsername()
+            : "system";
+    }
     
     /**
      * Clears the current user from the thread context.

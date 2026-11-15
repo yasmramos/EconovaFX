@@ -12,6 +12,7 @@ import com.econovafx.modules.core.exception.ValidationException;
 import com.econovafx.modules.core.model.AuditLog;
 import com.econovafx.modules.core.service.AuditService;
 import com.econovafx.modules.core.security.RequiresTenant;
+import com.econovafx.modules.core.security.SecurityUtil;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -142,10 +143,10 @@ public class TransactionService {
     }
     
     /**
-     * Create transaction without audit (for backward compatibility)
+     * Create a transaction using the current session user for the audit log.
      */
     public Transaction createTransaction(Transaction transaction, List<TransactionEntryData> entries) {
-        return createTransaction(transaction, entries, "system");
+        return createTransaction(transaction, entries, SecurityUtil.currentUsername());
     }
 
     /**
@@ -296,10 +297,10 @@ public class TransactionService {
     }
     
     /**
-     * Post transaction without audit (for backward compatibility)
+     * Post a transaction using the current session user for the audit log.
      */
     public Transaction postTransaction(Long transactionId) {
-        return postTransaction(transactionId, "system");
+        return postTransaction(transactionId, SecurityUtil.currentUsername());
     }
     
     /**
@@ -346,10 +347,10 @@ public class TransactionService {
     }
     
     /**
-     * Reverse transaction without audit (for backward compatibility)
+     * Reverse a transaction using the current session user for the audit log.
      */
     public Transaction reverseTransaction(Long transactionId, String reason) {
-        return reverseTransaction(transactionId, reason, "system");
+        return reverseTransaction(transactionId, reason, SecurityUtil.currentUsername());
     }
     
     public void deleteTransaction(Long id, String username) {
@@ -374,10 +375,10 @@ public class TransactionService {
     }
     
     /**
-     * Delete transaction without audit (for backward compatibility)
+     * Delete a transaction using the current session user for the audit log.
      */
     public void deleteTransaction(Long id) {
-        deleteTransaction(id, "system");
+        deleteTransaction(id, SecurityUtil.currentUsername());
     }
     
     private void validateTransaction(Transaction transaction, List<TransactionEntryData> entries) {

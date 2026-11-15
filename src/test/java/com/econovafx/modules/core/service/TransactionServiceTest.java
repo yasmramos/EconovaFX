@@ -35,6 +35,7 @@ class TransactionServiceTest {
 
     private StubTransactionRepository transactionRepository;
     private StubAccountRepositoryForTransaction accountRepository;
+    private StubAuditLogRepositoryForTransaction auditLogRepository;
     private AuditService auditService;
     private AccountingPeriodService accountingPeriodService;
     private ClosingEntryRepository closingEntryRepository;
@@ -44,7 +45,8 @@ class TransactionServiceTest {
     void setUp() {
         transactionRepository = new StubTransactionRepository();
         accountRepository = new StubAccountRepositoryForTransaction();
-        auditService = new AuditService(new StubAuditLogRepositoryForTransaction());
+        auditLogRepository = new StubAuditLogRepositoryForTransaction();
+        auditService = new AuditService(auditLogRepository);
         accountingPeriodService = new StubAccountingPeriodService();
         closingEntryRepository = new StubClosingEntryRepository();
         transactionService = new TransactionService(transactionRepository, accountRepository, auditService, accountingPeriodService, closingEntryRepository, new StubDocumentSequenceRepository());
@@ -69,6 +71,34 @@ class TransactionServiceTest {
 
         assertNotNull(result);
         assertTrue(transactionRepository.saveCalled);
+    }
+
+    @Test
+    void createTransactionWithoutUsernameUsesSessionUserInAuditLog() {
+        Account debitAccount = accountRepository.save(new Account("1002", "Cash", AccountType.ASSET));
+        Account creditAccount = accountRepository.save(new Account("4002", "Sales", AccountType.REVENUE));
+
+        Transaction transaction = new Transaction();
+        transaction.setDate(LocalDate.now());
+        transaction.setType("JOURNAL");
+        transaction.setDescription("Session user transaction");
+
+        List<TransactionService.TransactionEntryData> entries = List.of(
+            new TransactionService.TransactionEntryData(debitAccount.getId(), new BigDecimal("100.00"), BigDecimal.ZERO, "Debit cash"),
+            new TransactionService.TransactionEntryData(creditAccount.getId(), BigDecimal.ZERO, new BigDecimal("100.00"), "Credit sales")
+        );
+
+        User user = new User();
+        user.setUsername("ana.lopez");
+        com.econovafx.modules.core.security.SecurityUtil.setCurrentUser(user);
+        try {
+            transactionService.createTransaction(transaction, entries);
+            assertNotNull(auditLogRepository.lastSaved, "an audit entry must be written");
+            assertEquals("ana.lopez", auditLogRepository.lastSaved.getUsername(),
+                    "the audit log must record the session user, not the literal 'system'");
+        } finally {
+            com.econovafx.modules.core.security.SecurityUtil.clearCurrentUser();
+        }
     }
 
     @Test
@@ -857,7 +887,10 @@ class TransactionServiceTest {
             return new ArrayList<>();
         }
 
+        AuditLog lastSaved;
+
         public AuditLog save(AuditLog log) {
+            this.lastSaved = log;
             return log;
         }
 

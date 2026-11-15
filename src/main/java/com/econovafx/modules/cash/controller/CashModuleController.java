@@ -12,7 +12,6 @@ import com.econovafx.modules.cash.repository.CashMovementRepository;
 import com.econovafx.modules.cash.service.CashMovementService;
 import com.econovafx.modules.bank.service.BankReconciliationService;
 import com.econovafx.modules.core.service.ExportService;
-import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.core.security.SecurityUtil;
 import jakarta.inject.Inject;
 import javafx.collections.FXCollections;
@@ -797,9 +796,6 @@ public class CashModuleController {
      * {@code "system"} when no user is present (e.g. background/startup calls).
      */
     String currentUsername() {
-        User user = SecurityUtil.getCurrentUser();
-        return (user != null && user.getUsername() != null && !user.getUsername().isEmpty())
-            ? user.getUsername()
-            : "system";
+        return SecurityUtil.currentUsername();
     }
 }
