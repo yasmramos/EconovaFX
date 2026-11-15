@@ -2,7 +2,6 @@ package com.econovafx.modules.billing.model;
 import com.econovafx.modules.core.model.BaseEntity;
 
 import com.econovafx.modules.accounting.model.Account;
-import com.econovafx.modules.core.model.Company;
 import com.econovafx.modules.accounting.model.Transaction;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -64,6 +63,16 @@ public class ThirdParty extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
+
+    /**
+     * Company of the same group that this third party represents, when the
+     * counterparty is another company of the consolidation group.
+     * Plain id (no FK): every company lives in its own tenant database, so the
+     * referenced company row is not reachable from this schema. Null means the
+     * third party is an external counterparty.
+     */
+    @Column(name = "related_company_id", columnDefinition = "BIGINT")
+    private Long relatedCompanyId;
 
     @Column(name = "notes", length = 2000)
     @Lob
@@ -193,6 +202,14 @@ public class ThirdParty extends BaseEntity {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public Long getRelatedCompanyId() {
+        return relatedCompanyId;
+    }
+
+    public void setRelatedCompanyId(Long relatedCompanyId) {
+        this.relatedCompanyId = relatedCompanyId;
     }
 
     public String getNotes() {

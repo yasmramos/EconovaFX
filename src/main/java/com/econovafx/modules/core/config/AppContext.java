@@ -11,6 +11,7 @@ import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.service.NotificationService;
+import com.econovafx.modules.core.service.CompanyService;
 import com.econovafx.modules.core.service.ExchangeRateService;
 import com.econovafx.modules.core.service.SystemConfigService;
 import com.econovafx.modules.core.ui.controller.*;
@@ -107,12 +108,13 @@ public final class AppContext {
         SystemConfigService systemConfigService = beanScope.get(SystemConfigService.class);
         
         ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
+        CompanyService companyService = beanScope.get(CompanyService.class);
 
         // Create controllers without ViewFactory initially
         // Controllers that don't need ViewFactory
         accountClassController = new AccountClassController(accountService);
         accountFormController = new AccountFormController(accountService);
-        thirdPartyFormController = new ThirdPartyFormController(thirdPartyService);
+        thirdPartyFormController = new ThirdPartyFormController(thirdPartyService, companyService);
         transactionEntryController = new TransactionEntryController(accountService, transactionService);
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
