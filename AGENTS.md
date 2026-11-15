@@ -306,3 +306,10 @@ third party's schema; the id is enough to match.
 - `IntercompanyEliminationService` selects each company's tenant before
   querying, because a company's transactions are only visible while its tenant
   is current, and checks both directions of every pair.
+- `ConsolidatedStatementResult.isEliminationsApplied()` reports whether
+  eliminations were actually applied (the identified list is non-empty), not
+  whether the caller requested them; the identified entries are exposed through
+  `getAppliedEliminations()` for the audit trail.
+- `validateEliminationsBalanced(...)` treats an entry as unpostable when its
+  amount is missing, not positive, or either account code is blank, because
+  such an entry is skipped when journal entries are generated.
