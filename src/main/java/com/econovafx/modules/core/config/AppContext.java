@@ -134,7 +134,9 @@ public final class AppContext {
                         beanScope.get(com.econovafx.modules.reporting.controller.FinancialReportingController.class),
                         accountingReportService,
                         accountService,
-                        exportService);
+                        exportService,
+                        companyService,
+                        beanScope.get(com.econovafx.modules.accounting.repository.FinancialStatementModelRepository.class));
 
         // Create ViewFactory with controllers that don't need it back
         viewFactory = new ViewFactory(

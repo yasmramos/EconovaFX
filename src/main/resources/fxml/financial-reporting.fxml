@@ -156,6 +156,57 @@
             </VBox>
         </Tab>
 
+        <!-- ================= Consolidación ================= -->
+        <Tab text="Consolidación">
+            <VBox spacing="12" styleClass="p-4">
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <Label text="Modelo:" styleClass="text-slate-700"/>
+                    <ComboBox fx:id="consolidationModelCombo" prefWidth="260"/>
+                    <Label text="Desde:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="consolidationStartDate"/>
+                    <Label text="Hasta:" styleClass="text-slate-700"/>
+                    <DatePicker fx:id="consolidationEndDate"/>
+                    <CheckBox fx:id="applyEliminationsCheck" text="Eliminar operaciones intercompañía"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnConsolidate" onAction="#onConsolidate" styleClass="btn, btn-primary" graphicTextGap="8" contentDisplay="LEFT">
+                        <text>Consolidar</text>
+                        <graphic><FontIcon iconLiteral="mdi2p-play" iconSize="18"/></graphic>
+                    </Button>
+                </HBox>
+
+                <HBox spacing="16" VBox.vgrow="ALWAYS">
+                    <VBox spacing="6" prefWidth="260">
+                        <Label text="Empresas del grupo:" styleClass="text-slate-700"/>
+                        <ListView fx:id="consolidationCompaniesList" VBox.vgrow="ALWAYS" prefHeight="320"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Estado consolidado:" styleClass="text-slate-700"/>
+                        <TableView fx:id="consolidationTable" prefHeight="320" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colConsRow" text="Fila" prefWidth="60"/>
+                                <TableColumn fx:id="colConsConcept" text="Concepto" prefWidth="320"/>
+                                <TableColumn fx:id="colConsValue" text="Valor consolidado" prefWidth="160"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </HBox>
+
+                <Label fx:id="consolidationStatusLabel" styleClass="text-slate-500" wrapText="true"/>
+
+                <Label text="Traza de auditoría de eliminaciones:" styleClass="text-slate-700"/>
+                <TableView fx:id="eliminationsTable" prefHeight="180">
+                    <columns>
+                        <TableColumn fx:id="colElimType" text="Tipo" prefWidth="200"/>
+                        <TableColumn fx:id="colElimDescription" text="Descripción" prefWidth="300"/>
+                        <TableColumn fx:id="colElimAccount" text="Cuenta" prefWidth="130"/>
+                        <TableColumn fx:id="colElimCounter" text="Contracuenta" prefWidth="130"/>
+                        <TableColumn fx:id="colElimAmount" text="Importe" prefWidth="130"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
     </TabPane>
 
 </VBox>
