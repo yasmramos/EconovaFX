@@ -11,9 +11,9 @@ import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.service.NotificationService;
-import com.econovafx.modules.core.service.CompanyService;
 import com.econovafx.modules.core.service.ExchangeRateService;
 import com.econovafx.modules.core.service.SystemConfigService;
+import com.econovafx.modules.core.service.CompanyService;
 import com.econovafx.modules.core.ui.controller.*;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.accounting.controller.AccountsController;
@@ -126,72 +126,32 @@ public final class AppContext {
         inventoryController = new InventoryController(inventoryService, userContext);
 
         // Financial reporting view (statements + Trial Balance + General Ledger)
-        com.econovafx.modules.accounting.service.AccountingReportService accountingReportService =
-                beanScope.get(com.econovafx.modules.accounting.service.AccountingReportService.class);
-
         com.econovafx.modules.reporting.controller.FinancialReportingViewController financialReportingViewController =
                 new com.econovafx.modules.reporting.controller.FinancialReportingViewController(
                         beanScope.get(com.econovafx.modules.reporting.controller.FinancialReportingController.class),
-                        accountingReportService,
+                        beanScope.get(com.econovafx.modules.accounting.service.AccountingReportService.class),
                         accountService,
                         exportService,
                         companyService,
                         beanScope.get(com.econovafx.modules.accounting.repository.FinancialStatementModelRepository.class));
 
-        // Create ViewFactory with controllers that don't need it back
-        viewFactory = new ViewFactory(
-                null, // dashboardController - will be set later
-                null, // accountsController - will be set later
-                null, // transactionsController - will be set later
-                null, // thirdPartiesController - will be set later
-                accountingPeriodsController,
-                accountingClosuresController,
-                accountClassController,
-                exchangeRatesController,
-                accountFormController,
-                thirdPartyFormController,
-                transactionEntryController,
-                null, // comprobantesController - will be set later
-                null, // systemSettingsController - will be set later
-                inventoryController,
-                null, // webViewController - will be set later
-                financialReportingViewController,
-                accountService,
-                thirdPartyService,
-                transactionService,
-                exportService,
-                accountingPeriodService,
-                notificationService,
-                inventoryService,
-                null // viewSwitcher - will be set later
-        );
-
-        // Now create controllers that need ViewFactory and initialize them
+        // Create every controller first. They only need the ViewFactory through
+        // initializeViewFactory below, so nothing here depends on the factory yet.
         dashboardController = new DashboardController(accountService, transactionService, systemConfigService);
-        dashboardController.initializeViewFactory(viewFactory);
-
+        com.econovafx.modules.accounting.service.AccountingReportService accountingReportService =
+                beanScope.get(com.econovafx.modules.accounting.service.AccountingReportService.class);
         accountsController = new AccountsController(accountService, accountingReportService);
-        accountsController.initializeViewFactory(viewFactory);
-
-        accountClassController.initializeViewFactory(viewFactory);
-
         transactionsController = new TransactionsController(transactionService, accountService);
-        transactionsController.initializeViewFactory(viewFactory);
-
-        thirdPartiesController = new ThirdPartiesController(thirdPartyService, exportService, null);
-        thirdPartiesController.initializeViewFactory(viewFactory);
-
+        thirdPartiesController = new ThirdPartiesController(thirdPartyService, exportService, notificationService);
         comprobantesController = new ComprobantesController(transactionService, accountService, exportService);
-        comprobantesController.initializeViewFactory(viewFactory);
 
         // Create SystemSettingsController using DI to inject BackupSchedulerService
         systemSettingsController = beanScope.get(SystemSettingsController.class);
-        systemSettingsController.initializeViewFactory(viewFactory);
 
         // Create WebViewController with injected LocalWebServer
         webViewController = beanScope.get(WebViewController.class);
 
-        // Re-create ViewFactory with all controllers properly initialized
+        // Build the single ViewFactory over the finished controllers.
         viewFactory = new ViewFactory(
                 dashboardController,
                 accountsController,
@@ -214,20 +174,19 @@ public final class AppContext {
                 transactionService,
                 exportService,
                 accountingPeriodService,
-                notificationService,
-                inventoryService,
-                null // viewSwitcher - not used in AppContext initialization
+                inventoryService
         );
 
-        // Final initialization pass for controllers that need the complete ViewFactory
-        dashboardController.completeInitialization(viewFactory);
-        accountsController.completeInitialization(viewFactory);
-        accountClassController.completeInitialization(viewFactory);
-        transactionsController.completeInitialization(viewFactory);
-        thirdPartiesController.completeInitialization(viewFactory);
-        comprobantesController.completeInitialization(viewFactory);
-        systemSettingsController.completeInitialization(viewFactory);
-        
+        // Hand that one instance to every controller that navigates through it.
+        // Building a second ViewFactory here used to leave the controllers holding
+        // the first, half-empty one, so dialogs and navigation silently no-oped.
+        dashboardController.initializeViewFactory(viewFactory);
+        accountsController.initializeViewFactory(viewFactory);
+        transactionsController.initializeViewFactory(viewFactory);
+        thirdPartiesController.initializeViewFactory(viewFactory);
+        comprobantesController.initializeViewFactory(viewFactory);
+        systemSettingsController.initializeViewFactory(viewFactory);
+
         logger.info("Application context initialized successfully with Avaje Inject");
     }
 

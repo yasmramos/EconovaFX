@@ -142,12 +142,6 @@ public class ComprobantesController implements Initializable {
         this.viewFactory = viewFactory;
     }
 
-    /**
-     * Complete initialization after ViewFactory is fully constructed
-     */
-    public void completeInitialization(ViewFactory viewFactory) {
-        // Additional initialization if needed
-    }
 
     /**
      * Get the root pane of this controller's view

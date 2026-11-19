@@ -369,10 +369,4 @@ public class SystemSettingsController {
         this.viewFactory = viewFactory;
     }
 
-    /**
-     * Complete initialization after ViewFactory is fully constructed
-     */
-    public void completeInitialization(ViewFactory viewFactory) {
-        // Additional initialization if needed
-    }
 }

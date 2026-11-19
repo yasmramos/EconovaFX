@@ -169,12 +169,6 @@ public class MainViewController implements Initializable {
         this.viewFactory = viewFactory;
     }
 
-    /**
-     * Complete initialization after ViewFactory is fully constructed
-     */
-    public void completeInitialization(ViewFactory viewFactory) {
-        // Additional initialization if needed
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -378,6 +372,14 @@ public class MainViewController implements Initializable {
         contentArea.getChildren().clear();
         contentArea.getChildren().add(viewFactory.createTransactionsView());
         updateStatus("Transacciones");
+    }
+
+    /**
+     * Public entry point for other components (e.g. the dashboard's "view all"
+     * action) to open the transactions page. Must run on the FX thread.
+     */
+    public void navigateToTransactions() {
+        showTransactions();
     }
 
     @FXML
