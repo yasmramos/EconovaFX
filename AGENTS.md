@@ -313,3 +313,9 @@ third party's schema; the id is enough to match.
 - `validateEliminationsBalanced(...)` treats an entry as unpostable when its
   amount is missing, not positive, or either account code is blank, because
   such an entry is skipped when journal entries are generated.
+- The consolidation tab lives in `financial-reporting.fxml` and is driven by
+  `FinancialReportingViewController`; it renders both the consolidated rows and
+  the elimination audit trail, so any change to the result accessors shows up
+  there. FXML grid constraints must match the parent panel: a child of an
+  `HBox` takes `HBox.hgrow`, not `VBox.hgrow`, and the loader fails with
+  `PropertyNotFoundException` when they are swapped.
