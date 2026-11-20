@@ -397,4 +397,68 @@ class TransactionRepositoryTest {
         assertEquals(3, result.size());
         assertTrue(result.stream().allMatch(t -> t.getThirdParty() != null && t.getThirdParty().getId().equals(thirdParty.getId())));
     }
+
+    @Test
+    @DisplayName("Find intercompany transactions filters by related company")
+    void testFindIntercompanyTransactions_FiltersByRelatedCompany() {
+        // Arrange
+        User user = createTestUser("testuser20");
+        userRepository.save(user);
+
+        Account account = createTestAccount("ACC-020", "Intercompany Account", AccountType.ASSET);
+        accountRepository.save(account);
+
+        Long groupCompanyId = 500L;
+
+        ThirdParty groupCounterparty = new ThirdParty();
+        groupCounterparty.setName("Group Sister Company");
+        groupCounterparty.setIdentificationNumber("ID-GROUP");
+        groupCounterparty.setType(ThirdParty.ThirdPartyType.CUSTOMER);
+        groupCounterparty.setEmail("sister@group.com");
+        groupCounterparty.setIsActive(true);
+        groupCounterparty.setRelatedCompanyId(groupCompanyId);
+        db.insert(groupCounterparty);
+
+        ThirdParty external = new ThirdParty();
+        external.setName("External Customer");
+        external.setIdentificationNumber("ID-EXT");
+        external.setType(ThirdParty.ThirdPartyType.CUSTOMER);
+        external.setEmail("external@customer.com");
+        external.setIsActive(true);
+        db.insert(external);
+
+        com.econovafx.modules.accounting.model.Transaction intercompany =
+                createTestTransaction("TRX-IC-1", account);
+        intercompany.setStatus(com.econovafx.modules.accounting.model.TransactionStatus.POSTED);
+        intercompany.setThirdParty(groupCounterparty);
+
+        com.econovafx.modules.accounting.model.Transaction externalTxn =
+                createTestTransaction("TRX-IC-2", account);
+        externalTxn.setStatus(com.econovafx.modules.accounting.model.TransactionStatus.POSTED);
+        externalTxn.setThirdParty(external);
+
+        transactionRepository.save(intercompany);
+        transactionRepository.save(externalTxn);
+
+        // Act
+        List<com.econovafx.modules.accounting.model.Transaction> result =
+                transactionRepository.findIntercompanyTransactions(
+                        1L, groupCompanyId, LocalDate.now().minusDays(1), LocalDate.now().plusDays(1));
+
+        // Assert: only the transaction whose third party is linked to the group company
+        assertEquals(1, result.size());
+        assertEquals("TRX-IC-1", result.get(0).getNumber());
+    }
+
+    @Test
+    @DisplayName("Find intercompany transactions returns empty for null related company")
+    void testFindIntercompanyTransactions_NullRelatedCompany() {
+        // Act
+        List<com.econovafx.modules.accounting.model.Transaction> result =
+                transactionRepository.findIntercompanyTransactions(
+                        1L, null, LocalDate.now().minusDays(1), LocalDate.now().plusDays(1));
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
 }

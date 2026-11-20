@@ -2,7 +2,6 @@ package com.econovafx.modules.accounting.controller;
 
 import com.econovafx.modules.accounting.model.AccountingPeriod;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
-import com.econovafx.modules.core.model.User;
 import com.econovafx.modules.core.security.SecurityUtil;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
@@ -244,8 +243,7 @@ public class AccountingClosuresController implements Initializable {
 
         try {
             // Get authenticated user from security context
-            User currentUser = SecurityUtil.getCurrentUser();
-            String username = (currentUser != null) ? currentUser.getUsername() : "system";
+            String username = SecurityUtil.currentUsername();
             
             // Execute monthly closure
             accountingPeriodService.closeMonthlyPeriod(period.getId(), username, "Monthly closure executed from UI");
@@ -332,8 +330,7 @@ public class AccountingClosuresController implements Initializable {
 
         try {
             // Get authenticated user from security context
-            User currentUser = SecurityUtil.getCurrentUser();
-            String username = (currentUser != null) ? currentUser.getUsername() : "system";
+            String username = SecurityUtil.currentUsername();
             
             // Execute annual closure with auto-close of related months
             accountingPeriodService.closeAnnualPeriod(period.getId(), username, "Annual closure executed from UI", true);

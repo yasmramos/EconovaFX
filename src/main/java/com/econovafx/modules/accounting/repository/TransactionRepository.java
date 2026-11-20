@@ -76,7 +76,13 @@ public class TransactionRepository {
      * Find intercompany transactions between specific companies.
      * Used for identifying transactions that need elimination in consolidation.
      * 
-     * @param companyId Source company ID
+     * Runs against the current tenant's database, so it returns the transactions
+     * booked by {@code companyId} whose counterparty third party is linked to
+     * {@code relatedCompanyId}. A transaction only qualifies when its third party
+     * has been flagged as an intercompany counterparty; third parties without a
+     * related company are external and never produce eliminations.
+     *
+     * @param companyId Source company ID (the current tenant)
      * @param relatedCompanyId Related (counterparty) company ID
      * @param startDate Start date of the period
      * @param endDate End date of the period
@@ -86,8 +92,9 @@ public class TransactionRepository {
                                                            Long relatedCompanyId,
                                                            LocalDate startDate, 
                                                            LocalDate endDate) {
-        // Note: This requires third_party relationship to be properly set up
-        // Future enhancement: Add company_id field to Transaction for direct filtering
+        if (relatedCompanyId == null) {
+            return List.of();
+        }
         return database.find(Transaction.class)
                 .fetch("entries")
                 .fetch("entries.account")
@@ -95,8 +102,9 @@ public class TransactionRepository {
                 .ge("date", startDate)
                 .le("date", endDate)
                 .eq("status", com.econovafx.modules.accounting.model.TransactionStatus.POSTED)
+                .eq("thirdParty.relatedCompanyId", relatedCompanyId)
+                .orderBy("date asc, number asc")
                 .findList();
-        // TODO: Implement proper filtering when company relationship is added to Transaction entity
     }
 
     public List<Transaction> findByType(String type) {

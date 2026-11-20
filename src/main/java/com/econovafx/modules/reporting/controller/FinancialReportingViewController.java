@@ -1,11 +1,18 @@
 package com.econovafx.modules.reporting.controller;
 
 import com.econovafx.modules.accounting.model.Account;
+import com.econovafx.modules.accounting.model.FinancialStatementModel;
+import com.econovafx.modules.accounting.model.IntercompanyElimination;
+import com.econovafx.modules.accounting.repository.FinancialStatementModelRepository;
 import com.econovafx.modules.accounting.service.AccountingReportService;
 import com.econovafx.modules.accounting.service.AccountService;
+import com.econovafx.modules.core.model.Company;
+import com.econovafx.modules.core.service.CompanyService;
 import com.econovafx.modules.core.service.ExportService;
 import com.econovafx.modules.reporting.model.FinancialReport;
 import com.econovafx.modules.reporting.model.ReportLine;
+import com.econovafx.modules.reporting.service.consolidation.ConsolidatedRow;
+import com.econovafx.modules.reporting.service.consolidation.ConsolidatedStatementResult;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -36,6 +43,8 @@ public class FinancialReportingViewController implements Initializable {
     private final AccountingReportService accountingReportService;
     private final AccountService accountService;
     private final ExportService exportService;
+    private final CompanyService companyService;
+    private final FinancialStatementModelRepository modelRepository;
 
     @FXML private ComboBox<ReportKind> reportTypeCombo;
     @FXML private DatePicker statementStartDate;
@@ -92,16 +101,38 @@ public class FinancialReportingViewController implements Initializable {
     @FXML private TableColumn<VoucherHistoryRow, String> colHistDebit;
     @FXML private TableColumn<VoucherHistoryRow, String> colHistCredit;
 
+    @FXML private ComboBox<FinancialStatementModel> consolidationModelCombo;
+    @FXML private DatePicker consolidationStartDate;
+    @FXML private DatePicker consolidationEndDate;
+    @FXML private CheckBox applyEliminationsCheck;
+    @FXML private Button btnConsolidate;
+    @FXML private ListView<Company> consolidationCompaniesList;
+    @FXML private TableView<ConsolidatedRowDisplay> consolidationTable;
+    @FXML private TableColumn<ConsolidatedRowDisplay, String> colConsRow;
+    @FXML private TableColumn<ConsolidatedRowDisplay, String> colConsConcept;
+    @FXML private TableColumn<ConsolidatedRowDisplay, String> colConsValue;
+    @FXML private Label consolidationStatusLabel;
+    @FXML private TableView<EliminationRow> eliminationsTable;
+    @FXML private TableColumn<EliminationRow, String> colElimType;
+    @FXML private TableColumn<EliminationRow, String> colElimDescription;
+    @FXML private TableColumn<EliminationRow, String> colElimAccount;
+    @FXML private TableColumn<EliminationRow, String> colElimCounter;
+    @FXML private TableColumn<EliminationRow, String> colElimAmount;
+
     private Long lastStatementReportId;
 
     public FinancialReportingViewController(FinancialReportingController reportingController,
                                             AccountingReportService accountingReportService,
                                             AccountService accountService,
-                                            ExportService exportService) {
+                                            ExportService exportService,
+                                            CompanyService companyService,
+                                            FinancialStatementModelRepository modelRepository) {
         this.reportingController = reportingController;
         this.accountingReportService = accountingReportService;
         this.accountService = accountService;
         this.exportService = exportService;
+        this.companyService = companyService;
+        this.modelRepository = modelRepository;
     }
 
     @Override
@@ -112,7 +143,9 @@ public class FinancialReportingViewController implements Initializable {
         setupTrialBalanceTable();
         setupLedgerTable();
         setupHistoryTable();
+        setupConsolidationTables();
         loadAccounts();
+        loadConsolidationInputs();
     }
 
     private void setupDefaults() {
@@ -128,6 +161,9 @@ public class FinancialReportingViewController implements Initializable {
         ledgerEndDate.setValue(LocalDate.now());
         historyStartDate.setValue(firstOfYear);
         historyEndDate.setValue(LocalDate.now());
+        consolidationStartDate.setValue(firstOfYear);
+        consolidationEndDate.setValue(LocalDate.now());
+        consolidationCompaniesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         fiscalYearSpinner.setValueFactory(
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(2000, 2100, LocalDate.now().getYear()));
@@ -167,6 +203,45 @@ public class FinancialReportingViewController implements Initializable {
         colHistDescription.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().description()));
         colHistDebit.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().debit()));
         colHistCredit.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().credit()));
+    }
+
+    private void setupConsolidationTables() {
+        colConsRow.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().rowNumber()));
+        colConsConcept.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().label()));
+        colConsValue.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().value()));
+
+        colElimType.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().type()));
+        colElimDescription.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().description()));
+        colElimAccount.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().accountCode()));
+        colElimCounter.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().counterAccountCode()));
+        colElimAmount.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().amount()));
+    }
+
+    private void loadConsolidationInputs() {
+        consolidationCompaniesList.setItems(FXCollections.observableArrayList(companyService.findAllActive()));
+        consolidationCompaniesList.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Company company, boolean empty) {
+                super.updateItem(company, empty);
+                setText(empty || company == null ? null : company.getCode() + " - " + company.getName());
+            }
+        });
+
+        consolidationModelCombo.setItems(FXCollections.observableArrayList(modelRepository.findAll()));
+        consolidationModelCombo.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(FinancialStatementModel model) {
+                return model == null ? "" : model.getCode() + " - " + model.getName();
+            }
+
+            @Override
+            public FinancialStatementModel fromString(String string) {
+                return null;
+            }
+        });
+        if (!consolidationModelCombo.getItems().isEmpty()) {
+            consolidationModelCombo.getSelectionModel().selectFirst();
+        }
     }
 
     private void loadAccounts() {
@@ -334,13 +409,73 @@ public class FinancialReportingViewController implements Initializable {
                 .toList();
     }
 
+    @FXML
+    private void onConsolidate() {
+        FinancialStatementModel model = consolidationModelCombo.getValue();
+        List<Company> selected = consolidationCompaniesList.getSelectionModel().getSelectedItems();
+        LocalDate start = consolidationStartDate.getValue();
+        LocalDate end = consolidationEndDate.getValue();
+
+        if (model == null || start == null || end == null) {
+            setStatus(consolidationStatusLabel, "Seleccione un modelo y un rango de fechas.", true);
+            return;
+        }
+        if (selected == null || selected.isEmpty()) {
+            setStatus(consolidationStatusLabel, "Seleccione al menos una empresa.", true);
+            return;
+        }
+        if (start.isAfter(end)) {
+            setStatus(consolidationStatusLabel, "La fecha inicial no puede ser posterior a la final.", true);
+            return;
+        }
+
+        List<Long> companyIds = selected.stream().map(Company::getId).toList();
+        boolean applyEliminations = applyEliminationsCheck.isSelected();
+
+        btnConsolidate.setDisable(true);
+        try {
+            ConsolidatedStatementResult result = reportingController.consolidate(
+                    companyIds, model.getId(), start, end, applyEliminations);
+
+            consolidationTable.setItems(FXCollections.observableArrayList(
+                    result.getConsolidatedRows().stream()
+                            .map(ConsolidatedRowDisplay::of)
+                            .toList()));
+
+            List<IntercompanyElimination> eliminations = result.getAppliedEliminations();
+            eliminationsTable.setItems(FXCollections.observableArrayList(
+                    eliminations == null ? List.<EliminationRow>of()
+                            : eliminations.stream().map(EliminationRow::of).toList()));
+
+            setStatus(consolidationStatusLabel, describeConsolidation(result, eliminations), false);
+        } catch (RuntimeException e) {
+            logger.error("Error consolidating financial statements", e);
+            consolidationTable.getItems().clear();
+            eliminationsTable.getItems().clear();
+            setStatus(consolidationStatusLabel, "Error al consolidar: " + e.getMessage(), true);
+        } finally {
+            btnConsolidate.setDisable(false);
+        }
+    }
+
+    private String describeConsolidation(ConsolidatedStatementResult result,
+                                         List<IntercompanyElimination> eliminations) {
+        int companies = result.getIncludedCompanies() == null ? 0 : result.getIncludedCompanies().size();
+        int rows = result.getConsolidatedRows() == null ? 0 : result.getConsolidatedRows().size();
+        String base = companies + " empresas consolidadas, " + rows + " filas.";
+        if (!result.isEliminationsApplied()) {
+            return base + " Sin eliminaciones intercompañía.";
+        }
+        return base + " " + eliminations.size() + " eliminaciones intercompañía aplicadas.";
+    }
+
     private void setStatus(Label label, String message, boolean error) {
         label.setText(message);
         label.getStyleClass().removeAll("value-negative", "value-positive");
         label.getStyleClass().add(error ? "value-negative" : "value-positive");
     }
 
-    private String format(BigDecimal value) {
+    private static String format(BigDecimal value) {
         if (value == null) {
             return "0.00";
         }
@@ -351,6 +486,28 @@ public class FinancialReportingViewController implements Initializable {
     public record VoucherHistoryRow(String voucherNumber, String date, String account,
                                     String description, String debit, String credit) {
     }
+
+    /** Display row for a consolidated statement line. */
+    public record ConsolidatedRowDisplay(String rowNumber, String label, String value) {
+        static ConsolidatedRowDisplay of(ConsolidatedRow row) {
+            return new ConsolidatedRowDisplay(
+                    String.valueOf(row.getRowNumber()), row.getLabel(), format(row.getConsolidatedValue()));
+        }
+    }
+
+    /** Display row for an applied intercompany elimination. */
+    public record EliminationRow(String type, String description, String accountCode,
+                                 String counterAccountCode, String amount) {
+        static EliminationRow of(IntercompanyElimination elimination) {
+            return new EliminationRow(
+                    elimination.getType() == null ? "" : elimination.getType().getDisplayName(),
+                    elimination.getDescription(),
+                    elimination.getAccountCode(),
+                    elimination.getCounterAccountCode(),
+                    format(elimination.getAmount()));
+        }
+    }
+
 
     private record StatementRequest(LocalDate start, LocalDate end, Integer year) {
     }

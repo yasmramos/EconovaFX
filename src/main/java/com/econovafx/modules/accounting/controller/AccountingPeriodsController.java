@@ -2,6 +2,7 @@ package com.econovafx.modules.accounting.controller;
 
 import com.econovafx.modules.accounting.model.AccountingPeriod;
 import com.econovafx.modules.accounting.service.AccountingPeriodService;
+import com.econovafx.modules.core.security.SecurityUtil;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -137,7 +138,7 @@ public class AccountingPeriodsController {
                                        "'? No new transactions will be allowed.");
                     alert.showAndWait().ifPresent(response -> {
                         if (response == ButtonType.OK) {
-                            periodService.closePeriod(period.getId(), "Current User");
+                            periodService.closePeriod(period.getId(), SecurityUtil.currentUsername());
                             showAlert("Success", "Period closed successfully.", Alert.AlertType.INFORMATION);
                             loadPeriods();
                             updateStatistics();

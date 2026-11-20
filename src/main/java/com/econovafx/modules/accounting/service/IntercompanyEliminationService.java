@@ -7,7 +7,10 @@ import com.econovafx.modules.accounting.model.TransactionStatus;
 import com.econovafx.modules.accounting.model.Account;
 import com.econovafx.modules.accounting.repository.TransactionRepository;
 import com.econovafx.modules.accounting.repository.AccountRepository;
+import com.econovafx.modules.core.config.TenantContext;
 import com.econovafx.modules.core.model.Company;
+import com.econovafx.modules.core.security.SecurityUtil;
+import com.econovafx.modules.core.service.CompanyService;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -44,23 +47,25 @@ public class IntercompanyEliminationService {
     private final TransactionRepository transactionRepository;
     private final TransactionService transactionService;
     private final AccountRepository accountRepository;
+    private final CompanyService companyService;
 
     @Inject
     public IntercompanyEliminationService(TransactionRepository transactionRepository,
                                           TransactionService transactionService,
-                                          AccountRepository accountRepository) {
+                                          AccountRepository accountRepository,
+                                          CompanyService companyService) {
         this.transactionRepository = transactionRepository;
         this.transactionService = transactionService;
         this.accountRepository = accountRepository;
+        this.companyService = companyService;
     }
 
     /**
      * Identifies potential intercompany transactions that may require elimination.
      * 
-     * This is a foundational method that will be enhanced with:
-     * - Third-party relationship tracking across companies
-     * - Account code pattern matching for intercompany accounts
-     * - Automatic detection of reciprocal balances
+     * Walks every pair of companies in the group and collects the transactions
+     * each one books against the other, matching on the counterparty company
+     * linked to the transaction's third party.
      * 
      * @param companies List of companies in the consolidation group
      * @param startDate Start date of the period
@@ -77,37 +82,58 @@ public class IntercompanyEliminationService {
         logger.info("Identifying intercompany transactions for {} companies from {} to {}", 
                     companies.size(), startDate, endDate);
         
-        // For each pair of companies, check for intercompany transactions
-        for (int i = 0; i < companies.size(); i++) {
-            for (int j = i + 1; j < companies.size(); j++) {
-                Company companyA = companies.get(i);
-                Company companyB = companies.get(j);
-                
-                // Find transactions between these two companies
-                List<Transaction> transactionsAB = findTransactionsBetweenCompanies(
-                        companyA.getId(), companyB.getId(), startDate, endDate);
-                
-                // Create elimination entries for identified transactions
-                for (Transaction transaction : transactionsAB) {
-                    IntercompanyElimination elimination = createEliminationFromTransaction(
-                            transaction, companyA.getId(), companyB.getId());
-                    if (elimination != null) {
-                        eliminations.add(elimination);
-                    }
+        Company originalTenant = TenantContext.getCurrentTenant();
+        try {
+            // Each company lives in its own database, so a company's transactions
+            // are only visible while its tenant is selected. Both directions are
+            // checked because each side books its own entry.
+            for (int i = 0; i < companies.size(); i++) {
+                for (int j = i + 1; j < companies.size(); j++) {
+                    Company companyA = companies.get(i);
+                    Company companyB = companies.get(j);
+
+                    collectEliminations(companyA, companyB, startDate, endDate, eliminations);
+                    collectEliminations(companyB, companyA, startDate, endDate, eliminations);
                 }
             }
+        } finally {
+            if (originalTenant != null) {
+                TenantContext.setCurrentTenant(originalTenant);
+            } else {
+                TenantContext.clear();
+            }
         }
-        
+
         logger.info("Found {} potential intercompany eliminations", eliminations.size());
         return eliminations;
     }
 
     /**
+     * Collects the eliminations the source company books against the given
+     * counterparty. Selects the source tenant so the query runs against that
+     * company's database.
+     */
+    private void collectEliminations(Company source,
+                                     Company counterparty,
+                                     LocalDate startDate,
+                                     LocalDate endDate,
+                                     List<IntercompanyElimination> eliminations) {
+        companyService.selectTenant(source);
+
+        List<Transaction> transactions = findTransactionsBetweenCompanies(
+                source.getId(), counterparty.getId(), startDate, endDate);
+
+        for (Transaction transaction : transactions) {
+            IntercompanyElimination elimination = createEliminationFromTransaction(
+                    transaction, source.getId(), counterparty.getId());
+            if (elimination != null) {
+                eliminations.add(elimination);
+            }
+        }
+    }
+
+    /**
      * Finds transactions between two specific companies.
-     * 
-     * Note: Current implementation is limited by the data model.
-     * Future enhancement: Add explicit company_id field to Transaction entity
-     * and third_party relationships across companies.
      * 
      * @param companyId1 First company ID
      * @param companyId2 Second company ID
@@ -119,8 +145,8 @@ public class IntercompanyEliminationService {
                                                                 Long companyId2,
                                                                 LocalDate startDate,
                                                                 LocalDate endDate) {
-        // Use the repository method to find intercompany transactions
-        // This delegates to TransactionRepository.findIntercompanyTransactions() which filters by company/counterparty
+        // Delegates to the repository, which filters by the counterparty
+        // company linked to the transaction's third party.
         return transactionRepository.findIntercompanyTransactions(companyId1, companyId2, startDate, endDate);
     }
 
@@ -660,7 +686,7 @@ public class IntercompanyEliminationService {
             // Only create transaction if we have valid entries
             if (!adjustmentEntries.isEmpty()) {
                 try {
-                    Transaction savedTxn = transactionService.createTransaction(adjustmentTxn, adjustmentEntries, "system");
+                    Transaction savedTxn = transactionService.createTransaction(adjustmentTxn, adjustmentEntries, SecurityUtil.currentUsername());
                     transactionIds.add(savedTxn.getId());
                     logger.debug("Created consolidation adjustment transaction: {}", savedTxn.getNumber());
                 } catch (Exception e) {
@@ -675,36 +701,54 @@ public class IntercompanyEliminationService {
     }
 
     /**
-     * Validates that eliminations are balanced (debits = credits).
-     * 
+     * Validates that every elimination can be posted and that the batch is
+     * balanced (debits = credits).
+     *
+     * An elimination is unpostable when its amount is missing or not positive,
+     * or when either account code is blank; such an entry is skipped when the
+     * journal entries are generated and would leave the journal unbalanced.
+     *
      * @param eliminations List of eliminations to validate
-     * @return true if eliminations are balanced, false otherwise
+     * @return true if every elimination is postable and the batch is balanced
      */
     public boolean validateEliminationsBalanced(List<IntercompanyElimination> eliminations) {
         if (eliminations == null || eliminations.isEmpty()) {
             return true;
         }
-        
+
         BigDecimal totalDebits = BigDecimal.ZERO;
         BigDecimal totalCredits = BigDecimal.ZERO;
-        
+        int unpostable = 0;
+
         for (IntercompanyElimination elimination : eliminations) {
-            // Each elimination should have equal debit and credit impact
-            totalDebits = totalDebits.add(elimination.getAmount());
-            totalCredits = totalCredits.add(elimination.getAmount());
+            BigDecimal amount = elimination.getAmount();
+            if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0
+                    || !hasText(elimination.getAccountCode())
+                    || !hasText(elimination.getCounterAccountCode())) {
+                unpostable++;
+                logger.error("Unpostable elimination: amount={}, accountCode={}, counterAccountCode={}",
+                             amount, elimination.getAccountCode(), elimination.getCounterAccountCode());
+                continue;
+            }
+            totalDebits = totalDebits.add(amount);
+            totalCredits = totalCredits.add(amount);
         }
-        
-        boolean balanced = totalDebits.compareTo(totalCredits) == 0;
-        
+
+        boolean balanced = unpostable == 0 && totalDebits.compareTo(totalCredits) == 0;
+
         if (!balanced) {
-            logger.error("Eliminations are NOT balanced! Debits: {}, Credits: {}", 
-                         totalDebits, totalCredits);
+            logger.error("Eliminations are NOT balanced! Debits: {}, Credits: {}, unpostable: {}",
+                         totalDebits, totalCredits, unpostable);
         } else {
-            logger.debug("Eliminations validated: {} debits, {} credits - BALANCED", 
+            logger.debug("Eliminations validated: {} debits, {} credits - BALANCED",
                          totalDebits, totalCredits);
         }
-        
+
         return balanced;
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
     /**
