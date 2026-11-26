@@ -1,5 +1,6 @@
 package com.econovafx.modules.core.ui.view;
 
+import com.econovafx.modules.accounting.controller.AccountClassController;
 import com.econovafx.modules.accounting.controller.AccountFormController;
 import com.econovafx.modules.accounting.controller.AccountingClosuresController;
 import com.econovafx.modules.accounting.controller.AccountingPeriodsController;
@@ -47,6 +48,7 @@ public class ViewFactoryNavigationTest {
                 mock(ThirdPartiesController.class),
                 mock(AccountingPeriodsController.class),
                 mock(AccountingClosuresController.class),
+                mock(AccountClassController.class),
                 mock(ExchangeRatesController.class),
                 mock(AccountFormController.class),
                 mock(ThirdPartyFormController.class),

@@ -8,6 +8,7 @@ import com.econovafx.modules.inventory.service.InventoryService;
 import com.econovafx.modules.reporting.model.FinancialReport;
 import com.econovafx.modules.reporting.repository.FinancialReportRepository;
 import com.econovafx.modules.core.security.RequiresTenant;
+import com.econovafx.modules.core.security.SecurityUtil;
 import io.avaje.inject.Component;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -215,7 +216,7 @@ public class AccountingPeriodService {
         // Must run before validateLastMonthClosed, because closing the nominal
         // accounts posts entries dated December 31 which require the December
         // monthly period to still be open.
-        validateNominalAccountsClosed(period.getStartDate().getYear());
+        validateNominalAccountsClosed(period.getStartDate().getYear(), closedBy);
 
         // Resolution 340/2004 MC.6.b: Validate last month of period is closed
         validateLastMonthClosed(period);
@@ -469,13 +470,13 @@ public class AccountingPeriodService {
      * @param fiscalYear The fiscal year to validate
      * @throws IllegalStateException if nominal accounts are not closed
      */
-    private void validateNominalAccountsClosed(Integer fiscalYear) {
+    private void validateNominalAccountsClosed(Integer fiscalYear, String username) {
         boolean areClosed = closingEntryRepository.areNominalAccountsClosed(fiscalYear);
         if (!areClosed) {
             // Execute the closure of nominal accounts automatically
             log.info("Nominal accounts not closed for fiscal year {}, executing closure", fiscalYear);
             try {
-                List<ClosingEntry> closingEntries = transactionService.closeNominalAccounts(fiscalYear, "system");
+                List<ClosingEntry> closingEntries = transactionService.closeNominalAccounts(fiscalYear, username);
                 log.info("Automatically created {} closing entries for fiscal year {}", closingEntries.size(), fiscalYear);
             } catch (Exception e) {
                 log.error("Failed to close nominal accounts for fiscal year {}: {}", fiscalYear, e.getMessage());

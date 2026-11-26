@@ -95,6 +95,7 @@ public class ExchangeRevaluationService {
      */
     private List<ExchangeDifference> revalueSupplierInvoices(LocalDate cutoffDate, String username) {
         List<SupplierInvoice> openInvoices = supplierInvoiceRepository.findOpenForeignCurrencyInvoices();
+        List<ExchangeDifference> createdDifferences = new java.util.ArrayList<>();
         
         for (SupplierInvoice invoice : openInvoices) {
             Currency invoiceCurrency = invoice.getCurrency();
@@ -115,7 +116,7 @@ public class ExchangeRevaluationService {
                 BigDecimal differenceAmount = localValueAtCutoff.subtract(localValueAtOriginal);
 
                 if (differenceAmount.abs().compareTo(BigDecimal.valueOf(0.01)) >= 0) {
-                    createUnrealizedDifferenceRecord(
+                    createdDifferences.add(createUnrealizedDifferenceRecord(
                         "PURCHASE_INVOICE",
                         invoice.getId(),
                         invoice.getInvoiceNumber(),
@@ -129,18 +130,14 @@ public class ExchangeRevaluationService {
                         cutoffDate,
                         "Unrealized exchange difference at period end",
                         username
-                    );
+                    ));
                 }
             } catch (Exception e) {
                 logger.error("Error revaluing supplier invoice {}: {}", invoice.getInvoiceNumber(), e.getMessage());
             }
         }
 
-        return exchangeDifferenceRepository.findByDocumentAndType(
-            "PURCHASE_INVOICE", 
-            1L, // Document ID placeholder - method signature needs update
-            ExchangeDifference.DifferenceType.UNREALIZED_GAIN
-        );
+        return createdDifferences;
     }
 
     /**
@@ -148,6 +145,7 @@ public class ExchangeRevaluationService {
      */
     private List<ExchangeDifference> revalueCustomerInvoices(LocalDate cutoffDate, String username) {
         List<CustomerInvoice> openInvoices = customerInvoiceRepository.findOpenForeignCurrencyInvoices();
+        List<ExchangeDifference> createdDifferences = new java.util.ArrayList<>();
         
         for (CustomerInvoice invoice : openInvoices) {
             Currency invoiceCurrency = invoice.getCurrency();
@@ -168,7 +166,7 @@ public class ExchangeRevaluationService {
                 BigDecimal differenceAmount = localValueAtCutoff.subtract(localValueAtOriginal);
 
                 if (differenceAmount.abs().compareTo(BigDecimal.valueOf(0.01)) >= 0) {
-                    createUnrealizedDifferenceRecord(
+                    createdDifferences.add(createUnrealizedDifferenceRecord(
                         "SALES_INVOICE",
                         invoice.getId(),
                         invoice.getInvoiceNumber(),
@@ -182,18 +180,14 @@ public class ExchangeRevaluationService {
                         cutoffDate,
                         "Unrealized exchange difference at period end",
                         username
-                    );
+                    ));
                 }
             } catch (Exception e) {
                 logger.error("Error revaluing customer invoice {}: {}", invoice.getInvoiceNumber(), e.getMessage());
             }
         }
 
-        return exchangeDifferenceRepository.findByDocumentAndType(
-            "SALES_INVOICE",
-            1L, // Document ID placeholder - method signature needs update
-            ExchangeDifference.DifferenceType.UNREALIZED_GAIN
-        );
+        return createdDifferences;
     }
 
     /**

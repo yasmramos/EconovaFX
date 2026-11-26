@@ -597,7 +597,9 @@ public class MainViewController implements Initializable {
     private void showClasificador() {
         logger.debug("Showing clasificador de cuentas");
         setActiveButton(btnClasificador);
-        updateStatus("Clasificador de Cuentas - Coming Soon");
+        contentArea.getChildren().clear();
+        contentArea.getChildren().add(viewFactory.createAccountClassView());
+        updateStatus("Clasificador de Cuentas");
     }
 
     @FXML

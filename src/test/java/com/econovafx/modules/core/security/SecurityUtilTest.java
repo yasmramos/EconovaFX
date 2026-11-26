@@ -110,6 +110,29 @@ class SecurityUtilTest {
     }
 
     @Test
+    void currentUsernameReturnsAuthenticatedUsername() {
+        User user = new User();
+        user.setUsername("ana.lopez");
+        SecurityUtil.setCurrentUser(user);
+
+        assertEquals("ana.lopez", SecurityUtil.currentUsername());
+    }
+
+    @Test
+    void currentUsernameFallsBackToSystemWhenNoUser() {
+        assertEquals("system", SecurityUtil.currentUsername());
+    }
+
+    @Test
+    void currentUsernameFallsBackToSystemWhenUsernameIsBlank() {
+        User user = new User();
+        user.setUsername("  ");
+        SecurityUtil.setCurrentUser(user);
+
+        assertEquals("system", SecurityUtil.currentUsername());
+    }
+
+    @Test
     void testSessionExpirationAfterTimeout() throws InterruptedException {
         // This test verifies the session timeout logic
         // Note: We can't actually wait for 30 minutes, so we test the mechanism

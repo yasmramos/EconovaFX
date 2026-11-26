@@ -6,7 +6,9 @@ MSG_FILE="$1"
 # First non-comment, non-empty line is the subject
 SUBJECT=$(grep -v '^#' "$MSG_FILE" | sed '/^$/d' | head -n 1)
 
-PATTERN='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9\-_.]+\))?!?: [a-z0-9].*'
+# The scope class keeps the hyphen last so it stays literal; "[a-z0-9\-_.]"
+# builds a range from "\" to "_" and rejects any scope that contains a hyphen.
+PATTERN='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9._-]+\))?!?: [a-z0-9].*'
 
 if [[ "$SUBJECT" =~ ^Merge\  || "$SUBJECT" =~ ^Revert\  ]]; then
   exit 0

@@ -31,36 +31,39 @@
             <Label text="Type:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
             <ComboBox fx:id="typeComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="rounded-md"/>
 
-            <Label text="Email:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <TextField fx:id="emailField" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="rounded-md"/>
+            <Label text="Group Company:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <ComboBox fx:id="relatedCompanyComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="rounded-md"/>
 
-            <Label text="Phone:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <TextField fx:id="phoneField" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="rounded-md"/>
+            <Label text="Email:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <TextField fx:id="emailField" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="rounded-md"/>
 
-            <Label text="Address:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <TextField fx:id="addressField" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="rounded-md"/>
+            <Label text="Phone:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <TextField fx:id="phoneField" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="rounded-md"/>
 
-            <Label text="City:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <TextField fx:id="cityField" GridPane.rowIndex="6" GridPane.columnIndex="1" styleClass="rounded-md"/>
+            <Label text="Address:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <TextField fx:id="addressField" GridPane.rowIndex="6" GridPane.columnIndex="1" styleClass="rounded-md"/>
 
-            <Label text="Country:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <TextField fx:id="countryField" GridPane.rowIndex="7" GridPane.columnIndex="1" styleClass="rounded-md"/>
+            <Label text="City:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <TextField fx:id="cityField" GridPane.rowIndex="7" GridPane.columnIndex="1" styleClass="rounded-md"/>
 
-            <Label text="Tax ID (RUC):" GridPane.rowIndex="8" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <TextField fx:id="taxIdField" GridPane.rowIndex="8" GridPane.columnIndex="1" styleClass="rounded-md"/>
+            <Label text="Country:" GridPane.rowIndex="8" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <TextField fx:id="countryField" GridPane.rowIndex="8" GridPane.columnIndex="1" styleClass="rounded-md"/>
+
+            <Label text="Tax ID (RUC):" GridPane.rowIndex="9" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <TextField fx:id="taxIdField" GridPane.rowIndex="9" GridPane.columnIndex="1" styleClass="rounded-md"/>
 
             <!-- Financial Information -->
-            <Label text="Credit Limit:" GridPane.rowIndex="9" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <TextField fx:id="creditLimitField" GridPane.rowIndex="9" GridPane.columnIndex="1" styleClass="rounded-md"/>
+            <Label text="Credit Limit:" GridPane.rowIndex="10" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <TextField fx:id="creditLimitField" GridPane.rowIndex="10" GridPane.columnIndex="1" styleClass="rounded-md"/>
 
-            <Label text="Payment Days:" GridPane.rowIndex="10" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <TextField fx:id="paymentDaysField" GridPane.rowIndex="10" GridPane.columnIndex="1" styleClass="rounded-md"/>
+            <Label text="Payment Days:" GridPane.rowIndex="11" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <TextField fx:id="paymentDaysField" GridPane.rowIndex="11" GridPane.columnIndex="1" styleClass="rounded-md"/>
 
-            <Label text="Active:" GridPane.rowIndex="11" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <CheckBox fx:id="activeCheckBox" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+            <Label text="Active:" GridPane.rowIndex="12" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <CheckBox fx:id="activeCheckBox" GridPane.rowIndex="12" GridPane.columnIndex="1"/>
 
-            <Label text="Notes:" GridPane.rowIndex="12" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
-            <TextArea fx:id="notesArea" GridPane.rowIndex="12" GridPane.columnIndex="1"
+            <Label text="Notes:" GridPane.rowIndex="13" GridPane.columnIndex="0" styleClass="text-sm, font-medium, text-gray-700"/>
+            <TextArea fx:id="notesArea" GridPane.rowIndex="13" GridPane.columnIndex="1"
                       prefRowCount="4" wrapText="true" styleClass="rounded-md"/>
         </GridPane>
     </ScrollPane>

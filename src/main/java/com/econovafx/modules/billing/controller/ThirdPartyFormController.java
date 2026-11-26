@@ -3,6 +3,8 @@ package com.econovafx.modules.billing.controller;
 import com.econovafx.modules.billing.model.ThirdParty;
 import com.econovafx.modules.billing.service.ThirdPartyService;
 import com.econovafx.modules.core.exception.GlobalExceptionHandler;
+import com.econovafx.modules.core.model.Company;
+import com.econovafx.modules.core.service.CompanyService;
 import com.econovafx.modules.core.ui.util.ModernDialog;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -30,6 +32,7 @@ public class ThirdPartyFormController implements Initializable {
     private static final ExecutorService backgroundExecutor = Executors.newCachedThreadPool();
     
     private final ThirdPartyService thirdPartyService;
+    private final CompanyService companyService;
     
     // Reference to dialog handle for proper closure
     private ModernDialog.DialogHandle dialogHandle;
@@ -54,6 +57,9 @@ public class ThirdPartyFormController implements Initializable {
     
     @FXML
     private ComboBox<ThirdParty.ThirdPartyType> typeComboBox;
+
+    @FXML
+    private ComboBox<Company> relatedCompanyComboBox;
     
     @FXML
     private TextField emailField;
@@ -88,14 +94,44 @@ public class ThirdPartyFormController implements Initializable {
     private ThirdParty editingThirdParty;
     private boolean saved = false;
     
-    public ThirdPartyFormController(ThirdPartyService thirdPartyService) {
+    public ThirdPartyFormController(ThirdPartyService thirdPartyService, CompanyService companyService) {
         this.thirdPartyService = thirdPartyService;
+        this.companyService = companyService;
     }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("ThirdPartyFormController initialized");
         initializeComboBoxes();
+        initializeRelatedCompanyComboBox();
+    }
+
+    /**
+     * Loads the group companies and shows them in the counterparty picker.
+     * The empty option ("None") marks an external third party.
+     */
+    private void initializeRelatedCompanyComboBox() {
+        relatedCompanyComboBox.setConverter(new StringConverter<Company>() {
+            @Override
+            public String toString(Company company) {
+                return company != null ? company.getName() : "None";
+            }
+
+            @Override
+            public Company fromString(String string) {
+                return null;
+            }
+        });
+
+        CompletableFuture.supplyAsync(companyService::findAllActive, backgroundExecutor)
+                .thenAccept(companies -> javafx.application.Platform.runLater(() -> {
+                    relatedCompanyComboBox.setItems(
+                            FXCollections.observableArrayList(companies));
+                }))
+                .exceptionally(ex -> {
+                    logger.error("Error loading group companies", ex);
+                    return null;
+                });
     }
     
     private void initializeComboBoxes() {
@@ -142,10 +178,31 @@ public class ThirdPartyFormController implements Initializable {
         }
     }
     
+    /**
+     * Selects the counterparty company whose id matches, once the list is loaded.
+     */
+    private void selectRelatedCompany(Long relatedCompanyId) {
+        if (relatedCompanyId == null) {
+            relatedCompanyComboBox.setValue(null);
+            return;
+        }
+        Runnable select = () -> relatedCompanyComboBox.getItems().stream()
+                .filter(company -> relatedCompanyId.equals(company.getId()))
+                .findFirst()
+                .ifPresent(relatedCompanyComboBox::setValue);
+        if (relatedCompanyComboBox.getItems().isEmpty()) {
+            relatedCompanyComboBox.getItems().addListener(
+                    (javafx.collections.ListChangeListener<Company>) change -> select.run());
+        } else {
+            select.run();
+        }
+    }
+
     private void populateForm(ThirdParty thirdParty) {
         nameField.setText(thirdParty.getName());
         identificationField.setText(thirdParty.getIdentificationNumber());
         typeComboBox.setValue(thirdParty.getType());
+        selectRelatedCompany(thirdParty.getRelatedCompanyId());
         emailField.setText(thirdParty.getEmail());
         phoneField.setText(thirdParty.getPhone());
         addressField.setText(thirdParty.getAddress());
@@ -162,6 +219,7 @@ public class ThirdPartyFormController implements Initializable {
         nameField.clear();
         identificationField.clear();
         typeComboBox.setValue(ThirdParty.ThirdPartyType.CUSTOMER);
+        relatedCompanyComboBox.setValue(null);
         emailField.clear();
         phoneField.clear();
         addressField.clear();
@@ -193,6 +251,9 @@ public class ThirdPartyFormController implements Initializable {
                 editingThirdParty.setName(nameField.getText().trim());
                 editingThirdParty.setIdentificationNumber(identificationField.getText().trim());
                 editingThirdParty.setType(typeComboBox.getValue());
+                Company relatedCompany = relatedCompanyComboBox.getValue();
+                editingThirdParty.setRelatedCompanyId(
+                        relatedCompany != null ? relatedCompany.getId() : null);
                 editingThirdParty.setEmail(emailField.getText().trim());
                 editingThirdParty.setPhone(phoneField.getText().trim());
                 editingThirdParty.setAddress(addressField.getText().trim());
@@ -239,6 +300,7 @@ public class ThirdPartyFormController implements Initializable {
         nameField.setDisable(!enabled);
         identificationField.setDisable(!enabled);
         typeComboBox.setDisable(!enabled);
+        relatedCompanyComboBox.setDisable(!enabled);
         emailField.setDisable(!enabled);
         phoneField.setDisable(!enabled);
         addressField.setDisable(!enabled);

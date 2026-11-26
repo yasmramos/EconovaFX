@@ -13,10 +13,12 @@ import com.econovafx.modules.accounting.service.AccountingPeriodService;
 import com.econovafx.modules.core.service.NotificationService;
 import com.econovafx.modules.core.service.ExchangeRateService;
 import com.econovafx.modules.core.service.SystemConfigService;
+import com.econovafx.modules.core.service.CompanyService;
 import com.econovafx.modules.core.ui.controller.*;
 import com.econovafx.modules.core.ui.view.ViewFactory;
 import com.econovafx.modules.accounting.controller.AccountsController;
 import com.econovafx.modules.accounting.controller.TransactionsController;
+import com.econovafx.modules.accounting.controller.AccountClassController;
 import com.econovafx.modules.accounting.controller.AccountFormController;
 import com.econovafx.modules.accounting.controller.TransactionEntryController;
 import com.econovafx.modules.accounting.controller.ComprobantesController;
@@ -68,6 +70,7 @@ public final class AppContext {
     private ThirdPartiesController thirdPartiesController;
     private AccountingPeriodsController accountingPeriodsController;
     private AccountingClosuresController accountingClosuresController;
+    private AccountClassController accountClassController;
     private ExchangeRatesController exchangeRatesController;
     private final AccountFormController accountFormController;
     private final ThirdPartyFormController thirdPartyFormController;
@@ -105,11 +108,13 @@ public final class AppContext {
         SystemConfigService systemConfigService = beanScope.get(SystemConfigService.class);
         
         ExchangeRateService exchangeRateService = beanScope.get(ExchangeRateService.class);
+        CompanyService companyService = beanScope.get(CompanyService.class);
 
         // Create controllers without ViewFactory initially
         // Controllers that don't need ViewFactory
+        accountClassController = new AccountClassController(accountService);
         accountFormController = new AccountFormController(accountService);
-        thirdPartyFormController = new ThirdPartyFormController(thirdPartyService);
+        thirdPartyFormController = new ThirdPartyFormController(thirdPartyService, companyService);
         transactionEntryController = new TransactionEntryController(accountService, transactionService);
         accountingPeriodsController = new AccountingPeriodsController(accountingPeriodService);
         accountingClosuresController = new AccountingClosuresController(accountingPeriodService);
@@ -126,12 +131,16 @@ public final class AppContext {
                         beanScope.get(com.econovafx.modules.reporting.controller.FinancialReportingController.class),
                         beanScope.get(com.econovafx.modules.accounting.service.AccountingReportService.class),
                         accountService,
-                        exportService);
+                        exportService,
+                        companyService,
+                        beanScope.get(com.econovafx.modules.accounting.repository.FinancialStatementModelRepository.class));
 
         // Create every controller first. They only need the ViewFactory through
         // initializeViewFactory below, so nothing here depends on the factory yet.
         dashboardController = new DashboardController(accountService, transactionService, systemConfigService);
-        accountsController = new AccountsController(accountService);
+        com.econovafx.modules.accounting.service.AccountingReportService accountingReportService =
+                beanScope.get(com.econovafx.modules.accounting.service.AccountingReportService.class);
+        accountsController = new AccountsController(accountService, accountingReportService);
         transactionsController = new TransactionsController(transactionService, accountService);
         thirdPartiesController = new ThirdPartiesController(thirdPartyService, exportService, notificationService);
         comprobantesController = new ComprobantesController(transactionService, accountService, exportService);
@@ -150,6 +159,7 @@ public final class AppContext {
                 thirdPartiesController,
                 accountingPeriodsController,
                 accountingClosuresController,
+                accountClassController,
                 exchangeRatesController,
                 accountFormController,
                 thirdPartyFormController,
